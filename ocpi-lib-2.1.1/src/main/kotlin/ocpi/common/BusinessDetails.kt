@@ -1,7 +1,5 @@
 package ocpi.common
 
-import ocpi.evse.Image
-
 /**
  * @property name Name of the operator.
  * @property website Link (string(255) type following the w3.org spec.) to the operator's website.

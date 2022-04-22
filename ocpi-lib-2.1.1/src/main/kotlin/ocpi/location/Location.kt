@@ -2,7 +2,7 @@ package ocpi.location
 
 import ocpi.common.*
 import ocpi.evse.Evse
-import ocpi.evse.Image
+import ocpi.common.Image
 import java.time.Instant
 
 /**

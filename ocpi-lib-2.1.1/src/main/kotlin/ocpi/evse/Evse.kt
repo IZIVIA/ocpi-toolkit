@@ -3,6 +3,7 @@ package ocpi.evse
 import ocpi.common.DisplayText
 import ocpi.connector.Connector
 import ocpi.common.GeoLocation
+import ocpi.common.Image
 import ocpi.common.ParkingRestriction
 import java.time.Instant
 

@@ -1,4 +1,4 @@
-package ocpi.evse
+package ocpi.common
 
 /**
  * The category of an image to obtain the correct usage in a user presentation. The category has to be set accordingly

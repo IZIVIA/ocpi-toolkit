@@ -1,4 +1,4 @@
-package ocpi.evse
+package ocpi.common
 
 /**
  * This class references images related to a EVSE in terms of a file name or url. According to the roaming connection
