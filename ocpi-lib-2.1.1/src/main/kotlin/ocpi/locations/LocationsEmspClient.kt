@@ -33,7 +33,7 @@ class LocationsEmspClient(
                 )
             )
             .run {
-                mapper.readValue(this.payload)
+                mapper.readValue(this.body)
             }
 
     override fun getLocation(locationId: String): Location? =
@@ -45,7 +45,7 @@ class LocationsEmspClient(
                 )
             )
             .run {
-                mapper.readValue(this.payload)
+                mapper.readValue(this.body)
             }
 
     override fun getLocation(locationId: String, evseUid: String): Evse? =
@@ -57,7 +57,7 @@ class LocationsEmspClient(
                 )
             )
             .run {
-                mapper.readValue(this.payload)
+                mapper.readValue(this.body)
             }
 
     override fun getLocation(locationId: String, evseUid: String, connectorId: String): Connector? =
@@ -69,6 +69,6 @@ class LocationsEmspClient(
                 )
             )
             .run {
-                mapper.readValue(this.payload)
+                mapper.readValue(this.body)
             }
 }

@@ -24,7 +24,7 @@ class LocationsCpoClient(
                 )
             )
             .run {
-                mapper.readValue(this.payload)
+                mapper.readValue(this.body)
             }
 
     override fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): Evse =
@@ -36,7 +36,7 @@ class LocationsCpoClient(
                 )
             )
             .run {
-                mapper.readValue(this.payload)
+                mapper.readValue(this.body)
             }
 
     override fun getConnector(
@@ -54,7 +54,7 @@ class LocationsCpoClient(
                 )
             )
             .run {
-                mapper.readValue(this.payload)
+                mapper.readValue(this.body)
             }
 
     override fun putLocation(countryCode: String, partyId: String, locationId: String, location: Location): Location =
@@ -67,7 +67,7 @@ class LocationsCpoClient(
                 )
             )
             .run {
-                mapper.readValue(this.payload)
+                mapper.readValue(this.body)
             }
 
     override fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: Evse): Evse =
@@ -80,7 +80,7 @@ class LocationsCpoClient(
                 )
             )
             .run {
-                mapper.readValue(this.payload)
+                mapper.readValue(this.body)
             }
 
     override fun putConnector(
@@ -100,7 +100,7 @@ class LocationsCpoClient(
                 )
             )
             .run {
-                mapper.readValue(this.payload)
+                mapper.readValue(this.body)
             }
 
     override fun patchLocation(
@@ -117,7 +117,7 @@ class LocationsCpoClient(
             )
         )
         .run {
-            mapper.readValue(this.payload)
+            mapper.readValue(this.body)
         }
 
     override fun patchEvse(
@@ -135,7 +135,7 @@ class LocationsCpoClient(
             )
         )
         .run {
-            mapper.readValue(this.payload)
+            mapper.readValue(this.body)
         }
 
     override fun patchConnector(
@@ -154,6 +154,6 @@ class LocationsCpoClient(
             )
         )
         .run {
-            mapper.readValue(this.payload)
+            mapper.readValue(this.body)
         }
 }
