@@ -1,8 +1,5 @@
-package ocpi.evse
+package ocpi.locations.domain
 
-import ocpi.common.*
-import ocpi.connector.Connector
-import ocpi.connector.ConnectorPatch
 import java.time.Instant
 
 /**

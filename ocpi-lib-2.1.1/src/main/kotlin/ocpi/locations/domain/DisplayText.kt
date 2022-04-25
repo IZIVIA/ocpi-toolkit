@@ -1,4 +1,4 @@
-package ocpi.common
+package ocpi.locations.domain
 
 /**
  * @property language (max-length=2) Language Code ISO 639-1

@@ -1,4 +1,4 @@
-package ocpi.evse
+package ocpi.locations.domain
 
 import java.time.Instant
 

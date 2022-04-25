@@ -1,4 +1,4 @@
-package ocpi.connector
+package ocpi.locations.domain
 
 /**
  * The socket or plug standard of the charging point.

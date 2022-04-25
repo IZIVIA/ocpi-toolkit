@@ -1,4 +1,4 @@
-package ocpi.evse
+package ocpi.locations.domain
 
 /**
  * The status of an EVSE.

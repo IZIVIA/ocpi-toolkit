@@ -1,9 +1,5 @@
-package ocpi.location
+package ocpi.locations.domain
 
-import ocpi.common.*
-import ocpi.evse.Evse
-import ocpi.common.Image
-import ocpi.evse.EvsePatch
 import java.time.Instant
 
 /**

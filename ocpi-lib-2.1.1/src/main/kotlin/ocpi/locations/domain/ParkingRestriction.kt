@@ -1,4 +1,4 @@
-package ocpi.common
+package ocpi.locations.domain
 
 /**
  * This value, if provided, represents the restriction to the parking spot for different purposes.

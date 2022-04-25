@@ -1,4 +1,4 @@
-package ocpi.location
+package ocpi.locations.domain
 
 /**
  * Reflects the general type of the charge points location. May be used for user information.

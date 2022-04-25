@@ -1,4 +1,4 @@
-package ocpi.connector
+package ocpi.locations.domain
 
 /**
  * A connector is the socket or cable available for the EV to use. A single EVSE may provide multiple connectors but

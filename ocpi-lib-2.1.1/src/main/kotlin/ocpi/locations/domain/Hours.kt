@@ -1,4 +1,4 @@
-package ocpi.common
+package ocpi.locations.domain
 
 /**
  * Opening and access hours of the location.

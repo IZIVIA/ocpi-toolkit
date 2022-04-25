@@ -1,4 +1,4 @@
-package ocpi.common
+package ocpi.locations.domain
 
 import java.math.BigDecimal
 

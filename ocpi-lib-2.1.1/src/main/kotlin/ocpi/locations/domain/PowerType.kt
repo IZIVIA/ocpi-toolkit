@@ -1,4 +1,4 @@
-package ocpi.connector
+package ocpi.locations.domain
 
 enum class PowerType {
     /**

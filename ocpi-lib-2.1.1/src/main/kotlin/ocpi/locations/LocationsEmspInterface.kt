@@ -1,9 +1,11 @@
-package ocpi.location
+package ocpi.locations
 
-import ocpi.connector.Connector
-import ocpi.connector.ConnectorPatch
-import ocpi.evse.Evse
-import ocpi.evse.EvsePatch
+import ocpi.locations.domain.Connector
+import ocpi.locations.domain.ConnectorPatch
+import ocpi.locations.domain.Evse
+import ocpi.locations.domain.EvsePatch
+import ocpi.locations.domain.Location
+import ocpi.locations.domain.LocationPatch
 
 /**
  * Locations is a client owned object, so the end-points need to contain the required extra fields: {party_id} and

@@ -1,4 +1,4 @@
-package ocpi.connector
+package ocpi.locations.domain
 
 /**
  * The format of the connector, whether it is a socket or a plug.

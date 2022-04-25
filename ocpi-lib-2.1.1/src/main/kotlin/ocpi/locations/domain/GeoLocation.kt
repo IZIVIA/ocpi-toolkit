@@ -1,4 +1,4 @@
-package ocpi.common
+package ocpi.locations.domain
 
 /**
  * This class defines the geolocation of the Charge Point. The geodetic system to be used is WGS 84.

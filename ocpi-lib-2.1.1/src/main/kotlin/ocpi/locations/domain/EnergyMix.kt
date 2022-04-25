@@ -1,4 +1,4 @@
-package ocpi.common
+package ocpi.locations.domain
 
 /**
  * This type is used to specify the energy mix and environmental impact of the supplied energy at a location or in a

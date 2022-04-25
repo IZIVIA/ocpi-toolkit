@@ -1,4 +1,4 @@
-package ocpi.evse
+package ocpi.locations.domain
 
 /**
  * The capabilities of an EVSE.
