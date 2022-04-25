@@ -77,7 +77,7 @@ interface LocationsEmspInterface {
      * @param locationId (max-length=39) Location.id of the new Location object, or the Location of which an EVSE or
      * Location object is send
      */
-    fun putLocation(countryCode: String, partyId: String, locationId: String): Location
+    fun putLocation(countryCode: String, partyId: String, locationId: String, location: Location): Location
 
     /**
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
@@ -89,7 +89,7 @@ interface LocationsEmspInterface {
      * Location object is send
      * @param evseUid (max-length=39) Evse.uid, required when an EVSE or Connector object is send/replaced.
      */
-    fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): Evse
+    fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: Evse): Evse
 
     /**
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
@@ -107,7 +107,8 @@ interface LocationsEmspInterface {
         partyId: String,
         locationId: String,
         evseUid: String,
-        connectorId: String
+        connectorId: String,
+        connector: Connector
     ): Connector
 
     /**
