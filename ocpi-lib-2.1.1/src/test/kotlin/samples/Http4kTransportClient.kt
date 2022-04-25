@@ -30,7 +30,7 @@ class Http4kTransportClient(
         return client(http4kRequest).let {
             HttpResponse(
                 status = it.status.code,
-                payload = it.bodyString()
+                body = it.bodyString()
             )
         }
     }
