@@ -53,3 +53,19 @@ data class Evse(
     val images: List<Image>,
     val lastUpdated: Instant
 )
+
+data class EvsePatch( // TODO: use xxPatch classes for attributes
+    val uid: String,
+    val evse_id: String?,
+    val status: Status?,
+    val statusSchedule: List<StatusSchedule>?,
+    val capabilities: List<Capability>?,
+    val connectors: List<Connector>?,
+    val floorLevel: String?,
+    val coordinates: GeoLocation?,
+    val physicalReference: String?,
+    val directions: List<DisplayText>?,
+    val parkingRestrictions: List<ParkingRestriction>?,
+    val images: List<Image>?,
+    val lastUpdated: Instant?
+)

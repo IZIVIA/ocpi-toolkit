@@ -27,3 +27,15 @@ data class Connector(
     val termsAndConditions: String,
     val lastUpdated: String
 )
+
+data class ConnectorPatch( // TODO: use xxPatch classes for attributes
+    val id: String?,
+    val standard: ConnectorType?,
+    val format: ConnectorFormat?,
+    val powerType: PowerType?,
+    val voltage: Int?,
+    val amperage: Int?,
+    val tariffId: String?,
+    val termsAndConditions: String?,
+    val lastUpdated: String?
+)

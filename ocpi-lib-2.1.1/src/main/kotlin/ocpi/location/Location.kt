@@ -61,3 +61,27 @@ data class Location(
     val energyMix: EnergyMix?,
     val lastUpdated: Instant
 )
+
+data class LocationPatch( // TODO: use xxPatch classes for attributes
+    val id: String?,
+    val type: LocationType?,
+    val name: String?,
+    val address: String?,
+    val city: String?,
+    val postalCode: String?,
+    val country: String?,
+    val coordinates: GeoLocation?,
+    val relatedLocations: List<AdditionalGeoLocation>?,
+    val evses: List<Evse>?,
+    val directions: List<DisplayText>?,
+    val operator: BusinessDetails?,
+    val suboperator: BusinessDetails?,
+    val owner: BusinessDetails?,
+    val facilities: List<Facility>?,
+    val timeZone: String?,
+    val openingTimes: Hours?,
+    val chargingWhenClosed: Boolean?,
+    val images: List<Image>?,
+    val energyMix: EnergyMix?,
+    val lastUpdated: Instant?
+)
