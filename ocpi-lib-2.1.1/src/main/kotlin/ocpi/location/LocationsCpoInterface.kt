@@ -4,6 +4,16 @@ import ocpi.connector.Connector
 import ocpi.evse.Evse
 import java.time.Instant
 
+/**
+ * CPO Interface
+ *
+ * - GET: Fetch a list locations, last updated between the {date_from} and {date_to} (paginated), or get a specific
+ * location, EVSE or Connector.
+ * - POST: n/a
+ * - PUT: n/a
+ * - PATCH: n/a
+ * - DELETE: n/a
+ */
 interface LocationsCpoInterface {
 
     /**
