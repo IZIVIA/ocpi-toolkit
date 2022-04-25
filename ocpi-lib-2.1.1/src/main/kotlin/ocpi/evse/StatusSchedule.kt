@@ -19,3 +19,9 @@ data class StatusSchedule(
     val periodEnd: Instant?,
     val status: Status
 )
+
+data class StatusSchedulePatch(
+    val periodBegin: Instant?,
+    val periodEnd: Instant?,
+    val status: Status?
+)

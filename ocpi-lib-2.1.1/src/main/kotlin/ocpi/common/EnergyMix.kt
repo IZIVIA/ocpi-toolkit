@@ -21,3 +21,12 @@ data class EnergyMix(
     val supplierName: String?,
     val energyProductName: String?
 )
+
+data class EnergyMixPatch(
+    val isGreenEnergy: Boolean?,
+    val energySources: List<EnergySourcePatch>?,
+    val environImpact: List<EnvironmentalImpactPatch>?,
+    val supplierName: String?,
+    val energyProductName: String?
+)
+

@@ -11,3 +11,10 @@ data class BusinessDetails(
     val website: String?,
     val logo: Image?
 )
+
+data class BusinessDetailsPatch(
+    val name: String?,
+    val website: String?,
+    val logo: ImagePatch?
+)
+

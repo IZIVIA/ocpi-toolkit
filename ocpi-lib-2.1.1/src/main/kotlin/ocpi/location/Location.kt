@@ -3,6 +3,7 @@ package ocpi.location
 import ocpi.common.*
 import ocpi.evse.Evse
 import ocpi.common.Image
+import ocpi.evse.EvsePatch
 import java.time.Instant
 
 /**
@@ -62,7 +63,7 @@ data class Location(
     val lastUpdated: Instant
 )
 
-data class LocationPatch( // TODO: use xxPatch classes for attributes
+data class LocationPatch(
     val id: String?,
     val type: LocationType?,
     val name: String?,
@@ -70,18 +71,18 @@ data class LocationPatch( // TODO: use xxPatch classes for attributes
     val city: String?,
     val postalCode: String?,
     val country: String?,
-    val coordinates: GeoLocation?,
-    val relatedLocations: List<AdditionalGeoLocation>?,
-    val evses: List<Evse>?,
-    val directions: List<DisplayText>?,
-    val operator: BusinessDetails?,
-    val suboperator: BusinessDetails?,
-    val owner: BusinessDetails?,
+    val coordinates: GeoLocationPatch?,
+    val relatedLocations: List<AdditionalGeoLocationPatch>?,
+    val evses: List<EvsePatch>?,
+    val directions: List<DisplayTextPatch>?,
+    val operator: BusinessDetailsPatch?,
+    val suboperator: BusinessDetailsPatch?,
+    val owner: BusinessDetailsPatch?,
     val facilities: List<Facility>?,
     val timeZone: String?,
-    val openingTimes: Hours?,
+    val openingTimes: HoursPatch?,
     val chargingWhenClosed: Boolean?,
-    val images: List<Image>?,
-    val energyMix: EnergyMix?,
+    val images: List<ImagePatch>?,
+    val energyMix: EnergyMixPatch?,
     val lastUpdated: Instant?
 )

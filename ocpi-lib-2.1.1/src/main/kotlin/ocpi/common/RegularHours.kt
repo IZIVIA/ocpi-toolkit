@@ -14,3 +14,9 @@ data class RegularHours(
     val periodBegin: String,
     val periodEnd: String
 )
+
+data class RegularHoursPatch(
+    val weekday: Int?,
+    val periodBegin: String?,
+    val periodEnd: String?
+)

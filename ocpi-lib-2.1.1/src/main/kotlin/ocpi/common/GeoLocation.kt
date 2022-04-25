@@ -12,3 +12,8 @@ data class GeoLocation(
     val latitude: String,
     val longitude: String
 )
+
+data class GeoLocationPatch(
+    val latitude: String?,
+    val longitude: String?
+)

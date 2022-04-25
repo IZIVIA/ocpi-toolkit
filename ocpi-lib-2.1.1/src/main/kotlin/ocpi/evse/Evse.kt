@@ -1,10 +1,8 @@
 package ocpi.evse
 
-import ocpi.common.DisplayText
+import ocpi.common.*
 import ocpi.connector.Connector
-import ocpi.common.GeoLocation
-import ocpi.common.Image
-import ocpi.common.ParkingRestriction
+import ocpi.connector.ConnectorPatch
 import java.time.Instant
 
 /**
@@ -54,18 +52,18 @@ data class Evse(
     val lastUpdated: Instant
 )
 
-data class EvsePatch( // TODO: use xxPatch classes for attributes
-    val uid: String,
+data class EvsePatch(
+    val uid: String?,
     val evse_id: String?,
     val status: Status?,
-    val statusSchedule: List<StatusSchedule>?,
+    val statusSchedule: List<StatusSchedulePatch>?,
     val capabilities: List<Capability>?,
-    val connectors: List<Connector>?,
+    val connectors: List<ConnectorPatch>?,
     val floorLevel: String?,
-    val coordinates: GeoLocation?,
+    val coordinates: GeoLocationPatch?,
     val physicalReference: String?,
-    val directions: List<DisplayText>?,
+    val directions: List<DisplayTextPatch>?,
     val parkingRestrictions: List<ParkingRestriction>?,
-    val images: List<Image>?,
+    val images: List<ImagePatch>?,
     val lastUpdated: Instant?
 )

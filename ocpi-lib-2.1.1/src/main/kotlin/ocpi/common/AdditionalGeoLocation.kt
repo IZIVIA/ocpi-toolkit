@@ -16,3 +16,9 @@ data class AdditionalGeoLocation(
     val longitude: String,
     val name: DisplayText?
 )
+
+data class AdditionalGeoLocationPatch(
+    val latitude: String?,
+    val longitude: String?,
+    val name: DisplayTextPatch?
+)

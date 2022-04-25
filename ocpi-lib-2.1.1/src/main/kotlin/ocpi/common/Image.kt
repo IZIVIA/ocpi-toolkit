@@ -34,3 +34,12 @@ data class Image(
     val width: Int?,
     val height: Int?
 )
+
+data class ImagePatch(
+    val url: String?,
+    val thumbnail: String?,
+    val category: ImageCategory?,
+    val type: String?,
+    val width: Int?,
+    val height: Int?
+)

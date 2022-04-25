@@ -8,3 +8,8 @@ data class DisplayText(
     val language: String,
     val text: String
 )
+
+data class DisplayTextPatch(
+    val language: String?,
+    val text: String?
+)

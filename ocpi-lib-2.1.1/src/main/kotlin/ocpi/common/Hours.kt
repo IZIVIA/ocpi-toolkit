@@ -11,3 +11,10 @@ data class Hours(
     val exceptionalOpenings: List<ExceptionalPeriod>,
     val exceptionalClosings: List<ExceptionalPeriod>
 )
+
+data class HoursPatch(
+    val regularHours: List<RegularHours>?,
+    val twentyFourSeven: Boolean?,
+    val exceptionalOpenings: List<ExceptionalPeriod>,
+    val exceptionalClosings: List<ExceptionalPeriod>
+)

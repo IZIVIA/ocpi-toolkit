@@ -12,3 +12,8 @@ data class EnergySource(
     val source: EnergySourceCategory,
     val percentage: BigDecimal
 )
+
+data class EnergySourcePatch(
+    val source: EnergySourceCategory?,
+    val percentage: BigDecimal?
+)

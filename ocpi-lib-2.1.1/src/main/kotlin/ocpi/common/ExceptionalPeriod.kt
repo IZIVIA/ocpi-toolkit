@@ -12,3 +12,9 @@ data class ExceptionalPeriod(
     val periodBegin: Instant,
     val periodEnd: Instant
 )
+
+data class ExceptionalPeriodPatch(
+    val periodBegin: Instant?,
+    val periodEnd: Instant?
+)
+

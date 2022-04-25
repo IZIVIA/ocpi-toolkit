@@ -28,7 +28,7 @@ data class Connector(
     val lastUpdated: String
 )
 
-data class ConnectorPatch( // TODO: use xxPatch classes for attributes
+data class ConnectorPatch(
     val id: String?,
     val standard: ConnectorType?,
     val format: ConnectorFormat?,

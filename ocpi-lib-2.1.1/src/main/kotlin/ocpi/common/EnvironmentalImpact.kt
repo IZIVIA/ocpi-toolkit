@@ -11,3 +11,8 @@ data class EnvironmentalImpact(
     val source: EnvironmentalImpactCategory,
     val amount: BigDecimal
 )
+
+data class EnvironmentalImpactPatch(
+    val source: EnvironmentalImpactCategory?,
+    val amount: BigDecimal?
+)
