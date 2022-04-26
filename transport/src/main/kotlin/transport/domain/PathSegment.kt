@@ -1,6 +1,16 @@
 package transport.domain
 
-data class PathSegment(
-    val path: String,
-    val param: Boolean = false
-)
+
+sealed interface PathSegment {
+    val path: String
+}
+
+data class FixedPathSegment(
+    override val path: String
+) : PathSegment
+
+data class VariablePathSegment(
+    override val path: String
+) : PathSegment
+
+

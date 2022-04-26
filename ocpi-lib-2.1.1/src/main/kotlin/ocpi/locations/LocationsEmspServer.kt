@@ -2,9 +2,7 @@ package ocpi.locations
 
 import common.mapper
 import transport.TransportServer
-import transport.domain.HttpMethod
-import transport.domain.HttpResponse
-import transport.domain.PathSegment
+import transport.domain.*
 
 /**
  * Receives calls from a CPO
@@ -19,10 +17,10 @@ class LocationsEmspServer(
         transportServer.handle(
             HttpMethod.GET,
             listOf(
-                PathSegment("/ocpi/emsp/2.0"),
-                PathSegment("countryCode", true), // TODO
-                PathSegment("partyId", true),
-                PathSegment("locationId", true)
+                FixedPathSegment("/ocpi/emsp/2.0"),
+                VariablePathSegment("countryCode"),
+                VariablePathSegment("partyId"),
+                VariablePathSegment("locationId")
             )
         ) { req ->
             val location = callbacks.getLocation(

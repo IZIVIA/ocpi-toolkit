@@ -9,10 +9,7 @@ import org.http4k.routing.routes
 import org.http4k.server.Netty
 import org.http4k.server.asServer
 import transport.TransportServer
-import transport.domain.HttpMethod
-import transport.domain.HttpRequest
-import transport.domain.HttpResponse
-import transport.domain.PathSegment
+import transport.domain.*
 
 class Http4kTransportServer(
     private val port: Int
@@ -26,8 +23,16 @@ class Http4kTransportServer(
         queryParams: List<String>,
         callback: (request: HttpRequest) -> HttpResponse
     ) {
-        val pathParams = path.filter { it.param }.map { it.path }
-        val route = path.joinToString("/") { if (it.param) "{${it.path}}" else it.path }
+        val pathParams = path
+            .filterIsInstance(VariablePathSegment::class.java)
+            .map { it.path }
+
+        val route = path.joinToString("/") { segment ->
+            when (segment) {
+                is VariablePathSegment -> "{${segment.path}}"
+                is FixedPathSegment -> segment.path
+            }
+        }
 
         serverRoutes.add(
             route bind Method.valueOf(method.name) to { req: Request ->
