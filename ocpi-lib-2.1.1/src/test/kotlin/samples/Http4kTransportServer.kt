@@ -10,6 +10,7 @@ import org.http4k.server.Netty
 import org.http4k.server.asServer
 import transport.TransportServer
 import transport.domain.HttpMethod
+import transport.domain.HttpRequest
 import transport.domain.HttpResponse
 import transport.domain.PathSegment
 
@@ -23,7 +24,7 @@ class Http4kTransportServer(
         method: HttpMethod,
         path: List<PathSegment>,
         queryParams: List<String>,
-        callback: (pathParams: Map<String, String>, queryParams: Map<String, String?>) -> HttpResponse
+        callback: (request: HttpRequest) -> HttpResponse
     ) {
         val pathParams = path.filter { it.param }.map { it.path }
         val route = path.joinToString("/") { if (it.param) "{${it.path}}" else it.path }
@@ -31,8 +32,12 @@ class Http4kTransportServer(
         serverRoutes.add(
             route bind Method.valueOf(method.name) to { req: Request ->
                 callback(
-                    pathParams.associateWith { param -> req.path(param)!! },
-                    queryParams.associateWith { param -> req.query(param) },
+                    HttpRequest(
+                        method = method,
+                        path = route,
+                        pathParams = pathParams.associateWith { param -> req.path(param)!! },
+                        queryParams = queryParams.associateWith { param -> req.query(param) },
+                    )
                 ).let {
                     Response(Status(it.status, null)).body(it.body)
                 }

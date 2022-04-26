@@ -1,17 +1,28 @@
 package transport
 
 import transport.domain.HttpMethod
+import transport.domain.HttpRequest
 import transport.domain.HttpResponse
 import transport.domain.PathSegment
 
 
-// TODO: documentation
 abstract class TransportServer {
+    /**
+     * Creates a route and specifies how to respond
+     * @param method
+     * @param path
+     * @param queryParams expected queryParams
+     * @param callback
+     */
     abstract fun handle(
         method: HttpMethod,
         path: List<PathSegment>,
         queryParams: List<String> = emptyList(),
-        callback: (pathParams: Map<String, String>, queryParams: Map<String, String?>) -> HttpResponse
+        callback: (request: HttpRequest) -> HttpResponse
     )
+
+    /**
+     * Starts the server
+     */
     abstract fun start()
 }

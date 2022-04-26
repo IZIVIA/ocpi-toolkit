@@ -8,27 +8,27 @@ import transport.domain.PathSegment
 
 /**
  * Receives calls from a CPO
- * @property transportClient
+ * @property transportServer
  */
 class LocationsEmspServer(
-    private val transportClient: TransportServer,
+    private val transportServer: TransportServer,
     private val callbacks: LocationsEmspInterface
 ) {
 
     init {
-        transportClient.handle(
+        transportServer.handle(
             HttpMethod.GET,
             listOf(
                 PathSegment("/ocpi/emsp/2.0"),
-                PathSegment("countryCode", true),
+                PathSegment("countryCode", true), // TODO
                 PathSegment("partyId", true),
                 PathSegment("locationId", true)
             )
-        ) { pathParams, _ ->
+        ) { req ->
             val location = callbacks.getLocation(
-                countryCode = pathParams["countryCode"]!!,
-                partyId = pathParams["partyId"]!!,
-                locationId = pathParams["locationId"]!!
+                countryCode = req.pathParams["countryCode"]!!,
+                partyId = req.pathParams["partyId"]!!,
+                locationId = req.pathParams["locationId"]!!
             )
 
             HttpResponse(
