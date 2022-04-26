@@ -36,11 +36,11 @@ class LocationsCpoServerCallbacks : LocationsCpoInterface {
         TODO("Not yet implemented")
     }
 
-    override fun getLocation(locationId: String, evseUid: String): Evse? {
+    override fun getEvse(locationId: String, evseUid: String): Evse? {
         TODO("Not yet implemented")
     }
 
-    override fun getLocation(locationId: String, evseUid: String, connectorId: String): Connector? {
+    override fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector? {
         TODO("Not yet implemented")
     }
 }

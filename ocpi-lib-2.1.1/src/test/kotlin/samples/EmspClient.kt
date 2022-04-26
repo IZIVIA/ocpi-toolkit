@@ -14,6 +14,6 @@ fun main() {
 
     // We can use it
     println(
-        locationsEmspClient.getLocation("location1", "evse1", "connector1")
+        locationsEmspClient.getConnector("location1", "evse1", "connector1")
     )
 }

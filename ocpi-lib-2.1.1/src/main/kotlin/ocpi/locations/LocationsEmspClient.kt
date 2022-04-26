@@ -48,7 +48,7 @@ class LocationsEmspClient(
                 mapper.readValue(body)
             }
 
-    override fun getLocation(locationId: String, evseUid: String): Evse? =
+    override fun getEvse(locationId: String, evseUid: String): Evse? =
         transportClient
             .send(
                 HttpRequest(
@@ -60,7 +60,7 @@ class LocationsEmspClient(
                 mapper.readValue(body)
             }
 
-    override fun getLocation(locationId: String, evseUid: String, connectorId: String): Connector? =
+    override fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector? =
         transportClient
             .send(
                 HttpRequest(
