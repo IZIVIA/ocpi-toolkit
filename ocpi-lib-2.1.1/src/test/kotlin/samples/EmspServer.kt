@@ -3,8 +3,9 @@ package samples
 import ocpi.locations.LocationsEmspInterface
 import ocpi.locations.LocationsEmspServer
 import ocpi.locations.domain.*
+import java.time.Instant
 
-val emspServerUrl = "localhost:8081"
+val emspServerUrl = "http://localhost:8081"
 val emspServerPort = 8081
 
 /**
@@ -26,7 +27,29 @@ fun main() {
 
 class LocationsEmspServerCallbacks: LocationsEmspInterface {
     override fun getLocation(countryCode: String, partyId: String, locationId: String): Location {
-        TODO("Not yet implemented")
+        return Location(
+            id = locationId,
+            type = LocationType.ON_STREET,
+            name = null,
+            address = "1 avenue des satellites",
+            city = "Bruges",
+            postalCode = "33520",
+            country = "france",
+            coordinates = GeoLocation(latitude = "1.0", longitude = "2.56"),
+            relatedLocations = emptyList(),
+            evses = emptyList(),
+            directions = emptyList(),
+            operator = null,
+            suboperator = null,
+            owner = null,
+            facilities = emptyList(),
+            timeZone = null,
+            openingTimes = null,
+            chargingWhenClosed = null,
+            images = emptyList(),
+            energyMix = null,
+            lastUpdated = Instant.now()
+        )
     }
 
     override fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): Evse {
