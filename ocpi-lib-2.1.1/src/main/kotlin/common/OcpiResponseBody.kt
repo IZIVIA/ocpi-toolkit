@@ -23,4 +23,13 @@ data class OcpiResponseBody<T>(
     val status_code: Int,
     val status_message: String?,
     val timestamp: Instant
-)
+) {
+    companion object {
+        fun <T> success(data: T) = OcpiResponseBody(
+            data = data,
+            status_code = OcpiStatusCode.SUCCESS.code,
+            status_message = null,
+            timestamp =Instant.now()
+        )
+    }
+}

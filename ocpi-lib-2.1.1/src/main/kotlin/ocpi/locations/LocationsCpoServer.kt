@@ -1,5 +1,6 @@
 package ocpi.locations
 
+import common.OcpiResponseBody
 import common.mapper
 import transport.TransportServer
 import transport.domain.FixedPathSegment
@@ -34,7 +35,7 @@ class LocationsCpoServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(location)
+                body = mapper.writeValueAsString(mapper.writeValueAsString(OcpiResponseBody.success(location))),
             )
         }
 
@@ -51,7 +52,7 @@ class LocationsCpoServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(location)
+                body = mapper.writeValueAsString(mapper.writeValueAsString(OcpiResponseBody.success(location)))
             )
         }
 
@@ -70,7 +71,7 @@ class LocationsCpoServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(evse)
+                body = mapper.writeValueAsString(OcpiResponseBody.success(evse))
             )
         }
 
@@ -91,7 +92,7 @@ class LocationsCpoServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(connector)
+                body = mapper.writeValueAsString(OcpiResponseBody.success(connector))
             )
         }
     }

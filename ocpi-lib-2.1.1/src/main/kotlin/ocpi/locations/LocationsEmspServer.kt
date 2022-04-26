@@ -1,5 +1,6 @@
 package ocpi.locations
 
+import common.OcpiResponseBody
 import common.mapper
 import ocpi.locations.domain.*
 import transport.TransportServer
@@ -55,7 +56,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(evse)
+                body = mapper.writeValueAsString(OcpiResponseBody.success(evse))
             )
         }
 
@@ -80,7 +81,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(connector)
+                body = mapper.writeValueAsString(OcpiResponseBody.success(connector))
             )
         }
 
@@ -126,7 +127,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(evse)
+                body = mapper.writeValueAsString(OcpiResponseBody.success(evse))
             )
         }
 
@@ -152,7 +153,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(connector)
+                body = mapper.writeValueAsString(OcpiResponseBody.success(connector))
             )
         }
 
@@ -198,7 +199,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(evse)
+                body = mapper.writeValueAsString(OcpiResponseBody.success(evse))
             )
         }
 
@@ -224,7 +225,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(connector)
+                body = mapper.writeValueAsString(OcpiResponseBody.success(connector))
             )
         }
     }
