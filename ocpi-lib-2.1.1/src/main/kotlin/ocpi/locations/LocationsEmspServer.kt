@@ -6,10 +6,10 @@ import transport.domain.HttpMethod
 import transport.domain.HttpResponse
 
 /**
- * Sends calls to an eMSP server
+ * Receives calls from a CPO
  * @property transportClient
  */
-class LocationsCpoServer(
+class LocationsEmspServer(
     private val transportClient: TransportServer,
     private val callbacks: LocationsEmspInterface
 ) {
