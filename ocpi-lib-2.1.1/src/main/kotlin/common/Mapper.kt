@@ -1,6 +1,7 @@
 package common
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -16,3 +17,4 @@ val mapper: ObjectMapper = jacksonObjectMapper()
             .configure(KotlinFeature.StrictNullChecks, false)
             .build()
     )
+    .registerModule(JavaTimeModule())
