@@ -18,7 +18,7 @@ class LocationsEmspServer(
         transportServer.handle(
             HttpMethod.GET,
             listOf(
-                FixedPathSegment("/ocpi/emsp/2.0/locations"),
+                FixedPathSegment("/ocpi/emsp/2.1.1/locations"),
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId")
@@ -39,7 +39,7 @@ class LocationsEmspServer(
         transportServer.handle(
             HttpMethod.GET,
             listOf(
-                FixedPathSegment("/ocpi/emsp/2.0/locations"),
+                FixedPathSegment("/ocpi/emsp/2.1.1/locations"),
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
@@ -62,7 +62,7 @@ class LocationsEmspServer(
         transportServer.handle(
             HttpMethod.GET,
             listOf(
-                FixedPathSegment("/ocpi/emsp/2.0/locations"),
+                FixedPathSegment("/ocpi/emsp/2.1.1/locations"),
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
@@ -87,7 +87,7 @@ class LocationsEmspServer(
         transportServer.handle(
             HttpMethod.PUT,
             listOf(
-                FixedPathSegment("/ocpi/emsp/2.0/locations"),
+                FixedPathSegment("/ocpi/emsp/2.1.1/locations"),
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId")
@@ -109,7 +109,7 @@ class LocationsEmspServer(
         transportServer.handle(
             HttpMethod.PUT,
             listOf(
-                FixedPathSegment("/ocpi/emsp/2.0/locations"),
+                FixedPathSegment("/ocpi/emsp/2.1.1/locations"),
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
@@ -133,7 +133,7 @@ class LocationsEmspServer(
         transportServer.handle(
             HttpMethod.PUT,
             listOf(
-                FixedPathSegment("/ocpi/emsp/2.0/locations"),
+                FixedPathSegment("/ocpi/emsp/2.1.1/locations"),
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
@@ -159,7 +159,7 @@ class LocationsEmspServer(
         transportServer.handle(
             HttpMethod.PATCH,
             listOf(
-                FixedPathSegment("/ocpi/emsp/2.0/locations"),
+                FixedPathSegment("/ocpi/emsp/2.1.1/locations"),
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId")
@@ -181,7 +181,7 @@ class LocationsEmspServer(
         transportServer.handle(
             HttpMethod.PATCH,
             listOf(
-                FixedPathSegment("/ocpi/emsp/2.0/locations"),
+                FixedPathSegment("/ocpi/emsp/2.1.1/locations"),
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
@@ -205,7 +205,7 @@ class LocationsEmspServer(
         transportServer.handle(
             HttpMethod.PATCH,
             listOf(
-                FixedPathSegment("/ocpi/emsp/2.0/locations"),
+                FixedPathSegment("/ocpi/emsp/2.1.1/locations"),
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),

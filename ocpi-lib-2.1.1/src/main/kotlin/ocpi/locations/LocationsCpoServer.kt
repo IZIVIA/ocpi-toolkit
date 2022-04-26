@@ -21,7 +21,7 @@ class LocationsCpoServer(
         transportServer.handle(
             HttpMethod.GET,
             listOf(
-                FixedPathSegment("/ocpi/cpo/2.0/locations")
+                FixedPathSegment("/ocpi/cpo/2.1.1/locations")
             ),
             listOf("dateFrom", "dateTo", "offset", "limit")
         ) { req ->
@@ -41,7 +41,7 @@ class LocationsCpoServer(
         transportServer.handle(
             HttpMethod.GET,
             listOf(
-                FixedPathSegment("/ocpi/cpo/2.0/locations"),
+                FixedPathSegment("/ocpi/cpo/2.1.1/locations"),
                 VariablePathSegment("locationId")
             )
         ) { req ->
@@ -58,7 +58,7 @@ class LocationsCpoServer(
         transportServer.handle(
             HttpMethod.GET,
             listOf(
-                FixedPathSegment("/ocpi/cpo/2.0/locations"),
+                FixedPathSegment("/ocpi/cpo/2.1.1/locations"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
             )
@@ -77,7 +77,7 @@ class LocationsCpoServer(
         transportServer.handle(
             HttpMethod.GET,
             listOf(
-                FixedPathSegment("/ocpi/cpo/2.0/locations"),
+                FixedPathSegment("/ocpi/cpo/2.1.1/locations"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")

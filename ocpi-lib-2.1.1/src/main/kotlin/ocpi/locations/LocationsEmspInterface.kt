@@ -10,9 +10,9 @@ import ocpi.locations.domain.LocationPatch
 /**
  * Locations is a client owned object, so the end-points need to contain the required extra fields: {party_id} and
  * {country_code}. Example endpoint structures:
- * - /ocpi/emsp/2.0/locations/{country_code}/{party_id}/{location_id}
- * - /ocpi/emsp/2.0/locations/{country_code}/{party_id}/{location_id}/{evse_uid}
- * - /ocpi/emsp/2.0/locations/{country_code}/{party_id}/{location_id}/{evse_uid}/{connector_id}
+ * - /ocpi/emsp/2.1.1/locations/{country_code}/{party_id}/{location_id}
+ * - /ocpi/emsp/2.1.1/locations/{country_code}/{party_id}/{location_id}/{evse_uid}
+ * - /ocpi/emsp/2.1.1/locations/{country_code}/{party_id}/{location_id}/{evse_uid}/{connector_id}
  *
  * Method: Description
  * - GET: Retrieve a Location as it is stored in the eMSP system.

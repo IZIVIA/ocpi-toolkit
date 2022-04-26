@@ -20,7 +20,7 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/emsp/2.0/locations/$countryCode/$partyId/$locationId"
+                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId"
                 )
             )
             .run {
@@ -32,7 +32,7 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/emsp/2.0/locations/$countryCode/$partyId/$locationId/$evseUid"
+                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid"
                 )
             )
             .run {
@@ -50,7 +50,7 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/emsp/2.0/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId"
+                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId"
                 )
             )
             .run {
@@ -62,7 +62,7 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/ocpi/emsp/2.0/locations/$countryCode/$partyId/$locationId",
+                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId",
                     body = mapper.writeValueAsString(location)
                 )
             )
@@ -75,7 +75,7 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/ocpi/emsp/2.0/locations/$countryCode/$partyId/$locationId/$evseUid",
+                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid",
                     body = mapper.writeValueAsString(evse)
                 )
             )
@@ -95,7 +95,7 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/ocpi/emsp/2.0/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
                     body = mapper.writeValueAsString(connector)
                 )
             )
@@ -112,7 +112,7 @@ class LocationsCpoClient(
         .send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/ocpi/emsp/2.0/locations/$countryCode/$partyId/$locationId",
+                path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId",
                 body = mapper.writeValueAsString(location)
             )
         )
@@ -130,7 +130,7 @@ class LocationsCpoClient(
         .send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/ocpi/emsp/2.0/locations/$countryCode/$partyId/$locationId",
+                path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId",
                 body = mapper.writeValueAsString(evse)
             )
         )
@@ -149,7 +149,7 @@ class LocationsCpoClient(
         .send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/ocpi/emsp/2.0/locations/$countryCode/$partyId/$locationId",
+                path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId",
                 body = mapper.writeValueAsString(connector)
             )
         )
