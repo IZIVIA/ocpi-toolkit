@@ -13,5 +13,7 @@ fun main() {
     val locationsCpoClient = LocationsCpoClient(transportClient)
 
     // We can use it
-    locationsCpoClient.getLocation("fr", "abc", "location1")
+    println(
+        locationsCpoClient.getLocation("fr", "abc", "location1")
+    )
 }
