@@ -1,16 +1,13 @@
 package ocpi.locations.services
 
-import common.OcpiResponseBody
-import common.SearchResult
+import common.*
 import ocpi.locations.LocationsCpoInterface
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
 import ocpi.locations.repositories.LocationsRepository
 import ocpi.locations.validators.validate
-import org.valiktor.*
-import org.valiktor.constraints.Greater
-import org.valiktor.constraints.Less
+import org.valiktor.ConstraintViolationException
 import java.time.Instant
 
 class LocationsCpoService(
@@ -24,37 +21,10 @@ class LocationsCpoService(
         limit: Int?
     ): OcpiResponseBody<SearchResult<Location>> {
         return try {
-            val violations = mutableSetOf<ConstraintViolation>()
-
-            if (dateFrom != null && dateTo != null && dateFrom.isAfter(dateTo)) {
-                violations.add(
-                    DefaultConstraintViolation(
-                        property = "dateFrom",
-                        constraint = Greater(dateTo)
-                    )
-                )
-            }
-
-            if (offset < 0) {
-                violations.add(
-                    DefaultConstraintViolation(
-                        property = "offset",
-                        constraint = Less(0)
-                    )
-                )
-            }
-
-            if (limit != null && limit < 0) {
-                violations.add(
-                    DefaultConstraintViolation(
-                        property = "limit",
-                        constraint = Less(0)
-                    )
-                )
-            }
-
-            if (violations.isNotEmpty()) {
-                throw ConstraintViolationException(violations)
+            validate {
+                if (dateFrom != null && dateTo != null) validateDates("dateFrom", dateFrom, "dateTo", dateTo)
+                if (limit != null) validateInt("limit", limit, 0, null)
+                validateInt("offset", offset, 0, null)
             }
 
             val locations = repository
@@ -81,19 +51,8 @@ class LocationsCpoService(
 
     override fun getLocation(locationId: String): OcpiResponseBody<Location?> {
         return try {
-            val violations = mutableSetOf<ConstraintViolation>()
-
-            if (locationId.length > 39) {
-                violations.add(
-                    DefaultConstraintViolation(
-                        property = "locationId size",
-                        constraint = Greater(39)
-                    )
-                )
-            }
-
-            if (violations.isNotEmpty()) {
-                throw ConstraintViolationException(violations)
+            validate {
+                validateLength("locationId", locationId, 39)
             }
 
             val location = repository
@@ -118,28 +77,9 @@ class LocationsCpoService(
 
     override fun getEvse(locationId: String, evseUid: String): OcpiResponseBody<Evse?> {
         return try {
-            val violations = mutableSetOf<ConstraintViolation>()
-
-            if (locationId.length > 39) {
-                violations.add(
-                    DefaultConstraintViolation(
-                        property = "locationId size",
-                        constraint = Greater(39)
-                    )
-                )
-            }
-
-            if (evseUid.length > 39) {
-                violations.add(
-                    DefaultConstraintViolation(
-                        property = "evseUid size",
-                        constraint = Greater(39)
-                    )
-                )
-            }
-
-            if (violations.isNotEmpty()) {
-                throw ConstraintViolationException(violations)
+            validate {
+                validateLength("locationId", locationId, 39)
+                validateLength("evseUid", evseUid, 39)
             }
 
             val evse = repository
@@ -164,37 +104,10 @@ class LocationsCpoService(
 
     override fun getConnector(locationId: String, evseUid: String, connectorId: String): OcpiResponseBody<Connector?> {
         return try {
-            val violations = mutableSetOf<ConstraintViolation>()
-
-            if (locationId.length > 39) {
-                violations.add(
-                    DefaultConstraintViolation(
-                        property = "locationId size",
-                        constraint = Greater(39)
-                    )
-                )
-            }
-
-            if (evseUid.length > 39) {
-                violations.add(
-                    DefaultConstraintViolation(
-                        property = "evseUid size",
-                        constraint = Greater(39)
-                    )
-                )
-            }
-
-            if (connectorId.length > 39) {
-                violations.add(
-                    DefaultConstraintViolation(
-                        property = "connectorId size",
-                        constraint = Greater(39)
-                    )
-                )
-            }
-
-            if (violations.isNotEmpty()) {
-                throw ConstraintViolationException(violations)
+            validate {
+                validateLength("locationId", locationId, 39)
+                validateLength("evseUid", evseUid, 39)
+                validateLength("connectorId", connectorId, 39)
             }
 
             val connector = repository
