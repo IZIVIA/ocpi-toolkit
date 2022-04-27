@@ -1,6 +1,6 @@
 package common
 
-data class SearchResult<T>(
+data class  SearchResult<T>(
     val list: List<T>,
     val totalCount: Int,
     val limit: Int,

@@ -55,7 +55,7 @@ interface LocationsCpoInterface {
     /**
      * @param locationId String max-length = 39
      * @param evseUid max-length = 39
-     * @param connectorId String? max-length = 39
+     * @param connectorId max-length = 39
      */
     fun getConnector(locationId: String, evseUid: String, connectorId: String): OcpiResponseBody<Connector?>
 }
