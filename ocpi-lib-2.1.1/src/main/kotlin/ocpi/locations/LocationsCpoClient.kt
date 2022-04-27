@@ -1,8 +1,8 @@
 package ocpi.locations
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import common.OcpiResponseBody
 import common.mapper
+import common.parseBody
 import ocpi.locations.domain.*
 import transport.TransportClient
 import transport.domain.HttpMethod
@@ -24,11 +24,14 @@ class LocationsCpoClient(
                     path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId"
                 )
             )
-            .run {
-                mapper.readValue(body)
-            }
+            .parseBody()
 
-    override fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): OcpiResponseBody<Evse> =
+    override fun getEvse(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String
+    ): OcpiResponseBody<Evse> =
         transportClient
             .send(
                 HttpRequest(
@@ -36,9 +39,7 @@ class LocationsCpoClient(
                     path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid"
                 )
             )
-            .run {
-                mapper.readValue(body)
-            }
+            .parseBody()
 
     override fun getConnector(
         countryCode: String,
@@ -54,11 +55,14 @@ class LocationsCpoClient(
                     path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId"
                 )
             )
-            .run {
-                mapper.readValue(body)
-            }
+            .parseBody()
 
-    override fun putLocation(countryCode: String, partyId: String, locationId: String, location: Location): OcpiResponseBody<Location> =
+    override fun putLocation(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        location: Location
+    ): OcpiResponseBody<Location> =
         transportClient
             .send(
                 HttpRequest(
@@ -67,11 +71,15 @@ class LocationsCpoClient(
                     body = mapper.writeValueAsString(location)
                 )
             )
-            .run {
-                mapper.readValue(body)
-            }
+            .parseBody()
 
-    override fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: Evse): OcpiResponseBody<Evse> =
+    override fun putEvse(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String,
+        evse: Evse
+    ): OcpiResponseBody<Evse> =
         transportClient
             .send(
                 HttpRequest(
@@ -80,9 +88,7 @@ class LocationsCpoClient(
                     body = mapper.writeValueAsString(evse)
                 )
             )
-            .run {
-                mapper.readValue(body)
-            }
+            .parseBody()
 
     override fun putConnector(
         countryCode: String,
@@ -100,9 +106,7 @@ class LocationsCpoClient(
                     body = mapper.writeValueAsString(connector)
                 )
             )
-            .run {
-                mapper.readValue(body)
-            }
+            .parseBody()
 
     override fun patchLocation(
         countryCode: String,
@@ -117,9 +121,7 @@ class LocationsCpoClient(
                 body = mapper.writeValueAsString(location)
             )
         )
-        .run {
-            mapper.readValue(body)
-        }
+        .parseBody()
 
     override fun patchEvse(
         countryCode: String,
@@ -135,9 +137,7 @@ class LocationsCpoClient(
                 body = mapper.writeValueAsString(evse)
             )
         )
-        .run {
-            mapper.readValue(body)
-        }
+        .parseBody()
 
     override fun patchConnector(
         countryCode: String,
@@ -154,7 +154,5 @@ class LocationsCpoClient(
                 body = mapper.writeValueAsString(connector)
             )
         )
-        .run {
-            mapper.readValue(body)
-        }
+        .parseBody()
 }

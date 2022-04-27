@@ -46,7 +46,7 @@ class Http4kTransportServer(
                     )
                 ).let {
                     Response(Status(it.status, null))
-                        .body(it.body)
+                        .body(it.body ?: "")
                         .headers(it.headers.toList())
                 }
             }

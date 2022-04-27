@@ -1,10 +1,9 @@
 package ocpi.locations
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import common.OcpiResponseBody
 import common.SearchResult
-import common.mapper
-import common.toSearchResult
+import common.parseBody
+import common.parsePaginatedBody
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
@@ -40,20 +39,7 @@ class LocationsEmspClient(
                     ).toMap()
                 )
             )
-            .run {
-                mapper.readValue<OcpiResponseBody<List<Location>>>(body).let { body ->
-                    OcpiResponseBody(
-                        data = body.data?.toSearchResult(
-                            totalCount = headers["X-Total-Count"]!!.toInt(),
-                            limit = headers["X-Limit"]!!.toInt(),
-                            offset = offset
-                        ),
-                        status_code = body.status_code,
-                        status_message = body.status_message,
-                        timestamp = body.timestamp
-                    )
-                }
-            }
+            .parsePaginatedBody(offset)
 
     override fun getLocation(locationId: String): OcpiResponseBody<Location?> =
         transportClient
@@ -63,9 +49,7 @@ class LocationsEmspClient(
                     path = "/ocpi/cpo/2.1.1/locations/$locationId"
                 )
             )
-            .run {
-                mapper.readValue(body)
-            }
+            .parseBody()
 
     override fun getEvse(locationId: String, evseUid: String): OcpiResponseBody<Evse?> =
         transportClient
@@ -75,9 +59,7 @@ class LocationsEmspClient(
                     path = "/ocpi/cpo/2.1.1/locations/$locationId/$evseUid"
                 )
             )
-            .run {
-                mapper.readValue(body)
-            }
+            .parseBody()
 
     override fun getConnector(locationId: String, evseUid: String, connectorId: String): OcpiResponseBody<Connector?> =
         transportClient
@@ -87,7 +69,5 @@ class LocationsEmspClient(
                     path = "/ocpi/cpo/2.1.1/locations/$locationId/$evseUid/$connectorId"
                 )
             )
-            .run {
-                mapper.readValue(body)
-            }
+            .parseBody()
 }
