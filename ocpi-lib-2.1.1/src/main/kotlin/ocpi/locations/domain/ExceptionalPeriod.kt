@@ -5,16 +5,16 @@ import java.time.Instant
 /**
  * Specifies one exceptional period for opening or access hours.
  *
- * @property periodBegin Begin of the exception.
- * @property periodEnd End of the exception.
+ * @property period_begin Begin of the exception.
+ * @property period_end End of the exception.
  */
 data class ExceptionalPeriod(
-    val periodBegin: Instant,
-    val periodEnd: Instant
+    val period_begin: Instant,
+    val period_end: Instant
 )
 
 data class ExceptionalPeriodPatch(
-    val periodBegin: Instant?,
-    val periodEnd: Instant?
+    val period_begin: Instant?,
+    val period_end: Instant?
 )
 

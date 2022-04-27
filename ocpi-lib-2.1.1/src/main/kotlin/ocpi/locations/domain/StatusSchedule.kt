@@ -10,18 +10,18 @@ import java.time.Instant
  * Note that the scheduled status is purely informational. When the status actually changes, the CPO must push an update
  * to the EVSEs `status` field itself.
  *
- * @property periodBegin Begin of the scheduled period.
- * @property periodEnd End of the scheduled period, if known.
+ * @property period_begin Begin of the scheduled period.
+ * @property period_end End of the scheduled period, if known.
  * @property status Status value during the scheduled period.
  */
 data class StatusSchedule(
-    val periodBegin: Instant,
-    val periodEnd: Instant?,
+    val period_begin: Instant,
+    val period_end: Instant?,
     val status: Status
 )
 
 data class StatusSchedulePatch(
-    val periodBegin: Instant?,
-    val periodEnd: Instant?,
+    val period_begin: Instant?,
+    val period_end: Instant?,
     val status: Status?
 )

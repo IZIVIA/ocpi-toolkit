@@ -6,6 +6,7 @@ package ocpi.locations.domain
  * @property logo Image link to the operator's logo.
  * @constructor
  */
+
 data class BusinessDetails(
     val name: String,
     val website: String?,
@@ -17,4 +18,3 @@ data class BusinessDetailsPatch(
     val website: String?,
     val logo: ImagePatch?
 )
-

@@ -8,34 +8,34 @@ package ocpi.locations.domain
  * as they do not belong to the same EVSE object.
  * @property standard The standard of the installed connector.
  * @property format The format (socket/cable) of the installed connector.
- * @property powerType
+ * @property power_type
  * @property voltage Voltage of the connector (line to neutral for AC_3_PHASE), in volt [V].
  * @property amperage maximum amperage of the connector, in ampere [A].
- * @property tariffId (max-length=36) Identifier of the current charging tariff structure. For a "Free of Charge" tariff
+ * @property tariff_id (max-length=36) Identifier of the current charging tariff structure. For a "Free of Charge" tariff
  * this field should be set, and point to a defined "Free of Charge" tariff.
- * @property termsAndConditions URL (string(255) type following the w3.org spec.) to the operator's terms and conditions
- * @property lastUpdated Timestamp when this Connectors was last updated (or created).
+ * @property terms_and_conditions URL (string(255) type following the w3.org spec.) to the operator's terms and conditions
+ * @property last_updated Timestamp when this Connectors was last updated (or created).
  */
 data class Connector(
     val id: String,
     val standard: ConnectorType,
     val format: ConnectorFormat,
-    val powerType: PowerType,
+    val power_type: PowerType,
     val voltage: Int,
     val amperage: Int,
-    val tariffId: String?,
-    val termsAndConditions: String,
-    val lastUpdated: String
+    val tariff_id: String?,
+    val terms_and_conditions: String,
+    val last_updated: String
 )
 
 data class ConnectorPatch(
     val id: String?,
     val standard: ConnectorType?,
     val format: ConnectorFormat?,
-    val powerType: PowerType?,
+    val power_type: PowerType?,
     val voltage: Int?,
     val amperage: Int?,
-    val tariffId: String?,
-    val termsAndConditions: String?,
-    val lastUpdated: String?
+    val tariff_id: String?,
+    val terms_and_conditions: String?,
+    val last_updated: String?
 )

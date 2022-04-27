@@ -14,10 +14,10 @@ import java.time.Instant
  * @property name (max-length=255) Display name of the location.
  * @property address (max-length=45) Street/block name and house number if available.
  * @property city (max-length=45) City or town.
- * @property postalCode (max-length=10) Postal code of the location.
+ * @property postal_code (max-length=10) Postal code of the location.
  * @property country (max-length=3) ISO 3166-1 alpha-3 code for the country of this location.
  * @property coordinates Coordinates of the location.
- * @property relatedLocations Geographical location of related points relevant to the user.
+ * @property related_locations Geographical location of related points relevant to the user.
  * @property evses List of EVSEs that belong to this Location.
  * @property directions Human-readable directions on how to reach the location.
  * @property operator Information of the operator. When not specified, the information retrieved from the api_info
@@ -25,15 +25,15 @@ import java.time.Instant
  * @property suboperator Information of the suboperator if available.
  * @property owner Information of the owner if available.
  * @property facilities Optional list of facilities this charge location directly belongs to.
- * @property timeZone (max-length=255) One of IANA tzdata's TZ-values representing the time zone of the location.
+ * @property time_zone (max-length=255) One of IANA tzdata's TZ-values representing the time zone of the location.
  * Examples: "Europe/Oslo", "Europe/Zurich". (http://www.iana.org/time-zones)
- * @property openingTimes The times when the EVSEs at the location can be accessed for charging.
- * @property chargingWhenClosed Indicates if the EVSEs are still charging outside the opening hours of the location.
+ * @property opening_times The times when the EVSEs at the location can be accessed for charging.
+ * @property charging_when_closed Indicates if the EVSEs are still charging outside the opening hours of the location.
  * E.g. when the parking garage closes its barriers overnight, is it allowed to charge till the next morning?
  * Default: true
  * @property images Links to images related to the location such as photos or logos.
- * @property energyMix Details on the energy supplied at this location.
- * @property lastUpdated Timestamp when this Location or one of its EVSEs or Connectors were last updated (or created).
+ * @property energy_mix Details on the energy supplied at this location.
+ * @property last_updated Timestamp when this Location or one of its EVSEs or Connectors were last updated (or created).
  */
 data class Location(
     val id: String,
@@ -41,22 +41,22 @@ data class Location(
     val name: String?,
     val address: String,
     val city: String,
-    val postalCode: String,
+    val postal_code: String,
     val country: String,
     val coordinates: GeoLocation,
-    val relatedLocations: List<AdditionalGeoLocation>,
+    val related_locations: List<AdditionalGeoLocation>,
     val evses: List<Evse>,
     val directions: List<DisplayText>,
     val operator: BusinessDetails?,
     val suboperator: BusinessDetails?,
     val owner: BusinessDetails?,
     val facilities: List<Facility>,
-    val timeZone: String?,
-    val openingTimes: Hours?,
-    val chargingWhenClosed: Boolean?,
+    val time_zone: String?,
+    val opening_times: Hours?,
+    val charging_when_closed: Boolean?,
     val images: List<Image>,
-    val energyMix: EnergyMix?,
-    val lastUpdated: Instant
+    val energy_mix: EnergyMix?,
+    val last_updated: Instant
 )
 
 data class LocationPatch(
@@ -65,20 +65,20 @@ data class LocationPatch(
     val name: String?,
     val address: String?,
     val city: String?,
-    val postalCode: String?,
+    val postal_code: String?,
     val country: String?,
     val coordinates: GeoLocationPatch?,
-    val relatedLocations: List<AdditionalGeoLocationPatch>?,
+    val related_locations: List<AdditionalGeoLocationPatch>?,
     val evses: List<EvsePatch>?,
     val directions: List<DisplayTextPatch>?,
     val operator: BusinessDetailsPatch?,
     val suboperator: BusinessDetailsPatch?,
     val owner: BusinessDetailsPatch?,
     val facilities: List<Facility>?,
-    val timeZone: String?,
-    val openingTimes: HoursPatch?,
-    val chargingWhenClosed: Boolean?,
+    val time_zone: String?,
+    val opening_times: HoursPatch?,
+    val charging_when_closed: Boolean?,
     val images: List<ImagePatch>?,
-    val energyMix: EnergyMixPatch?,
-    val lastUpdated: Instant?
+    val energy_mix: EnergyMixPatch?,
+    val last_updated: Instant?
 )

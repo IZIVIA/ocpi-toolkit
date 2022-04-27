@@ -35,22 +35,22 @@ class LocationsEmspServerCallbacks: LocationsEmspInterface {
                 name = null,
                 address = "1 avenue des satellites",
                 city = "Bruges",
-                postalCode = "33520",
+                postal_code = "33520",
                 country = "france",
                 coordinates = GeoLocation(latitude = "1.0", longitude = "2.56"),
-                relatedLocations = emptyList(),
+                related_locations = emptyList(),
                 evses = emptyList(),
                 directions = emptyList(),
                 operator = null,
                 suboperator = null,
                 owner = null,
                 facilities = emptyList(),
-                timeZone = null,
-                openingTimes = null,
-                chargingWhenClosed = null,
+                time_zone = null,
+                opening_times = null,
+                charging_when_closed = null,
                 images = emptyList(),
-                energyMix = null,
-                lastUpdated = Instant.now()
+                energy_mix = null,
+                last_updated = Instant.now()
             )
         )
     }

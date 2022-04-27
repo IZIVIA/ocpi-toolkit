@@ -20,47 +20,47 @@ import java.time.Instant
  * (http://emi3group.com/documents-links/) "Part 2: business objects." Optional because: if an EVSE ID is to be re-used
  * the EVSE ID can be removed from an EVSE that is removed (status: REMOVED)
  * @property status Indicates the current status of the EVSE.
- * @property statusSchedule Indicates a planned status in the future of the EVSE.
+ * @property status_schedule Indicates a planned status in the future of the EVSE.
  * @property capabilities List of functionalities that the EVSE is capable of.
  * @property connectors (at least one in the list) List of available connectors on the EVSE.
- * @property floorLevel (max-length=4) Level on which the charging station is located (in garage buildings) in the
+ * @property floor_level (max-length=4) Level on which the charging station is located (in garage buildings) in the
  * locally displayed numbering scheme.
  * @property coordinates Coordinates of the EVSE.
- * @property physicalReference A number/string printed on the outside of the EVSE for visual identification.
+ * @property physical_reference A number/string printed on the outside of the EVSE for visual identification.
  * @property directions Multi-language human-readable directions when more detailed information on how to reach the EVSE
  * from the Location is required.
- * @property parkingRestrictions The restrictions that apply to the parking spot.
+ * @property parking_restrictions The restrictions that apply to the parking spot.
  * @property images Links to images related to the EVSE such as photos or logos.
- * @property lastUpdated Instant Timestamp when this EVSE or one of its Connectors was last updated (or created).
+ * @property last_updated Instant Timestamp when this EVSE or one of its Connectors was last updated (or created).
  */
 data class Evse(
     val uid: String,
     val evse_id: String?,
     val status: Status,
-    val statusSchedule: List<StatusSchedule>,
+    val status_schedule: List<StatusSchedule>,
     val capabilities: List<Capability>,
     val connectors: List<Connector>,
-    val floorLevel: String?,
+    val floor_level: String?,
     val coordinates: GeoLocation?,
-    val physicalReference: String?,
+    val physical_reference: String?,
     val directions: List<DisplayText>,
-    val parkingRestrictions: List<ParkingRestriction>,
+    val parking_restrictions: List<ParkingRestriction>,
     val images: List<Image>,
-    val lastUpdated: Instant
+    val last_updated: Instant
 )
 
 data class EvsePatch(
     val uid: String?,
     val evse_id: String?,
     val status: Status?,
-    val statusSchedule: List<StatusSchedulePatch>?,
+    val status_schedule: List<StatusSchedulePatch>?,
     val capabilities: List<Capability>?,
     val connectors: List<ConnectorPatch>?,
-    val floorLevel: String?,
+    val floor_level: String?,
     val coordinates: GeoLocationPatch?,
-    val physicalReference: String?,
+    val physical_reference: String?,
     val directions: List<DisplayTextPatch>?,
-    val parkingRestrictions: List<ParkingRestriction>?,
+    val parking_restrictions: List<ParkingRestriction>?,
     val images: List<ImagePatch>?,
-    val lastUpdated: Instant?
+    val last_updated: Instant?
 )
