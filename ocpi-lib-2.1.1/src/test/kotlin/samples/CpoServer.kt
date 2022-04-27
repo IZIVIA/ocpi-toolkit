@@ -1,6 +1,6 @@
 package samples
 
-import common.SearchResult
+import common.OcpiResponseBody
 import ocpi.locations.LocationsCpoInterface
 import ocpi.locations.LocationsCpoServer
 import ocpi.locations.domain.Connector
@@ -29,19 +29,24 @@ fun main() {
 }
 
 class LocationsCpoServerCallbacks : LocationsCpoInterface {
-    override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int?, limit: Int?): SearchResult<Location> {
+    override fun getLocations(
+        dateFrom: Instant?,
+        dateTo: Instant?,
+        offset: Int?,
+        limit: Int?
+    ): OcpiResponseBody<List<Location>> {
         TODO("Not yet implemented")
     }
 
-    override fun getLocation(locationId: String): Location? {
+    override fun getLocation(locationId: String): OcpiResponseBody<Location?> {
         TODO("Not yet implemented")
     }
 
-    override fun getEvse(locationId: String, evseUid: String): Evse? {
+    override fun getEvse(locationId: String, evseUid: String): OcpiResponseBody<Evse?> {
         TODO("Not yet implemented")
     }
 
-    override fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector? {
+    override fun getConnector(locationId: String, evseUid: String, connectorId: String): OcpiResponseBody<Connector?> {
         TODO("Not yet implemented")
     }
 }

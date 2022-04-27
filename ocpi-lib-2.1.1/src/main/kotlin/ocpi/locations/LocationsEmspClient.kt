@@ -1,7 +1,7 @@
 package ocpi.locations
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import common.SearchResult
+import common.OcpiResponseBody
 import common.mapper
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
@@ -19,7 +19,12 @@ class LocationsEmspClient(
     private val transportClient: TransportClient
 ) : LocationsCpoInterface {
 
-    override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int?, limit: Int?): SearchResult<Location> =
+    override fun getLocations(
+        dateFrom: Instant?,
+        dateTo: Instant?,
+        offset: Int?,
+        limit: Int?
+    ): OcpiResponseBody<List<Location>> =
         transportClient
             .send(
                 HttpRequest(
@@ -37,7 +42,7 @@ class LocationsEmspClient(
                 mapper.readValue(body)
             }
 
-    override fun getLocation(locationId: String): Location? =
+    override fun getLocation(locationId: String): OcpiResponseBody<Location?> =
         transportClient
             .send(
                 HttpRequest(
@@ -49,7 +54,7 @@ class LocationsEmspClient(
                 mapper.readValue(body)
             }
 
-    override fun getEvse(locationId: String, evseUid: String): Evse? =
+    override fun getEvse(locationId: String, evseUid: String): OcpiResponseBody<Evse?> =
         transportClient
             .send(
                 HttpRequest(
@@ -61,7 +66,7 @@ class LocationsEmspClient(
                 mapper.readValue(body)
             }
 
-    override fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector? =
+    override fun getConnector(locationId: String, evseUid: String, connectorId: String): OcpiResponseBody<Connector?> =
         transportClient
             .send(
                 HttpRequest(
