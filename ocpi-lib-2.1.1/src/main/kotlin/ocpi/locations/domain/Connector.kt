@@ -16,6 +16,7 @@ package ocpi.locations.domain
  * @property termsAndConditions URL (string(255) type following the w3.org spec.) to the operator's terms and conditions
  * @property lastUpdated Timestamp when this Connectors was last updated (or created).
  */
+
 data class Connector(
     val id: String,
     val standard: ConnectorType,

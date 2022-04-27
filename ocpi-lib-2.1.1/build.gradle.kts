@@ -1,9 +1,12 @@
 plugins {
     kotlin("jvm")
+    id("io.github.4sh.apt.partial")
 }
 
 dependencies {
+    implementation(project(":common"))
     implementation(project(":transport"))
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${Versions.jackson}")
     implementation("org.valiktor:valiktor-core:${Versions.valiktor}")
