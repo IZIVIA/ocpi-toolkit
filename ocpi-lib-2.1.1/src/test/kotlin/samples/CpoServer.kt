@@ -1,6 +1,7 @@
 package samples
 
 import common.OcpiResponseBody
+import common.SearchResult
 import ocpi.locations.LocationsCpoInterface
 import ocpi.locations.LocationsCpoServer
 import ocpi.locations.domain.Connector
@@ -32,9 +33,9 @@ class LocationsCpoServerCallbacks : LocationsCpoInterface {
     override fun getLocations(
         dateFrom: Instant?,
         dateTo: Instant?,
-        offset: Int?,
+        offset: Int,
         limit: Int?
-    ): OcpiResponseBody<List<Location>> {
+    ): OcpiResponseBody<SearchResult<Location>> {
         TODO("Not yet implemented")
     }
 
