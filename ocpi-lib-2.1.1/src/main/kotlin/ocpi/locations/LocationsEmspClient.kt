@@ -1,6 +1,7 @@
 package ocpi.locations
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import common.SearchResult
 import common.mapper
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
@@ -18,12 +19,12 @@ class LocationsEmspClient(
     private val transportClient: TransportClient
 ) : LocationsCpoInterface {
 
-    override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int?, limit: Int?): List<Location> =
+    override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int?, limit: Int?): SearchResult<Location> =
         transportClient
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/cpo/2.1.1/locations/",
+                    path = "/ocpi/cpo/2.1.1/locations",
                     queryParams = listOfNotNull(
                         dateFrom?.let { "date_from" to dateFrom.toString() },
                         dateTo?.let { "date_to" to dateTo.toString() },

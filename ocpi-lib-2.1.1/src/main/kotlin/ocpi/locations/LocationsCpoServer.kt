@@ -15,7 +15,7 @@ import java.time.Instant
  */
 class LocationsCpoServer(
     private val transportServer: TransportServer,
-    private val controller: LocationsCpoInterface
+    private val service: LocationsCpoInterface
 ) {
 
     init {
@@ -29,7 +29,7 @@ class LocationsCpoServer(
             val dateFrom = req.queryParams["dateFrom"]
             val dateTo = req.queryParams["dateTo"]
 
-            val locationSearchResult = controller.getLocations(
+            val locationSearchResult = service.getLocations(
                 dateFrom = dateFrom?.let { Instant.parse(it) },
                 dateTo = dateTo?.let { Instant.parse(it) },
                 offset = req.queryParams["offset"]?.toInt(),
@@ -64,7 +64,7 @@ class LocationsCpoServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            val location = controller.getLocation(
+            val location = service.getLocation(
                 locationId = req.pathParams["locationId"]!!
             )
 
@@ -82,7 +82,7 @@ class LocationsCpoServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            val evse = controller.getEvse(
+            val evse = service.getEvse(
                 locationId = req.pathParams["locationId"]!!,
                 evseUid = req.pathParams["evseUid"]!!
             )
@@ -102,7 +102,7 @@ class LocationsCpoServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            val connector = controller.getConnector(
+            val connector = service.getConnector(
                 locationId = req.pathParams["locationId"]!!,
                 evseUid = req.pathParams["evseUid"]!!,
                 connectorId = req.pathParams["connectorId"]!!

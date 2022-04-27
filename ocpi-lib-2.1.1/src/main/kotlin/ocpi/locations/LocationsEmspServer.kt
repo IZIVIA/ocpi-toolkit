@@ -12,7 +12,7 @@ import transport.domain.*
  */
 class LocationsEmspServer(
     private val transportServer: TransportServer,
-    private val controller: LocationsEmspInterface
+    private val service: LocationsEmspInterface
 ) {
 
     init {
@@ -25,7 +25,7 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            val location = controller.getLocation(
+            val location = service.getLocation(
                 countryCode = req.pathParams["countryCode"]!!,
                 partyId = req.pathParams["partyId"]!!,
                 locationId = req.pathParams["locationId"]!!
@@ -47,7 +47,7 @@ class LocationsEmspServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            val evse = controller.getEvse(
+            val evse = service.getEvse(
                 countryCode = req.pathParams["countryCode"]!!,
                 partyId = req.pathParams["partyId"]!!,
                 locationId = req.pathParams["locationId"]!!,
@@ -71,7 +71,7 @@ class LocationsEmspServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            val connector = controller.getConnector(
+            val connector = service.getConnector(
                 countryCode = req.pathParams["countryCode"]!!,
                 partyId = req.pathParams["partyId"]!!,
                 locationId = req.pathParams["locationId"]!!,
@@ -94,7 +94,7 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            val location = controller.putLocation(
+            val location = service.putLocation(
                 countryCode = req.pathParams["countryCode"]!!,
                 partyId = req.pathParams["partyId"]!!,
                 locationId = req.pathParams["locationId"]!!,
@@ -117,7 +117,7 @@ class LocationsEmspServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            val evse = controller.putEvse(
+            val evse = service.putEvse(
                 countryCode = req.pathParams["countryCode"]!!,
                 partyId = req.pathParams["partyId"]!!,
                 locationId = req.pathParams["locationId"]!!,
@@ -142,7 +142,7 @@ class LocationsEmspServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            val connector = controller.putConnector(
+            val connector = service.putConnector(
                 countryCode = req.pathParams["countryCode"]!!,
                 partyId = req.pathParams["partyId"]!!,
                 locationId = req.pathParams["locationId"]!!,
@@ -166,7 +166,7 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            val location = controller.patchLocation(
+            val location = service.patchLocation(
                 countryCode = req.pathParams["countryCode"]!!,
                 partyId = req.pathParams["partyId"]!!,
                 locationId = req.pathParams["locationId"]!!,
@@ -189,7 +189,7 @@ class LocationsEmspServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            val evse = controller.patchEvse(
+            val evse = service.patchEvse(
                 countryCode = req.pathParams["countryCode"]!!,
                 partyId = req.pathParams["partyId"]!!,
                 locationId = req.pathParams["locationId"]!!,
@@ -214,7 +214,7 @@ class LocationsEmspServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            val connector = controller.patchConnector(
+            val connector = service.patchConnector(
                 countryCode = req.pathParams["countryCode"]!!,
                 partyId = req.pathParams["partyId"]!!,
                 locationId = req.pathParams["locationId"]!!,
