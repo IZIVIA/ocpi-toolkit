@@ -33,3 +33,21 @@ data class OcpiResponseBody<T>(
         )
     }
 }
+
+fun <T> OcpiResponseBody<SearchResult<T>>.paginatedHeaders(url: String, queryList: List<String>) =
+    if (data != null) {
+        val nextPageOffset = (data.offset + data.limit).takeIf { it <= data.totalCount }
+
+        val queries = queryList
+            .plus("limit=${data.limit}")
+            .plus("offset=${data.limit + data.offset}")
+            .joinToString("&", "?")
+
+        listOfNotNull(
+            nextPageOffset?.let { "Link" to "<$url$queries>; rel=\"next\"" },
+            "X-Total-Count" to data.totalCount.toString(),
+            "X-Limit" to data.limit.toString()
+        ).toMap()
+    } else {
+        emptyMap()
+    }
