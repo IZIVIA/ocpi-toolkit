@@ -1,12 +1,10 @@
 package ocpi.locations
 
-import common.OcpiResponseBody
-import common.mapper
-import common.paginatedHeaders
+import common.toHttpResponse
+import common.toPaginatedHttpResponse
 import transport.TransportServer
 import transport.domain.FixedPathSegment
 import transport.domain.HttpMethod
-import transport.domain.HttpResponse
 import transport.domain.VariablePathSegment
 import java.time.Instant
 
@@ -30,31 +28,20 @@ class LocationsCpoServer(
             val dateFrom = req.queryParams["dateFrom"]
             val dateTo = req.queryParams["dateTo"]
 
-            val response = service.getLocations(
-                dateFrom = dateFrom?.let { Instant.parse(it) },
-                dateTo = dateTo?.let { Instant.parse(it) },
-                offset = req.queryParams["offset"]?.toInt() ?: 0,
-                limit = req.queryParams["limit"]?.toInt()
-            )
-
-            HttpResponse(
-                status = 200,
-                body = mapper.writeValueAsString(
-                    OcpiResponseBody(
-                        data = response.data?.list,
-                        status_code = response.status_code,
-                        status_message = response.status_message,
-                        timestamp = response.timestamp
-                    )
-                ),
-                headers = response.paginatedHeaders(
+            service
+                .getLocations(
+                    dateFrom = dateFrom?.let { Instant.parse(it) },
+                    dateTo = dateTo?.let { Instant.parse(it) },
+                    offset = req.queryParams["offset"]?.toInt() ?: 0,
+                    limit = req.queryParams["limit"]?.toInt()
+                )
+                .toPaginatedHttpResponse(
                     url = "${transportServer.baseUrl}/ocpi/cpo/2.1.1/locations",
                     queryList = listOfNotNull(
                         dateFrom?.let { "dateFrom=$dateFrom" },
                         dateTo?.let { "dateTo=$dateTo" }
                     )
                 )
-            )
         }
 
         transportServer.handle(
@@ -64,14 +51,11 @@ class LocationsCpoServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            val response = service.getLocation(
-                locationId = req.pathParams["locationId"]!!
-            )
-
-            HttpResponse(
-                status = 200,
-                body = mapper.writeValueAsString(response)
-            )
+            service
+                .getLocation(
+                    locationId = req.pathParams["locationId"]!!
+                )
+                .toHttpResponse()
         }
 
         transportServer.handle(
@@ -82,15 +66,12 @@ class LocationsCpoServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            val response = service.getEvse(
-                locationId = req.pathParams["locationId"]!!,
-                evseUid = req.pathParams["evseUid"]!!
-            )
-
-            HttpResponse(
-                status = 200,
-                body = mapper.writeValueAsString(response)
-            )
+            service
+                .getEvse(
+                    locationId = req.pathParams["locationId"]!!,
+                    evseUid = req.pathParams["evseUid"]!!
+                )
+                .toHttpResponse()
         }
 
         transportServer.handle(
@@ -102,16 +83,13 @@ class LocationsCpoServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            val response = service.getConnector(
-                locationId = req.pathParams["locationId"]!!,
-                evseUid = req.pathParams["evseUid"]!!,
-                connectorId = req.pathParams["connectorId"]!!
-            )
-
-            HttpResponse(
-                status = 200,
-                body = mapper.writeValueAsString(response)
-            )
+            service
+                .getConnector(
+                    locationId = req.pathParams["locationId"]!!,
+                    evseUid = req.pathParams["evseUid"]!!,
+                    connectorId = req.pathParams["connectorId"]!!
+                )
+                .toHttpResponse()
         }
     }
 }

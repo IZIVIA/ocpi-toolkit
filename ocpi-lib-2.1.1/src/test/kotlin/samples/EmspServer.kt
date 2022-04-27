@@ -27,7 +27,7 @@ fun main() {
 }
 
 class LocationsEmspServerCallbacks: LocationsEmspInterface {
-    override fun getLocation(countryCode: String, partyId: String, locationId: String): OcpiResponseBody<Location> {
+    override fun getLocation(countryCode: String, partyId: String, locationId: String): OcpiResponseBody<Location?> {
         return OcpiResponseBody.success(
             Location(
                 id = locationId,
@@ -55,7 +55,12 @@ class LocationsEmspServerCallbacks: LocationsEmspInterface {
         )
     }
 
-    override fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): OcpiResponseBody<Evse> {
+    override fun getEvse(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String
+    ): OcpiResponseBody<Evse?> {
         TODO("Not yet implemented")
     }
 
@@ -65,15 +70,26 @@ class LocationsEmspServerCallbacks: LocationsEmspInterface {
         locationId: String,
         evseUid: String,
         connectorId: String
-    ): OcpiResponseBody<Connector> {
+    ): OcpiResponseBody<Connector?> {
         TODO("Not yet implemented")
     }
 
-    override fun putLocation(countryCode: String, partyId: String, locationId: String, location: Location): OcpiResponseBody<Location> {
+    override fun putLocation(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        location: Location
+    ): OcpiResponseBody<Location> {
         TODO("Not yet implemented")
     }
 
-    override fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: Evse): OcpiResponseBody<Evse> {
+    override fun putEvse(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String,
+        evse: Evse
+    ): OcpiResponseBody<Evse> {
         TODO("Not yet implemented")
     }
 
@@ -93,7 +109,7 @@ class LocationsEmspServerCallbacks: LocationsEmspInterface {
         partyId: String,
         locationId: String,
         location: LocationPatch
-    ): OcpiResponseBody<Location> {
+    ): OcpiResponseBody<Location?> {
         TODO("Not yet implemented")
     }
 
@@ -103,7 +119,7 @@ class LocationsEmspServerCallbacks: LocationsEmspInterface {
         locationId: String,
         evseUid: String,
         evse: EvsePatch
-    ): OcpiResponseBody<Evse> {
+    ): OcpiResponseBody<Evse?> {
         TODO("Not yet implemented")
     }
 
@@ -114,7 +130,7 @@ class LocationsEmspServerCallbacks: LocationsEmspInterface {
         evseUid: String,
         connectorId: String,
         connector: ConnectorPatch
-    ): OcpiResponseBody<Connector> {
+    ): OcpiResponseBody<Connector?> {
         TODO("Not yet implemented")
     }
 }

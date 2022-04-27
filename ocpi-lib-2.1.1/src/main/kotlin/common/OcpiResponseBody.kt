@@ -1,5 +1,6 @@
 package common
 
+import transport.domain.HttpResponse
 import java.time.Instant
 
 /**
@@ -51,3 +52,24 @@ fun <T> OcpiResponseBody<SearchResult<T>>.paginatedHeaders(url: String, queryLis
     } else {
         emptyMap()
     }
+
+fun <T> OcpiResponseBody<T>.toHttpResponse() =
+    HttpResponse(
+        status = if (data != null) 200 else 404,
+        body = mapper.writeValueAsString(this)
+    )
+
+fun <T> OcpiResponseBody<SearchResult<T>>.toPaginatedHttpResponse(url: String, queryList: List<String>) =
+    OcpiResponseBody(
+        data = data?.list,
+        status_code = status_code,
+        status_message = status_message,
+        timestamp = timestamp
+    )
+        .toHttpResponse()
+        .copy(
+            headers = paginatedHeaders(
+                url = url,
+                queryList = queryList
+            )
+        )

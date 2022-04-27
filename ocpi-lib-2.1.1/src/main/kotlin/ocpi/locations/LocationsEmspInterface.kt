@@ -34,7 +34,7 @@ interface LocationsEmspInterface {
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the Location object to retrieve.
      */
-    fun getLocation(countryCode: String, partyId: String, locationId: String): OcpiResponseBody<Location>
+    fun getLocation(countryCode: String, partyId: String, locationId: String): OcpiResponseBody<Location?>
 
     /**
      * If the CPO wants to check the status of a Location, EVSE or Connector object in the eMSP system, it might GET the
@@ -47,7 +47,7 @@ interface LocationsEmspInterface {
      * @param locationId (max-length=39) Location.id of the Location object to retrieve.
      * @param evseUid (max-length=39) Evse.uid, required when requesting an EVSE or Connector object.
      */
-    fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): OcpiResponseBody<Evse>
+    fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): OcpiResponseBody<Evse?>
 
     /**
      * If the CPO wants to check the status of a Location, EVSE or Connector object in the eMSP system, it might GET the
@@ -67,7 +67,7 @@ interface LocationsEmspInterface {
         locationId: String,
         evseUid: String,
         connectorId: String
-    ): OcpiResponseBody<Connector>
+    ): OcpiResponseBody<Connector?>
 
     /**
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
@@ -136,7 +136,7 @@ interface LocationsEmspInterface {
         partyId: String,
         locationId: String,
         location: LocationPatch
-    ): OcpiResponseBody<Location>
+    ): OcpiResponseBody<Location?>
 
     /**
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
@@ -153,7 +153,7 @@ interface LocationsEmspInterface {
         locationId: String,
         evseUid: String,
         evse: EvsePatch
-    ): OcpiResponseBody<Evse>
+    ): OcpiResponseBody<Evse?>
 
     /**
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
@@ -172,5 +172,5 @@ interface LocationsEmspInterface {
         evseUid: String,
         connectorId: String,
         connector: ConnectorPatch
-    ): OcpiResponseBody<Connector>
+    ): OcpiResponseBody<Connector?>
 }

@@ -2,6 +2,7 @@ package ocpi.locations
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import common.mapper
+import common.toHttpResponse
 import ocpi.locations.domain.*
 import transport.TransportServer
 import transport.domain.FixedPathSegment
@@ -28,16 +29,13 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            val location = service.getLocation(
-                countryCode = req.pathParams["countryCode"]!!,
-                partyId = req.pathParams["partyId"]!!,
-                locationId = req.pathParams["locationId"]!!
-            )
-
-            HttpResponse(
-                status = 200,
-                body = mapper.writeValueAsString(location)
-            )
+            service
+                .getLocation(
+                    countryCode = req.pathParams["countryCode"]!!,
+                    partyId = req.pathParams["partyId"]!!,
+                    locationId = req.pathParams["locationId"]!!
+                )
+                .toHttpResponse()
         }
 
         transportServer.handle(
@@ -50,17 +48,14 @@ class LocationsEmspServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            val evse = service.getEvse(
-                countryCode = req.pathParams["countryCode"]!!,
-                partyId = req.pathParams["partyId"]!!,
-                locationId = req.pathParams["locationId"]!!,
-                evseUid = req.pathParams["evseUid"]!!
-            )
-
-            HttpResponse(
-                status = 200,
-                body = mapper.writeValueAsString(evse)
-            )
+            service
+                .getEvse(
+                    countryCode = req.pathParams["countryCode"]!!,
+                    partyId = req.pathParams["partyId"]!!,
+                    locationId = req.pathParams["locationId"]!!,
+                    evseUid = req.pathParams["evseUid"]!!
+                )
+                .toHttpResponse()
         }
 
         transportServer.handle(
@@ -74,18 +69,15 @@ class LocationsEmspServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            val connector = service.getConnector(
-                countryCode = req.pathParams["countryCode"]!!,
-                partyId = req.pathParams["partyId"]!!,
-                locationId = req.pathParams["locationId"]!!,
-                evseUid = req.pathParams["evseUid"]!!,
-                connectorId = req.pathParams["connectorId"]!!
-            )
-
-            HttpResponse(
-                status = 200,
-                body = mapper.writeValueAsString(connector)
-            )
+            service
+                .getConnector(
+                    countryCode = req.pathParams["countryCode"]!!,
+                    partyId = req.pathParams["partyId"]!!,
+                    locationId = req.pathParams["locationId"]!!,
+                    evseUid = req.pathParams["evseUid"]!!,
+                    connectorId = req.pathParams["connectorId"]!!
+                )
+                .toHttpResponse()
         }
 
         transportServer.handle(
@@ -98,17 +90,14 @@ class LocationsEmspServer(
             )
         ) { req ->
             try {
-                val responseBody = service.putLocation(
-                    countryCode = req.pathParams["countryCode"]!!,
-                    partyId = req.pathParams["partyId"]!!,
-                    locationId = req.pathParams["locationId"]!!,
-                    location = mapper.readValue(req.body, Location::class.java)
-                )
-
-                HttpResponse(
-                    status = 200,
-                    body = mapper.writeValueAsString(responseBody)
-                )
+                service
+                    .putLocation(
+                        countryCode = req.pathParams["countryCode"]!!,
+                        partyId = req.pathParams["partyId"]!!,
+                        locationId = req.pathParams["locationId"]!!,
+                        location = mapper.readValue(req.body, Location::class.java)
+                    )
+                    .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 e.printStackTrace()
                 HttpResponse(status = 400)
@@ -126,18 +115,15 @@ class LocationsEmspServer(
             )
         ) { req ->
             try {
-                val responseBody = service.putEvse(
-                    countryCode = req.pathParams["countryCode"]!!,
-                    partyId = req.pathParams["partyId"]!!,
-                    locationId = req.pathParams["locationId"]!!,
-                    evseUid = req.pathParams["evseUid"]!!,
-                    evse = mapper.readValue(req.body!!, Evse::class.java)
-                )
-
-                HttpResponse(
-                    status = 200,
-                    body = mapper.writeValueAsString(responseBody)
-                )
+                service
+                    .putEvse(
+                        countryCode = req.pathParams["countryCode"]!!,
+                        partyId = req.pathParams["partyId"]!!,
+                        locationId = req.pathParams["locationId"]!!,
+                        evseUid = req.pathParams["evseUid"]!!,
+                        evse = mapper.readValue(req.body!!, Evse::class.java)
+                    )
+                    .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 e.printStackTrace()
                 HttpResponse(status = 400)
@@ -156,19 +142,16 @@ class LocationsEmspServer(
             )
         ) { req ->
             try {
-                val responseBody = service.putConnector(
-                    countryCode = req.pathParams["countryCode"]!!,
-                    partyId = req.pathParams["partyId"]!!,
-                    locationId = req.pathParams["locationId"]!!,
-                    evseUid = req.pathParams["evseUid"]!!,
-                    connectorId = req.pathParams["connectorId"]!!,
-                    connector = mapper.readValue(req.body!!, Connector::class.java)
-                )
-
-                HttpResponse(
-                    status = 200,
-                    body = mapper.writeValueAsString(responseBody)
-                )
+                 service
+                     .putConnector(
+                        countryCode = req.pathParams["countryCode"]!!,
+                        partyId = req.pathParams["partyId"]!!,
+                        locationId = req.pathParams["locationId"]!!,
+                        evseUid = req.pathParams["evseUid"]!!,
+                        connectorId = req.pathParams["connectorId"]!!,
+                        connector = mapper.readValue(req.body!!, Connector::class.java)
+                    )
+                     .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 e.printStackTrace()
                 HttpResponse(status = 400)
@@ -185,17 +168,14 @@ class LocationsEmspServer(
             )
         ) { req ->
             try {
-                val responseBody = service.patchLocation(
-                    countryCode = req.pathParams["countryCode"]!!,
-                    partyId = req.pathParams["partyId"]!!,
-                    locationId = req.pathParams["locationId"]!!,
-                    location = mapper.readValue(req.body!!, LocationPatch::class.java)
-                )
-
-                HttpResponse(
-                    status = 200,
-                    body = mapper.writeValueAsString(responseBody)
-                )
+                service
+                    .patchLocation(
+                        countryCode = req.pathParams["countryCode"]!!,
+                        partyId = req.pathParams["partyId"]!!,
+                        locationId = req.pathParams["locationId"]!!,
+                        location = mapper.readValue(req.body!!, LocationPatch::class.java)
+                    )
+                    .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 e.printStackTrace()
                 HttpResponse(status = 400)
@@ -213,18 +193,15 @@ class LocationsEmspServer(
             )
         ) { req ->
             try {
-                val responseBody = service.patchEvse(
-                    countryCode = req.pathParams["countryCode"]!!,
-                    partyId = req.pathParams["partyId"]!!,
-                    locationId = req.pathParams["locationId"]!!,
-                    evseUid = req.pathParams["evseUid"]!!,
-                    evse = mapper.readValue(req.body!!, EvsePatch::class.java)
-                )
-
-                HttpResponse(
-                    status = 200,
-                    body = mapper.writeValueAsString(responseBody)
-                )
+               service
+                   .patchEvse(
+                        countryCode = req.pathParams["countryCode"]!!,
+                        partyId = req.pathParams["partyId"]!!,
+                        locationId = req.pathParams["locationId"]!!,
+                        evseUid = req.pathParams["evseUid"]!!,
+                        evse = mapper.readValue(req.body!!, EvsePatch::class.java)
+                    )
+                   .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 e.printStackTrace()
                 HttpResponse(status = 400)
@@ -243,19 +220,16 @@ class LocationsEmspServer(
             )
         ) { req ->
             try {
-                val responseBody = service.patchConnector(
-                    countryCode = req.pathParams["countryCode"]!!,
-                    partyId = req.pathParams["partyId"]!!,
-                    locationId = req.pathParams["locationId"]!!,
-                    evseUid = req.pathParams["evseUid"]!!,
-                    connectorId = req.pathParams["connectorId"]!!,
-                    connector = mapper.readValue(req.body!!, ConnectorPatch::class.java)
-                )
-
-                HttpResponse(
-                    status = 200,
-                    body = mapper.writeValueAsString(responseBody)
-                )
+                service
+                    .patchConnector(
+                        countryCode = req.pathParams["countryCode"]!!,
+                        partyId = req.pathParams["partyId"]!!,
+                        locationId = req.pathParams["locationId"]!!,
+                        evseUid = req.pathParams["evseUid"]!!,
+                        connectorId = req.pathParams["connectorId"]!!,
+                        connector = mapper.readValue(req.body!!, ConnectorPatch::class.java)
+                    )
+                    .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 e.printStackTrace()
                 HttpResponse(status = 400)

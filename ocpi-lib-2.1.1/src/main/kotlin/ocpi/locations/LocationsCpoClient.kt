@@ -16,7 +16,7 @@ class LocationsCpoClient(
     private val transportClient: TransportClient
 ) : LocationsEmspInterface {
 
-    override fun getLocation(countryCode: String, partyId: String, locationId: String): OcpiResponseBody<Location> =
+    override fun getLocation(countryCode: String, partyId: String, locationId: String): OcpiResponseBody<Location?> =
         transportClient
             .send(
                 HttpRequest(
@@ -31,7 +31,7 @@ class LocationsCpoClient(
         partyId: String,
         locationId: String,
         evseUid: String
-    ): OcpiResponseBody<Evse> =
+    ): OcpiResponseBody<Evse?> =
         transportClient
             .send(
                 HttpRequest(
@@ -47,7 +47,7 @@ class LocationsCpoClient(
         locationId: String,
         evseUid: String,
         connectorId: String
-    ): OcpiResponseBody<Connector> =
+    ): OcpiResponseBody<Connector?> =
         transportClient
             .send(
                 HttpRequest(
@@ -113,7 +113,7 @@ class LocationsCpoClient(
         partyId: String,
         locationId: String,
         location: LocationPatch
-    ): OcpiResponseBody<Location> = transportClient
+    ): OcpiResponseBody<Location?> = transportClient
         .send(
             HttpRequest(
                 method = HttpMethod.PATCH,
@@ -129,7 +129,7 @@ class LocationsCpoClient(
         locationId: String,
         evseUid: String,
         evse: EvsePatch
-    ): OcpiResponseBody<Evse> = transportClient
+    ): OcpiResponseBody<Evse?> = transportClient
         .send(
             HttpRequest(
                 method = HttpMethod.PATCH,
@@ -146,7 +146,7 @@ class LocationsCpoClient(
         evseUid: String,
         connectorId: String,
         connector: ConnectorPatch
-    ): OcpiResponseBody<Connector> = transportClient
+    ): OcpiResponseBody<Connector?> = transportClient
         .send(
             HttpRequest(
                 method = HttpMethod.PATCH,
