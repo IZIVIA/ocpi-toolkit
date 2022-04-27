@@ -1,5 +1,6 @@
 package ocpi.locations
 
+import common.OcpiResponseBody
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.ConnectorPatch
 import ocpi.locations.domain.Evse
@@ -33,7 +34,7 @@ interface LocationsEmspInterface {
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the Location object to retrieve.
      */
-    fun getLocation(countryCode: String, partyId: String, locationId: String): Location
+    fun getLocation(countryCode: String, partyId: String, locationId: String): OcpiResponseBody<Location>
 
     /**
      * If the CPO wants to check the status of a Location, EVSE or Connector object in the eMSP system, it might GET the
@@ -46,7 +47,7 @@ interface LocationsEmspInterface {
      * @param locationId (max-length=39) Location.id of the Location object to retrieve.
      * @param evseUid (max-length=39) Evse.uid, required when requesting an EVSE or Connector object.
      */
-    fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): Evse
+    fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): OcpiResponseBody<Evse>
 
     /**
      * If the CPO wants to check the status of a Location, EVSE or Connector object in the eMSP system, it might GET the
@@ -66,7 +67,7 @@ interface LocationsEmspInterface {
         locationId: String,
         evseUid: String,
         connectorId: String
-    ): Connector
+    ): OcpiResponseBody<Connector>
 
     /**
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
@@ -77,7 +78,12 @@ interface LocationsEmspInterface {
      * @param locationId (max-length=39) Location.id of the new Location object, or the Location of which an EVSE or
      * Location object is send
      */
-    fun putLocation(countryCode: String, partyId: String, locationId: String, location: Location): Location
+    fun putLocation(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        location: Location
+    ): OcpiResponseBody<Location>
 
     /**
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
@@ -89,7 +95,13 @@ interface LocationsEmspInterface {
      * Location object is send
      * @param evseUid (max-length=39) Evse.uid, required when an EVSE or Connector object is send/replaced.
      */
-    fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: Evse): Evse
+    fun putEvse(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String,
+        evse: Evse
+    ): OcpiResponseBody<Evse>
 
     /**
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
@@ -109,7 +121,7 @@ interface LocationsEmspInterface {
         evseUid: String,
         connectorId: String,
         connector: Connector
-    ): Connector
+    ): OcpiResponseBody<Connector>
 
     /**
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
@@ -119,7 +131,12 @@ interface LocationsEmspInterface {
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the new Location object
      */
-    fun patchLocation(countryCode: String, partyId: String, locationId: String, location: LocationPatch): Location
+    fun patchLocation(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        location: LocationPatch
+    ): OcpiResponseBody<Location>
 
     /**
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
@@ -130,7 +147,13 @@ interface LocationsEmspInterface {
      * @param locationId (max-length=39) Location.id of the Location of which an EVSE or Location object is send
      * @param evseUid (max-length=39) Evse.uid, required when an EVSE or Connector object is send/replaced.
      */
-    fun patchEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: EvsePatch): Evse
+    fun patchEvse(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String,
+        evse: EvsePatch
+    ): OcpiResponseBody<Evse>
 
     /**
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
@@ -149,5 +172,5 @@ interface LocationsEmspInterface {
         evseUid: String,
         connectorId: String,
         connector: ConnectorPatch
-    ): Connector
+    ): OcpiResponseBody<Connector>
 }

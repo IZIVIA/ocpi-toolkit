@@ -1,6 +1,7 @@
 package ocpi.locations
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import common.OcpiResponseBody
 import common.mapper
 import ocpi.locations.domain.*
 import transport.TransportClient
@@ -15,7 +16,7 @@ class LocationsCpoClient(
     private val transportClient: TransportClient
 ) : LocationsEmspInterface {
 
-    override fun getLocation(countryCode: String, partyId: String, locationId: String): Location =
+    override fun getLocation(countryCode: String, partyId: String, locationId: String): OcpiResponseBody<Location> =
         transportClient
             .send(
                 HttpRequest(
@@ -27,7 +28,7 @@ class LocationsCpoClient(
                 mapper.readValue(body)
             }
 
-    override fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): Evse =
+    override fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): OcpiResponseBody<Evse> =
         transportClient
             .send(
                 HttpRequest(
@@ -45,7 +46,7 @@ class LocationsCpoClient(
         locationId: String,
         evseUid: String,
         connectorId: String
-    ): Connector =
+    ): OcpiResponseBody<Connector> =
         transportClient
             .send(
                 HttpRequest(
@@ -57,7 +58,7 @@ class LocationsCpoClient(
                 mapper.readValue(body)
             }
 
-    override fun putLocation(countryCode: String, partyId: String, locationId: String, location: Location): Location =
+    override fun putLocation(countryCode: String, partyId: String, locationId: String, location: Location): OcpiResponseBody<Location> =
         transportClient
             .send(
                 HttpRequest(
@@ -70,7 +71,7 @@ class LocationsCpoClient(
                 mapper.readValue(body)
             }
 
-    override fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: Evse): Evse =
+    override fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: Evse): OcpiResponseBody<Evse> =
         transportClient
             .send(
                 HttpRequest(
@@ -90,7 +91,7 @@ class LocationsCpoClient(
         evseUid: String,
         connectorId: String,
         connector: Connector
-    ): Connector =
+    ): OcpiResponseBody<Connector> =
         transportClient
             .send(
                 HttpRequest(
@@ -108,7 +109,7 @@ class LocationsCpoClient(
         partyId: String,
         locationId: String,
         location: LocationPatch
-    ): Location = transportClient
+    ): OcpiResponseBody<Location> = transportClient
         .send(
             HttpRequest(
                 method = HttpMethod.PATCH,
@@ -126,7 +127,7 @@ class LocationsCpoClient(
         locationId: String,
         evseUid: String,
         evse: EvsePatch
-    ): Evse = transportClient
+    ): OcpiResponseBody<Evse> = transportClient
         .send(
             HttpRequest(
                 method = HttpMethod.PATCH,
@@ -145,7 +146,7 @@ class LocationsCpoClient(
         evseUid: String,
         connectorId: String,
         connector: ConnectorPatch
-    ): Connector = transportClient
+    ): OcpiResponseBody<Connector> = transportClient
         .send(
             HttpRequest(
                 method = HttpMethod.PATCH,
