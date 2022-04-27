@@ -12,17 +12,19 @@ import java.io.File
 class PartialAnnotationProcessor : AbstractProcessor() {
 
     private val annotationFqdn = "io.github.quatresh.annotations.Partial"
-    private var partialClasses: List<ClassDescriptor> = emptyList()
+    private val partialClasses: MutableList<ClassDescriptor> = mutableListOf()
 
     override fun getSupportedAnnotationTypes(): Set<String> = setOf(annotationFqdn)
 
     override fun isTargetPlatformSupported(platform: TargetPlatform): Boolean = true
 
     override fun process(roundEnvironment: RoundEnvironment) {
-        partialClasses = roundEnvironment.getElementsAnnotatedWith(annotationFqdn)
-            .filterIsInstance<Element.ClassElement>()
-            .filter { it.classDescriptor.isData }
-            .map { it.classDescriptor }
+        partialClasses.addAll(
+            roundEnvironment.getElementsAnnotatedWith(annotationFqdn)
+                .filterIsInstance<Element.ClassElement>()
+                .filter { it.classDescriptor.isData }
+                .map { it.classDescriptor }
+        )
     }
 
     override fun processingOver() {
@@ -30,7 +32,7 @@ class PartialAnnotationProcessor : AbstractProcessor() {
             val classFilePath = classDescriptor.canonicalFilePath().toString()
             val className = classDescriptor.name.asString()
             val classFile = File(classFilePath)
-            val partialClassName = "${className}Partial"
+            val partialClassName = className.toPartial()
             if (!classFile.readText().contains("data class $partialClassName")) {
                 buildPartialDataClassType(classDescriptor, partialClassName)
                     .toString()
@@ -90,10 +92,12 @@ class PartialAnnotationProcessor : AbstractProcessor() {
                 val typeName = if (fullPackage.contains("<")) {
                     val type = fullPackage.substringBefore("<")
                         .split(".").last().replace("?", "")
+                        .wireWithExistingPartial()
                     val packageName = fullPackage.substringBefore("<").split(".")
                         .dropLast(1).joinToString(".")
                     val parameterType = fullPackage.substringAfter("<").substringBefore(">")
                         .split(".").last().replace("?", "")
+                        .wireWithExistingPartial()
                     val parameterTypePackage = fullPackage.substringAfter("<").substringBefore(">")
                         .split(".").dropLast(1).joinToString(".")
                     ClassName(
@@ -102,9 +106,12 @@ class PartialAnnotationProcessor : AbstractProcessor() {
                     )
                         .parameterizedBy(ClassName(parameterTypePackage, parameterType))
                 } else {
+                    val packageName = fullPackage.split(".").dropLast(1).joinToString(".")
+                    val typeName = fullPackage.split(".").last().replace("?", "")
+                        .wireWithExistingPartial()
                     ClassName(
-                        fullPackage.split(".").dropLast(1).joinToString("."),
-                        fullPackage.split(".").last().replace("?", "")
+                        packageName,
+                        typeName
                     )
                 }
                 FunctionParameter(
@@ -117,6 +124,15 @@ class PartialAnnotationProcessor : AbstractProcessor() {
             emptyList()
         }
     }
+
+    private fun String.wireWithExistingPartial(): String =
+        partialClasses
+            .map { it.name.asString() }
+            .find { it == this }
+            ?.toPartial()
+            ?: this
+
+    private fun String.toPartial() = "${this}Partial"
 
     data class FunctionParameter(
         val parameterName: String,
