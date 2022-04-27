@@ -1,6 +1,7 @@
 package io.github.quatresh
 
 import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import de.jensklingenberg.mpapt.common.canonicalFilePath
 import de.jensklingenberg.mpapt.model.*
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
@@ -49,8 +50,7 @@ class PartialAnnotationProcessor : AbstractProcessor() {
                 ParameterSpec
                     .builder(
                         param.parameterName,
-                        ClassName(param.packagee.packagename, param.packagee.classname)
-                            .copy(nullable = true)
+                        param.type.copy(nullable = true)
                     )
                     .build()
             }
@@ -59,8 +59,7 @@ class PartialAnnotationProcessor : AbstractProcessor() {
             .map { param ->
                 PropertySpec
                     .builder(
-                        param.parameterName, ClassName(param.packagee.packagename, param.packagee.classname)
-                            .copy(nullable = true)
+                        param.parameterName, param.type.copy(nullable = true)
                     )
                     .initializer(param.parameterName)
                     .build()
@@ -87,17 +86,41 @@ class PartialAnnotationProcessor : AbstractProcessor() {
                     .substringBefore(" /* =")
                     .substringBefore("=")
                     .trim()
+
+                val typeName = if (fullPackage.contains("<")) {
+                    val type = fullPackage.substringBefore("<")
+                        .split(".").last().replace("?", "")
+                    val packageName = fullPackage.substringBefore("<").split(".")
+                        .dropLast(1).joinToString(".")
+                    val parameterType = fullPackage.substringAfter("<").substringBefore(">")
+                        .split(".").last().replace("?", "")
+                    val parameterTypePackage = fullPackage.substringAfter("<").substringBefore(">")
+                        .split(".").dropLast(1).joinToString(".")
+                    ClassName(
+                        packageName,
+                        type
+                    )
+                        .parameterizedBy(ClassName(parameterTypePackage, parameterType))
+                } else {
+                    ClassName(
+                        fullPackage.split(".").dropLast(1).joinToString("."),
+                        fullPackage.split(".").last().replace("?", "")
+                    )
+                }
                 FunctionParameter(
                     parameter.name.asString(),
                     parameter.type.toString().endsWith("?"),
-                    Package(
-                        fullPackage.split(".").last().replace("?", ""),
-                        fullPackage.split(".").dropLast(1).joinToString(".")
-                    )
+                    typeName
                 )
             }.toList()
         } else {
             emptyList()
         }
     }
+
+    data class FunctionParameter(
+        val parameterName: String,
+        val nullable: Boolean,
+        val type: TypeName
+    )
 }
