@@ -14,18 +14,18 @@ class Http4kTransportClient(
     val client = JettyClient()
 
     override fun send(request: HttpRequest): HttpResponse {
-        var http4kRequest = Request(
+        val http4kRequest = Request(
             method = Method.valueOf(request.method.name),
             uri = "$baseUrl${request.path}"
         )
-
-        request.queryParams.forEach { queryParam ->
-            http4kRequest = http4kRequest.query(queryParam.key, queryParam.value)
-        }
-
-        request.body?.let { body ->
-            http4kRequest = http4kRequest.body(body)
-        }
+            .run {
+                request.queryParams.toList().foldRight(this) { queryParam, r ->
+                    r.query(queryParam.first, queryParam.second)
+                }
+            }
+            .run {
+                request.body?.let { body -> body(body) } ?: this
+            }
 
         return client(http4kRequest).let {
             HttpResponse(
