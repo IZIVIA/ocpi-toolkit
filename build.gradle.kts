@@ -1,7 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    base
+    java
     kotlin("jvm") apply false
+    kotlin("kapt") apply false
+    id("maven-publish")
 }
 
 val versionNumber = System.getenv("version")?.substringAfter("R-") ?: "dev"
@@ -11,6 +15,7 @@ allprojects {
     version = versionNumber
 
     repositories {
+        mavenLocal()
         mavenCentral()
     }
 }
