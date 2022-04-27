@@ -2,7 +2,9 @@ package ocpi.locations
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import common.OcpiResponseBody
+import common.SearchResult
 import common.mapper
+import common.toSearchResult
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
@@ -22,9 +24,9 @@ class LocationsEmspClient(
     override fun getLocations(
         dateFrom: Instant?,
         dateTo: Instant?,
-        offset: Int?,
+        offset: Int,
         limit: Int?
-    ): OcpiResponseBody<List<Location>> =
+    ): OcpiResponseBody<SearchResult<Location>> =
         transportClient
             .send(
                 HttpRequest(
@@ -33,13 +35,24 @@ class LocationsEmspClient(
                     queryParams = listOfNotNull(
                         dateFrom?.let { "date_from" to dateFrom.toString() },
                         dateTo?.let { "date_to" to dateTo.toString() },
-                        offset?.let { "offset" to offset.toString() },
+                        "offset" to offset.toString(),
                         limit?.let { "limit" to limit.toString() }
                     ).toMap()
                 )
             )
             .run {
-                mapper.readValue(body)
+                mapper.readValue<OcpiResponseBody<List<Location>>>(body).let { body ->
+                    OcpiResponseBody(
+                        data = body.data?.toSearchResult(
+                            totalCount = headers["X-Total-Count"]!!.toInt(),
+                            limit = headers["X-Limit"]!!.toInt(),
+                            offset = offset
+                        ),
+                        status_code = body.status_code,
+                        status_message = body.status_message,
+                        timestamp = body.timestamp
+                    )
+                }
             }
 
     override fun getLocation(locationId: String): OcpiResponseBody<Location?> =
