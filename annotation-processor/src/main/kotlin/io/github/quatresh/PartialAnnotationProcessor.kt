@@ -5,7 +5,6 @@ import de.jensklingenberg.mpapt.common.canonicalFilePath
 import de.jensklingenberg.mpapt.model.*
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
-import org.jetbrains.kotlin.descriptors.containingPackage
 import org.jetbrains.kotlin.platform.TargetPlatform
 import java.io.File
 
@@ -27,56 +26,56 @@ class PartialAnnotationProcessor : AbstractProcessor() {
 
     override fun processingOver() {
         partialClasses.forEach { classDescriptor ->
-            val baseClassConstructorParameters = classDescriptor.constructors.first()
-                .getFunctionParameters()
-            val partialClassConstructorParameters = baseClassConstructorParameters
-                .map { param ->
-                    ParameterSpec
-                        .builder(
-                            param.parameterName,
-                            ClassName(param.packagee.packagename, param.packagee.classname)
-                                .copy(nullable = true)
-                        )
-                        .build()
-                }
-
-            val partialClassProperties = baseClassConstructorParameters
-                .map { param ->
-                    PropertySpec
-                        .builder(
-                            param.parameterName, ClassName(param.packagee.packagename, param.packagee.classname)
-                                .copy(nullable = true)
-                        )
-                        .initializer(param.parameterName)
-                        .build()
-                }
-
-            val partialClassName = "${classDescriptor.name.asString()}Partial"
-            val partialClassFile = "${classDescriptor.canonicalFilePath()?.substringBeforeLast("/")}/$partialClassName.kt"
-            val partialClassBuilder = TypeSpec.classBuilder(partialClassName)
-                .addModifiers(KModifier.DATA)
-                .primaryConstructor(
-                    FunSpec.constructorBuilder()
-                        .addParameters(partialClassConstructorParameters)
-                        .build()
-                )
-                .addProperties(partialClassProperties)
-
-            FileSpec
-                .builder(
-                    classDescriptor.containingPackage().toString(),
-                    partialClassName
-                )
-                .generateComments()
-                .addType(partialClassBuilder.build())
-                .build()
-                .toString()
-                .replace("public", "")
-                .also {
-                    File(partialClassFile)
-                        .writeText(it)
-                }
+            val classFilePath = classDescriptor.canonicalFilePath().toString()
+            val className = classDescriptor.name.asString()
+            val classFile = File(classFilePath)
+            val partialClassName = "${className}Partial"
+            if (!classFile.readText().contains("data class $partialClassName")) {
+                buildPartialDataClassType(classDescriptor, partialClassName)
+                    .toString()
+                    .replace("public", "")
+                    .also {
+                        classFile.appendText("\n$it")
+                    }
+            }
         }
+    }
+
+    private fun buildPartialDataClassType(classDescriptor: ClassDescriptor, partialClassName: String): TypeSpec {
+        val baseClassConstructorParameters = classDescriptor.constructors.first()
+            .getFunctionParameters()
+        val partialClassConstructorParameters = baseClassConstructorParameters
+            .map { param ->
+                ParameterSpec
+                    .builder(
+                        param.parameterName,
+                        ClassName(param.packagee.packagename, param.packagee.classname)
+                            .copy(nullable = true)
+                    )
+                    .build()
+            }
+
+        val partialClassProperties = baseClassConstructorParameters
+            .map { param ->
+                PropertySpec
+                    .builder(
+                        param.parameterName, ClassName(param.packagee.packagename, param.packagee.classname)
+                            .copy(nullable = true)
+                    )
+                    .initializer(param.parameterName)
+                    .build()
+            }
+
+        return TypeSpec
+            .classBuilder(partialClassName)
+            .addModifiers(KModifier.DATA)
+            .primaryConstructor(
+                FunSpec.constructorBuilder()
+                    .addParameters(partialClassConstructorParameters)
+                    .build()
+            )
+            .addProperties(partialClassProperties)
+            .build()
     }
 
     private fun FunctionDescriptor.getFunctionParameters(): List<FunctionParameter> {
@@ -101,11 +100,4 @@ class PartialAnnotationProcessor : AbstractProcessor() {
             emptyList()
         }
     }
-
-    private fun FileSpec.Builder.generateComments() = addFileComment(
-        """
-        | - WARNING -
-        | This code is generated AND MUST NOT BE EDITED
-    """.trimMargin()
-    )
 }
