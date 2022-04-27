@@ -1,5 +1,6 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
 import java.time.Instant
 
 /**
@@ -33,6 +34,7 @@ import java.time.Instant
  * @property images Links to images related to the EVSE such as photos or logos.
  * @property last_updated Instant Timestamp when this EVSE or one of its Connectors was last updated (or created).
  */
+@Partial
 data class Evse(
     val uid: String,
     val evse_id: String?,
@@ -49,18 +51,18 @@ data class Evse(
     val last_updated: Instant
 )
 
-data class EvsePatch(
+data class EvsePartial(
     val uid: String?,
     val evse_id: String?,
     val status: Status?,
-    val status_schedule: List<StatusSchedulePatch>?,
+    val status_schedule: List<StatusSchedulePartial>?,
     val capabilities: List<Capability>?,
-    val connectors: List<ConnectorPatch>?,
+    val connectors: List<ConnectorPartial>?,
     val floor_level: String?,
-    val coordinates: GeoLocationPatch?,
+    val coordinates: GeoLocationPartial?,
     val physical_reference: String?,
-    val directions: List<DisplayTextPatch>?,
+    val directions: List<DisplayTextPartial>?,
     val parking_restrictions: List<ParkingRestriction>?,
-    val images: List<ImagePatch>?,
-    val last_updated: Instant?
+    val images: List<ImagePartial>?,
+    val last_updated: Instant?,
 )

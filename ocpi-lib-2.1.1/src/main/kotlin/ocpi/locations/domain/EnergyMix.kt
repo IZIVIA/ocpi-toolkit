@@ -1,5 +1,7 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
+
 /**
  * This type is used to specify the energy mix and environmental impact of the supplied energy at a location or in a
  * tariff.
@@ -14,6 +16,7 @@ package ocpi.locations.domain
  * ** These fields can be used to look-up energy qualification or to show it directly to the customer (for well-known
  * brands like Greenpeace Energy, etc.)
  */
+@Partial
 data class EnergyMix(
     val is_green_energy: Boolean,
     val energy_sources: List<EnergySource>,
@@ -22,11 +25,11 @@ data class EnergyMix(
     val energy_product_name: String?
 )
 
-data class EnergyMixPatch(
-    val is_green_energy: Boolean?,
-    val energy_sources: List<EnergySourcePatch>?,
-    val environ_impact: List<EnvironmentalImpactPatch>?,
-    val supplier_name: String?,
-    val energy_product_name: String?
-)
 
+data class EnergyMixPartial(
+    val is_green_energy: Boolean?,
+    val energy_sources: List<EnergySourcePartial>?,
+    val environ_impact: List<EnvironmentalImpactPartial>?,
+    val supplier_name: String?,
+    val energy_product_name: String?,
+)

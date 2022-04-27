@@ -112,7 +112,7 @@ class LocationsCpoClient(
         countryCode: String,
         partyId: String,
         locationId: String,
-        location: LocationPatch
+        location: LocationPartial
     ): OcpiResponseBody<Location?> = transportClient
         .send(
             HttpRequest(
@@ -128,7 +128,7 @@ class LocationsCpoClient(
         partyId: String,
         locationId: String,
         evseUid: String,
-        evse: EvsePatch
+        evse: EvsePartial
     ): OcpiResponseBody<Evse?> = transportClient
         .send(
             HttpRequest(
@@ -145,7 +145,7 @@ class LocationsCpoClient(
         locationId: String,
         evseUid: String,
         connectorId: String,
-        connector: ConnectorPatch
+        connector: ConnectorPartial
     ): OcpiResponseBody<Connector?> = transportClient
         .send(
             HttpRequest(

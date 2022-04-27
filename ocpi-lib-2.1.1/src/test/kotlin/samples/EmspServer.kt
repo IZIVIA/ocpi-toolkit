@@ -108,7 +108,7 @@ class LocationsEmspServerCallbacks: LocationsEmspInterface {
         countryCode: String,
         partyId: String,
         locationId: String,
-        location: LocationPatch
+        location: LocationPartial
     ): OcpiResponseBody<Location?> {
         TODO("Not yet implemented")
     }
@@ -118,7 +118,7 @@ class LocationsEmspServerCallbacks: LocationsEmspInterface {
         partyId: String,
         locationId: String,
         evseUid: String,
-        evse: EvsePatch
+        evse: EvsePartial
     ): OcpiResponseBody<Evse?> {
         TODO("Not yet implemented")
     }
@@ -129,7 +129,7 @@ class LocationsEmspServerCallbacks: LocationsEmspInterface {
         locationId: String,
         evseUid: String,
         connectorId: String,
-        connector: ConnectorPatch
+        connector: ConnectorPartial
     ): OcpiResponseBody<Connector?> {
         TODO("Not yet implemented")
     }

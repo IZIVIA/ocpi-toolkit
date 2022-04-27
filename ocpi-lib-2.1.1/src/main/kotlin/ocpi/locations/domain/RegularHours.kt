@@ -1,5 +1,7 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
+
 /**
  * Regular recurring operation or access hours
  *
@@ -9,14 +11,15 @@ package ocpi.locations.domain
  * @property period_end (max-length=5) End of the regular period, syntax as for periodBegin. Must be later than
  * periodBegin.
  */
+@Partial
 data class RegularHours(
     val weekday: Int,
     val period_begin: String,
     val period_end: String
 )
 
-data class RegularHoursPatch(
+data class RegularHoursPartial(
     val weekday: Int?,
     val period_begin: String?,
-    val period_end: String?
+    val period_end: String?,
 )

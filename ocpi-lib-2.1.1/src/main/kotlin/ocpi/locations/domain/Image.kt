@@ -1,5 +1,7 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
+
 /**
  * This class references images related to a EVSE in terms of a file name or url. According to the roaming connection
  * between one EVSE Operator and one or more Navigation Service Providers the hosting or file exchange of image payload
@@ -26,6 +28,7 @@ package ocpi.locations.domain
  * @property height (max-length=5)
  * @constructor
  */
+@Partial
 data class Image(
     val url: String,
     val thumbnail: String?,
@@ -35,11 +38,11 @@ data class Image(
     val height: Int?
 )
 
-data class ImagePatch(
+data class ImagePartial(
     val url: String?,
     val thumbnail: String?,
     val category: ImageCategory?,
     val type: String?,
     val width: Int?,
-    val height: Int?
+    val height: Int?,
 )

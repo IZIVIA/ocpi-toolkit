@@ -1,5 +1,7 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
+
 /**
  * This class defines an additional geolocation that is relevant for the Charge Point. The geodetic system to be used
  * is WGS 84.
@@ -11,14 +13,15 @@ package ocpi.locations.domain
  * @property name DisplayText? Name of the point in local language or as written at the location. For example the street
  * name of a parking lot entrance, or its number.
  */
+@Partial
 data class AdditionalGeoLocation(
     val latitude: String,
     val longitude: String,
     val name: DisplayText?
 )
 
-data class AdditionalGeoLocationPatch(
+data class AdditionalGeoLocationPartial(
     val latitude: String?,
     val longitude: String?,
-    val name: DisplayTextPatch?
+    val name: DisplayTextPartial?,
 )

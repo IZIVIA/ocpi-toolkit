@@ -1,5 +1,6 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
 import java.time.Instant
 
 /**
@@ -35,6 +36,7 @@ import java.time.Instant
  * @property energy_mix Details on the energy supplied at this location.
  * @property last_updated Timestamp when this Location or one of its EVSEs or Connectors were last updated (or created).
  */
+@Partial
 data class Location(
     val id: String,
     val type: LocationType,
@@ -59,7 +61,8 @@ data class Location(
     val last_updated: Instant
 )
 
-data class LocationPatch(
+
+data class LocationPartial(
     val id: String?,
     val type: LocationType?,
     val name: String?,
@@ -67,18 +70,18 @@ data class LocationPatch(
     val city: String?,
     val postal_code: String?,
     val country: String?,
-    val coordinates: GeoLocationPatch?,
-    val related_locations: List<AdditionalGeoLocationPatch>?,
-    val evses: List<EvsePatch>?,
-    val directions: List<DisplayTextPatch>?,
-    val operator: BusinessDetailsPatch?,
-    val suboperator: BusinessDetailsPatch?,
-    val owner: BusinessDetailsPatch?,
+    val coordinates: GeoLocationPartial?,
+    val related_locations: List<AdditionalGeoLocationPartial>?,
+    val evses: List<EvsePartial>?,
+    val directions: List<DisplayTextPartial>?,
+    val `operator`: BusinessDetailsPartial?,
+    val suboperator: BusinessDetailsPartial?,
+    val owner: BusinessDetailsPartial?,
     val facilities: List<Facility>?,
     val time_zone: String?,
-    val opening_times: HoursPatch?,
+    val opening_times: HoursPartial?,
     val charging_when_closed: Boolean?,
-    val images: List<ImagePatch>?,
-    val energy_mix: EnergyMixPatch?,
-    val last_updated: Instant?
+    val images: List<ImagePartial>?,
+    val energy_mix: EnergyMixPartial?,
+    val last_updated: Instant?,
 )

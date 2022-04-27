@@ -1,5 +1,6 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
 import java.time.Instant
 
 /**
@@ -14,14 +15,15 @@ import java.time.Instant
  * @property period_end End of the scheduled period, if known.
  * @property status Status value during the scheduled period.
  */
+@Partial
 data class StatusSchedule(
     val period_begin: Instant,
     val period_end: Instant?,
     val status: Status
 )
 
-data class StatusSchedulePatch(
+data class StatusSchedulePartial(
     val period_begin: Instant?,
     val period_end: Instant?,
-    val status: Status?
+    val status: Status?,
 )

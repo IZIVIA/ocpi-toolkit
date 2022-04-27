@@ -1,5 +1,7 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
+
 /**
  * Opening and access hours of the location.
  * Either regularHours or twentyFourSeven is set. Both cannot be null and both cannot be set.
@@ -12,6 +14,7 @@ package ocpi.locations.domain
  * @property exceptional_closings Exceptions for specified calendar dates, time-range based. Periods the station is not
  * operating/accessible. Overwriting regularHours and exceptionalOpenings. Should not overlap exceptionalOpenings.
  */
+@Partial
 data class Hours(
     val regular_hours: List<RegularHours>?,
     val twenty_four_seven: Boolean?,
@@ -19,9 +22,9 @@ data class Hours(
     val exceptional_closings: List<ExceptionalPeriod>
 )
 
-data class HoursPatch(
-    val regular_hours: List<RegularHours>?,
+data class HoursPartial(
+    val regular_hours: List<RegularHoursPartial>?,
     val twenty_four_seven: Boolean?,
-    val exceptional_openings: List<ExceptionalPeriod>,
-    val exceptional_closings: List<ExceptionalPeriod>
+    val exceptional_openings: List<ExceptionalPeriodPartial>?,
+    val exceptional_closings: List<ExceptionalPeriodPartial>?,
 )

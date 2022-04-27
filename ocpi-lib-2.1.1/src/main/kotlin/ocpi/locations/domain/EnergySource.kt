@@ -1,5 +1,6 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
 import java.math.BigDecimal
 
 /**
@@ -8,12 +9,13 @@ import java.math.BigDecimal
  * @property source The type of energy source.
  * @property percentage Percentage of this source (0-100) in the mix.
  */
+@Partial
 data class EnergySource(
     val source: EnergySourceCategory,
     val percentage: BigDecimal
 )
 
-data class EnergySourcePatch(
+data class EnergySourcePartial(
     val source: EnergySourceCategory?,
-    val percentage: BigDecimal?
+    val percentage: BigDecimal?,
 )

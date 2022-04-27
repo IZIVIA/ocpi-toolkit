@@ -1,5 +1,7 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
+
 /**
  * This class defines the geolocation of the Charge Point. The geodetic system to be used is WGS 84.
  *
@@ -8,12 +10,14 @@ package ocpi.locations.domain
  * @property longitude (max-length=11) Longitude of the point in decimal degree. Example: -126.104965. Decimal
  * separator: "." Regex: -?[0-9]{1,3}\.[0-9]{6}
  */
+@Partial
 data class GeoLocation(
     val latitude: String,
     val longitude: String
 )
 
-data class GeoLocationPatch(
+
+data class GeoLocationPartial(
     val latitude: String?,
-    val longitude: String?
+    val longitude: String?,
 )

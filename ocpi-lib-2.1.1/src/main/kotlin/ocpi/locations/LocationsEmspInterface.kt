@@ -1,12 +1,7 @@
 package ocpi.locations
 
 import common.OcpiResponseBody
-import ocpi.locations.domain.Connector
-import ocpi.locations.domain.ConnectorPatch
-import ocpi.locations.domain.Evse
-import ocpi.locations.domain.EvsePatch
-import ocpi.locations.domain.Location
-import ocpi.locations.domain.LocationPatch
+import ocpi.locations.domain.*
 
 /**
  * Locations is a client owned object, so the end-points need to contain the required extra fields: {party_id} and
@@ -135,7 +130,7 @@ interface LocationsEmspInterface {
         countryCode: String,
         partyId: String,
         locationId: String,
-        location: LocationPatch
+        location: LocationPartial
     ): OcpiResponseBody<Location?>
 
     /**
@@ -152,7 +147,7 @@ interface LocationsEmspInterface {
         partyId: String,
         locationId: String,
         evseUid: String,
-        evse: EvsePatch
+        evse: EvsePartial
     ): OcpiResponseBody<Evse?>
 
     /**
@@ -171,6 +166,6 @@ interface LocationsEmspInterface {
         locationId: String,
         evseUid: String,
         connectorId: String,
-        connector: ConnectorPatch
+        connector: ConnectorPartial
     ): OcpiResponseBody<Connector?>
 }

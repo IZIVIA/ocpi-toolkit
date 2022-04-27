@@ -173,7 +173,7 @@ class LocationsEmspServer(
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
-                        location = mapper.readValue(req.body!!, LocationPatch::class.java)
+                        location = mapper.readValue(req.body!!, LocationPartial::class.java)
                     )
                     .toHttpResponse()
             } catch (e: JsonProcessingException) {
@@ -199,7 +199,7 @@ class LocationsEmspServer(
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
                         evseUid = req.pathParams["evseUid"]!!,
-                        evse = mapper.readValue(req.body!!, EvsePatch::class.java)
+                        evse = mapper.readValue(req.body!!, EvsePartial::class.java)
                     )
                    .toHttpResponse()
             } catch (e: JsonProcessingException) {
@@ -227,7 +227,7 @@ class LocationsEmspServer(
                         locationId = req.pathParams["locationId"]!!,
                         evseUid = req.pathParams["evseUid"]!!,
                         connectorId = req.pathParams["connectorId"]!!,
-                        connector = mapper.readValue(req.body!!, ConnectorPatch::class.java)
+                        connector = mapper.readValue(req.body!!, ConnectorPartial::class.java)
                     )
                     .toHttpResponse()
             } catch (e: JsonProcessingException) {

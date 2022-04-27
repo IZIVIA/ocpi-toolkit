@@ -1,5 +1,7 @@
 package ocpi.locations.domain
 
+import io.github.quatresh.annotations.Partial
+
 /**
  * A connector is the socket or cable available for the EV to use. A single EVSE may provide multiple connectors but
  * only one of them can be in use at the same time. A connector always belongs to an EVSE object.
@@ -16,6 +18,7 @@ package ocpi.locations.domain
  * @property terms_and_conditions URL (string(255) type following the w3.org spec.) to the operator's terms and conditions
  * @property last_updated Timestamp when this Connectors was last updated (or created).
  */
+@Partial
 data class Connector(
     val id: String,
     val standard: ConnectorType,
@@ -28,7 +31,8 @@ data class Connector(
     val last_updated: String
 )
 
-data class ConnectorPatch(
+
+data class ConnectorPartial(
     val id: String?,
     val standard: ConnectorType?,
     val format: ConnectorFormat?,
@@ -37,5 +41,5 @@ data class ConnectorPatch(
     val amperage: Int?,
     val tariff_id: String?,
     val terms_and_conditions: String?,
-    val last_updated: String?
+    val last_updated: String?,
 )
