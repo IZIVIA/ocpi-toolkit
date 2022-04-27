@@ -1,5 +1,6 @@
 package samples
 
+import common.SearchResult
 import ocpi.locations.LocationsCpoInterface
 import ocpi.locations.LocationsCpoServer
 import ocpi.locations.domain.Connector
@@ -15,7 +16,7 @@ val cpoServerPort = 8080
  */
 fun main() {
     // We specify the transport to serve the cpo server
-    val transportServer = Http4kTransportServer(cpoServerPort)
+    val transportServer = Http4kTransportServer("http://localhost", cpoServerPort)
 
     // We specify callbacks for the server
     val callbacks = LocationsCpoServerCallbacks()
@@ -28,7 +29,7 @@ fun main() {
 }
 
 class LocationsCpoServerCallbacks : LocationsCpoInterface {
-    override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int?, limit: Int?): List<Location> {
+    override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int?, limit: Int?): SearchResult<Location> {
         TODO("Not yet implemented")
     }
 

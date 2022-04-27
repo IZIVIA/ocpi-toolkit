@@ -12,8 +12,9 @@ import transport.TransportServer
 import transport.domain.*
 
 class Http4kTransportServer(
+    url: String,
     private val port: Int
-) : TransportServer() {
+) : TransportServer("$url:$port") {
 
     private val serverRoutes: MutableList<RoutingHttpHandler> = mutableListOf()
 
@@ -44,7 +45,9 @@ class Http4kTransportServer(
                         queryParams = queryParams.associateWith { param -> req.query(param) },
                     )
                 ).let {
-                    Response(Status(it.status, null)).body(it.body)
+                    Response(Status(it.status, null))
+                        .body(it.body)
+                        .headers(it.headers.toList())
                 }
             }
         )

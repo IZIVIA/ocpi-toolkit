@@ -1,5 +1,6 @@
 package ocpi.locations
 
+import common.SearchResult
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
@@ -32,7 +33,7 @@ interface LocationsCpoInterface {
      * @return List<Location> The endpoint returns a list of Location objects The header will
      * contain the pagination related headers.
      */
-    fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int?, limit: Int?): List<Location>
+    fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int?, limit: Int?): SearchResult<Location>
 
     /**
      * @param locationId String max-length = 39

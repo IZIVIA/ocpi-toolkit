@@ -13,7 +13,7 @@ val emspServerPort = 8081
  */
 fun main() {
     // We specify the transport to serve the eMSP server
-    val transportServer = Http4kTransportServer(emspServerPort)
+    val transportServer = Http4kTransportServer("http://localhost", emspServerPort)
 
     // We specify callbacks for the server
     val callbacks = LocationsEmspServerCallbacks()

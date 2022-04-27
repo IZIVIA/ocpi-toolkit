@@ -26,16 +26,34 @@ class LocationsCpoServer(
             ),
             listOf("dateFrom", "dateTo", "offset", "limit")
         ) { req ->
-            val location = controller.getLocations(
-                dateFrom = req.queryParams["dateFrom"]?.let { Instant.parse(it) },
-                dateTo = req.queryParams["dateTo"]?.let { Instant.parse(it) },
+            val dateFrom = req.queryParams["dateFrom"]
+            val dateTo = req.queryParams["dateTo"]
+
+            val locationSearchResult = controller.getLocations(
+                dateFrom = dateFrom?.let { Instant.parse(it) },
+                dateTo = dateTo?.let { Instant.parse(it) },
                 offset = req.queryParams["offset"]?.toInt(),
                 limit = req.queryParams["limit"]?.toInt()
             )
 
+            val nextPageOffset = (locationSearchResult.offset + locationSearchResult.limit)
+                .takeIf { it <= locationSearchResult.totalCount }
+
+            val params = listOfNotNull(
+                dateFrom?.let { "dateFrom=$dateFrom" },
+                dateTo?.let { "dateTo=$dateTo" },
+                nextPageOffset?.let { "offset=$nextPageOffset" },
+                "limit=${locationSearchResult.limit}"
+            ).joinToString("&", "?")
+
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(mapper.writeValueAsString(OcpiResponseBody.success(location))),
+                body = mapper.writeValueAsString(mapper.writeValueAsString(OcpiResponseBody.success(locationSearchResult.list))),
+                headers = listOfNotNull(
+                    nextPageOffset?.let { "Link" to "<${transportServer.baseUrl}/ocpi/cpo/2.1.1/locations$params>; rel=\"next\"" },
+                    "X-Total-Count" to locationSearchResult.totalCount.toString(),
+                    "X-Limit" to locationSearchResult.limit.toString()
+                ).toMap()
             )
         }
 
