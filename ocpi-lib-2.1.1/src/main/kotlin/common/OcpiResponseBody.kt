@@ -29,7 +29,7 @@ data class OcpiResponseBody<T>(
             data = data,
             status_code = OcpiStatusCode.SUCCESS.code,
             status_message = null,
-            timestamp =Instant.now()
+            timestamp = Instant.now()
         )
     }
 }
