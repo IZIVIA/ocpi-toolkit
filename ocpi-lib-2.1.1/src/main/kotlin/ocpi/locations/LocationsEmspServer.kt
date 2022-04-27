@@ -56,7 +56,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(OcpiResponseBody.success(evse))
+                body = mapper.writeValueAsString(evse)
             )
         }
 
@@ -81,7 +81,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(OcpiResponseBody.success(connector))
+                body = mapper.writeValueAsString(connector)
             )
         }
 
@@ -127,7 +127,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(OcpiResponseBody.success(evse))
+                body = mapper.writeValueAsString(evse)
             )
         }
 
@@ -153,7 +153,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(OcpiResponseBody.success(connector))
+                body = mapper.writeValueAsString(connector)
             )
         }
 
@@ -199,7 +199,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(OcpiResponseBody.success(evse))
+                body = mapper.writeValueAsString(evse)
             )
         }
 
@@ -225,7 +225,7 @@ class LocationsEmspServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(OcpiResponseBody.success(connector))
+                body = mapper.writeValueAsString(connector)
             )
         }
     }
