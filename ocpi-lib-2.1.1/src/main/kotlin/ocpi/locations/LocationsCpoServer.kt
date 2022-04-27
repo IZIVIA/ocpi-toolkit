@@ -2,6 +2,7 @@ package ocpi.locations
 
 import common.OcpiResponseBody
 import common.mapper
+import common.paginatedHeaders
 import transport.TransportServer
 import transport.domain.FixedPathSegment
 import transport.domain.HttpMethod
@@ -29,31 +30,30 @@ class LocationsCpoServer(
             val dateFrom = req.queryParams["dateFrom"]
             val dateTo = req.queryParams["dateTo"]
 
-            val locationSearchResult = service.getLocations(
+            val response = service.getLocations(
                 dateFrom = dateFrom?.let { Instant.parse(it) },
                 dateTo = dateTo?.let { Instant.parse(it) },
-                offset = req.queryParams["offset"]?.toInt(),
+                offset = req.queryParams["offset"]?.toInt() ?: 0,
                 limit = req.queryParams["limit"]?.toInt()
             )
 
-            val nextPageOffset = (locationSearchResult.offset + locationSearchResult.limit)
-                .takeIf { it <= locationSearchResult.totalCount }
-
-            val params = listOfNotNull(
-                dateFrom?.let { "dateFrom=$dateFrom" },
-                dateTo?.let { "dateTo=$dateTo" },
-                nextPageOffset?.let { "offset=$nextPageOffset" },
-                "limit=${locationSearchResult.limit}"
-            ).joinToString("&", "?")
-
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(mapper.writeValueAsString(OcpiResponseBody.success(locationSearchResult.list))),
-                headers = listOfNotNull(
-                    nextPageOffset?.let { "Link" to "<${transportServer.baseUrl}/ocpi/cpo/2.1.1/locations$params>; rel=\"next\"" },
-                    "X-Total-Count" to locationSearchResult.totalCount.toString(),
-                    "X-Limit" to locationSearchResult.limit.toString()
-                ).toMap()
+                body = mapper.writeValueAsString(
+                    OcpiResponseBody(
+                        data = response.data?.list,
+                        status_code = response.status_code,
+                        status_message = response.status_message,
+                        timestamp = response.timestamp
+                    )
+                ),
+                headers = response.paginatedHeaders(
+                    url = "${transportServer.baseUrl}/ocpi/cpo/2.1.1/locations",
+                    queryList = listOfNotNull(
+                        dateFrom?.let { "dateFrom=$dateFrom" },
+                        dateTo?.let { "dateTo=$dateTo" }
+                    )
+                )
             )
         }
 
@@ -64,13 +64,13 @@ class LocationsCpoServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            val location = service.getLocation(
+            val response = service.getLocation(
                 locationId = req.pathParams["locationId"]!!
             )
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(mapper.writeValueAsString(OcpiResponseBody.success(location)))
+                body = mapper.writeValueAsString(response)
             )
         }
 
@@ -82,14 +82,14 @@ class LocationsCpoServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            val evse = service.getEvse(
+            val response = service.getEvse(
                 locationId = req.pathParams["locationId"]!!,
                 evseUid = req.pathParams["evseUid"]!!
             )
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(OcpiResponseBody.success(evse))
+                body = mapper.writeValueAsString(response)
             )
         }
 
@@ -102,7 +102,7 @@ class LocationsCpoServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            val connector = service.getConnector(
+            val response = service.getConnector(
                 locationId = req.pathParams["locationId"]!!,
                 evseUid = req.pathParams["evseUid"]!!,
                 connectorId = req.pathParams["connectorId"]!!
@@ -110,7 +110,7 @@ class LocationsCpoServer(
 
             HttpResponse(
                 status = 200,
-                body = mapper.writeValueAsString(OcpiResponseBody.success(connector))
+                body = mapper.writeValueAsString(response)
             )
         }
     }
