@@ -5,13 +5,13 @@ import ocpi.locations.LocationsCpoInterface
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
-import ocpi.locations.repositories.LocationsRepository
+import ocpi.locations.repositories.LocationsCpoRepository
 import ocpi.locations.validators.validate
 import org.valiktor.ConstraintViolationException
 import java.time.Instant
 
 class LocationsCpoService(
-    private val repository: LocationsRepository
+    private val repository: LocationsCpoRepository
 ) : LocationsCpoInterface {
 
     override fun getLocations(
@@ -35,14 +35,14 @@ class LocationsCpoService(
 
             OcpiResponseBody(
                 data = locations,
-                status_code = 1000,
+                status_code = OcpiStatusCode.SUCCESS.code,
                 status_message = null,
                 timestamp = Instant.now()
             )
         } catch (e: ConstraintViolationException) {
             OcpiResponseBody(
                 data = null,
-                status_code = 2001,
+                status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
                 status_message = e.constraintViolations.toString(),
                 timestamp = Instant.now()
             )
@@ -61,14 +61,14 @@ class LocationsCpoService(
 
             OcpiResponseBody(
                 data = location,
-                status_code = 1000,
+                status_code = OcpiStatusCode.SUCCESS.code,
                 status_message = null,
                 timestamp = Instant.now()
             )
         } catch (e: ConstraintViolationException) {
             OcpiResponseBody(
                 data = null,
-                status_code = 2001,
+                status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
                 status_message = e.constraintViolations.toString(),
                 timestamp = Instant.now()
             )
@@ -88,14 +88,14 @@ class LocationsCpoService(
 
             OcpiResponseBody(
                 data = evse,
-                status_code = 1000,
+                status_code = OcpiStatusCode.SUCCESS.code,
                 status_message = null,
                 timestamp = Instant.now()
             )
         } catch (e: ConstraintViolationException) {
             OcpiResponseBody(
                 data = null,
-                status_code = 2001,
+                status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
                 status_message = e.constraintViolations.toString(),
                 timestamp = Instant.now()
             )
@@ -116,14 +116,14 @@ class LocationsCpoService(
 
             OcpiResponseBody(
                 data = connector,
-                status_code = 1000,
+                status_code = OcpiStatusCode.SUCCESS.code,
                 status_message = null,
                 timestamp = Instant.now()
             )
         } catch (e: ConstraintViolationException) {
             OcpiResponseBody(
                 data = null,
-                status_code = 2001,
+                status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
                 status_message = e.constraintViolations.toString(),
                 timestamp = Instant.now()
             )
