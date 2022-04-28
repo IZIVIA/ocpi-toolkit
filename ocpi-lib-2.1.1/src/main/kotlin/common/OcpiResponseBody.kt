@@ -1,5 +1,6 @@
 package common
 
+import transport.domain.HttpRequest
 import transport.domain.HttpResponse
 import java.time.Instant
 
@@ -35,17 +36,19 @@ data class OcpiResponseBody<T>(
     }
 }
 
-fun <T> OcpiResponseBody<SearchResult<T>>.paginatedHeaders(url: String, queryList: List<String>) =
+fun <T> OcpiResponseBody<SearchResult<T>>.paginatedHeaders(request: HttpRequest) =
     if (data != null) {
         val nextPageOffset = (data.offset + data.limit).takeIf { it <= data.totalCount }
 
-        val queries = queryList
-            .plus("limit=${data.limit}")
-            .plus("offset=${data.limit + data.offset}")
+        val queries = request
+            .queryParams
+            .filterNot { it.key == "offset" }
+            .plus("offset" to (data.limit + data.offset))
+            .map { "${it.key}=${it.value}" }
             .joinToString("&", "?")
 
         listOfNotNull(
-            nextPageOffset?.let { "Link" to "<$url$queries>; rel=\"next\"" },
+            nextPageOffset?.let { "Link" to "<${request.baseUrl}${request.path}$queries>; rel=\"next\"" },
             "X-Total-Count" to data.totalCount.toString(),
             "X-Limit" to data.limit.toString()
         ).toMap()
@@ -59,7 +62,7 @@ fun <T> OcpiResponseBody<T>.toHttpResponse() =
         body = mapper.writeValueAsString(this)
     )
 
-fun <T> OcpiResponseBody<SearchResult<T>>.toPaginatedHttpResponse(url: String, queryList: List<String>) =
+fun <T> OcpiResponseBody<SearchResult<T>>.toPaginatedHttpResponse(request: HttpRequest) =
     OcpiResponseBody(
         data = data?.list,
         status_code = status_code,
@@ -67,9 +70,4 @@ fun <T> OcpiResponseBody<SearchResult<T>>.toPaginatedHttpResponse(url: String, q
         timestamp = timestamp
     )
         .toHttpResponse()
-        .copy(
-            headers = paginatedHeaders(
-                url = url,
-                queryList = queryList
-            )
-        )
+        .copy(headers = paginatedHeaders(request = request))

@@ -5,12 +5,8 @@ import transport.domain.HttpRequest
 import transport.domain.HttpResponse
 import transport.domain.PathSegment
 
-/**
- * @property baseUrl only used to know the next page for paginated responses.
- */
-abstract class TransportServer(
-    val baseUrl: String
-) {
+
+abstract class TransportServer {
     /**
      * Creates a route and specifies how to respond
      * @param method
