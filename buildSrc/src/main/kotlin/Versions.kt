@@ -7,4 +7,6 @@ object Versions {
     const val strikt = "0.34.0"
     const val kotlinPoet = "1.11.0"
     const val mpapt = "0.8.8"
+    const val mockk = "1.12.3"
+    const val log4j = "2.17.2+"
 }
