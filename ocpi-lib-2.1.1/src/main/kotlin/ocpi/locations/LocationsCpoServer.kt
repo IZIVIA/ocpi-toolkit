@@ -23,10 +23,10 @@ class LocationsCpoServer(
             path = listOf(
                 FixedPathSegment("/ocpi/cpo/2.1.1/locations")
             ),
-            queryParams = listOf("dateFrom", "dateTo", "offset", "limit")
+            queryParams = listOf("date_from", "date_to", "offset", "limit")
         ) { req ->
-            val dateFrom = req.queryParams["dateFrom"]
-            val dateTo = req.queryParams["dateTo"]
+            val dateFrom = req.queryParams["date_from"]
+            val dateTo = req.queryParams["date_to"]
 
             service
                 .getLocations(
