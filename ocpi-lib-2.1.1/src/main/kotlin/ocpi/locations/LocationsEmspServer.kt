@@ -18,7 +18,6 @@ class LocationsEmspServer(
     private val transportServer: TransportServer,
     private val service: LocationsEmspInterface
 ) {
-
     init {
         transportServer.handle(
             method = HttpMethod.GET,
@@ -99,8 +98,10 @@ class LocationsEmspServer(
                     )
                     .toHttpResponse()
             } catch (e: JsonProcessingException) {
-                e.printStackTrace()
-                HttpResponse(status = 400)
+                HttpResponse(
+                    status = 400,
+                    body = e.originalMessage
+                )
             }
         }
 
@@ -125,8 +126,10 @@ class LocationsEmspServer(
                     )
                     .toHttpResponse()
             } catch (e: JsonProcessingException) {
-                e.printStackTrace()
-                HttpResponse(status = 400)
+                HttpResponse(
+                    status = 400,
+                    body = e.originalMessage
+                )
             }
         }
 
@@ -153,8 +156,10 @@ class LocationsEmspServer(
                     )
                      .toHttpResponse()
             } catch (e: JsonProcessingException) {
-                e.printStackTrace()
-                HttpResponse(status = 400)
+                HttpResponse(
+                    status = 400,
+                    body = e.originalMessage
+                )
             }
         }
 
@@ -177,8 +182,10 @@ class LocationsEmspServer(
                     )
                     .toHttpResponse()
             } catch (e: JsonProcessingException) {
-                e.printStackTrace()
-                HttpResponse(status = 400)
+                HttpResponse(
+                    status = 400,
+                    body = e.originalMessage
+                )
             }
         }
 
@@ -203,8 +210,10 @@ class LocationsEmspServer(
                     )
                    .toHttpResponse()
             } catch (e: JsonProcessingException) {
-                e.printStackTrace()
-                HttpResponse(status = 400)
+                HttpResponse(
+                    status = 400,
+                    body = e.originalMessage
+                )
             }
         }
 
@@ -231,8 +240,10 @@ class LocationsEmspServer(
                     )
                     .toHttpResponse()
             } catch (e: JsonProcessingException) {
-                e.printStackTrace()
-                HttpResponse(status = 400)
+                HttpResponse(
+                    status = 400,
+                    body = e.originalMessage
+                )
             }
         }
     }
