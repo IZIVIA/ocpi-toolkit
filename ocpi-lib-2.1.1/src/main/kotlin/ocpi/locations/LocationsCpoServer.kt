@@ -35,13 +35,7 @@ class LocationsCpoServer(
                     offset = req.queryParams["offset"]?.toInt() ?: 0,
                     limit = req.queryParams["limit"]?.toInt()
                 )
-                .toPaginatedHttpResponse(
-                    url = "${transportServer.baseUrl}/ocpi/cpo/2.1.1/locations",
-                    queryList = listOfNotNull(
-                        dateFrom?.let { "dateFrom=$dateFrom" },
-                        dateTo?.let { "dateTo=$dateTo" }
-                    )
-                )
+                .toPaginatedHttpResponse(request = req)
         }
 
         transportServer.handle(
