@@ -3,6 +3,8 @@ package tests
 import common.OcpiResponseBody
 import common.OcpiStatusCode
 import common.SearchResult
+import ocpi.locations.domain.Connector
+import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
 import ocpi.locations.services.LocationsCpoService
 import org.junit.jupiter.api.Test
@@ -138,6 +140,128 @@ class LocationsCpoServiceTest {
                 .isNotNull()
                 .get(SearchResult<Location>::limit)
                 .isEqualTo(0)
+        }
+    }
+
+    @Test
+    fun getLocationParamsValidationTest() {
+        service = LocationsCpoService(locationsCpoRepository(emptyList()))
+
+        val str3chars = "abc"
+        val str39chars = "abababababababababababababababababababa"
+        val str40chars = "abababababababababababababababababababab"
+
+        expectThat(service.getLocation(locationId = str3chars)) {
+            get(OcpiResponseBody<Location?>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+        }
+
+        expectThat(service.getLocation(locationId = str39chars)) {
+            get(OcpiResponseBody<Location?>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+        }
+
+        expectThat(service.getLocation(locationId = str40chars)) {
+            get(OcpiResponseBody<Location?>::status_code)
+                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+        }
+    }
+
+    @Test
+    fun getEvseParamsValidationTest() {
+        service = LocationsCpoService(locationsCpoRepository(emptyList()))
+
+        val str3chars = "abc"
+        val str39chars = "abababababababababababababababababababa"
+        val str40chars = "abababababababababababababababababababab"
+
+        expectThat(service.getEvse(locationId = str3chars, evseUid = str3chars)) {
+            get(OcpiResponseBody<Evse?>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+        }
+
+        expectThat(service.getEvse(locationId = str39chars, evseUid = str3chars)) {
+            get(OcpiResponseBody<Evse?>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+        }
+
+        expectThat(service.getEvse(locationId = str40chars, evseUid = str3chars)) {
+            get(OcpiResponseBody<Evse?>::status_code)
+                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+        }
+
+        expectThat(service.getEvse(locationId = str3chars, evseUid = str3chars)) {
+            get(OcpiResponseBody<Evse?>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+        }
+
+        expectThat(service.getEvse(locationId = str3chars, evseUid = str39chars)) {
+            get(OcpiResponseBody<Evse?>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+        }
+
+        expectThat(service.getEvse(locationId = str3chars, evseUid = str40chars)) {
+            get(OcpiResponseBody<Evse?>::status_code)
+                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+        }
+
+        expectThat(service.getEvse(locationId = str40chars, evseUid = str40chars)) {
+            get(OcpiResponseBody<Evse?>::status_code)
+                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+        }
+    }
+
+    @Test
+    fun getConnectorParamsValidationTest() {
+        service = LocationsCpoService(locationsCpoRepository(emptyList()))
+
+        val str3chars = "abc"
+        val str39chars = "abababababababababababababababababababa"
+        val str40chars = "abababababababababababababababababababab"
+
+        expectThat(service.getConnector(locationId = str3chars, evseUid = str3chars, connectorId = str3chars)) {
+            get(OcpiResponseBody<Connector?>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+        }
+
+        expectThat(service.getConnector(locationId = str39chars, evseUid = str3chars, connectorId = str3chars)) {
+            get(OcpiResponseBody<Connector?>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+        }
+
+        expectThat(service.getConnector(locationId = str40chars, evseUid = str3chars, connectorId = str3chars)) {
+            get(OcpiResponseBody<Connector?>::status_code)
+                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+        }
+
+        expectThat(service.getConnector(locationId = str3chars, evseUid = str3chars, connectorId = str3chars)) {
+            get(OcpiResponseBody<Connector?>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+        }
+
+        expectThat(service.getConnector(locationId = str3chars, evseUid = str39chars, connectorId = str3chars)) {
+            get(OcpiResponseBody<Connector?>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+        }
+
+        expectThat(service.getConnector(locationId = str3chars, evseUid = str40chars, connectorId = str3chars)) {
+            get(OcpiResponseBody<Connector?>::status_code)
+                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+        }
+
+        expectThat(service.getConnector(locationId = str40chars, evseUid = str40chars, connectorId = str3chars)) {
+            get(OcpiResponseBody<Connector?>::status_code)
+                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+        }
+
+        expectThat(service.getConnector(locationId = str3chars, evseUid = str3chars, connectorId = str40chars)) {
+            get(OcpiResponseBody<Connector?>::status_code)
+                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+        }
+
+        expectThat(service.getConnector(locationId = str40chars, evseUid = str40chars, connectorId = str40chars)) {
+            get(OcpiResponseBody<Connector?>::status_code)
+                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
     }
 }
