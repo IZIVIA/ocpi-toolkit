@@ -2,6 +2,7 @@ package ocpi.locations.services
 
 import common.OcpiResponseBody
 import common.validate
+import common.validateLength
 import ocpi.locations.LocationsEmspInterface
 import ocpi.locations.domain.*
 import ocpi.locations.repositories.LocationsEmspRepository
@@ -17,7 +18,9 @@ class LocationsEmspService(
         locationId: String
     ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
         validate {
-            // TODO
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 39)
         }
 
         repository
@@ -33,7 +36,10 @@ class LocationsEmspService(
         evseUid: String
     ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
         validate {
-            // TODO
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 39)
+            validateLength("evseUid", evseUid, 39)
         }
 
         repository
@@ -49,7 +55,11 @@ class LocationsEmspService(
         connectorId: String
     ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
         validate {
-            // TODO
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 39)
+            validateLength("evseUid", evseUid, 39)
+            validateLength("connectorId", connectorId, 36)
         }
 
         repository
@@ -70,7 +80,10 @@ class LocationsEmspService(
         location: Location
     ): OcpiResponseBody<Location> = OcpiResponseBody.of {
         validate {
-            // TODO
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 39)
+            location.validate()
         }
 
         repository
@@ -86,7 +99,11 @@ class LocationsEmspService(
         evse: Evse
     ): OcpiResponseBody<Evse> = OcpiResponseBody.of {
         validate {
-            // TODO
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 39)
+            validateLength("evseUid", evseUid, 39)
+            evse.validate()
         }
 
         repository
@@ -109,7 +126,12 @@ class LocationsEmspService(
         connector: Connector
     ): OcpiResponseBody<Connector> = OcpiResponseBody.of {
         validate {
-            // TODO
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 39)
+            validateLength("evseUid", evseUid, 39)
+            validateLength("connectorId", connectorId, 36)
+            connector.validate()
         }
 
         repository
@@ -131,7 +153,10 @@ class LocationsEmspService(
         location: LocationPartial
     ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
         validate {
-            // TODO
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 39)
+            location.validate()
         }
 
         repository
@@ -152,7 +177,11 @@ class LocationsEmspService(
         evse: EvsePartial
     ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
         validate {
-            // TODO
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 39)
+            validateLength("evseUid", evseUid, 39)
+            evse.validate()
         }
 
         repository
@@ -175,7 +204,12 @@ class LocationsEmspService(
         connector: ConnectorPartial
     ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
         validate {
-            // TODO
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 39)
+            validateLength("evseUid", evseUid, 39)
+            validateLength("connectorId", connectorId, 36)
+            connector.validate()
         }
 
         repository

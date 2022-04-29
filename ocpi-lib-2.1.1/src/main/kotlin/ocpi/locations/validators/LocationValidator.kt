@@ -1,8 +1,6 @@
 package ocpi.locations.validators
 
-import ocpi.locations.domain.Connector
-import ocpi.locations.domain.Evse
-import ocpi.locations.domain.Location
+import ocpi.locations.domain.*
 import org.valiktor.functions.isValid
 import org.valiktor.validate
 
@@ -25,5 +23,17 @@ fun Evse.validate(): Evse = validate(this) {
 }
 
 fun Connector.validate(): Connector = validate(this) {
+    // TODO
+}
+
+fun LocationPartial.validate(): LocationPartial = validate(this) {
+    // TODO
+}
+
+fun EvsePartial.validate(): EvsePartial = validate(this) {
+    // TODO
+}
+
+fun ConnectorPartial.validate(): ConnectorPartial = validate(this) {
     // TODO
 }
