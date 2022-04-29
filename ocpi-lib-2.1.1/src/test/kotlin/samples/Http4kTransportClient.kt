@@ -30,7 +30,10 @@ class Http4kTransportClient(
         return client(http4kRequest).let {
             HttpResponse(
                 status = it.status.code,
-                body = it.bodyString()
+                body = it.bodyString(),
+                headers = it.headers
+                    .filter { header -> header.second != null }
+                    .toMap() as Map<String, String>
             )
         }
     }

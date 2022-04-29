@@ -25,4 +25,9 @@ abstract class TransportServer {
      * Starts the server
      */
     abstract fun start()
+
+    /**
+     * Stops the server
+     */
+    abstract fun stop()
 }

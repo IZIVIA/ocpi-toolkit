@@ -6,17 +6,18 @@ import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
+import org.http4k.server.Http4kServer
 import org.http4k.server.Netty
 import org.http4k.server.asServer
 import transport.TransportServer
 import transport.domain.*
 
 class Http4kTransportServer(
-    private val url: String,
     private val port: Int
 ) : TransportServer() {
 
     private val serverRoutes: MutableList<RoutingHttpHandler> = mutableListOf()
+    private lateinit var server: Http4kServer
 
     override fun handle(
         method: HttpMethod,
@@ -39,7 +40,7 @@ class Http4kTransportServer(
             route bind Method.valueOf(method.name) to { req: Request ->
                 callback(
                     HttpRequest(
-                        baseUrl = "$url:$port",
+                        baseUrl = req.uri.toString(),
                         method = method,
                         path = route,
                         pathParams = pathParams.associateWith { param -> req.path(param)!! },
@@ -55,10 +56,14 @@ class Http4kTransportServer(
     }
 
     override fun start() {
-        DebuggingFilters.PrintRequestAndResponse()
+        server = DebuggingFilters.PrintRequestAndResponse()
             .then(
                 serverRoutes.reduce { a, b -> routes(a, b) }
             )
             .asServer(Netty(port)).start()
+    }
+
+    override fun stop() {
+        server.stop()
     }
 }
