@@ -13,6 +13,7 @@ import transport.TransportServer
 import transport.domain.*
 
 class Http4kTransportServer(
+    private val baseUrl: String,
     private val port: Int
 ) : TransportServer() {
 
@@ -40,7 +41,7 @@ class Http4kTransportServer(
             route bind Method.valueOf(method.name) to { req: Request ->
                 callback(
                     HttpRequest(
-                        baseUrl = req.uri.toString(),
+                        baseUrl = baseUrl,
                         method = method,
                         path = route,
                         pathParams = pathParams.associateWith { param -> req.path(param)!! },

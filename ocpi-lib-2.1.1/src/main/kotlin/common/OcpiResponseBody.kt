@@ -57,7 +57,7 @@ fun <T> OcpiResponseBody<SearchResult<T>>.getPaginatedHeaders(request: HttpReque
 
         val queries = request
             .queryParams
-            .filterNot { it.key == "offset" }
+            .filter { it.key != "offset" && it.value != null }
             .plus("offset" to (data.limit + data.offset))
             .map { "${it.key}=${it.value}" }
             .joinToString("&", "?")

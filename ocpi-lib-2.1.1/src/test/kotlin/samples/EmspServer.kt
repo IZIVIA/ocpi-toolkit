@@ -14,7 +14,7 @@ val emspServerPort = 8081
  */
 fun main() {
     // We specify the transport to serve the eMSP server
-    val transportServer = Http4kTransportServer(emspServerPort)
+    val transportServer = Http4kTransportServer(emspServerUrl, emspServerPort)
 
     // We specify repository for the service
     val repository = CacheLocationsEmspRepository()

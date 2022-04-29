@@ -18,7 +18,8 @@ inline fun <reified T> HttpResponse.parsePaginatedBody(offset: Int): OcpiRespons
                 data = parsedBody.data?.toSearchResult(
                     totalCount = headers["X-Total-Count"]!!.toInt(),
                     limit = headers["X-Limit"]!!.toInt(),
-                    offset = offset
+                    offset = offset,
+                    nextPageUrl = headers["Link"]?.split("<")?.get(1)?.split(">")?.first()
                 ),
                 status_code = parsedBody.status_code,
                 status_message = parsedBody.status_message,

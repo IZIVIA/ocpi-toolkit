@@ -17,7 +17,7 @@ val cpoServerPort = 8080
  */
 fun main() {
     // We specify the transport to serve the cpo server
-    val transportServer = Http4kTransportServer(cpoServerPort)
+    val transportServer = Http4kTransportServer(cpoServerUrl, cpoServerPort)
 
     // We specify repository for the service
     val repository = CacheLocationsCpoRepository()
