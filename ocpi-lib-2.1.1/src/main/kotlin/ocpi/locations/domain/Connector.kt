@@ -1,6 +1,7 @@
 package ocpi.locations.domain
 
 import io.github.quatresh.annotations.Partial
+import java.time.Instant
 
 /**
  * A connector is the socket or cable available for the EV to use. A single EVSE may provide multiple connectors but
@@ -28,7 +29,7 @@ data class Connector(
     val amperage: Int,
     val tariff_id: String?,
     val terms_and_conditions: String,
-    val last_updated: String
+    val last_updated: Instant
 )
 
 
@@ -41,5 +42,5 @@ data class ConnectorPartial(
     val amperage: Int?,
     val tariff_id: String?,
     val terms_and_conditions: String?,
-    val last_updated: String?,
+    val last_updated: Instant?,
 )
