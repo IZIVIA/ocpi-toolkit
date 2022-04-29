@@ -24,7 +24,7 @@ class LocationsEmspService(
                     ?.validate()
             )
         } catch (e: ConstraintViolationException) {
-            OcpiResponseBody.invalid(e.constraintViolations.toString())
+            OcpiResponseBody.invalid(message = e.constraintViolations.toString())
         }
 
 
@@ -44,7 +44,7 @@ class LocationsEmspService(
                 ?.validate()
         )
     } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(e.constraintViolations.toString())
+        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
     }
 
     override fun getConnector(
@@ -70,7 +70,7 @@ class LocationsEmspService(
                 ?.validate()
         )
     } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(e.constraintViolations.toString())
+        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
     }
 
     override fun putLocation(
@@ -89,7 +89,7 @@ class LocationsEmspService(
                 .validate()
         )
     } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(e.constraintViolations.toString())
+        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
     }
 
     override fun putEvse(
@@ -115,7 +115,7 @@ class LocationsEmspService(
                 .validate()
         )
     } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(e.constraintViolations.toString())
+        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
     }
 
     override fun putConnector(
@@ -143,7 +143,7 @@ class LocationsEmspService(
                 .validate()
         )
     } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(e.constraintViolations.toString())
+        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
     }
 
     override fun patchLocation(
@@ -167,7 +167,7 @@ class LocationsEmspService(
                 ?.validate()
         )
     } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(e.constraintViolations.toString())
+        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
     }
 
     override fun patchEvse(
@@ -193,7 +193,7 @@ class LocationsEmspService(
                 ?.validate()
         )
     } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(e.constraintViolations.toString())
+        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
     }
 
     override fun patchConnector(
@@ -221,6 +221,6 @@ class LocationsEmspService(
                 ?.validate()
         )
     } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(e.constraintViolations.toString())
+        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
     }
 }

@@ -33,19 +33,9 @@ class LocationsCpoService(
                     searchResult.list.forEach { location -> location.validate() }
                 }
 
-            OcpiResponseBody(
-                data = locations,
-                status_code = OcpiStatusCode.SUCCESS.code,
-                status_message = null,
-                timestamp = Instant.now()
-            )
+            OcpiResponseBody.success(data = locations)
         } catch (e: ConstraintViolationException) {
-            OcpiResponseBody(
-                data = null,
-                status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
-                status_message = e.constraintViolations.toString(),
-                timestamp = Instant.now()
-            )
+            OcpiResponseBody.invalid(message = e.constraintViolations.toString())
         }
     }
 
@@ -59,19 +49,9 @@ class LocationsCpoService(
                 .getLocation(locationId)
                 ?.validate()
 
-            OcpiResponseBody(
-                data = location,
-                status_code = OcpiStatusCode.SUCCESS.code,
-                status_message = null,
-                timestamp = Instant.now()
-            )
+            OcpiResponseBody.success(data = location)
         } catch (e: ConstraintViolationException) {
-            OcpiResponseBody(
-                data = null,
-                status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
-                status_message = e.constraintViolations.toString(),
-                timestamp = Instant.now()
-            )
+            OcpiResponseBody.invalid(message = e.constraintViolations.toString())
         }
     }
 
@@ -86,19 +66,9 @@ class LocationsCpoService(
                 .getEvse(locationId, evseUid)
                 ?.validate()
 
-            OcpiResponseBody(
-                data = evse,
-                status_code = OcpiStatusCode.SUCCESS.code,
-                status_message = null,
-                timestamp = Instant.now()
-            )
+            OcpiResponseBody.success(data = evse)
         } catch (e: ConstraintViolationException) {
-            OcpiResponseBody(
-                data = null,
-                status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
-                status_message = e.constraintViolations.toString(),
-                timestamp = Instant.now()
-            )
+            OcpiResponseBody.invalid(message = e.constraintViolations.toString())
         }
     }
 
@@ -114,19 +84,9 @@ class LocationsCpoService(
                 .getConnector(locationId, evseUid, connectorId)
                 ?.validate()
 
-            OcpiResponseBody(
-                data = connector,
-                status_code = OcpiStatusCode.SUCCESS.code,
-                status_message = null,
-                timestamp = Instant.now()
-            )
+            OcpiResponseBody.success(data = connector)
         } catch (e: ConstraintViolationException) {
-            OcpiResponseBody(
-                data = null,
-                status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
-                status_message = e.constraintViolations.toString(),
-                timestamp = Instant.now()
-            )
+            OcpiResponseBody.invalid(message = e.constraintViolations.toString())
         }
     }
 }
