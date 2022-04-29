@@ -1,5 +1,6 @@
 package common
 
+import org.valiktor.ConstraintViolationException
 import transport.domain.HttpRequest
 import transport.domain.HttpResponse
 import java.time.Instant
@@ -40,6 +41,13 @@ data class OcpiResponseBody<T>(
             status_message = message,
             timestamp = Instant.now()
         )
+
+        fun <T> of(data: () -> T) =
+        try {
+            success(data = data())
+        } catch (e: ConstraintViolationException) {
+            invalid(message = e.constraintViolations.toString())
+        }
     }
 }
 

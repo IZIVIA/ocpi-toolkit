@@ -6,26 +6,24 @@ import ocpi.locations.LocationsEmspInterface
 import ocpi.locations.domain.*
 import ocpi.locations.repositories.LocationsEmspRepository
 import ocpi.locations.validators.validate
-import org.valiktor.ConstraintViolationException
 
 class LocationsEmspService(
     private val repository: LocationsEmspRepository
 ) : LocationsEmspInterface {
 
-    override fun getLocation(countryCode: String, partyId: String, locationId: String): OcpiResponseBody<Location?> =
-        try {
-            validate {
-                // TODO
-            }
-
-            OcpiResponseBody.success(
-                data = repository
-                    .getLocation(countryCode = countryCode, partyId = partyId, locationId = locationId)
-                    ?.validate()
-            )
-        } catch (e: ConstraintViolationException) {
-            OcpiResponseBody.invalid(message = e.constraintViolations.toString())
+    override fun getLocation(
+        countryCode: String,
+        partyId: String,
+        locationId: String
+    ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
+        validate {
+            // TODO
         }
+
+        repository
+            .getLocation(countryCode = countryCode, partyId = partyId, locationId = locationId)
+            ?.validate()
+    }
 
 
     override fun getEvse(
@@ -33,18 +31,14 @@ class LocationsEmspService(
         partyId: String,
         locationId: String,
         evseUid: String
-    ): OcpiResponseBody<Evse?> = try {
+    ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
         validate {
             // TODO
         }
 
-        OcpiResponseBody.success(
-            data = repository
-                .getEvse(countryCode = countryCode, partyId = partyId, locationId = locationId, evseUid = evseUid)
-                ?.validate()
-        )
-    } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
+        repository
+            .getEvse(countryCode = countryCode, partyId = partyId, locationId = locationId, evseUid = evseUid)
+            ?.validate()
     }
 
     override fun getConnector(
@@ -53,24 +47,20 @@ class LocationsEmspService(
         locationId: String,
         evseUid: String,
         connectorId: String
-    ): OcpiResponseBody<Connector?> = try {
+    ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
         validate {
             // TODO
         }
 
-        OcpiResponseBody.success(
-            data = repository
-                .getConnector(
-                    countryCode = countryCode,
-                    partyId = partyId,
-                    locationId = locationId,
-                    evseUid = evseUid,
-                    connectorId = connectorId
-                )
-                ?.validate()
-        )
-    } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
+        repository
+            .getConnector(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                evseUid = evseUid,
+                connectorId = connectorId
+            )
+            ?.validate()
     }
 
     override fun putLocation(
@@ -78,18 +68,14 @@ class LocationsEmspService(
         partyId: String,
         locationId: String,
         location: Location
-    ): OcpiResponseBody<Location> = try {
+    ): OcpiResponseBody<Location> = OcpiResponseBody.of {
         validate {
             // TODO
         }
 
-        OcpiResponseBody.success(
-            data = repository
-                .putLocation(countryCode = countryCode, partyId = partyId, locationId = locationId, location = location)
-                .validate()
-        )
-    } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
+        repository
+            .putLocation(countryCode = countryCode, partyId = partyId, locationId = locationId, location = location)
+            .validate()
     }
 
     override fun putEvse(
@@ -98,24 +84,20 @@ class LocationsEmspService(
         locationId: String,
         evseUid: String,
         evse: Evse
-    ): OcpiResponseBody<Evse> = try {
+    ): OcpiResponseBody<Evse> = OcpiResponseBody.of {
         validate {
             // TODO
         }
 
-        OcpiResponseBody.success(
-            data = repository
-                .putEvse(
-                    countryCode = countryCode,
-                    partyId = partyId,
-                    locationId = locationId,
-                    evseUid = evseUid,
-                    evse = evse
-                )
-                .validate()
-        )
-    } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
+        repository
+            .putEvse(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                evseUid = evseUid,
+                evse = evse
+            )
+            .validate()
     }
 
     override fun putConnector(
@@ -125,25 +107,21 @@ class LocationsEmspService(
         evseUid: String,
         connectorId: String,
         connector: Connector
-    ): OcpiResponseBody<Connector> = try {
+    ): OcpiResponseBody<Connector> = OcpiResponseBody.of {
         validate {
             // TODO
         }
 
-        OcpiResponseBody.success(
-            data = repository
-                .putConnector(
-                    countryCode = countryCode,
-                    partyId = partyId,
-                    locationId = locationId,
-                    evseUid = evseUid,
-                    connectorId = connectorId,
-                    connector = connector
-                )
-                .validate()
-        )
-    } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
+        repository
+            .putConnector(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                evseUid = evseUid,
+                connectorId = connectorId,
+                connector = connector
+            )
+            .validate()
     }
 
     override fun patchLocation(
@@ -151,23 +129,19 @@ class LocationsEmspService(
         partyId: String,
         locationId: String,
         location: LocationPartial
-    ): OcpiResponseBody<Location?> = try {
+    ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
         validate {
             // TODO
         }
 
-        OcpiResponseBody.success(
-            data = repository
-                .patchLocation(
-                    countryCode = countryCode,
-                    partyId = partyId,
-                    locationId = locationId,
-                    location = location
-                )
-                ?.validate()
-        )
-    } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
+        repository
+            .patchLocation(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                location = location
+            )
+            ?.validate()
     }
 
     override fun patchEvse(
@@ -176,24 +150,20 @@ class LocationsEmspService(
         locationId: String,
         evseUid: String,
         evse: EvsePartial
-    ): OcpiResponseBody<Evse?> = try {
+    ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
         validate {
             // TODO
         }
 
-        OcpiResponseBody.success(
-            data = repository
-                .patchEvse(
-                    countryCode = countryCode,
-                    partyId = partyId,
-                    locationId = locationId,
-                    evseUid = evseUid,
-                    evse = evse
-                )
-                ?.validate()
-        )
-    } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
+        repository
+            .patchEvse(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                evseUid = evseUid,
+                evse = evse
+            )
+            ?.validate()
     }
 
     override fun patchConnector(
@@ -203,24 +173,20 @@ class LocationsEmspService(
         evseUid: String,
         connectorId: String,
         connector: ConnectorPartial
-    ): OcpiResponseBody<Connector?> = try {
+    ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
         validate {
             // TODO
         }
 
-        OcpiResponseBody.success(
-            data = repository
-                .patchConnector(
-                    countryCode = countryCode,
-                    partyId = partyId,
-                    locationId = locationId,
-                    evseUid = evseUid,
-                    connectorId = connectorId,
-                    connector = connector
-                )
-                ?.validate()
-        )
-    } catch (e: ConstraintViolationException) {
-        OcpiResponseBody.invalid(message = e.constraintViolations.toString())
+        repository
+            .patchConnector(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                evseUid = evseUid,
+                connectorId = connectorId,
+                connector = connector
+            )
+            ?.validate()
     }
 }
