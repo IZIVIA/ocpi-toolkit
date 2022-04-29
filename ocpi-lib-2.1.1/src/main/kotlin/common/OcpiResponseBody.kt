@@ -28,14 +28,14 @@ data class OcpiResponseBody<T>(
     val timestamp: Instant
 ) {
     companion object {
-        fun <T> success(data: T) = OcpiResponseBody(
+        private fun <T> success(data: T) = OcpiResponseBody(
             data = data,
             status_code = OcpiStatusCode.SUCCESS.code,
             status_message = null,
             timestamp = Instant.now()
         )
 
-        fun <T> invalid(message: String) = OcpiResponseBody<T>(
+        private fun <T> invalid(message: String) = OcpiResponseBody<T>(
             data = null,
             status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
             status_message = message,
@@ -43,15 +43,15 @@ data class OcpiResponseBody<T>(
         )
 
         fun <T> of(data: () -> T) =
-        try {
-            success(data = data())
-        } catch (e: ConstraintViolationException) {
-            invalid(message = e.constraintViolations.toString())
-        }
+            try {
+                success(data = data())
+            } catch (e: ConstraintViolationException) {
+                invalid(message = e.constraintViolations.toString())
+            }
     }
 }
 
-fun <T> OcpiResponseBody<SearchResult<T>>.paginatedHeaders(request: HttpRequest) =
+fun <T> OcpiResponseBody<SearchResult<T>>.getPaginatedHeaders(request: HttpRequest) =
     if (data != null) {
         val nextPageOffset = (data.offset + data.limit).takeIf { it <= data.totalCount }
 
@@ -85,4 +85,4 @@ fun <T> OcpiResponseBody<SearchResult<T>>.toPaginatedHttpResponse(request: HttpR
         timestamp = timestamp
     )
         .toHttpResponse()
-        .copy(headers = paginatedHeaders(request = request))
+        .copy(headers = getPaginatedHeaders(request = request))
