@@ -1,7 +1,5 @@
 package samples
 
-import common.OcpiResponseBody
-import ocpi.locations.LocationsEmspInterface
 import ocpi.locations.LocationsEmspServer
 import ocpi.locations.domain.*
 import ocpi.locations.repositories.LocationsEmspRepository
