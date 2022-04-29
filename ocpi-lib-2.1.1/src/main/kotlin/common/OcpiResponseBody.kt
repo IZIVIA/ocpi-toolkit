@@ -33,6 +33,13 @@ data class OcpiResponseBody<T>(
             status_message = null,
             timestamp = Instant.now()
         )
+
+        fun <T> invalid(message: String) = OcpiResponseBody<T>(
+            data = null,
+            status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
+            status_message = message,
+            timestamp = Instant.now()
+        )
     }
 }
 
