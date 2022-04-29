@@ -9,4 +9,6 @@ object Versions {
     const val mpapt = "0.8.8"
     const val mockk = "1.12.3"
     const val log4j = "2.17.2+"
+    const val testcontainers = "1.16.3"
+    const val kmongo = "4.5.1"
 }
