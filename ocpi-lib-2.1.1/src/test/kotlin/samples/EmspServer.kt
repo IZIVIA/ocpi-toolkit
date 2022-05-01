@@ -26,7 +26,7 @@ fun main() {
     transportServer.start()
 }
 
-class CacheLocationsEmspRepository: LocationsEmspRepository {
+class CacheLocationsEmspRepository : LocationsEmspRepository {
     override fun getLocation(countryCode: String, partyId: String, locationId: String): Location? {
         return Location(
             id = locationId,

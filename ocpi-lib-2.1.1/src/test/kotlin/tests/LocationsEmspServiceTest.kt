@@ -27,27 +27,27 @@ class LocationsEmspServiceTest {
         service = LocationsEmspService(locationsEmspRepository(emptyList()))
 
         expectThat(service.getLocation(countryCode = str1char, partyId = str2chars, locationId = str4chars)) {
-            get(OcpiResponseBody<Location?>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
         expectThat(service.getLocation(countryCode = str2chars, partyId = str3chars, locationId = str39chars)) {
-            get(OcpiResponseBody<Location?>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
         expectThat(service.getLocation(countryCode = str3chars, partyId = str3chars, locationId = str39chars)) {
-            get(OcpiResponseBody<Location?>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
         expectThat(service.getLocation(countryCode = str2chars, partyId = str4chars, locationId = str39chars)) {
-            get(OcpiResponseBody<Location?>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
         expectThat(service.getLocation(countryCode = str2chars, partyId = str3chars, locationId = str40chars)) {
-            get(OcpiResponseBody<Location?>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
     }
@@ -56,33 +56,75 @@ class LocationsEmspServiceTest {
     fun getEvseParamsValidationTest() {
         service = LocationsEmspService(locationsEmspRepository(emptyList()))
 
-        expectThat(service.getEvse(countryCode = str1char, partyId = str2chars, locationId = str4chars, evseUid = str4chars)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.getEvse(
+                countryCode = str1char,
+                partyId = str2chars,
+                locationId = str4chars,
+                evseUid = str4chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.getEvse(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.getEvse(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.getEvse(countryCode = str3chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.getEvse(
+                countryCode = str3chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.getEvse(countryCode = str2chars, partyId = str4chars, locationId = str39chars, evseUid = str39chars)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.getEvse(
+                countryCode = str2chars,
+                partyId = str4chars,
+                locationId = str39chars,
+                evseUid = str39chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.getEvse(countryCode = str2chars, partyId = str3chars, locationId = str40chars, evseUid = str39chars)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.getEvse(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str40chars,
+                evseUid = str39chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.getEvse(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str40chars)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.getEvse(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str40chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
     }
@@ -91,38 +133,94 @@ class LocationsEmspServiceTest {
     fun getConnectorParamsValidationTest() {
         service = LocationsEmspService(locationsEmspRepository(emptyList()))
 
-        expectThat(service.getConnector(countryCode = str1char, partyId = str2chars, locationId = str4chars, evseUid = str4chars, connectorId = str4chars)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.getConnector(
+                countryCode = str1char,
+                partyId = str2chars,
+                locationId = str4chars,
+                evseUid = str4chars,
+                connectorId = str4chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.getConnector(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, connectorId = str36chars)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.getConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str36chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.getConnector(countryCode = str3chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, connectorId = str36chars)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.getConnector(
+                countryCode = str3chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str36chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.getConnector(countryCode = str2chars, partyId = str4chars, locationId = str39chars, evseUid = str39chars, connectorId = str36chars)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.getConnector(
+                countryCode = str2chars,
+                partyId = str4chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str36chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.getConnector(countryCode = str2chars, partyId = str3chars, locationId = str40chars, evseUid = str39chars, connectorId = str36chars)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.getConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str40chars,
+                evseUid = str39chars,
+                connectorId = str36chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.getConnector(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str40chars, connectorId = str36chars)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.getConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str40chars,
+                connectorId = str36chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.getConnector(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, connectorId = str37chars)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.getConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str37chars
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
     }
@@ -131,28 +229,63 @@ class LocationsEmspServiceTest {
     fun patchLocationParamsValidationTest() {
         service = LocationsEmspService(locationsEmspRepository(emptyList()))
 
-        expectThat(service.patchLocation(countryCode = str1char, partyId = str2chars, locationId = str4chars, location = dummyLocationPartial)) {
-            get(OcpiResponseBody<Location?>::status_code)
+        expectThat(
+            service.patchLocation(
+                countryCode = str1char,
+                partyId = str2chars,
+                locationId = str4chars,
+                location = dummyLocationPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.patchLocation(countryCode = str2chars, partyId = str3chars, locationId = str39chars, location = dummyLocationPartial)) {
-            get(OcpiResponseBody<Location?>::status_code)
+        expectThat(
+            service.patchLocation(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                location = dummyLocationPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.patchLocation(countryCode = str3chars, partyId = str3chars, locationId = str39chars, location = dummyLocationPartial)) {
-            get(OcpiResponseBody<Location?>::status_code)
+        expectThat(
+            service.patchLocation(
+                countryCode = str3chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                location = dummyLocationPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.patchLocation(countryCode = str2chars, partyId = str4chars, locationId = str39chars, location = dummyLocationPartial)) {
-            get(OcpiResponseBody<Location?>::status_code)
+        expectThat(
+            service.patchLocation(
+                countryCode = str2chars,
+                partyId = str4chars,
+                locationId = str39chars,
+                location = dummyLocationPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.patchLocation(countryCode = str2chars, partyId = str3chars, locationId = str40chars, location = dummyLocationPartial)) {
-            get(OcpiResponseBody<Location?>::status_code)
+        expectThat(
+            service.patchLocation(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str40chars,
+                location = dummyLocationPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
     }
@@ -161,33 +294,81 @@ class LocationsEmspServiceTest {
     fun patchEvseParamsValidationTest() {
         service = LocationsEmspService(locationsEmspRepository(emptyList()))
 
-        expectThat(service.patchEvse(countryCode = str1char, partyId = str2chars, locationId = str4chars, evseUid = str4chars, evse = dummyEvsePartial)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.patchEvse(
+                countryCode = str1char,
+                partyId = str2chars,
+                locationId = str4chars,
+                evseUid = str4chars,
+                evse = dummyEvsePartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.patchEvse(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, evse = dummyEvsePartial)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.patchEvse(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                evse = dummyEvsePartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.patchEvse(countryCode = str3chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, evse = dummyEvsePartial)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.patchEvse(
+                countryCode = str3chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                evse = dummyEvsePartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.patchEvse(countryCode = str2chars, partyId = str4chars, locationId = str39chars, evseUid = str39chars, evse = dummyEvsePartial)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.patchEvse(
+                countryCode = str2chars,
+                partyId = str4chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                evse = dummyEvsePartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.patchEvse(countryCode = str2chars, partyId = str3chars, locationId = str40chars, evseUid = str39chars, evse = dummyEvsePartial)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.patchEvse(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str40chars,
+                evseUid = str39chars,
+                evse = dummyEvsePartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.patchEvse(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str40chars, evse = dummyEvsePartial)) {
-            get(OcpiResponseBody<Evse?>::status_code)
+        expectThat(
+            service.patchEvse(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str40chars,
+                evse = dummyEvsePartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
     }
@@ -196,38 +377,101 @@ class LocationsEmspServiceTest {
     fun patchConnectorParamsValidationTest() {
         service = LocationsEmspService(locationsEmspRepository(emptyList()))
 
-        expectThat(service.patchConnector(countryCode = str1char, partyId = str2chars, locationId = str4chars, evseUid = str4chars, connectorId = str4chars, connector = dummyConnectorPartial)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.patchConnector(
+                countryCode = str1char,
+                partyId = str2chars,
+                locationId = str4chars,
+                evseUid = str4chars,
+                connectorId = str4chars,
+                connector = dummyConnectorPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.patchConnector(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, connectorId = str36chars, connector = dummyConnectorPartial)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.patchConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str36chars,
+                connector = dummyConnectorPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.patchConnector(countryCode = str3chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, connectorId = str36chars, connector = dummyConnectorPartial)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.patchConnector(
+                countryCode = str3chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str36chars,
+                connector = dummyConnectorPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.patchConnector(countryCode = str2chars, partyId = str4chars, locationId = str39chars, evseUid = str39chars, connectorId = str36chars, connector = dummyConnectorPartial)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.patchConnector(
+                countryCode = str2chars,
+                partyId = str4chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str36chars,
+                connector = dummyConnectorPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.patchConnector(countryCode = str2chars, partyId = str3chars, locationId = str40chars, evseUid = str39chars, connectorId = str36chars, connector = dummyConnectorPartial)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.patchConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str40chars,
+                evseUid = str39chars,
+                connectorId = str36chars,
+                connector = dummyConnectorPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.patchConnector(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str40chars, connectorId = str36chars, connector = dummyConnectorPartial)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.patchConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str40chars,
+                connectorId = str36chars,
+                connector = dummyConnectorPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.patchConnector(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, connectorId = str37chars, connector = dummyConnectorPartial)) {
-            get(OcpiResponseBody<Connector?>::status_code)
+        expectThat(
+            service.patchConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str37chars,
+                connector = dummyConnectorPartial
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
     }
@@ -236,28 +480,63 @@ class LocationsEmspServiceTest {
     fun putLocationParamsValidationTest() {
         service = LocationsEmspService(locationsEmspRepository(emptyList()))
 
-        expectThat(service.putLocation(countryCode = str1char, partyId = str2chars, locationId = str4chars, location = dummyLocation)) {
-            get(OcpiResponseBody<Location>::status_code)
+        expectThat(
+            service.putLocation(
+                countryCode = str1char,
+                partyId = str2chars,
+                locationId = str4chars,
+                location = dummyLocation
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.putLocation(countryCode = str2chars, partyId = str3chars, locationId = str39chars, location = dummyLocation)) {
-            get(OcpiResponseBody<Location>::status_code)
+        expectThat(
+            service.putLocation(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                location = dummyLocation
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.putLocation(countryCode = str3chars, partyId = str3chars, locationId = str39chars, location = dummyLocation)) {
-            get(OcpiResponseBody<Location>::status_code)
+        expectThat(
+            service.putLocation(
+                countryCode = str3chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                location = dummyLocation
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.putLocation(countryCode = str2chars, partyId = str4chars, locationId = str39chars, location = dummyLocation)) {
-            get(OcpiResponseBody<Location>::status_code)
+        expectThat(
+            service.putLocation(
+                countryCode = str2chars,
+                partyId = str4chars,
+                locationId = str39chars,
+                location = dummyLocation
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.putLocation(countryCode = str2chars, partyId = str3chars, locationId = str40chars, location = dummyLocation)) {
-            get(OcpiResponseBody<Location>::status_code)
+        expectThat(
+            service.putLocation(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str40chars,
+                location = dummyLocation
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
     }
@@ -266,33 +545,81 @@ class LocationsEmspServiceTest {
     fun putEvseParamsValidationTest() {
         service = LocationsEmspService(locationsEmspRepository(emptyList()))
 
-        expectThat(service.putEvse(countryCode = str1char, partyId = str2chars, locationId = str4chars, evseUid = str4chars, evse = dummyEvse)) {
-            get(OcpiResponseBody<Evse>::status_code)
+        expectThat(
+            service.putEvse(
+                countryCode = str1char,
+                partyId = str2chars,
+                locationId = str4chars,
+                evseUid = str4chars,
+                evse = dummyEvse
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.putEvse(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, evse = dummyEvse)) {
-            get(OcpiResponseBody<Evse>::status_code)
+        expectThat(
+            service.putEvse(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                evse = dummyEvse
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.putEvse(countryCode = str3chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, evse = dummyEvse)) {
-            get(OcpiResponseBody<Evse>::status_code)
+        expectThat(
+            service.putEvse(
+                countryCode = str3chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                evse = dummyEvse
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.putEvse(countryCode = str2chars, partyId = str4chars, locationId = str39chars, evseUid = str39chars, evse = dummyEvse)) {
-            get(OcpiResponseBody<Evse>::status_code)
+        expectThat(
+            service.putEvse(
+                countryCode = str2chars,
+                partyId = str4chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                evse = dummyEvse
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.putEvse(countryCode = str2chars, partyId = str3chars, locationId = str40chars, evseUid = str39chars, evse = dummyEvse)) {
-            get(OcpiResponseBody<Evse>::status_code)
+        expectThat(
+            service.putEvse(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str40chars,
+                evseUid = str39chars,
+                evse = dummyEvse
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.putEvse(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str40chars, evse = dummyEvse)) {
-            get(OcpiResponseBody<Evse>::status_code)
+        expectThat(
+            service.putEvse(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str40chars,
+                evse = dummyEvse
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
     }
@@ -301,38 +628,101 @@ class LocationsEmspServiceTest {
     fun putConnectorParamsValidationTest() {
         service = LocationsEmspService(locationsEmspRepository(emptyList()))
 
-        expectThat(service.putConnector(countryCode = str1char, partyId = str2chars, locationId = str4chars, evseUid = str4chars, connectorId = str4chars, connector = dummyConnector)) {
-            get(OcpiResponseBody<Connector>::status_code)
+        expectThat(
+            service.putConnector(
+                countryCode = str1char,
+                partyId = str2chars,
+                locationId = str4chars,
+                evseUid = str4chars,
+                connectorId = str4chars,
+                connector = dummyConnector
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.putConnector(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, connectorId = str36chars, connector = dummyConnector)) {
-            get(OcpiResponseBody<Connector>::status_code)
+        expectThat(
+            service.putConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str36chars,
+                connector = dummyConnector
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
         }
 
-        expectThat(service.putConnector(countryCode = str3chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, connectorId = str36chars, connector = dummyConnector)) {
-            get(OcpiResponseBody<Connector>::status_code)
+        expectThat(
+            service.putConnector(
+                countryCode = str3chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str36chars,
+                connector = dummyConnector
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.putConnector(countryCode = str2chars, partyId = str4chars, locationId = str39chars, evseUid = str39chars, connectorId = str36chars, connector = dummyConnector)) {
-            get(OcpiResponseBody<Connector>::status_code)
+        expectThat(
+            service.putConnector(
+                countryCode = str2chars,
+                partyId = str4chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str36chars,
+                connector = dummyConnector
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.putConnector(countryCode = str2chars, partyId = str3chars, locationId = str40chars, evseUid = str39chars, connectorId = str36chars, connector = dummyConnector)) {
-            get(OcpiResponseBody<Connector>::status_code)
+        expectThat(
+            service.putConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str40chars,
+                evseUid = str39chars,
+                connectorId = str36chars,
+                connector = dummyConnector
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.putConnector(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str40chars, connectorId = str36chars, connector = dummyConnector)) {
-            get(OcpiResponseBody<Connector>::status_code)
+        expectThat(
+            service.putConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str40chars,
+                connectorId = str36chars,
+                connector = dummyConnector
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
 
-        expectThat(service.putConnector(countryCode = str2chars, partyId = str3chars, locationId = str39chars, evseUid = str39chars, connectorId = str37chars, connector = dummyConnector)) {
-            get(OcpiResponseBody<Connector>::status_code)
+        expectThat(
+            service.putConnector(
+                countryCode = str2chars,
+                partyId = str3chars,
+                locationId = str39chars,
+                evseUid = str39chars,
+                connectorId = str37chars,
+                connector = dummyConnector
+            )
+        ) {
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
         }
     }
