@@ -36,3 +36,33 @@ public data class LocationPartial(
   public val energy_mix: EnergyMixPartial?,
   public val last_updated: Instant?,
 )
+
+public fun Location.toPartial(): LocationPartial {
+   return LocationPartial(
+     id = id,
+    type = type,
+    name = name,
+    address = address,
+    city = city,
+    postal_code = postal_code,
+    country = country,
+    coordinates = coordinates.toPartial(),
+    related_locations = related_locations.toPartial(),
+    evses = evses.toPartial(),
+    directions = directions.toPartial(),
+    operator = operator?.toPartial(),
+    suboperator = suboperator?.toPartial(),
+    owner = owner?.toPartial(),
+    facilities = facilities,
+    time_zone = time_zone,
+    opening_times = opening_times?.toPartial(),
+    charging_when_closed = charging_when_closed,
+    images = images.toPartial(),
+    energy_mix = energy_mix?.toPartial(),
+    last_updated = last_updated
+   )
+}
+
+public fun List<Location>.toPartial(): List<LocationPartial> {
+   return mapNotNull { it.toPartial() }
+}

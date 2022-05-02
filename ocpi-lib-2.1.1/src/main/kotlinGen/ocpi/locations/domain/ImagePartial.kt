@@ -7,6 +7,7 @@ package ocpi.locations.domain
 
 import kotlin.Int
 import kotlin.String
+import kotlin.collections.List
 
 /**
  * Partial representation of [ocpi.locations.domain.Image]
@@ -19,3 +20,18 @@ public data class ImagePartial(
   public val width: Int?,
   public val height: Int?,
 )
+
+public fun Image.toPartial(): ImagePartial {
+   return ImagePartial(
+     url = url,
+    thumbnail = thumbnail,
+    category = category,
+    type = type,
+    width = width,
+    height = height
+   )
+}
+
+public fun List<Image>.toPartial(): List<ImagePartial> {
+   return mapNotNull { it.toPartial() }
+}

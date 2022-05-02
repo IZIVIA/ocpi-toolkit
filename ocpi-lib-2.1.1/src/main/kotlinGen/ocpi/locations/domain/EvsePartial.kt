@@ -27,3 +27,25 @@ public data class EvsePartial(
   public val images: List<ImagePartial>?,
   public val last_updated: Instant?,
 )
+
+public fun Evse.toPartial(): EvsePartial {
+   return EvsePartial(
+     uid = uid,
+    evse_id = evse_id,
+    status = status,
+    status_schedule = status_schedule.toPartial(),
+    capabilities = capabilities,
+    connectors = connectors.toPartial(),
+    floor_level = floor_level,
+    coordinates = coordinates?.toPartial(),
+    physical_reference = physical_reference,
+    directions = directions.toPartial(),
+    parking_restrictions = parking_restrictions,
+    images = images.toPartial(),
+    last_updated = last_updated
+   )
+}
+
+public fun List<Evse>.toPartial(): List<EvsePartial> {
+   return mapNotNull { it.toPartial() }
+}
