@@ -17,9 +17,3 @@ data class RegularHours(
     val period_begin: String,
     val period_end: String
 )
-
-data class RegularHoursPartial(
-    val weekday: Int?,
-    val period_begin: String?,
-    val period_end: String?,
-)

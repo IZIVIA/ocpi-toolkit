@@ -31,16 +31,3 @@ data class Connector(
     val terms_and_conditions: String,
     val last_updated: Instant
 )
-
-
-data class ConnectorPartial(
-    val id: String?,
-    val standard: ConnectorType?,
-    val format: ConnectorFormat?,
-    val power_type: PowerType?,
-    val voltage: Int?,
-    val amperage: Int?,
-    val tariff_id: String?,
-    val terms_and_conditions: String?,
-    val last_updated: Instant?,
-)

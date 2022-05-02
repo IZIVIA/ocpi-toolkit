@@ -21,9 +21,3 @@ data class StatusSchedule(
     val period_end: Instant?,
     val status: Status
 )
-
-data class StatusSchedulePartial(
-    val period_begin: Instant?,
-    val period_end: Instant?,
-    val status: Status?,
-)

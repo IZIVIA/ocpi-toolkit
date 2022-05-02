@@ -14,9 +14,3 @@ data class ExceptionalPeriod(
     val period_begin: Instant,
     val period_end: Instant
 )
-
-
-data class ExceptionalPeriodPartial(
-    val period_begin: Instant?,
-    val period_end: Instant?,
-)

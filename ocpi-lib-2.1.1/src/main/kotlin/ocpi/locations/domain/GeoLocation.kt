@@ -15,9 +15,3 @@ data class GeoLocation(
     val latitude: String,
     val longitude: String
 )
-
-
-data class GeoLocationPartial(
-    val latitude: String?,
-    val longitude: String?,
-)

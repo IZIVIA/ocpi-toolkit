@@ -11,9 +11,3 @@ data class DisplayText(
     val language: String,
     val text: String
 )
-
-
-data class DisplayTextPartial(
-    val language: String?,
-    val text: String?,
-)

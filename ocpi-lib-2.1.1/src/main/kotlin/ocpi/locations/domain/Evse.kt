@@ -50,19 +50,3 @@ data class Evse(
     val images: List<Image>,
     val last_updated: Instant
 )
-
-data class EvsePartial(
-    val uid: String?,
-    val evse_id: String?,
-    val status: Status?,
-    val status_schedule: List<StatusSchedulePartial>?,
-    val capabilities: List<Capability>?,
-    val connectors: List<ConnectorPartial>?,
-    val floor_level: String?,
-    val coordinates: GeoLocationPartial?,
-    val physical_reference: String?,
-    val directions: List<DisplayTextPartial>?,
-    val parking_restrictions: List<ParkingRestriction>?,
-    val images: List<ImagePartial>?,
-    val last_updated: Instant?,
-)

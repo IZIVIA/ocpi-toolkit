@@ -14,8 +14,3 @@ data class EnergySource(
     val source: EnergySourceCategory,
     val percentage: BigDecimal
 )
-
-data class EnergySourcePartial(
-    val source: EnergySourceCategory?,
-    val percentage: BigDecimal?,
-)

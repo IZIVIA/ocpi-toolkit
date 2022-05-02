@@ -14,9 +14,3 @@ data class BusinessDetails(
     val website: String?,
     val logo: Image?
 )
-
-data class BusinessDetailsPartial(
-    val name: String?,
-    val website: String?,
-    val logo: ImagePartial?,
-)

@@ -21,10 +21,3 @@ data class Hours(
     val exceptional_openings: List<ExceptionalPeriod>,
     val exceptional_closings: List<ExceptionalPeriod>
 )
-
-data class HoursPartial(
-    val regular_hours: List<RegularHoursPartial>?,
-    val twenty_four_seven: Boolean?,
-    val exceptional_openings: List<ExceptionalPeriodPartial>?,
-    val exceptional_closings: List<ExceptionalPeriodPartial>?,
-)

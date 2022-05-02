@@ -24,12 +24,3 @@ data class EnergyMix(
     val supplier_name: String?,
     val energy_product_name: String?
 )
-
-
-data class EnergyMixPartial(
-    val is_green_energy: Boolean?,
-    val energy_sources: List<EnergySourcePartial>?,
-    val environ_impact: List<EnvironmentalImpactPartial>?,
-    val supplier_name: String?,
-    val energy_product_name: String?,
-)

@@ -60,28 +60,3 @@ data class Location(
     val energy_mix: EnergyMix?,
     val last_updated: Instant
 )
-
-
-data class LocationPartial(
-    val id: String?,
-    val type: LocationType?,
-    val name: String?,
-    val address: String?,
-    val city: String?,
-    val postal_code: String?,
-    val country: String?,
-    val coordinates: GeoLocationPartial?,
-    val related_locations: List<AdditionalGeoLocationPartial>?,
-    val evses: List<EvsePartial>?,
-    val directions: List<DisplayTextPartial>?,
-    val `operator`: BusinessDetailsPartial?,
-    val suboperator: BusinessDetailsPartial?,
-    val owner: BusinessDetailsPartial?,
-    val facilities: List<Facility>?,
-    val time_zone: String?,
-    val opening_times: HoursPartial?,
-    val charging_when_closed: Boolean?,
-    val images: List<ImagePartial>?,
-    val energy_mix: EnergyMixPartial?,
-    val last_updated: Instant?,
-)
