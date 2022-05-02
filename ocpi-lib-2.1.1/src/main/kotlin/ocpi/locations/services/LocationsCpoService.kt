@@ -7,8 +7,6 @@ import ocpi.locations.domain.Location
 import java.time.Instant
 
 /**
- * CPO Interface
- *
  * - GET: Fetch a list locations, last updated between the {date_from} and {date_to} (paginated), or get a specific
  * location, EVSE or Connector.
  * - POST: n/a
