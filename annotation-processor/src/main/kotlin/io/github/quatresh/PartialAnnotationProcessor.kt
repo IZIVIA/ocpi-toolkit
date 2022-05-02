@@ -37,6 +37,8 @@ class PartialAnnotationProcessor : AbstractProcessor() {
 
             val partialClassName = className.toPartial()
             val partialClassType = buildPartialDataClassType(classDescriptor, partialClassName)
+            val partialBuilderFun = buildPartialDataClassBuilderFunction(classDescriptor)
+            val partialListBuilderFun = buildPartialDataClassListBuilderFunction(classDescriptor)
             val partialGenFolder = classFile.parent
                 .replace("/src/main/kotlin", "/src/main/kotlinGen")
                 .replace(packageName.replace(".", "/"), "")
@@ -45,6 +47,8 @@ class PartialAnnotationProcessor : AbstractProcessor() {
                 .builder(packageName, partialClassName)
                 .generateComments()
                 .addType(partialClassType)
+                .addFunction(partialBuilderFun)
+                .addFunction(partialListBuilderFun)
                 .build()
                 .writeTo(File(partialGenFolder))
         }
@@ -87,6 +91,51 @@ class PartialAnnotationProcessor : AbstractProcessor() {
                     .build()
             )
             .addProperties(partialClassProperties)
+            .build()
+    }
+
+    private fun buildPartialDataClassBuilderFunction(classDescriptor: ClassDescriptor): FunSpec {
+        val packageName = classDescriptor.containingPackage().toString()
+        val className = classDescriptor.name.asString()
+        val baseClassConstructorParameters = classDescriptor.constructors.first()
+            .getFunctionParameters()
+        val partialClassConstructorParameters = baseClassConstructorParameters
+            .joinToString(separator = ",\n  ") { param ->
+                "${param.parameterName} = ${
+                    findPartialClassByName(param.type.asString()!!.toBase())
+                        ?.let { "${param.parameterName}${if (param.nullable) "?" else ""}.toPartial()" } ?: param.parameterName
+                }"
+            }
+        return FunSpec.builder("toPartial")
+            .receiver(ClassName(packageName, className))
+            .returns(ClassName(packageName, className.toPartial()))
+            .addCode(
+                """
+                | return ${className.toPartial()}(
+                |   $partialClassConstructorParameters
+                | )
+                """.trimMargin()
+            )
+            .build()
+    }
+
+    private fun buildPartialDataClassListBuilderFunction(classDescriptor: ClassDescriptor): FunSpec {
+        val packageName = classDescriptor.containingPackage().toString()
+        val className = classDescriptor.name.asString()
+        return FunSpec.builder("toPartial")
+            .receiver(
+                ClassName("kotlin.collections", "List")
+                    .parameterizedBy(ClassName(packageName, className))
+            )
+            .returns(
+                ClassName("kotlin.collections", "List")
+                    .parameterizedBy(ClassName(packageName, className.toPartial()))
+            )
+            .addCode(
+                """
+                | return mapNotNull { it.toPartial() }
+                """.trimMargin()
+            )
             .build()
     }
 
@@ -137,13 +186,23 @@ class PartialAnnotationProcessor : AbstractProcessor() {
     }
 
     private fun String.wireWithExistingPartial(): String =
-        partialClasses
-            .map { it.name.asString() }
-            .find { it == this }
+        findPartialClassByName(this)
             ?.toPartial()
             ?: this
 
+    private fun findPartialClassByName(name: String) =
+        partialClasses
+            .map { it.name.asString() }
+            .find { it == name }
+
+    private fun TypeName.asString(): String? = when (this) {
+        is ClassName -> simpleName
+        is ParameterizedTypeName -> this.typeArguments.first().asString()
+        else -> null
+    }
+
     private fun String.toPartial() = "${this}Partial"
+    private fun String.toBase() = replace("Partial", "")
 
     private fun FileSpec.Builder.generateComments() =
         addFileComment(
