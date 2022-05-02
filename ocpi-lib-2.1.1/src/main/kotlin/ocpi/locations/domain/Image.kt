@@ -18,9 +18,9 @@ import io.github.quatresh.annotations.Partial
  * representations for logos should be exactly 128 pixels in width and height. If not squared, thumbnails should have
  * the same orientation as the original.
  *
- * @property url URL (string(255) type following the w3.org spec.) from where the image data can be fetched through a
+ * @property url URL (string(255) type following the w3.org spec. from where the image data can be fetched through a
  * web browser.
- * @property thumbnail URL (string(255) type following the w3.org spec.) from where a thumbnail of the image can
+ * @property thumbnail URL (string(255) type following the w3.org spec. from where a thumbnail of the image can
  * be fetched through a web browser.
  * @property category Describes what the image is used for.
  * @property type (max-length=4) Image type like: gif, jpeg, png, svg

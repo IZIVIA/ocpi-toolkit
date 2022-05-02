@@ -27,7 +27,8 @@ import java.time.Instant
  * @property floor_level (max-length=4) Level on which the charging station is located (in garage buildings) in the
  * locally displayed numbering scheme.
  * @property coordinates Coordinates of the EVSE.
- * @property physical_reference A number/string printed on the outside of the EVSE for visual identification.
+ * @property physical_reference (max-length=16) A number/string printed on the outside of the EVSE for visual
+ * identification.
  * @property directions Multi-language human-readable directions when more detailed information on how to reach the EVSE
  * from the Location is required.
  * @property parking_restrictions The restrictions that apply to the parking spot.

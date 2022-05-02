@@ -10,8 +10,10 @@ import io.github.quatresh.annotations.Partial
  * @property energy_sources Key-value pairs (enum + percentage) of energy sources of this location's tariff.
  * @property environ_impact Key-value pairs (enum + percentage) of nuclear waste and CO2 exhaust of this location's
  * tariff.
- * @property supplier_name Name of the energy supplier, delivering the energy for this location or tariff. **
- * @property energy_product_name Name of the energy suppliers product/tariff plan used at this location. **
+ * @property supplier_name (max-length=64) Name of the energy supplier, delivering the energy for this location or
+ * tariff. **
+ * @property energy_product_name (max-length=64) Name of the energy suppliers product/tariff plan used at this
+ * location. **
  *
  * ** These fields can be used to look-up energy qualification or to show it directly to the customer (for well-known
  * brands like Greenpeace Energy, etc.)
