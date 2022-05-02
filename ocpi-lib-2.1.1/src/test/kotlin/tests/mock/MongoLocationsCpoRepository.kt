@@ -20,12 +20,17 @@ class LocationsCpoMongoRepository(
         collection
             .run {
                 if (dateFrom != null || dateTo != null) {
-                    find(
-                        and(
-                            dateFrom?.let { Location::last_updated gte dateFrom },
-                            dateTo?.let { Location::last_updated lte dateTo }
+                    if (dateFrom == null)
+                        find(Location::last_updated lte dateTo)
+                    else if (dateTo == null)
+                        find(Location::last_updated gte dateFrom )
+                    else
+                        find(
+                            and(
+                                Location::last_updated gte dateFrom,
+                                Location::last_updated lte dateTo
+                            )
                         )
-                    )
                 } else {
                     find()
                 }
@@ -36,7 +41,7 @@ class LocationsCpoMongoRepository(
                 val size = it.size
 
                 it
-                    .filterIndexed { index: Int, _: Location -> index >= offset }
+                    .filterIndexed { index: Int, _: Location -> index + 1 > offset }
                     .take(actualLimit)
                     .toSearchResult(totalCount = size, limit = actualLimit, offset = offset)
             }
