@@ -13,8 +13,8 @@ import transport.TransportServer
 import transport.domain.*
 
 class Http4kTransportServer(
-    private val baseUrl: String,
-    private val port: Int
+    val baseUrl: String,
+    val port: Int
 ) : TransportServer() {
 
     private val serverRoutes: MutableList<RoutingHttpHandler> = mutableListOf()
@@ -61,7 +61,8 @@ class Http4kTransportServer(
             .then(
                 serverRoutes.reduce { a, b -> routes(a, b) }
             )
-            .asServer(Netty(port)).start()
+            .asServer(Netty(port))
+            .start()
     }
 
     override fun stop() {

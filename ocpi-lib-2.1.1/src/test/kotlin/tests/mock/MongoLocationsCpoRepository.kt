@@ -1,39 +1,31 @@
 package tests.mock
 
 import com.mongodb.client.MongoCollection
-import com.mongodb.client.model.Filters.and
+import com.mongodb.client.model.Filters
 import common.SearchResult
 import common.toSearchResult
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
 import ocpi.locations.repositories.LocationsCpoRepository
+import org.litote.kmongo.and
 import org.litote.kmongo.gte
 import org.litote.kmongo.lte
 import java.time.Instant
 
 class LocationsCpoMongoRepository(
     private val collection: MongoCollection<Location>
-): LocationsCpoRepository {
+) : LocationsCpoRepository {
 
     override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int, limit: Int?): SearchResult<Location> =
         collection
             .run {
-                if (dateFrom != null || dateTo != null) {
-                    if (dateFrom == null)
-                        find(Location::last_updated lte dateTo)
-                    else if (dateTo == null)
-                        find(Location::last_updated gte dateFrom )
-                    else
-                        find(
-                            and(
-                                Location::last_updated gte dateFrom,
-                                Location::last_updated lte dateTo
-                            )
-                        )
-                } else {
-                    find()
-                }
+                find(
+                    and(
+                        dateFrom?.let { Location::last_updated gte dateFrom },
+                        dateTo?.let { Location::last_updated lte dateTo }
+                    )
+                )
             }
             .toList()
             .let {

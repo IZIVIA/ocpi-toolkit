@@ -8,15 +8,13 @@ import ocpi.locations.domain.Location
 import ocpi.locations.services.LocationsCpoService
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.getCollection
-import samples.Http4kTransportClient
-import samples.Http4kTransportServer
 import strikt.api.expectThat
 import strikt.assertions.*
 import tests.mock.LocationsCpoMongoRepository
 import java.time.Instant
 import kotlin.math.min
 
-class LocationsIntegrationTest : BaseDBIntegrationTest() {
+class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
     @Test
     fun getLocationsTest() {
@@ -41,16 +39,16 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
         collection.insertMany(locations)
 
         // Start CPO server
-        val cpoServerPort = 8080
-        val cpoServerUrl = "http://localhost:$cpoServerPort"
-        val transport = Http4kTransportServer(cpoServerUrl, cpoServerPort)
-        LocationsCpoServer(transport, LocationsCpoService(locationsCpoRepository))
+        val server = buildTransportServer()
+        val client = server.getClient()
+
+        LocationsCpoServer(server, LocationsCpoService(locationsCpoRepository))
 
         GlobalScope.run {
-            transport.start()
+            server.start()
         }
 
-        val locationsEmspClient = LocationsEmspClient(Http4kTransportClient(cpoServerUrl))
+        val locationsEmspClient = LocationsEmspClient(client)
 
         // Tests
         var limit = numberOfLocations + 1
@@ -131,7 +129,7 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("http://localhost:8080/ocpi/cpo/2.1.1/locations?limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${server.baseUrl}/ocpi/cpo/2.1.1/locations?limit=$limit&offset=${offset + limit}")
                 }
         }
 
@@ -172,7 +170,7 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("http://localhost:8080/ocpi/cpo/2.1.1/locations?limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${server.baseUrl}/ocpi/cpo/2.1.1/locations?limit=$limit&offset=${offset + limit}")
                 }
         }
 
@@ -458,10 +456,10 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("http://localhost:8080/ocpi/cpo/2.1.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset+limit}")
+                        .isEqualTo("${server.baseUrl}/ocpi/cpo/2.1.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset+limit}")
                 }
         }
 
-        transport.stop()
+        server.stop()
     }
 }
