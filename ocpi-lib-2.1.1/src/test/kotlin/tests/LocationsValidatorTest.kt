@@ -103,11 +103,9 @@ class LocationsValidatorTest {
             validConnector.copy(tariff_id = generateRandomString(37)).validate()
         }.isFailure()
 
-        /* Not implemented
         expectCatching {
-            validImage.copy(terms_and_conditions = "not an url").validate()
+            validConnector.copy(terms_and_conditions = "not an url").validate()
         }.isFailure()
-         */
     }
 
     @Test
@@ -420,7 +418,6 @@ class LocationsValidatorTest {
             validImage.copy(type = "abcde").validate()
         }.isFailure()
 
-        /* Not implemented
         expectCatching {
             validImage.copy(url = "not an url").validate()
         }.isFailure()
@@ -428,7 +425,6 @@ class LocationsValidatorTest {
         expectCatching {
             validImage.copy(thumbnail = "not an url").validate()
         }.isFailure()
-         */
     }
 
     @Test
@@ -443,11 +439,9 @@ class LocationsValidatorTest {
             validBusinessDetails.copy(name = generateRandomString(101)).validate()
         }.isFailure()
 
-        /* Not implemented
         expectCatching {
-            validImage.copy(website = "not an url").validate()
+            validBusinessDetails.copy(website = "not an url").validate()
         }.isFailure()
-        */
     }
 
     @Test

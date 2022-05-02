@@ -1,11 +1,18 @@
 package ocpi.locations.validation
 
+import java.net.URL
+
 /**
  * URL type following the w3.org spec. to the operator's terms and conditions
- * TODO: Improve?
  */
 fun String.isValidUrl(): Boolean =
-    length <= 255
+    try {
+        URL(this).toURI()
+        length <= 255
+    } catch (e: Exception) {
+        false
+    }
+
 
 /**
  * One of IANA tzdata's TZ-values representing the time zone of the location.
