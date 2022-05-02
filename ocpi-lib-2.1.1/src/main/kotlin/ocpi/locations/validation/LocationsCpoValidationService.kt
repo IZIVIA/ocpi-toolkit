@@ -1,4 +1,4 @@
-package ocpi.locations.validators
+package ocpi.locations.validation
 
 import common.*
 import ocpi.locations.LocationsCpoInterface
@@ -8,7 +8,7 @@ import ocpi.locations.domain.Location
 import ocpi.locations.services.LocationsCpoService
 import java.time.Instant
 
-class LocationsCpoValidatorService(
+class LocationsCpoValidationService(
     private val service: LocationsCpoService
 ) : LocationsCpoInterface {
 

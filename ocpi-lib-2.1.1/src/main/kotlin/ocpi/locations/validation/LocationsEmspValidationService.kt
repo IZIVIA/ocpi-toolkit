@@ -1,4 +1,4 @@
-package ocpi.locations.validators
+package ocpi.locations.validation
 
 import common.OcpiResponseBody
 import common.validate
@@ -7,7 +7,7 @@ import ocpi.locations.LocationsEmspInterface
 import ocpi.locations.domain.*
 import ocpi.locations.services.LocationsEmspService
 
-class LocationsEmspValidatorService(
+class LocationsEmspValidationService(
     private val service: LocationsEmspService
 ) : LocationsEmspInterface {
 

@@ -1,4 +1,4 @@
-package ocpi.locations.validators
+package ocpi.locations.validation
 
 import ocpi.locations.domain.*
 import org.valiktor.functions.isValid

@@ -4,7 +4,7 @@ import common.OcpiStatusCode
 import ocpi.locations.LocationsCpoServer
 import ocpi.locations.LocationsEmspClient
 import ocpi.locations.domain.Location
-import ocpi.locations.validators.LocationsCpoValidatorService
+import ocpi.locations.validation.LocationsCpoValidationService
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.getCollection
 import strikt.api.expectThat
@@ -41,7 +41,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         val server = buildTransportServer()
         val client = server.getClient()
 
-        LocationsCpoServer(server, LocationsCpoValidatorService(locationsCpoService))
+        LocationsCpoServer(server, LocationsCpoValidationService(locationsCpoService))
         server.start()
 
         val locationsEmspClient = LocationsEmspClient(client)

@@ -1,14 +1,14 @@
 package tests
 
 import common.OcpiStatusCode
-import ocpi.locations.validators.LocationsEmspValidatorService
+import ocpi.locations.validation.LocationsEmspValidationService
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import tests.mock.locationsEmspService
 
-class LocationsEmspValidatorServiceTest {
-    private lateinit var service: LocationsEmspValidatorService
+class LocationsEmspValidationServiceTest {
+    private lateinit var service: LocationsEmspValidationService
 
     val str1char = "a"
     val str2chars = "ab"
@@ -21,7 +21,7 @@ class LocationsEmspValidatorServiceTest {
 
     @Test
     fun getLocationParamsValidationTest() {
-        service = LocationsEmspValidatorService(locationsEmspService(emptyList()))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()))
 
         expectThat(service.getLocation(countryCode = str1char, partyId = str2chars, locationId = str4chars)) {
             get { status_code }
@@ -51,7 +51,7 @@ class LocationsEmspValidatorServiceTest {
 
     @Test
     fun getEvseParamsValidationTest() {
-        service = LocationsEmspValidatorService(locationsEmspService(emptyList()))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()))
 
         expectThat(
             service.getEvse(
@@ -128,7 +128,7 @@ class LocationsEmspValidatorServiceTest {
 
     @Test
     fun getConnectorParamsValidationTest() {
-        service = LocationsEmspValidatorService(locationsEmspService(emptyList()))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()))
 
         expectThat(
             service.getConnector(
@@ -224,7 +224,7 @@ class LocationsEmspValidatorServiceTest {
 
     @Test
     fun patchLocationParamsValidationTest() {
-        service = LocationsEmspValidatorService(locationsEmspService(emptyList()))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()))
 
         expectThat(
             service.patchLocation(
@@ -289,7 +289,7 @@ class LocationsEmspValidatorServiceTest {
 
     @Test
     fun patchEvseParamsValidationTest() {
-        service = LocationsEmspValidatorService(locationsEmspService(emptyList()))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()))
 
         expectThat(
             service.patchEvse(
@@ -372,7 +372,7 @@ class LocationsEmspValidatorServiceTest {
 
     @Test
     fun patchConnectorParamsValidationTest() {
-        service = LocationsEmspValidatorService(locationsEmspService(emptyList()))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()))
 
         expectThat(
             service.patchConnector(
@@ -475,7 +475,7 @@ class LocationsEmspValidatorServiceTest {
 
     @Test
     fun putLocationParamsValidationTest() {
-        service = LocationsEmspValidatorService(locationsEmspService(emptyList()))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()))
 
         expectThat(
             service.putLocation(
@@ -540,7 +540,7 @@ class LocationsEmspValidatorServiceTest {
 
     @Test
     fun putEvseParamsValidationTest() {
-        service = LocationsEmspValidatorService(locationsEmspService(emptyList()))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()))
 
         expectThat(
             service.putEvse(
@@ -623,7 +623,7 @@ class LocationsEmspValidatorServiceTest {
 
     @Test
     fun putConnectorParamsValidationTest() {
-        service = LocationsEmspValidatorService(locationsEmspService(emptyList()))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()))
 
         expectThat(
             service.putConnector(

@@ -6,7 +6,7 @@ import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
 import ocpi.locations.services.LocationsCpoService
-import ocpi.locations.validators.LocationsCpoValidatorService
+import ocpi.locations.validation.LocationsCpoValidationService
 import java.time.Instant
 
 val cpoServerUrl = "http://localhost:8080"
@@ -19,11 +19,11 @@ fun main() {
     // We specify the transport to serve the cpo server
     val transportServer = Http4kTransportServer(cpoServerUrl, cpoServerPort)
 
-    // We specify service for the validator service
+    // We specify service for the validation service
     val service = CacheLocationsCpoService()
 
     // We implement callbacks for the server using the built-in service and our service implementation
-    LocationsCpoServer(transportServer, LocationsCpoValidatorService(service))
+    LocationsCpoServer(transportServer, LocationsCpoValidationService(service))
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()
