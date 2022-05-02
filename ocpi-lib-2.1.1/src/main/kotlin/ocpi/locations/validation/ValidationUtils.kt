@@ -1,6 +1,7 @@
 package ocpi.locations.validation
 
 import java.net.URL
+import java.util.*
 
 /**
  * URL type following the w3.org spec. to the operator's terms and conditions
@@ -24,10 +25,10 @@ fun String.isValidTimeZone(): Boolean =
 
 /**
  * ISO 3166-1 alpha-3 code for the country of this location.
- * TODO: Improve?
  */
-fun String.isValidCountry(): Boolean =
-    length <= 3 && uppercase() == this
+fun String.isValidCountry(): Boolean = Locale
+    .getISOCountries(Locale.IsoCountryCode.PART1_ALPHA3)
+    .contains(this)
 
 /**
  * Latitude of the point in decimal degree Regex: -?[0-9]{1,2}\.[0-9]{6}
