@@ -189,34 +189,32 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                 limit = limit
             )
         ) {
-            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
 
-            get(OcpiResponseBody<SearchResult<Location>>::data)
+            get { data }
                 .isNotNull()
-                .get(SearchResult<Location>::list)
-                .isNotEmpty()
-                .hasSize(min(limit, numberOfLocations))
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::limit)
-                .isEqualTo(limit)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::offset)
-                .isEqualTo(offset)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::totalCount)
-                .isEqualTo(numberOfLocations)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::nextPageUrl)
-                .isNull()
+                .and {
+                    get { list }
+                        .isNotEmpty()
+                        .hasSize(min(limit, numberOfLocations))
+                }
+                .and {
+                    get { limit }
+                        .isEqualTo(limit)
+                }
+                .and {
+                    get { offset }
+                        .isEqualTo(offset)
+                }
+                .and {
+                    get { totalCount }
+                        .isEqualTo(numberOfLocations)
+                }
+                .and {
+                    get { nextPageUrl }
+                        .isNull()
+                }
         }
 
         limit = numberOfLocations + 1
@@ -232,34 +230,32 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                 limit = limit
             )
         ) {
-            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
 
-            get(OcpiResponseBody<SearchResult<Location>>::data)
+            get { data }
                 .isNotNull()
-                .get(SearchResult<Location>::list)
-                .isNotEmpty()
-                .hasSize(min(limit, numberOfLocations))
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::limit)
-                .isEqualTo(limit)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::offset)
-                .isEqualTo(offset)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::totalCount)
-                .isEqualTo(numberOfLocations)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::nextPageUrl)
-                .isNull()
+                .and {
+                    get { list }
+                        .isNotEmpty()
+                        .hasSize(min(limit, numberOfLocations))
+                }
+                .and {
+                    get { limit }
+                        .isEqualTo(limit)
+                }
+                .and {
+                    get { offset }
+                        .isEqualTo(offset)
+                }
+                .and {
+                    get { totalCount }
+                        .isEqualTo(numberOfLocations)
+                }
+                .and {
+                    get { nextPageUrl }
+                        .isNull()
+                }
         }
 
         limit = numberOfLocations + 1
@@ -275,34 +271,32 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                 limit = limit
             )
         ) {
-            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
 
-            get(OcpiResponseBody<SearchResult<Location>>::data)
+            get { data }
                 .isNotNull()
-                .get(SearchResult<Location>::list)
-                .isNotEmpty()
-                .hasSize(min(limit, numberOfLocations))
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::limit)
-                .isEqualTo(limit)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::offset)
-                .isEqualTo(offset)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::totalCount)
-                .isEqualTo(numberOfLocations)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::nextPageUrl)
-                .isNull()
+                .and {
+                    get { list }
+                        .isNotEmpty()
+                        .hasSize(min(limit, numberOfLocations))
+                }
+                .and {
+                    get { limit }
+                        .isEqualTo(limit)
+                }
+                .and {
+                    get { offset }
+                        .isEqualTo(offset)
+                }
+                .and {
+                    get { totalCount }
+                        .isEqualTo(numberOfLocations)
+                }
+                .and {
+                    get { nextPageUrl }
+                        .isNull()
+                }
         }
 
         limit = numberOfLocations + 1
@@ -318,34 +312,32 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                 limit = limit
             )
         ) {
-            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
 
-            get(OcpiResponseBody<SearchResult<Location>>::data)
+            get { data }
                 .isNotNull()
-                .get(SearchResult<Location>::list)
-                .isNotEmpty()
-                .hasSize(1)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::limit)
-                .isEqualTo(limit)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::offset)
-                .isEqualTo(offset)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::totalCount)
-                .isEqualTo(1)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::nextPageUrl)
-                .isNull()
+                .and {
+                    get { list }
+                        .isNotEmpty()
+                        .hasSize(1)
+                }
+                .and {
+                    get { limit }
+                        .isEqualTo(limit)
+                }
+                .and {
+                    get { offset }
+                        .isEqualTo(offset)
+                }
+                .and {
+                    get { totalCount }
+                        .isEqualTo(1)
+                }
+                .and {
+                    get { nextPageUrl }
+                        .isNull()
+                }
         }
 
         limit = numberOfLocations + 1
@@ -361,34 +353,32 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                 limit = limit
             )
         ) {
-            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
 
-            get(OcpiResponseBody<SearchResult<Location>>::data)
+            get { data }
                 .isNotNull()
-                .get(SearchResult<Location>::list)
-                .isNotEmpty()
-                .hasSize(1)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::limit)
-                .isEqualTo(limit)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::offset)
-                .isEqualTo(offset)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::totalCount)
-                .isEqualTo(1)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::nextPageUrl)
-                .isNull()
+                .and {
+                    get { list }
+                        .isNotEmpty()
+                        .hasSize(1)
+                }
+                .and {
+                    get { limit }
+                        .isEqualTo(limit)
+                }
+                .and {
+                    get { offset }
+                        .isEqualTo(offset)
+                }
+                .and {
+                    get { totalCount }
+                        .isEqualTo(1)
+                }
+                .and {
+                    get { nextPageUrl }
+                        .isNull()
+                }
         }
 
         limit = numberOfLocations + 1
@@ -404,33 +394,31 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                 limit = limit
             )
         ) {
-            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
 
-            get(OcpiResponseBody<SearchResult<Location>>::data)
+            get { data }
                 .isNotNull()
-                .get(SearchResult<Location>::list)
-                .isEmpty()
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::limit)
-                .isEqualTo(limit)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::offset)
-                .isEqualTo(offset)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::totalCount)
-                .isEqualTo(1)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::nextPageUrl)
-                .isNull()
+                .and {
+                    get { list }
+                        .isEmpty()
+                }
+                .and {
+                    get { limit }
+                        .isEqualTo(limit)
+                }
+                .and {
+                    get { offset }
+                        .isEqualTo(offset)
+                }
+                .and {
+                    get { totalCount }
+                        .isEqualTo(1)
+                }
+                .and {
+                    get { nextPageUrl }
+                        .isNull()
+                }
         }
 
         limit = 1
@@ -446,34 +434,32 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                 limit = limit
             )
         ) {
-            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+            get { status_code }
                 .isEqualTo(OcpiStatusCode.SUCCESS.code)
 
-            get(OcpiResponseBody<SearchResult<Location>>::data)
+            get { data }
                 .isNotNull()
-                .get(SearchResult<Location>::list)
-                .isNotEmpty()
-                .hasSize(1)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::limit)
-                .isEqualTo(limit)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::offset)
-                .isEqualTo(offset)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::totalCount)
-                .isEqualTo(numberOfLocations - 1)
-
-            get(OcpiResponseBody<SearchResult<Location>>::data)
-                .isNotNull()
-                .get(SearchResult<Location>::nextPageUrl)
-                .isEqualTo("http://localhost:8080/ocpi/cpo/2.1.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset+limit}")
+                .and {
+                    get { list }
+                        .isNotEmpty()
+                        .hasSize(1)
+                }
+                .and {
+                    get { limit }
+                        .isEqualTo(limit)
+                }
+                .and {
+                    get { offset }
+                        .isEqualTo(offset)
+                }
+                .and {
+                    get { totalCount }
+                        .isEqualTo(numberOfLocations - 1)
+                }
+                .and {
+                    get { nextPageUrl }
+                        .isEqualTo("http://localhost:8080/ocpi/cpo/2.1.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset+limit}")
+                }
         }
 
         transport.stop()
