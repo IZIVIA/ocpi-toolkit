@@ -1,14 +1,14 @@
-package tests
+package tests.mock
 
 import common.toSearchResult
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import ocpi.locations.domain.Location
-import ocpi.locations.repositories.LocationsCpoRepository
+import ocpi.locations.services.LocationsCpoService
 import java.time.Instant
 
-fun locationsCpoRepository(locations: List<Location>): LocationsCpoRepository = mockk {
+fun locationsCpoService(locations: List<Location>): LocationsCpoService = mockk {
     val locationId = slot<String>()
     val evseUid = slot<String>()
     val connectorId = slot<String>()

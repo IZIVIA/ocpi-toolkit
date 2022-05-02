@@ -1,27 +1,25 @@
 package tests
 
-import common.OcpiResponseBody
 import common.OcpiStatusCode
 import common.SearchResult
-import ocpi.locations.domain.Connector
-import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
-import ocpi.locations.services.LocationsCpoService
+import ocpi.locations.validators.LocationsCpoValidatorService
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
 import strikt.assertions.isNull
+import tests.mock.locationsCpoService
 import java.time.Instant
 
-class LocationsCpoServiceTest {
-    private lateinit var service: LocationsCpoService
+class LocationsCpoValidatorServiceTest {
+    private lateinit var service: LocationsCpoValidatorService
     private val from = Instant.parse("2022-04-28T08:00:00.000Z")
     private val to = Instant.parse("2022-04-28T09:00:00.000Z")
 
     @Test
     fun getLocationsParamsValidationTest() {
-        service = LocationsCpoService(locationsCpoRepository(emptyList()))
+        service = LocationsCpoValidatorService(locationsCpoService(emptyList()))
 
         expectThat(service.getLocations(dateFrom = from, dateTo = from, offset = 0, limit = null)) {
             get { status_code }
@@ -145,7 +143,7 @@ class LocationsCpoServiceTest {
 
     @Test
     fun getLocationParamsValidationTest() {
-        service = LocationsCpoService(locationsCpoRepository(emptyList()))
+        service = LocationsCpoValidatorService(locationsCpoService(emptyList()))
 
         val str3chars = "abc"
         val str39chars = "abababababababababababababababababababa"
@@ -169,7 +167,7 @@ class LocationsCpoServiceTest {
 
     @Test
     fun getEvseParamsValidationTest() {
-        service = LocationsCpoService(locationsCpoRepository(emptyList()))
+        service = LocationsCpoValidatorService(locationsCpoService(emptyList()))
 
         val str3chars = "abc"
         val str39chars = "abababababababababababababababababababa"
@@ -213,7 +211,7 @@ class LocationsCpoServiceTest {
 
     @Test
     fun getConnectorParamsValidationTest() {
-        service = LocationsCpoService(locationsCpoRepository(emptyList()))
+        service = LocationsCpoValidatorService(locationsCpoService(emptyList()))
 
         val str3chars = "abc"
         val str39chars = "abababababababababababababababababababa"

@@ -1,21 +1,20 @@
 package tests.mock
 
 import com.mongodb.client.MongoCollection
-import com.mongodb.client.model.Filters
 import common.SearchResult
 import common.toSearchResult
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
-import ocpi.locations.repositories.LocationsCpoRepository
+import ocpi.locations.services.LocationsCpoService
 import org.litote.kmongo.and
 import org.litote.kmongo.gte
 import org.litote.kmongo.lte
 import java.time.Instant
 
-class LocationsCpoMongoRepository(
+class LocationsCpoMongoService(
     private val collection: MongoCollection<Location>
-) : LocationsCpoRepository {
+) : LocationsCpoService {
 
     override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int, limit: Int?): SearchResult<Location> =
         collection

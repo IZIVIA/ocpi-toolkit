@@ -2,8 +2,8 @@ package samples
 
 import ocpi.locations.LocationsEmspServer
 import ocpi.locations.domain.*
-import ocpi.locations.repositories.LocationsEmspRepository
 import ocpi.locations.services.LocationsEmspService
+import ocpi.locations.validators.LocationsEmspValidatorService
 import java.time.Instant
 
 val emspServerUrl = "http://localhost:8081"
@@ -16,17 +16,17 @@ fun main() {
     // We specify the transport to serve the eMSP server
     val transportServer = Http4kTransportServer(emspServerUrl, emspServerPort)
 
-    // We specify repository for the service
-    val repository = CacheLocationsEmspRepository()
+    // We specify service for the validator service
+    val service = CacheLocationsEmspService()
 
     // We implement callbacks for the server using the built-in service and our repository implementation
-    LocationsEmspServer(transportServer, LocationsEmspService(repository))
+    LocationsEmspServer(transportServer, LocationsEmspValidatorService(service))
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()
 }
 
-class CacheLocationsEmspRepository : LocationsEmspRepository {
+class CacheLocationsEmspService : LocationsEmspService {
     override fun getLocation(countryCode: String, partyId: String, locationId: String): Location? {
         return Location(
             id = locationId,

@@ -1,12 +1,12 @@
-package tests
+package tests.mock
 
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import ocpi.locations.domain.*
-import ocpi.locations.repositories.LocationsEmspRepository
+import ocpi.locations.services.LocationsEmspService
 
-fun locationsEmspRepository(locations: List<Location>): LocationsEmspRepository = mockk {
+fun locationsEmspService(locations: List<Location>): LocationsEmspService = mockk {
     val countryCode = slot<String>()
     val partyId = slot<String>()
     val locationId = slot<String>()

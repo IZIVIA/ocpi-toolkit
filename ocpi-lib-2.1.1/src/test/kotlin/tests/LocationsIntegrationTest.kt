@@ -4,12 +4,12 @@ import common.OcpiStatusCode
 import ocpi.locations.LocationsCpoServer
 import ocpi.locations.LocationsEmspClient
 import ocpi.locations.domain.Location
-import ocpi.locations.services.LocationsCpoService
+import ocpi.locations.validators.LocationsCpoValidatorService
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.getCollection
 import strikt.api.expectThat
 import strikt.assertions.*
-import tests.mock.LocationsCpoMongoRepository
+import tests.mock.LocationsCpoMongoService
 import java.time.Instant
 import kotlin.math.min
 
@@ -20,7 +20,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         // Db setup
         val database = buildDBClient().getDatabase("ocpi-2-1-1-tests")
         val collection = database.getCollection<Location>()
-        val locationsCpoRepository = LocationsCpoMongoRepository(collection)
+        val locationsCpoService = LocationsCpoMongoService(collection)
 
         // Add dummy data
         val numberOfLocations = 1000
@@ -41,7 +41,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         val server = buildTransportServer()
         val client = server.getClient()
 
-        LocationsCpoServer(server, LocationsCpoService(locationsCpoRepository))
+        LocationsCpoServer(server, LocationsCpoValidatorService(locationsCpoService))
         server.start()
 
         val locationsEmspClient = LocationsEmspClient(client)
