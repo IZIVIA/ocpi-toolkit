@@ -18,10 +18,10 @@ fun String.isValidUrl(): Boolean =
 /**
  * One of IANA tzdata's TZ-values representing the time zone of the location.
  * Examples: "Europe/Oslo", "Europe/Zurich". (http://www.iana.org/time-zones)
- * TODO: Improve?
  */
-fun String.isValidTimeZone(): Boolean =
-    length <= 255
+fun String.isValidTimeZone(): Boolean = TimeZone
+    .getAvailableIDs()
+    .contains(this)
 
 /**
  * ISO 3166-1 alpha-3 code for the country of this location.

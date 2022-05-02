@@ -56,6 +56,10 @@ class LocationsValidatorTest {
         expectCatching {
             validLocation.copy(time_zone = generateRandomString(256)).validate()
         }.isFailure()
+
+        expectCatching {
+            validLocation.copy(time_zone = "EuropeOslo").validate()
+        }.isFailure()
     }
 
     @Test
