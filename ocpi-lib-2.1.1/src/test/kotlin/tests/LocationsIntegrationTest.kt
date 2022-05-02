@@ -26,8 +26,9 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
         val locationsCpoRepository = LocationsCpoMongoRepository(collection)
 
         // Add dummy data
-        val referenceDate = Instant.parse("2022-04-28T09:00:00.000Z")
         val numberOfLocations = 1000
+        val referenceDate = Instant.parse("2022-04-28T09:00:00.000Z")
+        val lastDate = referenceDate.plusSeconds(3600L * (numberOfLocations - 1))
         val locations = mutableListOf<Location>()
         (0 until numberOfLocations).forEach { index ->
             locations.add(
@@ -54,11 +55,13 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
         // Tests
         var limit = numberOfLocations + 1
         var offset = 0
+        var dateFrom: Instant? = null
+        var dateTo: Instant? = null
 
         expectThat(
             locationsEmspClient.getLocations(
-                dateFrom = null,
-                dateTo = null,
+                dateFrom = dateFrom,
+                dateTo = dateTo,
                 offset = offset,
                 limit = limit
             )
@@ -93,11 +96,13 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
 
         limit = 100
         offset = 100
+        dateFrom = null
+        dateTo = null
 
         expectThat(
             locationsEmspClient.getLocations(
-                dateFrom = null,
-                dateTo = null,
+                dateFrom = dateFrom,
+                dateTo = dateTo,
                 offset = offset,
                 limit = limit
             )
@@ -132,11 +137,13 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
 
         limit = 50
         offset = 50
+        dateFrom = null
+        dateTo = null
 
         expectThat(
             locationsEmspClient.getLocations(
-                dateFrom = null,
-                dateTo = null,
+                dateFrom = dateFrom,
+                dateTo = dateTo,
                 offset = offset,
                 limit = limit
             )
@@ -167,6 +174,306 @@ class LocationsIntegrationTest : BaseDBIntegrationTest() {
                     get { nextPageUrl }
                         .isEqualTo("http://localhost:8080/ocpi/cpo/2.1.1/locations?limit=$limit&offset=${offset + limit}")
                 }
+        }
+
+        limit = numberOfLocations + 1
+        offset = 0
+        dateFrom = referenceDate
+        dateTo = lastDate
+
+        expectThat(
+            locationsEmspClient.getLocations(
+                dateFrom = dateFrom,
+                dateTo = dateTo,
+                offset = offset,
+                limit = limit
+            )
+        ) {
+            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::list)
+                .isNotEmpty()
+                .hasSize(min(limit, numberOfLocations))
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::limit)
+                .isEqualTo(limit)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::offset)
+                .isEqualTo(offset)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::totalCount)
+                .isEqualTo(numberOfLocations)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::nextPageUrl)
+                .isNull()
+        }
+
+        limit = numberOfLocations + 1
+        offset = 0
+        dateFrom = referenceDate
+        dateTo = null
+
+        expectThat(
+            locationsEmspClient.getLocations(
+                dateFrom = dateFrom,
+                dateTo = dateTo,
+                offset = offset,
+                limit = limit
+            )
+        ) {
+            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::list)
+                .isNotEmpty()
+                .hasSize(min(limit, numberOfLocations))
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::limit)
+                .isEqualTo(limit)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::offset)
+                .isEqualTo(offset)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::totalCount)
+                .isEqualTo(numberOfLocations)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::nextPageUrl)
+                .isNull()
+        }
+
+        limit = numberOfLocations + 1
+        offset = 0
+        dateFrom = null
+        dateTo = lastDate
+
+        expectThat(
+            locationsEmspClient.getLocations(
+                dateFrom = dateFrom,
+                dateTo = dateTo,
+                offset = offset,
+                limit = limit
+            )
+        ) {
+            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::list)
+                .isNotEmpty()
+                .hasSize(min(limit, numberOfLocations))
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::limit)
+                .isEqualTo(limit)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::offset)
+                .isEqualTo(offset)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::totalCount)
+                .isEqualTo(numberOfLocations)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::nextPageUrl)
+                .isNull()
+        }
+
+        limit = numberOfLocations + 1
+        offset = 0
+        dateFrom = lastDate
+        dateTo = null
+
+        expectThat(
+            locationsEmspClient.getLocations(
+                dateFrom = dateFrom,
+                dateTo = dateTo,
+                offset = offset,
+                limit = limit
+            )
+        ) {
+            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::list)
+                .isNotEmpty()
+                .hasSize(1)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::limit)
+                .isEqualTo(limit)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::offset)
+                .isEqualTo(offset)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::totalCount)
+                .isEqualTo(1)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::nextPageUrl)
+                .isNull()
+        }
+
+        limit = numberOfLocations + 1
+        offset = 0
+        dateFrom = null
+        dateTo = referenceDate
+
+        expectThat(
+            locationsEmspClient.getLocations(
+                dateFrom = dateFrom,
+                dateTo = dateTo,
+                offset = offset,
+                limit = limit
+            )
+        ) {
+            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::list)
+                .isNotEmpty()
+                .hasSize(1)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::limit)
+                .isEqualTo(limit)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::offset)
+                .isEqualTo(offset)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::totalCount)
+                .isEqualTo(1)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::nextPageUrl)
+                .isNull()
+        }
+
+        limit = numberOfLocations + 1
+        offset = 1
+        dateFrom = null
+        dateTo = referenceDate
+
+        expectThat(
+            locationsEmspClient.getLocations(
+                dateFrom = dateFrom,
+                dateTo = dateTo,
+                offset = offset,
+                limit = limit
+            )
+        ) {
+            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::list)
+                .isEmpty()
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::limit)
+                .isEqualTo(limit)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::offset)
+                .isEqualTo(offset)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::totalCount)
+                .isEqualTo(1)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::nextPageUrl)
+                .isNull()
+        }
+
+        limit = 1
+        offset = 0
+        dateFrom = null
+        dateTo = lastDate.minusSeconds(3600L)
+
+        expectThat(
+            locationsEmspClient.getLocations(
+                dateFrom = dateFrom,
+                dateTo = dateTo,
+                offset = offset,
+                limit = limit
+            )
+        ) {
+            get(OcpiResponseBody<SearchResult<Location>>::status_code)
+                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::list)
+                .isNotEmpty()
+                .hasSize(1)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::limit)
+                .isEqualTo(limit)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::offset)
+                .isEqualTo(offset)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::totalCount)
+                .isEqualTo(numberOfLocations - 1)
+
+            get(OcpiResponseBody<SearchResult<Location>>::data)
+                .isNotNull()
+                .get(SearchResult<Location>::nextPageUrl)
+                .isEqualTo("http://localhost:8080/ocpi/cpo/2.1.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset+limit}")
         }
 
         transport.stop()
