@@ -6,6 +6,7 @@ import de.jensklingenberg.mpapt.common.canonicalFilePath
 import de.jensklingenberg.mpapt.model.*
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
+import org.jetbrains.kotlin.descriptors.containingPackage
 import org.jetbrains.kotlin.platform.TargetPlatform
 import java.io.File
 
@@ -29,18 +30,23 @@ class PartialAnnotationProcessor : AbstractProcessor() {
 
     override fun processingOver() {
         partialClasses.forEach { classDescriptor ->
-            val classFilePath = classDescriptor.canonicalFilePath().toString()
+            val packageName = classDescriptor.containingPackage().toString()
             val className = classDescriptor.name.asString()
+            val classFilePath = classDescriptor.canonicalFilePath().toString()
             val classFile = File(classFilePath)
+
             val partialClassName = className.toPartial()
-            if (!classFile.readText().contains("data class $partialClassName")) {
-                buildPartialDataClassType(classDescriptor, partialClassName)
-                    .toString()
-                    .replace("public", "")
-                    .also {
-                        classFile.appendText("\n$it")
-                    }
-            }
+            val partialClassType = buildPartialDataClassType(classDescriptor, partialClassName)
+            val partialGenFolder = classFile.parent
+                .replace("/src/main/kotlin", "/src/main/kotlinGen")
+                .replace(packageName.replace(".", "/"), "")
+
+            FileSpec
+                .builder(packageName, partialClassName)
+                .generateComments()
+                .addType(partialClassType)
+                .build()
+                .writeTo(File(partialGenFolder))
         }
     }
 
@@ -70,6 +76,11 @@ class PartialAnnotationProcessor : AbstractProcessor() {
         return TypeSpec
             .classBuilder(partialClassName)
             .addModifiers(KModifier.DATA)
+            .addKdoc(
+                "Partial representation of [${
+                    classDescriptor.containingPackage().toString()
+                }.${classDescriptor.name.asString()}]"
+            )
             .primaryConstructor(
                 FunSpec.constructorBuilder()
                     .addParameters(partialClassConstructorParameters)
@@ -133,6 +144,17 @@ class PartialAnnotationProcessor : AbstractProcessor() {
             ?: this
 
     private fun String.toPartial() = "${this}Partial"
+
+    private fun FileSpec.Builder.generateComments() =
+        addFileComment(
+            """
+            | ----------
+            | - WARNING -
+            | ----------
+            | This code is generated AND MUST NOT BE EDITED
+            | ----------
+            """.trimMargin()
+        )
 
     data class FunctionParameter(
         val parameterName: String,

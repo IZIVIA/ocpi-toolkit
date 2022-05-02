@@ -37,3 +37,7 @@ tasks.test {
         events("passed", "skipped", "failed")
     }
 }
+
+sourceSets.main {
+    java.srcDirs("src/main/kotlinGen")
+}
