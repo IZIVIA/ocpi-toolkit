@@ -1,7 +1,6 @@
 package tests
 
 import common.OcpiStatusCode
-import kotlinx.coroutines.GlobalScope
 import ocpi.locations.LocationsCpoServer
 import ocpi.locations.LocationsEmspClient
 import ocpi.locations.domain.Location
@@ -43,10 +42,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         val client = server.getClient()
 
         LocationsCpoServer(server, LocationsCpoService(locationsCpoRepository))
-
-        GlobalScope.run {
-            server.start()
-        }
+        server.start()
 
         val locationsEmspClient = LocationsEmspClient(client)
 
@@ -456,7 +452,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${server.baseUrl}/ocpi/cpo/2.1.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset+limit}")
+                        .isEqualTo("${server.baseUrl}/ocpi/cpo/2.1.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset + limit}")
                 }
         }
 
