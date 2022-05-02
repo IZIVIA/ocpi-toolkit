@@ -73,7 +73,11 @@ fun <T> OcpiResponseBody<SearchResult<T>>.getPaginatedHeaders(request: HttpReque
 
 fun <T> OcpiResponseBody<T>.toHttpResponse() =
     HttpResponse(
-        status = if (data != null) 200 else 404,
+        status = when (status_code) {
+            OcpiStatusCode.SUCCESS.code -> if(data != null) 200 else 404
+            OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code -> 400
+            else -> 500
+        },
         body = mapper.writeValueAsString(this)
     )
 
