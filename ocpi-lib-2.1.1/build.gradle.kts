@@ -27,7 +27,6 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
     testImplementation("org.testcontainers:mongodb:${Versions.testcontainers}")
     testImplementation("org.litote.kmongo:kmongo:${Versions.kmongo}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
 
     testRuntimeOnly("ch.qos.logback:logback-classic:${Versions.logback}")
 }
