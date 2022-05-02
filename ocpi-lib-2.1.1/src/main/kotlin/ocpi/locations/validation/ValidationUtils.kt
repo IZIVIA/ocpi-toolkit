@@ -1,4 +1,4 @@
-package ocpi.locations.validators
+package ocpi.locations.validation
 
 /**
  * URL type following the w3.org spec. to the operator's terms and conditions
@@ -38,7 +38,7 @@ fun String.isValidLongitude(): Boolean =
  * Text to be displayed to an end user. No markup, html etc. allowed.
  */
 fun String.isRawString(): Boolean =
-    !matches("(<([^>]+)>)".toRegex())
+    !matches(".*<(\"[^\"]*\"|'[^']*'|[^'\">])*>.*".toRegex())
 
 /**
  * Language Code ISO 639-1

@@ -1,11 +1,13 @@
 package ocpi.locations.validation
 
 import ocpi.locations.domain.*
-import ocpi.locations.validators.*
 import org.valiktor.DefaultConstraintViolation
 import org.valiktor.constraints.Greater
 import org.valiktor.constraints.NotNull
-import org.valiktor.functions.*
+import org.valiktor.constraints.Null
+import org.valiktor.functions.isGreaterThanOrEqualTo
+import org.valiktor.functions.isLessThanOrEqualTo
+import org.valiktor.functions.isValid
 import org.valiktor.validate
 import java.math.BigDecimal
 
@@ -54,7 +56,7 @@ fun EnergyMix.validate(): EnergyMix = validate(this) {
 }
 
 fun ExceptionalPeriod.validate(): ExceptionalPeriod = validate(this) {
-    validate(ExceptionalPeriod::period_begin).isLessThan(it.period_end)
+    validate(ExceptionalPeriod::period_begin).isLessThanOrEqualTo(it.period_end)
 }
 
 fun RegularHours.validate(): RegularHours = validate(this) { regularHours ->
@@ -85,6 +87,13 @@ fun Hours.validate(): Hours = validate(this) { hours ->
             DefaultConstraintViolation(
                 property = "regular_hours and twenty_four_seven are both set (only one must be set)",
                 constraint = NotNull
+            )
+        )
+    } else if (hours.regular_hours == null && hours.twenty_four_seven == null) {
+        constraintViolations.add(
+            DefaultConstraintViolation(
+                property = "regular_hours or twenty_four_seven must be set (both are null)",
+                constraint = Null
             )
         )
     }
@@ -150,14 +159,14 @@ fun Evse.validate(): Evse = validate(this) {
 }
 
 fun Connector.validate(): Connector = validate(this) {
-    validate(Connector::id).validate { it.length <= 36 }
+    validate(Connector::id).isValid { it.length <= 36 }
     // standard: nothing to validate
     // format: nothing to validate
     // power_type: nothing to validate
     validate(Connector::voltage).isGreaterThanOrEqualTo(0)
     validate(Connector::amperage).isGreaterThanOrEqualTo(0)
-    validate(Connector::tariff_id).validate { it.length <= 36 }
-    validate(Connector::terms_and_conditions).validate { it.isValidUrl() }
+    validate(Connector::tariff_id).isValid { it.length <= 36 }
+    validate(Connector::terms_and_conditions).isValid { it.isValidUrl() }
     // last_updated: nothing to validate
 }
 

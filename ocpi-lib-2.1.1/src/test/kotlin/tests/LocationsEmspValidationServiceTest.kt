@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import tests.mock.locationsEmspService
+import tests.utils.*
 
 class LocationsEmspValidationServiceTest {
     private lateinit var service: LocationsEmspValidationService
@@ -231,7 +232,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
-                location = dummyLocationPartial
+                location = validLocationPartial
             )
         ) {
             get { status_code }
@@ -243,7 +244,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
-                location = dummyLocationPartial
+                location = validLocationPartial
             )
         ) {
             get { status_code }
@@ -255,7 +256,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
-                location = dummyLocationPartial
+                location = validLocationPartial
             )
         ) {
             get { status_code }
@@ -267,7 +268,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
-                location = dummyLocationPartial
+                location = validLocationPartial
             )
         ) {
             get { status_code }
@@ -279,7 +280,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
-                location = dummyLocationPartial
+                location = validLocationPartial
             )
         ) {
             get { status_code }
@@ -297,7 +298,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str2chars,
                 locationId = str4chars,
                 evseUid = str4chars,
-                evse = dummyEvsePartial
+                evse = validEvsePartial
             )
         ) {
             get { status_code }
@@ -310,7 +311,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str39chars,
                 evseUid = str39chars,
-                evse = dummyEvsePartial
+                evse = validEvsePartial
             )
         ) {
             get { status_code }
@@ -323,7 +324,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str39chars,
                 evseUid = str39chars,
-                evse = dummyEvsePartial
+                evse = validEvsePartial
             )
         ) {
             get { status_code }
@@ -336,7 +337,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str4chars,
                 locationId = str39chars,
                 evseUid = str39chars,
-                evse = dummyEvsePartial
+                evse = validEvsePartial
             )
         ) {
             get { status_code }
@@ -349,7 +350,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str40chars,
                 evseUid = str39chars,
-                evse = dummyEvsePartial
+                evse = validEvsePartial
             )
         ) {
             get { status_code }
@@ -362,7 +363,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str39chars,
                 evseUid = str40chars,
-                evse = dummyEvsePartial
+                evse = validEvsePartial
             )
         ) {
             get { status_code }
@@ -381,7 +382,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str4chars,
                 evseUid = str4chars,
                 connectorId = str4chars,
-                connector = dummyConnectorPartial
+                connector = validConnectorPartial
             )
         ) {
             get { status_code }
@@ -395,7 +396,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = dummyConnectorPartial
+                connector = validConnectorPartial
             )
         ) {
             get { status_code }
@@ -409,7 +410,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = dummyConnectorPartial
+                connector = validConnectorPartial
             )
         ) {
             get { status_code }
@@ -423,7 +424,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = dummyConnectorPartial
+                connector = validConnectorPartial
             )
         ) {
             get { status_code }
@@ -437,7 +438,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str40chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = dummyConnectorPartial
+                connector = validConnectorPartial
             )
         ) {
             get { status_code }
@@ -451,7 +452,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str40chars,
                 connectorId = str36chars,
-                connector = dummyConnectorPartial
+                connector = validConnectorPartial
             )
         ) {
             get { status_code }
@@ -465,7 +466,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str37chars,
-                connector = dummyConnectorPartial
+                connector = validConnectorPartial
             )
         ) {
             get { status_code }
@@ -482,7 +483,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
-                location = dummyLocation
+                location = validLocation
             )
         ) {
             get { status_code }
@@ -494,7 +495,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
-                location = dummyLocation
+                location = validLocation
             )
         ) {
             get { status_code }
@@ -506,7 +507,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
-                location = dummyLocation
+                location = validLocation
             )
         ) {
             get { status_code }
@@ -518,7 +519,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
-                location = dummyLocation
+                location = validLocation
             )
         ) {
             get { status_code }
@@ -530,7 +531,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
-                location = dummyLocation
+                location = validLocation
             )
         ) {
             get { status_code }
@@ -548,7 +549,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str2chars,
                 locationId = str4chars,
                 evseUid = str4chars,
-                evse = dummyEvse
+                evse = validEvse
             )
         ) {
             get { status_code }
@@ -561,7 +562,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str39chars,
                 evseUid = str39chars,
-                evse = dummyEvse
+                evse = validEvse
             )
         ) {
             get { status_code }
@@ -574,7 +575,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str39chars,
                 evseUid = str39chars,
-                evse = dummyEvse
+                evse = validEvse
             )
         ) {
             get { status_code }
@@ -587,7 +588,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str4chars,
                 locationId = str39chars,
                 evseUid = str39chars,
-                evse = dummyEvse
+                evse = validEvse
             )
         ) {
             get { status_code }
@@ -600,7 +601,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str40chars,
                 evseUid = str39chars,
-                evse = dummyEvse
+                evse = validEvse
             )
         ) {
             get { status_code }
@@ -613,7 +614,7 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str39chars,
                 evseUid = str40chars,
-                evse = dummyEvse
+                evse = validEvse
             )
         ) {
             get { status_code }
@@ -632,7 +633,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str4chars,
                 evseUid = str4chars,
                 connectorId = str4chars,
-                connector = dummyConnector
+                connector = validConnector
             )
         ) {
             get { status_code }
@@ -646,7 +647,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = dummyConnector
+                connector = validConnector
             )
         ) {
             get { status_code }
@@ -660,7 +661,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = dummyConnector
+                connector = validConnector
             )
         ) {
             get { status_code }
@@ -674,7 +675,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = dummyConnector
+                connector = validConnector
             )
         ) {
             get { status_code }
@@ -688,7 +689,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str40chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = dummyConnector
+                connector = validConnector
             )
         ) {
             get { status_code }
@@ -702,7 +703,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str40chars,
                 connectorId = str36chars,
-                connector = dummyConnector
+                connector = validConnector
             )
         ) {
             get { status_code }
@@ -716,7 +717,7 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str37chars,
-                connector = dummyConnector
+                connector = validConnector
             )
         ) {
             get { status_code }

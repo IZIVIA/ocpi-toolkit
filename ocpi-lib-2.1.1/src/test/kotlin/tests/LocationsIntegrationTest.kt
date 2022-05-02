@@ -10,6 +10,9 @@ import org.litote.kmongo.getCollection
 import strikt.api.expectThat
 import strikt.assertions.*
 import tests.mock.LocationsCpoMongoService
+import tests.utils.validConnector
+import tests.utils.validEvse
+import tests.utils.validLocation
 import java.time.Instant
 import kotlin.math.min
 
@@ -29,8 +32,8 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         val locations = mutableListOf<Location>()
         (0 until numberOfLocations).forEach { index ->
             locations.add(
-                dummyLocation.copy(
-                    evses = listOf(dummyEvse.copy(connectors = listOf(dummyConnector))),
+                validLocation.copy(
+                    evses = listOf(validEvse.copy(connectors = listOf(validConnector))),
                     last_updated = referenceDate.plusSeconds(3600L * index)
                 )
             )

@@ -1,10 +1,87 @@
-package tests
+package tests.utils
 
 import ocpi.locations.domain.*
 import java.math.BigDecimal
 import java.time.Instant
 
-val dummyLocation = Location(
+val validUrl = "https://abc.com"
+val validLatitude = "-15.234567"
+val validLongitude = "23.234567"
+
+val validStatusSchedule = StatusSchedule(
+    period_begin = Instant.parse("2022-04-28T08:00:00.000Z"),
+    period_end = Instant.parse("2022-04-28T09:00:00.000Z"),
+    status = Status.AVAILABLE
+)
+
+val validDisplayText = DisplayText(
+    language = "fr",
+    text = "abcdef"
+)
+
+val validGeoLocation = GeoLocation(
+    latitude = validLatitude,
+    longitude = validLongitude
+)
+
+val validAdditionalGeoLocation = AdditionalGeoLocation(
+    latitude = validLatitude,
+    longitude = validLongitude,
+    name = validDisplayText
+)
+
+val validImage = Image(
+    url = validUrl,
+    thumbnail = validUrl,
+    category = ImageCategory.LOCATION,
+    type = "jpeg",
+    width = 12345,
+    height = 123
+)
+
+val validBusinessDetails = BusinessDetails(
+    name = "name",
+    website = validUrl,
+    logo = validImage
+)
+
+val validRegularHours = RegularHours(
+    weekday = 1,
+    period_begin = "00:00",
+    period_end = "23:59",
+)
+
+val validExceptionalPeriod = ExceptionalPeriod(
+    period_begin = Instant.parse("2022-04-28T08:00:00.000Z"),
+    period_end = Instant.parse("2022-04-28T09:00:00.000Z")
+)
+
+val validHours = Hours(
+    regular_hours = listOf(validRegularHours),
+    twenty_four_seven = null,
+    exceptional_openings = listOf(validExceptionalPeriod),
+    exceptional_closings = emptyList()
+)
+
+val validEnergySource = EnergySource(
+    source = EnergySourceCategory.NUCLEAR,
+    percentage = BigDecimal.ZERO
+)
+
+val validEnvironmentalImpact = EnvironmentalImpact(
+    source = EnvironmentalImpactCategory.CARBON_DIOXIDE,
+    amount = BigDecimal.ZERO
+)
+
+val validEnergyMix = EnergyMix(
+    is_green_energy = true,
+    energy_sources = listOf(validEnergySource),
+    environ_impact = listOf(validEnvironmentalImpact),
+    supplier_name = "supplier_name",
+    energy_product_name = "energy_product_name"
+)
+
+val validLocation = Location(
     id = "location1",
     type = LocationType.ON_STREET,
     name = "name",
@@ -12,122 +89,39 @@ val dummyLocation = Location(
     city = "city",
     postal_code = "33520",
     country = "FRA",
-    coordinates = GeoLocation(latitude = "1.0", longitude = "2.56"),
-    related_locations = listOf(
-        AdditionalGeoLocation(
-            latitude = "1.001",
-            longitude = "2.56002",
-            name = DisplayText(
-                language = "en",
-                text = "Parking lot"
-            )
-        )
-    ),
+    coordinates = validGeoLocation,
+    related_locations = listOf(validAdditionalGeoLocation),
     evses = emptyList(),
-    directions = listOf(
-        DisplayText(
-            language = "en",
-            text = "In front of bridge"
-        )
-    ),
-    operator = BusinessDetails(
-        name = "John",
-        website = null,
-        logo = null
-    ),
+    directions = listOf(validDisplayText),
+    operator = validBusinessDetails,
     suboperator = null,
     owner = null,
-    facilities = listOf(
-        Facility.CARPOOL_PARKING
-    ),
+    facilities = listOf(Facility.CARPOOL_PARKING),
     time_zone = "Europe/Oslo",
-    opening_times = Hours(
-        regular_hours = listOf(
-            RegularHours(
-                weekday = 1,
-                period_begin = "10:00",
-                period_end = "18:05"
-            )
-        ),
-        twenty_four_seven = false,
-        exceptional_openings = emptyList(),
-        exceptional_closings = emptyList()
-    ),
+    opening_times = validHours,
     charging_when_closed = false,
-    images = listOf(
-        Image(
-            url = "http://imageurl/a.png",
-            thumbnail = null,
-            category = ImageCategory.LOCATION,
-            type = "png",
-            width = null,
-            height = null
-        )
-    ),
-    energy_mix = EnergyMix(
-        is_green_energy = true,
-        energy_sources = listOf(
-            EnergySource(
-                source = EnergySourceCategory.NUCLEAR,
-                percentage = BigDecimal.valueOf(100)
-            )
-        ),
-        environ_impact = listOf(
-            EnvironmentalImpact(
-                source = EnvironmentalImpactCategory.NUCLEAR_WASTE,
-                amount = BigDecimal.valueOf(2)
-            )
-        ),
-        supplier_name = "edf",
-        energy_product_name = null
-    ),
+    images = listOf(validImage),
+    energy_mix = validEnergyMix,
     last_updated = Instant.now()
 )
 
-val dummyEvse = Evse(
+val validEvse = Evse(
     uid = "uid",
     evse_id = "evse_id",
     status = Status.AVAILABLE,
-    status_schedule = listOf(
-        StatusSchedule(
-            period_begin = Instant.now(),
-            period_end = Instant.now().plusSeconds(60),
-            status = Status.AVAILABLE
-        )
-    ),
-    capabilities = listOf(
-        Capability.CHARGING_PROFILE_CAPABLE
-    ),
+    status_schedule = listOf(validStatusSchedule),
+    capabilities = listOf(Capability.CHARGING_PROFILE_CAPABLE),
     connectors = emptyList(),
     floor_level = "5",
-    coordinates = GeoLocation(
-        latitude = "1.5",
-        longitude = "6.48"
-    ),
+    coordinates = validGeoLocation,
     physical_reference = "visualid1",
-    directions = listOf(
-        DisplayText(
-            language = "en",
-            text = "next to gas station"
-        )
-    ),
-    parking_restrictions = listOf(
-        ParkingRestriction.CUSTOMERS
-    ),
-    images = listOf(
-        Image(
-            url = "http://imageurl/a.png",
-            thumbnail = null,
-            category = ImageCategory.LOCATION,
-            type = "png",
-            width = null,
-            height = null
-        )
-    ),
+    directions = listOf(validDisplayText),
+    parking_restrictions = listOf(ParkingRestriction.CUSTOMERS),
+    images = listOf(validImage),
     last_updated = Instant.now()
 )
 
-val dummyConnector = Connector(
+val validConnector = Connector(
     id = "id",
     standard = ConnectorType.DOMESTIC_A,
     format = ConnectorFormat.CABLE,
@@ -139,7 +133,7 @@ val dummyConnector = Connector(
     last_updated = Instant.now()
 )
 
-val dummyLocationPartial = LocationPartial(
+val validLocationPartial = LocationPartial(
     id = "location1",
     type = LocationType.ON_STREET,
     name = "name",
@@ -219,7 +213,7 @@ val dummyLocationPartial = LocationPartial(
     last_updated = Instant.now()
 )
 
-val dummyEvsePartial = EvsePartial(
+val validEvsePartial = EvsePartial(
     uid = "uid",
     evse_id = "evse_id",
     status = Status.AVAILABLE,
@@ -262,7 +256,7 @@ val dummyEvsePartial = EvsePartial(
     last_updated = Instant.now()
 )
 
-val dummyConnectorPartial = ConnectorPartial(
+val validConnectorPartial = ConnectorPartial(
     id = "id",
     standard = ConnectorType.DOMESTIC_A,
     format = ConnectorFormat.CABLE,
