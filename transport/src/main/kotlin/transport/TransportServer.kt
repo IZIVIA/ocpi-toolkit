@@ -8,7 +8,8 @@ import transport.domain.PathSegment
 
 abstract class TransportServer {
     /**
-     * Creates a route and specifies how to respond
+     * Creates a route and specifies how to respond. The callback may throw HttpExceptions.
+     *
      * @param method
      * @param path
      * @param queryParams expected queryParams

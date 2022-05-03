@@ -39,18 +39,25 @@ class Http4kTransportServer(
 
         serverRoutes.add(
             route bind Method.valueOf(method.name) to { req: Request ->
-                callback(
-                    HttpRequest(
-                        baseUrl = baseUrl,
-                        method = method,
-                        path = route,
-                        pathParams = pathParams.associateWith { param -> req.path(param)!! },
-                        queryParams = queryParams.associateWith { param -> req.query(param) },
-                    )
-                ).let {
-                    Response(Status(it.status.code, null))
-                        .body(it.body ?: "")
-                        .headers(it.headers.toList())
+                try {
+                    callback(
+                        HttpRequest(
+                            baseUrl = baseUrl,
+                            method = method,
+                            path = route,
+                            pathParams = pathParams.associateWith { param -> req.path(param)!! },
+                            queryParams = queryParams.associateWith { param -> req.query(param) },
+                        )
+                    ).let {
+                        Response(Status(it.status.code, null))
+                            .body(it.body ?: "")
+                            .headers(it.headers.toList())
+                    }
+                } catch (httpException: HttpException) {
+                    Response(Status(httpException.status.code, httpException.reason))
+                        .body(httpException.reason)
+                } catch (exception: Exception) {
+                    Response(Status.INTERNAL_SERVER_ERROR)
                 }
             }
         )
