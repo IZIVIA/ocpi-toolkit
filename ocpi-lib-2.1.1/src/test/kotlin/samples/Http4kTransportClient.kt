@@ -6,6 +6,7 @@ import org.http4k.core.Request
 import transport.TransportClient
 import transport.domain.HttpRequest
 import transport.domain.HttpResponse
+import transport.domain.parseHttpStatus
 
 class Http4kTransportClient(
     private val baseUrl: String
@@ -24,12 +25,17 @@ class Http4kTransportClient(
                 }
             }
             .run {
+                request.headers.toList().foldRight(this) { header, r ->
+                    r.header(header.first, header.second)
+                }
+            }
+            .run {
                 request.body?.let { body -> body(body) } ?: this
             }
 
         return client(http4kRequest).let {
             HttpResponse(
-                status = it.status.code,
+                status = parseHttpStatus(it.status.code),
                 body = it.bodyString(),
                 headers = it.headers
                     .filter { header -> header.second != null }

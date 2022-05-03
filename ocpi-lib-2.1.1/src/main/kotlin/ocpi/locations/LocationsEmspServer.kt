@@ -5,10 +5,7 @@ import common.mapper
 import common.toHttpResponse
 import ocpi.locations.domain.*
 import transport.TransportServer
-import transport.domain.FixedPathSegment
-import transport.domain.HttpMethod
-import transport.domain.HttpResponse
-import transport.domain.VariablePathSegment
+import transport.domain.*
 
 /**
  * Receives calls from a CPO
@@ -99,7 +96,7 @@ class LocationsEmspServer(
                     .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 HttpResponse(
-                    status = 400,
+                    status = HttpStatus.BAD_REQUEST,
                     body = e.originalMessage
                 )
             }
@@ -127,7 +124,7 @@ class LocationsEmspServer(
                     .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 HttpResponse(
-                    status = 400,
+                    status = HttpStatus.BAD_REQUEST,
                     body = e.originalMessage
                 )
             }
@@ -157,7 +154,7 @@ class LocationsEmspServer(
                      .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 HttpResponse(
-                    status = 400,
+                    status = HttpStatus.BAD_REQUEST,
                     body = e.originalMessage
                 )
             }
@@ -183,7 +180,7 @@ class LocationsEmspServer(
                     .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 HttpResponse(
-                    status = 400,
+                    status = HttpStatus.BAD_REQUEST,
                     body = e.originalMessage
                 )
             }
@@ -211,7 +208,7 @@ class LocationsEmspServer(
                    .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 HttpResponse(
-                    status = 400,
+                    status = HttpStatus.BAD_REQUEST,
                     body = e.originalMessage
                 )
             }
@@ -241,7 +238,7 @@ class LocationsEmspServer(
                     .toHttpResponse()
             } catch (e: JsonProcessingException) {
                 HttpResponse(
-                    status = 400,
+                    status = HttpStatus.BAD_REQUEST,
                     body = e.originalMessage
                 )
             }

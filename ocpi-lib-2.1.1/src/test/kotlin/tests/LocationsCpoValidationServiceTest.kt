@@ -1,6 +1,6 @@
 package tests
 
-import common.OcpiStatusCode
+import common.OcpiStatus
 import common.SearchResult
 import ocpi.locations.domain.Location
 import ocpi.locations.validation.LocationsCpoValidationService
@@ -23,7 +23,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = from, dateTo = from, offset = 0, limit = null)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -33,7 +33,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = to, dateTo = from, offset = 0, limit = null)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
             get { data }
                 .isNull()
@@ -41,7 +41,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = from, dateTo = to, offset = 0, limit = null)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -51,7 +51,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = null, dateTo = to, offset = 0, limit = null)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -61,7 +61,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = from, dateTo = null, offset = 0, limit = null)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -71,7 +71,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = null)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -81,7 +81,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = -10, limit = null)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
             get { data }
                 .isNull()
@@ -89,7 +89,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = -10)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
             get { data }
                 .isNull()
@@ -97,7 +97,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = 100)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -112,7 +112,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = 100, limit = 100)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -127,7 +127,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = 0)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -151,17 +151,17 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getLocation(locationId = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getLocation(locationId = str39chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getLocation(locationId = str40chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -175,37 +175,37 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getEvse(locationId = str3chars, evseUid = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getEvse(locationId = str39chars, evseUid = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getEvse(locationId = str40chars, evseUid = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(service.getEvse(locationId = str3chars, evseUid = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getEvse(locationId = str3chars, evseUid = str39chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getEvse(locationId = str3chars, evseUid = str40chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(service.getEvse(locationId = str40chars, evseUid = str40chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -219,47 +219,47 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(service.getConnector(locationId = str3chars, evseUid = str3chars, connectorId = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getConnector(locationId = str39chars, evseUid = str3chars, connectorId = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getConnector(locationId = str40chars, evseUid = str3chars, connectorId = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(service.getConnector(locationId = str3chars, evseUid = str3chars, connectorId = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getConnector(locationId = str3chars, evseUid = str39chars, connectorId = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getConnector(locationId = str3chars, evseUid = str40chars, connectorId = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(service.getConnector(locationId = str40chars, evseUid = str40chars, connectorId = str3chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(service.getConnector(locationId = str3chars, evseUid = str3chars, connectorId = str40chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(service.getConnector(locationId = str40chars, evseUid = str40chars, connectorId = str40chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 }

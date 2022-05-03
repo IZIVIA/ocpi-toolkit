@@ -1,6 +1,6 @@
 package tests
 
-import common.OcpiStatusCode
+import common.OcpiStatus
 import ocpi.locations.LocationsCpoServer
 import ocpi.locations.LocationsEmspClient
 import ocpi.locations.domain.Location
@@ -26,7 +26,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         val locationsCpoService = LocationsCpoMongoService(collection)
 
         // Add dummy data
-        val numberOfLocations = 1000
+        val numberOfLocations = 500
         val referenceDate = Instant.parse("2022-04-28T09:00:00.000Z")
         val lastDate = referenceDate.plusSeconds(3600L * (numberOfLocations - 1))
         val locations = mutableListOf<Location>()
@@ -64,7 +64,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -105,7 +105,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -146,7 +146,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -187,7 +187,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -228,7 +228,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -269,7 +269,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -310,7 +310,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -351,7 +351,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -392,7 +392,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()
@@ -432,7 +432,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
                 .isNotNull()

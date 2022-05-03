@@ -1,12 +1,15 @@
 package tests
 
-import common.OcpiStatusCode
+import common.OcpiStatus
+import ocpi.locations.domain.toPartial
 import ocpi.locations.validation.LocationsEmspValidationService
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import tests.mock.locationsEmspService
-import tests.utils.*
+import tests.utils.validConnector
+import tests.utils.validEvse
+import tests.utils.validLocation
 
 class LocationsEmspValidationServiceTest {
     private lateinit var service: LocationsEmspValidationService
@@ -26,27 +29,27 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(service.getLocation(countryCode = str1char, partyId = str2chars, locationId = str4chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getLocation(countryCode = str2chars, partyId = str3chars, locationId = str39chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(service.getLocation(countryCode = str3chars, partyId = str3chars, locationId = str39chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(service.getLocation(countryCode = str2chars, partyId = str4chars, locationId = str39chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(service.getLocation(countryCode = str2chars, partyId = str3chars, locationId = str40chars)) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -63,7 +66,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -75,7 +78,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -87,7 +90,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -99,7 +102,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -111,7 +114,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -123,7 +126,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -141,7 +144,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -154,7 +157,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -167,7 +170,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -180,7 +183,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -193,7 +196,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -206,7 +209,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -219,7 +222,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -232,11 +235,11 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
-                location = validLocationPartial
+                location = validLocation.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -244,11 +247,11 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
-                location = validLocationPartial
+                location = validLocation.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -256,11 +259,11 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
-                location = validLocationPartial
+                location = validLocation.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -268,11 +271,11 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
-                location = validLocationPartial
+                location = validLocation.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -280,11 +283,11 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
-                location = validLocationPartial
+                location = validLocation.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -298,11 +301,11 @@ class LocationsEmspValidationServiceTest {
                 partyId = str2chars,
                 locationId = str4chars,
                 evseUid = str4chars,
-                evse = validEvsePartial
+                evse = validEvse.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -311,11 +314,11 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str39chars,
                 evseUid = str39chars,
-                evse = validEvsePartial
+                evse = validEvse.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -324,11 +327,11 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str39chars,
                 evseUid = str39chars,
-                evse = validEvsePartial
+                evse = validEvse.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -337,11 +340,11 @@ class LocationsEmspValidationServiceTest {
                 partyId = str4chars,
                 locationId = str39chars,
                 evseUid = str39chars,
-                evse = validEvsePartial
+                evse = validEvse.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -350,11 +353,11 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str40chars,
                 evseUid = str39chars,
-                evse = validEvsePartial
+                evse = validEvse.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -363,11 +366,11 @@ class LocationsEmspValidationServiceTest {
                 partyId = str3chars,
                 locationId = str39chars,
                 evseUid = str40chars,
-                evse = validEvsePartial
+                evse = validEvse.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -382,11 +385,11 @@ class LocationsEmspValidationServiceTest {
                 locationId = str4chars,
                 evseUid = str4chars,
                 connectorId = str4chars,
-                connector = validConnectorPartial
+                connector = validConnector.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -396,11 +399,11 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = validConnectorPartial
+                connector = validConnector.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -410,11 +413,11 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = validConnectorPartial
+                connector = validConnector.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -424,11 +427,11 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = validConnectorPartial
+                connector = validConnector.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -438,11 +441,11 @@ class LocationsEmspValidationServiceTest {
                 locationId = str40chars,
                 evseUid = str39chars,
                 connectorId = str36chars,
-                connector = validConnectorPartial
+                connector = validConnector.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -452,11 +455,11 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str40chars,
                 connectorId = str36chars,
-                connector = validConnectorPartial
+                connector = validConnector.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -466,11 +469,11 @@ class LocationsEmspValidationServiceTest {
                 locationId = str39chars,
                 evseUid = str39chars,
                 connectorId = str37chars,
-                connector = validConnectorPartial
+                connector = validConnector.toPartial()
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -487,7 +490,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -499,7 +502,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -511,7 +514,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -523,7 +526,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -535,7 +538,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -553,7 +556,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -566,7 +569,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -579,7 +582,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -592,7 +595,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -605,7 +608,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -618,7 +621,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -637,7 +640,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -651,7 +654,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.SUCCESS.code)
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -665,7 +668,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -679,7 +682,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -693,7 +696,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -707,7 +710,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -721,7 +724,7 @@ class LocationsEmspValidationServiceTest {
             )
         ) {
             get { status_code }
-                .isEqualTo(OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code)
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 }

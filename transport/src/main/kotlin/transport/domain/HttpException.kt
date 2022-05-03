@@ -1,3 +1,3 @@
 package transport.domain
 
-class HttpException(val code: Int) : Exception("HTTP Error, status $code")
+class HttpException(val status: HttpStatus) : Exception("HTTP Error, status $status")

@@ -48,7 +48,7 @@ class Http4kTransportServer(
                         queryParams = queryParams.associateWith { param -> req.query(param) },
                     )
                 ).let {
-                    Response(Status(it.status, null))
+                    Response(Status(it.status.code, null))
                         .body(it.body ?: "")
                         .headers(it.headers.toList())
                 }

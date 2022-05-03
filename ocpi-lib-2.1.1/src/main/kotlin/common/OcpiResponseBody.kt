@@ -3,6 +3,7 @@ package common
 import org.valiktor.ConstraintViolationException
 import transport.domain.HttpRequest
 import transport.domain.HttpResponse
+import transport.domain.HttpStatus
 import java.time.Instant
 
 /**
@@ -30,14 +31,14 @@ data class OcpiResponseBody<T>(
     companion object {
         private fun <T> success(data: T) = OcpiResponseBody(
             data = data,
-            status_code = OcpiStatusCode.SUCCESS.code,
+            status_code = OcpiStatus.SUCCESS.code,
             status_message = null,
             timestamp = Instant.now()
         )
 
         private fun <T> invalid(message: String) = OcpiResponseBody<T>(
             data = null,
-            status_code = OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code,
+            status_code = OcpiStatus.CLIENT_INVALID_PARAMETERS.code,
             status_message = message,
             timestamp = Instant.now()
         )
@@ -74,9 +75,9 @@ fun <T> OcpiResponseBody<SearchResult<T>>.getPaginatedHeaders(request: HttpReque
 fun <T> OcpiResponseBody<T>.toHttpResponse() =
     HttpResponse(
         status = when (status_code) {
-            OcpiStatusCode.SUCCESS.code -> if(data != null) 200 else 404
-            OcpiStatusCode.INVALID_OR_MISSING_PARAMETERS.code -> 400
-            else -> 500
+            OcpiStatus.SUCCESS.code -> if(data != null) HttpStatus.OK else HttpStatus.NOT_FOUND
+            OcpiStatus.CLIENT_INVALID_PARAMETERS.code -> HttpStatus.BAD_REQUEST
+            else -> HttpStatus.INTERNAL_SERVER_ERROR
         },
         body = mapper.writeValueAsString(this)
     )
