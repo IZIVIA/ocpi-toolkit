@@ -435,6 +435,27 @@ class LocationsValidatorTest {
         }.isSuccess()
 
         expectCatching {
+            validHours.toPartial().validate()
+
+            // This fails when not partial, but does not when partial
+            validHours.toPartial().copy(regular_hours = null, twenty_four_seven = null).validate()
+        }.isSuccess()
+
+        expectCatching {
+            validHours.copy(
+                regular_hours = listOf(validRegularHours),
+                twenty_four_seven = true
+            ).toPartial().validate()
+        }.isFailure()
+
+        expectCatching {
+            validHours.copy(
+                regular_hours = listOf(validRegularHours),
+                twenty_four_seven = true
+            ).validate()
+        }.isFailure()
+
+        expectCatching {
             validHours.copy(
                 regular_hours = null,
                 twenty_four_seven = null
