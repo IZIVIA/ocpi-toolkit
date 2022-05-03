@@ -33,6 +33,11 @@ enum class OcpiStatus(val code: Int) {
     CLIENT_UNKNOWN_LOCATION(2003),
 
     /**
+     * Unknown Token, for example: 'real-time' authorization of an unknown Token.
+     */
+    CLIENT_UNKNOWN_TOKEN(2004),
+
+    /**
      * Generic server error
      */
     SERVER_ERROR(3000),
