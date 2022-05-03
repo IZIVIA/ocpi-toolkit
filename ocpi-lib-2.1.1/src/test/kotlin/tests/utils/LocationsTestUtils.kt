@@ -107,7 +107,7 @@ val validLocation = Location(
 
 val validEvse = Evse(
     uid = "uid",
-    evse_id = "evse_id",
+    evse_id = "FR*A23*E45B*78C",
     status = Status.AVAILABLE,
     status_schedule = listOf(validStatusSchedule),
     capabilities = listOf(Capability.CHARGING_PROFILE_CAPABLE),

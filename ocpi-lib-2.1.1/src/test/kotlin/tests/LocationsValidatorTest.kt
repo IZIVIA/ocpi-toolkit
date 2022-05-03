@@ -69,10 +69,48 @@ class LocationsValidatorTest {
         }.isSuccess()
 
         expectCatching {
-            validEvse.copy(uid = generateRandomString(40)).validate()
+            validEvse.copy(evse_id = "FR*A23*E45B*78C").validate()
+        }.isSuccess()
+
+        expectCatching {
+            validEvse.copy(evse_id = "fr*a23*e45b*78c").validate()
+        }.isSuccess()
+
+        expectCatching {
+            validEvse.copy(evse_id = "FRA23E45B78C").validate()
+        }.isSuccess()
+
+        expectCatching {
+            validEvse.copy(evse_id = "FRA23E45B*78C").validate()
+        }.isSuccess()
+
+        expectCatching {
+            validEvse.copy(evse_id = "FR*A23*E${generateRandomString(31)}").validate()
+        }.isSuccess()
+
+        expectCatching {
+            validEvse.copy(evse_id = "F*A23*E45B*78C").validate()
         }.isFailure()
 
-        // evse_id validation not implemented
+        expectCatching {
+            validEvse.copy(evse_id = "FR*A2*E45B*78C").validate()
+        }.isFailure()
+
+        expectCatching {
+            validEvse.copy(evse_id = "FR*A23*A45B*78C").validate()
+        }.isFailure()
+
+        expectCatching {
+            validEvse.copy(evse_id = "FR*A23*E").validate()
+        }.isFailure()
+
+        expectCatching {
+            validEvse.copy(evse_id = "FR*A23*E${generateRandomString(32)}").validate()
+        }.isFailure()
+
+        expectCatching {
+            validEvse.copy(uid = generateRandomString(40)).validate()
+        }.isFailure()
 
         expectCatching {
             validEvse.copy(floor_level = generateRandomString(5)).validate()
