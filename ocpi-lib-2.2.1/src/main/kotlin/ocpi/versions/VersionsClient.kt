@@ -1,6 +1,7 @@
 package ocpi.versions
 
 import common.OcpiResponseBody
+import common.encodeBase64
 import common.parseBody
 import ocpi.versions.domain.Version
 import ocpi.versions.domain.VersionDetails
@@ -19,7 +20,7 @@ class VersionsClient(
                     method = HttpMethod.GET,
                     path = "/",
                     headers = mapOf(
-                        "Authorization" to "Token $token"
+                        "Authorization" to "Token ${token.encodeBase64()}"
                     )
                 )
             )
@@ -32,7 +33,7 @@ class VersionsClient(
                     method = HttpMethod.GET,
                     path = "/$versionNumber",
                     headers = mapOf(
-                        "Authorization" to "Token $token"
+                        "Authorization" to "Token ${token.encodeBase64()}"
                     )
                 )
             )

@@ -1,6 +1,7 @@
 package ocpi.credentials
 
 import common.OcpiResponseBody
+import common.encodeBase64
 import common.mapper
 import common.parseBody
 import ocpi.credentials.domain.Credentials
@@ -23,7 +24,7 @@ class CredentialsClient(
                     method = HttpMethod.POST,
                     path = "/credentials",
                     headers = mapOf(
-                        "Authorization" to "Token $tokenA"
+                        "Authorization" to "Token ${tokenA.encodeBase64()}"
                     ),
                     body = mapper.writeValueAsString(credentials)
                 )

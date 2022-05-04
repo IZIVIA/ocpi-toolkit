@@ -1,5 +1,6 @@
 package ocpi.versions
 
+import common.decodeBase64
 import common.httpResponse
 import ocpi.versions.validation.VersionsValidationService
 import transport.TransportServer
@@ -20,6 +21,8 @@ class VersionsServer(
             validationService
                 .getVersions(
                     token = req.headers["Authorization"]
+                        ?.removePrefix("Token ")
+                        ?.decodeBase64()
                         ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing")
                 )
             }
@@ -35,6 +38,8 @@ class VersionsServer(
                 validationService
                     .getVersionDetails(
                         token = req.headers["Authorization"]
+                            ?.removePrefix("Token ")
+                            ?.decodeBase64()
                             ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing"),
                         versionNumber = req.pathParams["versionNumber"]!!
                     )
