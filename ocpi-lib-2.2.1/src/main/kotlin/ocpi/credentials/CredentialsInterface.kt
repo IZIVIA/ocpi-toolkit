@@ -1,5 +1,6 @@
 package ocpi.credentials
 
+import common.OcpiResponseBody
 import ocpi.credentials.domain.Credentials
 
 /**
@@ -27,7 +28,7 @@ interface CredentialsInterface {
      * This method MUST return a HTTP status code 405: method not allowed if the client has already been registered
      * before.
      */
-    fun post(credentials: Credentials): Credentials
+    fun post(tokenA: String, credentials: Credentials): OcpiResponseBody<Credentials>
 
     /**
      * Provides the server with updated credentials to access the client’s system. This credentials object also contains
