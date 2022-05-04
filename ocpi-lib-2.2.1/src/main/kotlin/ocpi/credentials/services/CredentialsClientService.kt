@@ -2,26 +2,26 @@ package ocpi.credentials.services
 
 import common.OcpiClientInvalidParametersException
 import common.OcpiServerUnsupportedVersionException
+import common.generateUUIDv4Token
 import ocpi.credentials.CredentialsClient
 import ocpi.credentials.domain.Credentials
-import ocpi.credentials.repositories.PlatformRepository
+import ocpi.credentials.repositories.ClientPlatformRepository
 import ocpi.versions.VersionsClient
 import ocpi.versions.repositories.VersionsRepository
-import java.util.*
 
 /**
  * Automates authentification process
  *
  * Note: credentialsClient & versionsClient must target the same platform
  *
- * @property platformRepository the repository to store credential information about platforms with whom the client may
+ * @property clientPlatformRepository the repository to store credential information about platforms with whom the client may
  * communicate
  * @property versionsRepository the repository to retrieve versions of the client
  * @property credentialsClient the client to make requests to the credentials endpoint of the server
  * @property versionsClient the client to check & synchronize client / server versions
  */
-class CredentialsSenderService(
-    private val platformRepository: PlatformRepository,
+class CredentialsClientService(
+    private val clientPlatformRepository: ClientPlatformRepository,
     private val versionsRepository: VersionsRepository,
     private val credentialsClient: CredentialsClient,
     private val versionsClient: VersionsClient
@@ -54,7 +54,7 @@ class CredentialsSenderService(
     fun register(clientVersionsEndpointUrl: String, platformUrl: String): Credentials {
 
         // Get token provided by receiver outside the OCPI protocol (for example by an admin)
-        val credentialsTokenA = platformRepository.getCredentialsTokenA(platformUrl = platformUrl)
+        val credentialsTokenA = clientPlatformRepository.getCredentialsTokenA(platformUrl = platformUrl)
             ?: throw OcpiClientInvalidParametersException("Could not find token A associated with platform $platformUrl")
 
         // Get available versions and pick latest mutual
@@ -76,32 +76,33 @@ class CredentialsSenderService(
         ).data ?: throw Exception("todo") // TODO
 
         // Store version & endpoint
-        platformRepository.saveVersion(platformUrl = platformUrl, version = latestMutualVersion)
-        platformRepository.saveEndpoints(platformUrl = platformUrl, endpoints = versionDetails.endpoints)
+        clientPlatformRepository.saveVersion(platformUrl = platformUrl, version = latestMutualVersion)
+        clientPlatformRepository.saveEndpoints(platformUrl = platformUrl, endpoints = versionDetails.endpoints)
 
         // Generate token B
-        val credentialsTokenB = platformRepository.saveCredentialsTokenB(
+        val credentialsTokenB = clientPlatformRepository.saveCredentialsTokenB(
             platformUrl = platformUrl,
-            credentialsTokenB = UUID.randomUUID().toString()
+            credentialsTokenB = generateUUIDv4Token()
         )
 
         // Initiate registration process
         val credentials = credentialsClient.post(
-            Credentials(
+            tokenA = credentialsTokenA,
+            credentials = Credentials(
                 token = credentialsTokenB,
                 url = clientVersionsEndpointUrl,
                 roles = listOf() // TODO: what should the client provide ???
             )
-        )
+        ).data ?: throw Exception("TODO")
 
         // Store token C
-        platformRepository.saveCredentialsTokenC(
+        clientPlatformRepository.saveCredentialsTokenC(
             platformUrl = platformUrl,
             credentialsTokenC = credentials.token
         )
 
         // Remove token A because it is useless from now on
-        platformRepository.removeCredentialsTokenA(platformUrl = platformUrl)
+        clientPlatformRepository.removeCredentialsTokenA(platformUrl = platformUrl)
 
         return credentials
     }

@@ -3,7 +3,7 @@ package ocpi.credentials.repositories
 import ocpi.versions.domain.Endpoint
 import ocpi.versions.domain.Version
 
-interface PlatformRepository {
+interface ClientPlatformRepository {
     /**
      * Note: CREDENTIALS_TOKEN_A is used by the client to initiate registration.
      *
@@ -51,14 +51,6 @@ interface PlatformRepository {
     fun saveCredentialsTokenB(platformUrl: String, credentialsTokenB: String): String
 
     /**
-     * Note: CREDENTIALS_TOKEN_B is used by the server to communicate with the client.
-     *
-     * @param platformUrl
-     * @return the CREDENTIALS_TOKEN_B for the given platform if it exists
-     */
-    fun getCredentialsTokenB(platformUrl: String): String?
-
-    /**
      * Saves CREDENTIALS_TOKEN_C for the given platform
      *
      * Note: CREDENTIALS_TOKEN_C is used by the client to communicate with the server.
@@ -76,7 +68,4 @@ interface PlatformRepository {
      * @return the CREDENTIALS_TOKEN_C for the given platform if it exists
      */
     fun getCredentialsTokenC(platformUrl: String): String?
-
-    fun getPlatformByTokenA(token: String): String?
-    fun getPlatformByTokenC(token: String): String?
 }
