@@ -3,7 +3,7 @@ package ocpi.credentials.repositories
 import ocpi.versions.domain.Endpoint
 import ocpi.versions.domain.Version
 
-interface ClientPlatformRepository {
+interface PlatformRepository {
     /**
      * Note: CREDENTIALS_TOKEN_A is used by the client to initiate registration.
      *
@@ -13,13 +13,16 @@ interface ClientPlatformRepository {
     fun getCredentialsTokenA(platformUrl: String): String?
 
     /**
-     * Removes CREDENTIALS_TOKEN_A from repository. Should be called when client finished registration with success.
-     *
-     * Note: CREDENTIALS_TOKEN_A is used by the client to initiate registration.
+     * Note: CREDENTIALS_TOKEN_C is used by the client to communicate with the server.
      *
      * @param platformUrl
+     * @return the CREDENTIALS_TOKEN_C for the given platform if it exists
      */
-    fun removeCredentialsTokenA(platformUrl: String)
+    fun getCredentialsTokenC(platformUrl: String): String?
+
+    fun getPlatformByTokenA(token: String): String?
+    fun getPlatformByTokenB(token: String): String?
+    fun getPlatformByTokenC(token: String): String?
 
     /**
      * Saves version used for the given platform
@@ -62,10 +65,11 @@ interface ClientPlatformRepository {
     fun saveCredentialsTokenC(platformUrl: String, credentialsTokenC: String): String
 
     /**
-     * Note: CREDENTIALS_TOKEN_C is used by the client to communicate with the server.
+     * Removes CREDENTIALS_TOKEN_A from repository. Should be called when client finished registration with success.
+     *
+     * Note: CREDENTIALS_TOKEN_A is used by the client to initiate registration.
      *
      * @param platformUrl
-     * @return the CREDENTIALS_TOKEN_C for the given platform if it exists
      */
-    fun getCredentialsTokenC(platformUrl: String): String?
+    fun removeCredentialsTokenA(platformUrl: String)
 }
