@@ -1,13 +1,10 @@
 package common
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import transport.domain.HttpException
 import transport.domain.HttpResponse
-import transport.domain.HttpStatus
+import java.util.*
 
-inline fun <reified T> HttpResponse.parseBody(): T =
-    if (status == HttpStatus.OK || status == HttpStatus.CREATED) {
-        mapper.readValue(body!!)
-    } else {
-        throw HttpException(status, status.label)
-    }
+inline fun <reified T> HttpResponse.parseBody(): T = mapper.readValue(body!!)
+
+fun String.encodeBase64(): String = Base64.getEncoder().encodeToString(this.encodeToByteArray())
+fun String.decodeBase64(): String = Base64.getDecoder().decode(this).decodeToString()
