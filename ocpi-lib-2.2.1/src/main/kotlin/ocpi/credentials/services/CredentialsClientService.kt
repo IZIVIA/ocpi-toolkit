@@ -5,7 +5,7 @@ import common.OcpiServerUnsupportedVersionException
 import common.generateUUIDv4Token
 import ocpi.credentials.CredentialsClient
 import ocpi.credentials.domain.Credentials
-import ocpi.credentials.repositories.ClientPlatformRepository
+import ocpi.credentials.repositories.PlatformRepository
 import ocpi.versions.VersionsClient
 import ocpi.versions.repositories.VersionsRepository
 
@@ -21,7 +21,7 @@ import ocpi.versions.repositories.VersionsRepository
  * @property versionsClient the client to check & synchronize client / server versions
  */
 class CredentialsClientService(
-    private val clientPlatformRepository: ClientPlatformRepository,
+    private val clientPlatformRepository: PlatformRepository,
     private val versionsRepository: VersionsRepository,
     private val credentialsClient: CredentialsClient,
     private val versionsClient: VersionsClient
@@ -58,7 +58,11 @@ class CredentialsClientService(
             ?: throw OcpiClientInvalidParametersException("Could not find token A associated with platform $platformUrl")
 
         // Get available versions and pick latest mutual
-        val availableServerVersions = versionsClient.getVersions(token = credentialsTokenA).data ?: throw Exception("todo") // TODO
+        val availableServerVersions = versionsClient
+            .getVersions(token = credentialsTokenA)
+            .let {
+                it.data ?: throw Exception("${it.status_code} ${it.status_message}")
+            }
         val availableClientVersions = versionsRepository.getVersions()
 
         val latestMutualVersion = availableClientVersions
@@ -73,7 +77,9 @@ class CredentialsClientService(
         val versionDetails = versionsClient.getVersionDetails(
             token = credentialsTokenA,
             versionNumber = latestMutualVersion.version.value
-        ).data ?: throw Exception("todo") // TODO
+        ).let {
+            it.data ?: throw Exception("${it.status_code} ${it.status_message}")
+        }
 
         // Store version & endpoint
         clientPlatformRepository.saveVersion(platformUrl = platformUrl, version = latestMutualVersion)
@@ -93,7 +99,9 @@ class CredentialsClientService(
                 url = clientVersionsEndpointUrl,
                 roles = listOf() // TODO: what should the client provide ???
             )
-        ).data ?: throw Exception("TODO")
+        ).let {
+            it.data ?: throw Exception("${it.status_code} ${it.status_message}")
+        }
 
         // Store token C
         clientPlatformRepository.saveCredentialsTokenC(
