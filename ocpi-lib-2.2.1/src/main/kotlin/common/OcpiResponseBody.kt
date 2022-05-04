@@ -84,7 +84,7 @@ fun <T> httpResponse(fn: () -> OcpiResponseBody<T>) =
         )
     } catch (e: JsonProcessingException) {
         HttpResponse(
-            status = HttpStatus.INTERNAL_SERVER_ERROR,
-            body = "Could not write OcpiResponseBody, does it contain unsupported characters / types ?"
+            status = HttpStatus.BAD_REQUEST,
+            body = e.message
         )
     }
