@@ -12,3 +12,7 @@ abstract class TransportClient {
      */
     abstract fun send(request: HttpRequest): HttpResponse
 }
+
+abstract class TransportClientBuilder {
+    abstract fun build(url: String): TransportClient
+}
