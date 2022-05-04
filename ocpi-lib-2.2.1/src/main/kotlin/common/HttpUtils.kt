@@ -9,5 +9,5 @@ inline fun <reified T> HttpResponse.parseBody(): T =
     if (status == HttpStatus.OK || status == HttpStatus.CREATED) {
         mapper.readValue(body!!)
     } else {
-        throw HttpException(status)
+        throw HttpException(status, status.label)
     }

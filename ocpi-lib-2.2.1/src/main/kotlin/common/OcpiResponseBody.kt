@@ -1,6 +1,8 @@
 package common
 
+import com.fasterxml.jackson.core.JsonProcessingException
 import org.valiktor.ConstraintViolationException
+import transport.domain.HttpException
 import transport.domain.HttpResponse
 import transport.domain.HttpStatus
 import java.time.Instant
@@ -28,14 +30,14 @@ data class OcpiResponseBody<T>(
     val timestamp: Instant
 ) {
     companion object {
-        private fun <T> success(data: T) = OcpiResponseBody(
+        fun <T> success(data: T) = OcpiResponseBody(
             data = data,
             status_code = OcpiStatus.SUCCESS.code,
             status_message = null,
             timestamp = Instant.now()
         )
 
-        private fun <T> invalid(message: String) = OcpiResponseBody<T>(
+        fun <T> invalid(message: String) = OcpiResponseBody<T>(
             data = null,
             status_code = OcpiStatus.CLIENT_INVALID_PARAMETERS.code,
             status_message = message,
@@ -51,12 +53,38 @@ data class OcpiResponseBody<T>(
     }
 }
 
-fun <T> OcpiResponseBody<T>.toHttpResponse() =
-    HttpResponse(
-        status = when (status_code) {
-            OcpiStatus.SUCCESS.code -> if(data != null) HttpStatus.OK else HttpStatus.NOT_FOUND
-            OcpiStatus.CLIENT_INVALID_PARAMETERS.code -> HttpStatus.BAD_REQUEST
-            else -> HttpStatus.INTERNAL_SERVER_ERROR
-        },
-        body = mapper.writeValueAsString(this)
-    )
+fun <T> httpResponse(fn: () -> OcpiResponseBody<T>) =
+    try {
+        val ocpiResponseBody = fn()
+
+        HttpResponse(
+            status = when (ocpiResponseBody.status_code) {
+                OcpiStatus.SUCCESS.code -> if(ocpiResponseBody.data != null) HttpStatus.OK else HttpStatus.NOT_FOUND
+                OcpiStatus.CLIENT_INVALID_PARAMETERS.code -> HttpStatus.BAD_REQUEST
+                else -> HttpStatus.INTERNAL_SERVER_ERROR
+            },
+            body = mapper.writeValueAsString(ocpiResponseBody)
+        )
+    } catch (e: OcpiException) {
+        HttpResponse(
+            status = e.httpStatus,
+            body = mapper.writeValueAsString(
+                OcpiResponseBody<T>(
+                    data = null,
+                    status_code = e.ocpiStatus.code,
+                    status_message = e.message,
+                    timestamp = Instant.now()
+                )
+            )
+        )
+    } catch (e: HttpException) {
+        HttpResponse(
+            status = e.status,
+            body = e.reason
+        )
+    } catch (e: JsonProcessingException) {
+        HttpResponse(
+            status = HttpStatus.INTERNAL_SERVER_ERROR,
+            body = "Could not write OcpiResponseBody, does it contain unsupported characters / types ?"
+        )
+    }

@@ -1,6 +1,6 @@
 package ocpi.versions
 
-import common.toHttpResponse
+import common.httpResponse
 import ocpi.versions.validation.VersionsValidationService
 import transport.TransportServer
 import transport.domain.*
@@ -16,14 +16,13 @@ class VersionsServer(
             path = listOf(
                 FixedPathSegment("/")
             )
-        ) { req ->
-
+        ) { req -> httpResponse {
             validationService
                 .getVersions(
                     token = req.headers["Authorization"]
                         ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing")
                 )
-                .toHttpResponse()
+            }
         }
 
         transportServer.handle(
@@ -32,13 +31,14 @@ class VersionsServer(
                 VariablePathSegment("versionNumber")
             )
         ) { req ->
-            validationService
-                .getVersionDetails(
-                    token = req.headers["Authorization"]
-                        ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing"),
-                    versionNumber = req.pathParams["versionNumber"]!!
-                )
-                .toHttpResponse()
+            httpResponse {
+                validationService
+                    .getVersionDetails(
+                        token = req.headers["Authorization"]
+                            ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing"),
+                        versionNumber = req.pathParams["versionNumber"]!!
+                    )
+            }
         }
     }
 }
