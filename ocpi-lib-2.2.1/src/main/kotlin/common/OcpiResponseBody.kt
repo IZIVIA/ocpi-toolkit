@@ -1,6 +1,7 @@
 package common
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import org.apache.logging.log4j.LogManager
 import org.valiktor.ConstraintViolationException
 import transport.domain.HttpException
 import transport.domain.HttpResponse
@@ -53,6 +54,8 @@ data class OcpiResponseBody<T>(
     }
 }
 
+private val logger = LogManager.getLogger(OcpiResponseBody::class.java)
+
 fun <T> httpResponse(fn: () -> OcpiResponseBody<T>) =
     try {
         val ocpiResponseBody = fn()
@@ -75,16 +78,17 @@ fun <T> httpResponse(fn: () -> OcpiResponseBody<T>) =
                     status_message = e.message,
                     timestamp = Instant.now()
                 )
-            )
+            ),
+            headers = if(e.httpStatus == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap()
         )
     } catch (e: HttpException) {
+        logger.error(e)
         HttpResponse(
-            status = e.status,
-            body = e.reason
+            status = e.status
         )
     } catch (e: JsonProcessingException) {
+        logger.error(e)
         HttpResponse(
-            status = HttpStatus.BAD_REQUEST,
-            body = e.message
+            status = HttpStatus.BAD_REQUEST
         )
     }
