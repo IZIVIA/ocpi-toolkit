@@ -14,7 +14,7 @@ class VersionsCacheRepository(
         )
     )
 
-    override fun getVersionDetails(versionNumber: VersionNumber): VersionDetails =
+    override fun getVersionDetails(versionNumber: VersionNumber): VersionDetails? =
         VersionDetails(
             version = VersionNumber.V2_2_1,
             endpoints = listOf(
@@ -24,5 +24,5 @@ class VersionsCacheRepository(
                     url = "$baseUrl/credentials"
                 )
             )
-        )
+        ).takeIf { versionNumber == it.version }
 }
