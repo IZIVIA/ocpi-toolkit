@@ -33,7 +33,21 @@ class CredentialsServer(
             }
         }
 
-        // TODO: put
+        transportServer.handle(
+            method = HttpMethod.PUT,
+            path = listOf(
+                FixedPathSegment("/credentials")
+            )
+        ) { req -> httpResponse {
+                service.put(
+                    tokenC = req.headers["Authorization"]
+                        ?.removePrefix("Token ")
+                        ?.decodeBase64()
+                        ?: throw OcpiClientNotEnoughInformationException("Missing Authorization header"),
+                    credentials = mapper.readValue(req.body!!, Credentials::class.java)
+                )
+            }
+        }
         // TODO: delete
     }
 }
