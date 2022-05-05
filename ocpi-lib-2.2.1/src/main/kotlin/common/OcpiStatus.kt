@@ -81,3 +81,5 @@ enum class OcpiStatus(val code: Int) {
      */
     HUB_CONNECTION_PROBLEM(4003)
 }
+
+fun Int.toOcpiStatus(): OcpiStatus? = OcpiStatus.values().firstOrNull { it.code == this }
