@@ -2,6 +2,7 @@ package ocpi.versions.validation
 
 import common.OcpiClientInvalidParametersException
 import common.OcpiResponseBody
+import common.OcpiServerUnsupportedVersionException
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.versions.VersionsInterface
 import ocpi.versions.domain.Version
@@ -36,7 +37,7 @@ class VersionsValidationService(
                     throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($token)")
                 }
             }
-            ?: throw OcpiClientInvalidParametersException("Invalid version number: $versionNumber")
+            ?: throw OcpiServerUnsupportedVersionException("Invalid version number: $versionNumber")
     }
 
     /**
