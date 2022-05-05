@@ -15,6 +15,7 @@ abstract class TransportServer {
      * @param queryParams expected queryParams
      * @param callback
      */
+    // TODO: filters ? (may be useful for authorization header)
     abstract fun handle(
         method: HttpMethod,
         path: List<PathSegment>,
