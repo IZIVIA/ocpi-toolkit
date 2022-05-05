@@ -1,5 +1,9 @@
 package tests
 
+import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoDatabase
+import common.OcpiClientInvalidParametersException
+import common.OcpiResponseException
 import common.OcpiStatus
 import ocpi.credentials.CredentialsClient
 import ocpi.credentials.CredentialsServer
@@ -15,26 +19,31 @@ import ocpi.versions.VersionsServer
 import ocpi.versions.domain.VersionNumber
 import ocpi.versions.validation.VersionsValidationService
 import org.junit.jupiter.api.Test
+import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 import samples.common.Http4kTransportClientBuilder
+import samples.common.Http4kTransportServer
 import samples.common.Platform
 import samples.common.VersionsCacheRepository
+import strikt.api.expectCatching
 import strikt.api.expectThat
-import strikt.assertions.isEqualTo
-import strikt.assertions.isNotEmpty
-import strikt.assertions.isNotNull
-import strikt.assertions.isNull
+import strikt.assertions.*
 import tests.mock.PlatformMongoRepository
 import java.util.*
 
 class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
-    @Test
-    fun `should properly run nominal registration process`() {
-        // Db setup
-        val database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
-        val receiverPlatformCollection = database.getCollection<Platform>("receiver-server")
-        val senderPlatformCollection = database.getCollection<Platform>("sender-client")
+    data class ServerSetupResult(
+        val transport: Http4kTransportServer,
+        val platformCollection: MongoCollection<Platform>
+    )
+
+    private var database: MongoDatabase? = null
+
+    private fun setupReceiver(): ServerSetupResult {
+        if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
+        val receiverPlatformCollection = database!!
+            .getCollection<Platform>("receiver-server-${UUID.randomUUID()}")
 
         // Setup receiver (only server)
         val receiverServer = buildTransportServer()
@@ -65,25 +74,41 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 platformRepository = receiverPlatformRepo
             )
         )
-        receiverServer.start()
+
+        return ServerSetupResult(
+            transport = receiverServer,
+            platformCollection = receiverPlatformCollection
+        )
+    }
+
+    private fun setupSender(): ServerSetupResult {
+        if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
+        val senderPlatformCollection = database!!
+            .getCollection<Platform>("sender-server-${UUID.randomUUID()}")
 
         // Setup sender (server)
         val senderServer = buildTransportServer()
-        val versionsRepo = VersionsCacheRepository(baseUrl = senderServer.baseUrl)
+
         VersionsServer(
             transportServer = senderServer,
             validationService = VersionsValidationService(
-                repository = versionsRepo,
+                repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl),
                 platformRepository = PlatformMongoRepository(collection = senderPlatformCollection)
             )
         )
-        senderServer.start()
 
+        return ServerSetupResult(
+            transport = senderServer,
+            platformCollection = senderPlatformCollection
+        )
+    }
+
+    private fun setupCredentialsSenderClient(senderServerSetupResult: ServerSetupResult, receiverServerSetupResult: ServerSetupResult): CredentialsClientService {
         // Setup sender (client)
-        val transportTowardsReceiver = receiverServer.getClient()
-        val credentialsClientService = CredentialsClientService(
-            clientPlatformRepository = PlatformMongoRepository(collection = senderPlatformCollection),
-            versionsRepository = versionsRepo,
+        val transportTowardsReceiver = receiverServerSetupResult.transport.getClient()
+        return CredentialsClientService(
+            clientPlatformRepository = PlatformMongoRepository(collection = senderServerSetupResult.platformCollection),
+            versionsRepository = VersionsCacheRepository(baseUrl = senderServerSetupResult.transport.baseUrl),
             credentialsRoleRepository = object: CredentialsRoleRepository {
                 override fun getCredentialsRoles(): List<CredentialRole> = listOf(
                     CredentialRole(
@@ -97,32 +122,36 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             credentialsClient = CredentialsClient(transportClient = transportTowardsReceiver),
             versionsClient = VersionsClient(transportClient = transportTowardsReceiver)
         )
+    }
+
+    @Test
+    fun `should properly run registration process and invalidate token A used during registration`() {
+        val receiverServer = setupReceiver()
+        val senderServer = setupSender()
+
+        val credentialsClientService = setupCredentialsSenderClient(
+            senderServerSetupResult = senderServer,
+            receiverServerSetupResult = receiverServer
+        )
 
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
         // well in the client so that it knows what token to send
         val tokenA = UUID.randomUUID().toString()
-        receiverPlatformCollection.insertOne(
-            Platform(
-                url = senderServer.baseUrl,
-                tokenA = tokenA
-            )
-        )
-        senderPlatformCollection.insertOne(
-            Platform(
-                url = receiverServer.baseUrl,
-                tokenA = tokenA
-            )
-        )
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
 
-        // Now that we have all the prerequisites, we can begin the registration
+        // Start the servers
+        receiverServer.transport.start()
+        senderServer.transport.start()
+
         val credentials = credentialsClientService.register(
-            clientVersionsEndpointUrl = senderServer.baseUrl,
-            platformUrl = receiverServer.baseUrl
+            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
+            platformUrl = receiverServer.transport.baseUrl
         )
 
         // Now we can do some requests to check if the credentials provided are right (and if token A is now invalid)
         val versionsClient = VersionsClient(
-            transportClient = receiverServer.getClient()
+            transportClient = receiverServer.transport.getClient()
         )
 
         expectThat(
@@ -133,7 +162,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             get { data }
                 .isNotNull()
                 .isNotEmpty()
-                .isEqualTo(receiverVersionsCacheRepository.getVersions())
+                .isEqualTo(
+                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                        .getVersions()
+                )
 
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -148,7 +180,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         ) {
             get { data }
                 .isNotNull()
-                .isEqualTo(receiverVersionsCacheRepository.getVersionDetails(versionNumber))
+                .isEqualTo(
+                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                        .getVersionDetails(versionNumber)
+                )
 
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -195,8 +230,60 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
     }
 
-    @Test // TODO
-    fun `should not properly run nominal registration process`() {
+    @Test
+    fun `should not properly run registration because wrong setup of token A`() {
+        val receiverServer = setupReceiver()
+        val senderServer = setupSender()
 
+        val credentialsClientService = setupCredentialsSenderClient(
+            senderServerSetupResult = senderServer,
+            receiverServerSetupResult = receiverServer
+        )
+
+        val tokenA = UUID.randomUUID().toString()
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
+
+        // Start the servers
+        receiverServer.transport.start()
+        senderServer.transport.start()
+
+        // Fails because the senders does not know the TOKEN_A to send with the request
+        expectCatching {
+            credentialsClientService.register(
+                clientVersionsEndpointUrl = senderServer.transport.baseUrl,
+                platformUrl = receiverServer.transport.baseUrl
+            )
+        }.isFailure().isA<OcpiClientInvalidParametersException>()
+
+
+        receiverServer.platformCollection.deleteOne(Platform::url eq senderServer.transport.baseUrl)
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+
+        // Fails because the receiver does not know the TOKEN_A used by the sender
+        expectCatching {
+            credentialsClientService.register(
+                clientVersionsEndpointUrl = senderServer.transport.baseUrl,
+                platformUrl = receiverServer.transport.baseUrl
+            )
+        }
+            .isFailure()
+            .isA<OcpiResponseException>()
+            .get { statusCode }
+            .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+
+        receiverServer.platformCollection.deleteOne(Platform::url eq senderServer.transport.baseUrl)
+        receiverServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = "!$tokenA"))
+
+        // Fails because the token sent by sender is not the same as the one in the receiver
+        expectCatching {
+            credentialsClientService.register(
+                clientVersionsEndpointUrl = senderServer.transport.baseUrl,
+                platformUrl = receiverServer.transport.baseUrl
+            )
+        }
+            .isFailure()
+            .isA<OcpiResponseException>()
+            .get { statusCode }
+            .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
     }
 }
