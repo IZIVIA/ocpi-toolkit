@@ -51,5 +51,5 @@ interface CredentialsInterface {
      *
      * This method MUST return a HTTP status code 405: method not allowed if the client has not been registered before.
      */
-    fun delete()
+    fun delete(tokenC: String): OcpiResponseBody<Credentials?>
 }

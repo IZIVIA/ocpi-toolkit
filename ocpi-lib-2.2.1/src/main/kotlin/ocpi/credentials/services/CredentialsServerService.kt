@@ -69,8 +69,19 @@ class CredentialsServerService(
         )
     }
 
-    override fun delete() {
-        TODO("Not yet implemented")
+    override fun delete(
+        tokenC: String
+    ): OcpiResponseBody<Credentials?> = OcpiResponseBody.of {
+        platformRepository
+            .getPlatformByTokenC(tokenC)
+            ?.also { platformUrl ->
+                platformRepository.removeVersion(platformUrl = platformUrl)
+                platformRepository.removeEndpoints(platformUrl = platformUrl)
+                platformRepository.removeCredentialsTokenC(platformUrl = platformUrl)
+            }
+            ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
+
+        null
     }
 
     private fun findLatestMutualVersionAndStoreInformation(platformUrl: String, credentials: Credentials) {

@@ -35,14 +35,6 @@ class PlatformCacheRepository: PlatformRepository {
 
     override fun getCredentialsTokenA(platformUrl: String): String? = platforms[platformUrl]?.tokenA
 
-    override fun removeCredentialsTokenA(platformUrl: String) {
-        platforms
-            .getOrDefault(platformUrl, Platform(platformUrl))
-            .copy(tokenA = null)
-            .also { platforms[it.url] = it }
-            .let { it.tokenC!! }
-    }
-
     override fun getPlatformByTokenA(token: String): String? = platforms
         .values.firstOrNull { it.tokenA == token }?.url
 
@@ -51,4 +43,32 @@ class PlatformCacheRepository: PlatformRepository {
 
     override fun getPlatformByTokenC(token: String): String? = platforms
         .values.firstOrNull { it.tokenC == token }?.url
+
+    override fun removeCredentialsTokenA(platformUrl: String) {
+        platforms
+            .getOrDefault(platformUrl, Platform(platformUrl))
+            .copy(tokenA = null)
+            .also { platforms[it.url] = it }
+    }
+
+    override fun removeCredentialsTokenC(platformUrl: String) {
+        platforms
+            .getOrDefault(platformUrl, Platform(platformUrl))
+            .copy(tokenC = null)
+            .also { platforms[it.url] = it }
+    }
+
+    override fun removeVersion(platformUrl: String) {
+        platforms
+            .getOrDefault(platformUrl, Platform(platformUrl))
+            .copy(version = null)
+            .also { platforms[it.url] = it }
+    }
+
+    override fun removeEndpoints(platformUrl: String) {
+        platforms
+            .getOrDefault(platformUrl, Platform(platformUrl))
+            .copy(endpoints = null)
+            .also { platforms[it.url] = it }
+    }
 }

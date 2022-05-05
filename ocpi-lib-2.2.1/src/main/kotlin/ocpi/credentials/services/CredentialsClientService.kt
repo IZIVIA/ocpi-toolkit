@@ -163,4 +163,15 @@ class CredentialsClientService(
         clientPlatformRepository.saveEndpoints(platformUrl = platformUrl, endpoints = versionDetails.endpoints)
     }
 
+    fun delete(platformUrl: String) = clientPlatformRepository
+        .getCredentialsTokenC(platformUrl = platformUrl)
+        ?.let { tokenC ->
+            credentialsClient
+                .delete(tokenC = tokenC)
+                .also {
+                    if (it.status_code != OcpiStatus.SUCCESS.code)
+                        throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
+                }
+        }
+        ?: throw OcpiClientGenericException("Could not find CREDENTIALS_TOKEN_C associated with platform $platformUrl")
 }

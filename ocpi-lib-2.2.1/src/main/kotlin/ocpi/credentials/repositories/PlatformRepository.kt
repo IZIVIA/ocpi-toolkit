@@ -19,4 +19,7 @@ interface PlatformRepository {
     fun saveCredentialsTokenB(platformUrl: String, credentialsTokenB: String): String
     fun saveCredentialsTokenC(platformUrl: String, credentialsTokenC: String): String
     fun removeCredentialsTokenA(platformUrl: String)
+    fun removeCredentialsTokenC(platformUrl: String)
+    fun removeVersion(platformUrl: String)
+    fun removeEndpoints(platformUrl: String)
 }

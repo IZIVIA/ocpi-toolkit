@@ -55,7 +55,16 @@ class CredentialsClient(
             )
             .parseBody()
 
-    override fun delete() {
-        TODO("Not yet implemented")
-    }
+    override fun delete(tokenC: String): OcpiResponseBody<Credentials?> =
+        transportClient
+            .send(
+                HttpRequest(
+                    method = HttpMethod.DELETE,
+                    path = "/credentials",
+                    headers = mapOf(
+                        "Authorization" to "Token ${tokenC.encodeBase64()}"
+                    )
+                )
+            )
+            .parseBody()
 }
