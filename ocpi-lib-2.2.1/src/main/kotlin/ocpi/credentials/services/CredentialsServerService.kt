@@ -17,10 +17,23 @@ class CredentialsServerService(
     private val credentialsRoleRepository: CredentialsRoleRepository,
     private val transportClientBuilder: TransportClientBuilder,
     private val serverUrl: String
-): CredentialsInterface {
+) : CredentialsInterface {
 
-    override fun get() {
-        TODO("Not yet implemented")
+    override fun get(
+        tokenC: String
+    ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
+        platformRepository
+            .getPlatformByTokenC(tokenC)
+            ?.let { platformUrl ->
+                getCredentials(
+                    token = platformRepository.getCredentialsTokenC(platformUrl)
+                        ?: throw OcpiClientInvalidParametersException(
+                            "Could not find CREDENTIALS_TOKEN_C associated with platform $platformUrl"
+                        )
+                )
+            }
+            ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
+
     }
 
     override fun post(
@@ -34,26 +47,25 @@ class CredentialsServerService(
 
         platformRepository.removeCredentialsTokenA(platformUrl = platformUrl)
 
-        Credentials(
+        getCredentials(
             token = platformRepository.saveCredentialsTokenC(
                 platformUrl = platformUrl,
                 credentialsTokenC = generateUUIDv4Token()
-            ),
-            url = serverUrl,
-            roles = credentialsRoleRepository.getCredentialsRoles()
+            )
         )
     }
 
-    override fun put(tokenC: String, credentials: Credentials): OcpiResponseBody<Credentials>  = OcpiResponseBody.of {
+    override fun put(tokenC: String, credentials: Credentials): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
         val platformUrl = platformRepository.getPlatformByTokenC(tokenC)
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
 
         findLatestMutualVersionAndStoreInformation(platformUrl = platformUrl, credentials = credentials)
 
-        Credentials(
-            token = platformRepository.saveCredentialsTokenC(platformUrl = platformUrl, credentialsTokenC = generateUUIDv4Token()),
-            url = serverUrl,
-            roles = credentialsRoleRepository.getCredentialsRoles()
+        getCredentials(
+            token = platformRepository.saveCredentialsTokenC(
+                platformUrl = platformUrl,
+                credentialsTokenC = generateUUIDv4Token()
+            )
         )
     }
 
@@ -98,4 +110,10 @@ class CredentialsServerService(
         platformRepository.saveVersion(platformUrl = platformUrl, version = matchingVersion)
         platformRepository.saveEndpoints(platformUrl = platformUrl, endpoints = versionDetail.endpoints)
     }
+
+    private fun getCredentials(token: String): Credentials = Credentials(
+        token = token,
+        url = serverUrl,
+        roles = credentialsRoleRepository.getCredentialsRoles()
+    )
 }

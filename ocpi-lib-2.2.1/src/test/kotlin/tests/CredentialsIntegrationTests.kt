@@ -30,7 +30,7 @@ import java.util.*
 class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     @Test
-    fun credentialsTest() {
+    fun `should properly run nominal registration process`() {
         // Db setup
         val database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
         val receiverPlatformCollection = database.getCollection<Platform>("receiver-server")
@@ -193,5 +193,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
+    }
+
+    @Test // TODO
+    fun `should not properly run nominal registration process`() {
+
     }
 }

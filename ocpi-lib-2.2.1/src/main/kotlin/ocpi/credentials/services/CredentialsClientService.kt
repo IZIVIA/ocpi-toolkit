@@ -1,9 +1,6 @@
 package ocpi.credentials.services
 
-import common.OcpiClientInvalidParametersException
-import common.OcpiResponseException
-import common.OcpiServerUnsupportedVersionException
-import common.generateUUIDv4Token
+import common.*
 import ocpi.credentials.CredentialsClient
 import ocpi.credentials.domain.Credentials
 import ocpi.credentials.repositories.CredentialsRoleRepository
@@ -29,6 +26,17 @@ class CredentialsClientService(
     private val credentialsClient: CredentialsClient,
     private val versionsClient: VersionsClient
 ) {
+    // TODO: The user should not need to specify platformUrl since CredentialsClient knows what platform to speak to
+
+    fun get(platformUrl: String): Credentials = clientPlatformRepository
+        .getCredentialsTokenC(platformUrl = platformUrl)
+        ?.let { tokenC ->
+            credentialsClient
+                .get(tokenC = tokenC)
+                .let { it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown") }
+        }
+        ?: throw OcpiClientGenericException("Could not find CREDENTIALS_TOKEN_C associated with platform $platformUrl")
+
     /**
      * To start using OCPI, the Platforms will need to exchange credentials tokens.
      *

@@ -15,14 +15,29 @@ class CredentialsServer(
     service: CredentialsServerService
 ) {
     init {
-        // TODO: get
+        transportServer.handle(
+            method = HttpMethod.GET,
+            path = listOf(
+                FixedPathSegment("/credentials")
+            )
+        ) { req ->
+            httpResponse {
+                service.get(
+                    tokenC = req.headers["Authorization"]
+                        ?.removePrefix("Token ")
+                        ?.decodeBase64()
+                        ?: throw OcpiClientNotEnoughInformationException("Missing Authorization header")
+                )
+            }
+        }
 
         transportServer.handle(
             method = HttpMethod.POST,
             path = listOf(
                 FixedPathSegment("/credentials")
             )
-        ) { req -> httpResponse {
+        ) { req ->
+            httpResponse {
                 service.post(
                     tokenA = req.headers["Authorization"]
                         ?.removePrefix("Token ")
@@ -38,7 +53,8 @@ class CredentialsServer(
             path = listOf(
                 FixedPathSegment("/credentials")
             )
-        ) { req -> httpResponse {
+        ) { req ->
+            httpResponse {
                 service.put(
                     tokenC = req.headers["Authorization"]
                         ?.removePrefix("Token ")

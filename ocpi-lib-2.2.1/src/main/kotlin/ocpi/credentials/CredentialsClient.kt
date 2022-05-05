@@ -13,9 +13,19 @@ class CredentialsClient(
     private val transportClient: TransportClient
 ): CredentialsInterface {
 
-    override fun get() {
-        TODO("Not yet implemented")
-    }
+    override fun get(tokenC: String): OcpiResponseBody<Credentials> =
+        transportClient
+            .send(
+                HttpRequest(
+                    method = HttpMethod.POST,
+                    path = "/credentials",
+                    headers = mapOf(
+                        "Authorization" to "Token ${tokenC.encodeBase64()}"
+                    )
+                )
+            )
+            .parseBody()
+
 
     override fun post(tokenA: String, credentials: Credentials): OcpiResponseBody<Credentials> =
         transportClient

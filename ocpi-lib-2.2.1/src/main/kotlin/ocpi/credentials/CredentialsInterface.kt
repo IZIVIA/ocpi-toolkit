@@ -14,7 +14,7 @@ interface CredentialsInterface {
      * contains the credentials object to access the server’s platform. This credentials object also contains extra
      * information about the server such as its business details.
      */
-    fun get()
+    fun get(tokenC: String): OcpiResponseBody<Credentials>
 
     /**
      * Provides the server with credentials to access the client's system. This credentials object also contains extra
