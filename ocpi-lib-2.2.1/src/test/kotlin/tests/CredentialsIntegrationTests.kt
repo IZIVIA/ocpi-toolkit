@@ -346,4 +346,36 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isEqualTo(OcpiStatus.SERVER_UNSUPPORTED_VERSION.code)
         }
     }
+
+    @Test
+    fun `should properly run registration process then correct get credentials from receiver`() {
+        val receiverServer = setupReceiver()
+        val senderServer = setupSender()
+
+        val credentialsClientService = setupCredentialsSenderClient(
+            senderServerSetupResult = senderServer,
+            receiverServerSetupResult = receiverServer
+        )
+
+        // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
+        // well in the client so that it knows what token to send
+        val tokenA = UUID.randomUUID().toString()
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+
+        // Start the servers
+        receiverServer.transport.start()
+        senderServer.transport.start()
+
+        val credentials = credentialsClientService.register(
+            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
+            platformUrl = receiverServer.transport.baseUrl
+        )
+
+        expectThat(
+            credentialsClientService.get(
+                platformUrl = receiverServer.transport.baseUrl
+            )
+        ).isEqualTo(credentials)
+    }
 }
