@@ -33,7 +33,6 @@ class CredentialsServerService(
                 )
             }
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
-
     }
 
     override fun post(

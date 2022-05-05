@@ -53,11 +53,29 @@ fun main() {
         versionsClient = VersionsClient(transportClient = transportTowardsReceiver)
     )
 
-    // Register!
-    val credentials = credentialsClientService.register(
+    println("Registering $senderUrl to $receiverUrl")
+    var credentials = credentialsClientService.register(
         clientVersionsEndpointUrl = senderUrl,
         platformUrl = receiverUrl
     )
+    println("Success. Credentials after register : $credentials")
 
-    println(credentials)
+    println("Retrieving credentials from $receiverUrl...")
+    credentials = credentialsClientService.get(
+        platformUrl = receiverUrl
+    )
+    println("Success. Credentials : $credentials")
+
+    println("Looking for updates, and updating if needed $receiverUrl...")
+    credentials = credentialsClientService.update(
+        clientVersionsEndpointUrl = senderUrl,
+        platformUrl = receiverUrl
+    )
+    println("Success. Credentials : $credentials")
+
+    println("Deleting credentials of $senderUrl on $receiverUrl...")
+    credentialsClientService.delete(
+        platformUrl = receiverUrl
+    )
+    println("Success.")
 }

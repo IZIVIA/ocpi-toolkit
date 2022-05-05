@@ -64,6 +64,22 @@ class CredentialsServer(
                 )
             }
         }
-        // TODO: delete
+
+        transportServer.handle(
+            method = HttpMethod.DELETE,
+            path = listOf(
+                FixedPathSegment("/credentials")
+            )
+        ) { req ->
+            httpResponse {
+                service.delete(
+                    tokenC = req.headers["Authorization"]
+                        ?.removePrefix("Token ")
+                        ?.decodeBase64()
+                        ?: throw OcpiClientNotEnoughInformationException("Missing Authorization header")
+                )
+            }
+        }
+
     }
 }

@@ -17,7 +17,7 @@ class CredentialsClient(
         transportClient
             .send(
                 HttpRequest(
-                    method = HttpMethod.POST,
+                    method = HttpMethod.GET,
                     path = "/credentials",
                     headers = mapOf(
                         "Authorization" to "Token ${tokenC.encodeBase64()}"
