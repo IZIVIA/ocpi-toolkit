@@ -125,7 +125,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     }
 
     @Test
-    fun `should properly run registration process and invalidate token A used during registration`() {
+    fun `should properly run registration process then credentials provided are working and the old ones are not`() {
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
@@ -187,20 +187,6 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
-        }
-
-        versionNumber = VersionNumber.V2_2
-        expectThat(
-            versionsClient.getVersionDetails(
-                token = credentials.token,
-                versionNumber = versionNumber.value
-            )
-        ) {
-            get { data }
-                .isNull()
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.SERVER_UNSUPPORTED_VERSION.code)
         }
 
         expectThat(
@@ -285,5 +271,79 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             .isA<OcpiResponseException>()
             .get { statusCode }
             .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+    }
+
+    @Test
+    fun `should access versions module properly with token A and return right errors when needed`() {
+        val receiverServer = setupReceiver()
+        val senderServer = setupSender()
+
+        val tokenA = UUID.randomUUID().toString()
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+
+        receiverServer.transport.start()
+        senderServer.transport.start()
+
+        // We don't need to register, we will use TOKEN_A for our requests
+
+        val versionsClient = VersionsClient(
+            transportClient = receiverServer.transport.getClient()
+        )
+
+        expectThat(
+            versionsClient.getVersions(
+                token = tokenA
+            )
+        ) {
+            get { data }
+                .isNotNull()
+                .isEqualTo(VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl).getVersions())
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
+        }
+
+        expectThat(
+            versionsClient.getVersionDetails(
+                token = tokenA,
+                versionNumber = VersionNumber.V2_2_1.value
+            )
+        ) {
+            get { data }
+                .isNotNull()
+                .isEqualTo(
+                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                        .getVersionDetails(VersionNumber.V2_2_1)
+                )
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
+        }
+
+        expectThat(
+            versionsClient.getVersions(
+                token = "!$tokenA"
+            )
+        ) {
+            get { data }
+                .isNull()
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+        }
+
+        expectThat(
+            versionsClient.getVersionDetails(
+                token = tokenA,
+                versionNumber = VersionNumber.V2_2.value
+            )
+        ) {
+            get { data }
+                .isNull()
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.SERVER_UNSUPPORTED_VERSION.code)
+        }
     }
 }
