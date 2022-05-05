@@ -43,7 +43,7 @@ interface CredentialsInterface {
      *
      * This method MUST return a HTTP status code 405: method not allowed if the client has not been registered yet.
      */
-    fun put()
+    fun put(tokenC: String, credentials: Credentials): OcpiResponseBody<Credentials>
 
     /**
      * Informs the server that its credentials to access the client’s system are now invalid and can no longer be used.

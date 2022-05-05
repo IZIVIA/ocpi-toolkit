@@ -27,9 +27,41 @@ class CredentialsServerService(
         tokenA: String,
         credentials: Credentials
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
-        val platform = platformRepository.getPlatformByTokenA(tokenA)
+        val platformUrl = platformRepository.getPlatformByTokenA(tokenA)
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($tokenA)")
 
+        findLatestMutualVersionAndStoreInformation(platformUrl = platformUrl, credentials = credentials)
+
+        platformRepository.removeCredentialsTokenA(platformUrl = platformUrl)
+
+        Credentials(
+            token = platformRepository.saveCredentialsTokenC(
+                platformUrl = platformUrl,
+                credentialsTokenC = generateUUIDv4Token()
+            ),
+            url = serverUrl,
+            roles = credentialsRoleRepository.getCredentialsRoles()
+        )
+    }
+
+    override fun put(tokenC: String, credentials: Credentials): OcpiResponseBody<Credentials>  = OcpiResponseBody.of {
+        val platformUrl = platformRepository.getPlatformByTokenC(tokenC)
+            ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
+
+        findLatestMutualVersionAndStoreInformation(platformUrl = platformUrl, credentials = credentials)
+
+        Credentials(
+            token = platformRepository.saveCredentialsTokenC(platformUrl = platformUrl, credentialsTokenC = generateUUIDv4Token()),
+            url = serverUrl,
+            roles = credentialsRoleRepository.getCredentialsRoles()
+        )
+    }
+
+    override fun delete() {
+        TODO("Not yet implemented")
+    }
+
+    private fun findLatestMutualVersionAndStoreInformation(platformUrl: String, credentials: Credentials) {
         val versions = transportClientBuilder
             .build(credentials.url)
             .send(
@@ -63,25 +95,7 @@ class CredentialsServerService(
             .data
             ?: throw OcpiServerGenericException("Could not get versions of sender")
 
-        // TODO: Should we do something about roles ?
-
-        val tokenC = platformRepository.saveCredentialsTokenC(platformUrl = platform, credentialsTokenC = generateUUIDv4Token())
-        platformRepository.saveVersion(platformUrl = platform, version = matchingVersion)
-        platformRepository.saveEndpoints(platformUrl = platform, endpoints = versionDetail.endpoints)
-        platformRepository.removeCredentialsTokenA(platformUrl = platform)
-
-        Credentials(
-            token = tokenC,
-            url = serverUrl,
-            roles = credentialsRoleRepository.getCredentialsRoles()
-        )
-    }
-
-    override fun put() {
-        TODO("Not yet implemented")
-    }
-
-    override fun delete() {
-        TODO("Not yet implemented")
+        platformRepository.saveVersion(platformUrl = platformUrl, version = matchingVersion)
+        platformRepository.saveEndpoints(platformUrl = platformUrl, endpoints = versionDetail.endpoints)
     }
 }

@@ -31,9 +31,19 @@ class CredentialsClient(
             )
             .parseBody()
 
-    override fun put() {
-        TODO("Not yet implemented")
-    }
+    override fun put(tokenC: String, credentials: Credentials): OcpiResponseBody<Credentials> =
+        transportClient
+            .send(
+                HttpRequest(
+                    method = HttpMethod.PUT,
+                    path = "/credentials",
+                    headers = mapOf(
+                        "Authorization" to "Token ${tokenC.encodeBase64()}"
+                    ),
+                    body = mapper.writeValueAsString(credentials)
+                )
+            )
+            .parseBody()
 
     override fun delete() {
         TODO("Not yet implemented")

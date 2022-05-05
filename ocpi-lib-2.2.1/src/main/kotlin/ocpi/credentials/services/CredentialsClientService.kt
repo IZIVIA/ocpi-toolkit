@@ -1,6 +1,7 @@
 package ocpi.credentials.services
 
 import common.OcpiClientInvalidParametersException
+import common.OcpiResponseException
 import common.OcpiServerUnsupportedVersionException
 import common.generateUUIDv4Token
 import ocpi.credentials.CredentialsClient
@@ -54,38 +55,11 @@ class CredentialsClientService(
      * @return the credentials to use when communicating with the server (receiver)
      */
     fun register(clientVersionsEndpointUrl: String, platformUrl: String): Credentials {
-
         // Get token provided by receiver outside the OCPI protocol (for example by an admin)
         val credentialsTokenA = clientPlatformRepository.getCredentialsTokenA(platformUrl = platformUrl)
             ?: throw OcpiClientInvalidParametersException("Could not find token A associated with platform $platformUrl")
 
-        // Get available versions and pick latest mutual
-        val availableServerVersions = versionsClient
-            .getVersions(token = credentialsTokenA)
-            .let {
-                it.data ?: throw Exception("${it.status_code} ${it.status_message}")
-            }
-        val availableClientVersions = versionsRepository.getVersions()
-
-        val latestMutualVersion = availableClientVersions
-            .sortedByDescending { clientVersion -> clientVersion.version.index }
-            .firstOrNull { clientVersion ->
-                availableServerVersions
-                    .any { serverVersion -> serverVersion.version == clientVersion.version }
-            }
-            ?: throw OcpiServerUnsupportedVersionException("Could not find mutual version with platform $platformUrl")
-
-        // Get available endpoints for a given version
-        val versionDetails = versionsClient.getVersionDetails(
-            token = credentialsTokenA,
-            versionNumber = latestMutualVersion.version.value
-        ).let {
-            it.data ?: throw Exception("${it.status_code} ${it.status_message}")
-        }
-
-        // Store version & endpoint
-        clientPlatformRepository.saveVersion(platformUrl = platformUrl, version = latestMutualVersion)
-        clientPlatformRepository.saveEndpoints(platformUrl = platformUrl, endpoints = versionDetails.endpoints)
+        findLatestMutualVersionAndSaveInformation(platformUrl = platformUrl, token = credentialsTokenA)
 
         // Generate token B
         val credentialsTokenB = clientPlatformRepository.saveCredentialsTokenB(
@@ -102,7 +76,7 @@ class CredentialsClientService(
                 roles = credentialsRoleRepository.getCredentialsRoles()
             )
         ).let {
-            it.data ?: throw Exception("${it.status_code} ${it.status_message}")
+            it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
         }
 
         // Store token C
@@ -116,4 +90,69 @@ class CredentialsClientService(
 
         return credentials
     }
+
+    fun update(clientVersionsEndpointUrl: String, platformUrl: String): Credentials {
+        // Token to communicate with receiver
+        val credentialsTokenC = clientPlatformRepository.getCredentialsTokenC(platformUrl = platformUrl)
+            ?: throw OcpiClientInvalidParametersException("Could not find token C associated with platform $platformUrl")
+
+        findLatestMutualVersionAndSaveInformation(platformUrl = platformUrl, token = credentialsTokenC)
+
+        // Generate token B
+        val credentialsTokenB = clientPlatformRepository.saveCredentialsTokenB(
+            platformUrl = platformUrl,
+            credentialsTokenB = generateUUIDv4Token()
+        )
+
+        // Initiate registration process
+        val credentials = credentialsClient.put(
+            tokenC = credentialsTokenC,
+            credentials = Credentials(
+                token = credentialsTokenB,
+                url = clientVersionsEndpointUrl,
+                roles = credentialsRoleRepository.getCredentialsRoles()
+            )
+        ).let {
+            it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
+        }
+
+        // Store token C
+        clientPlatformRepository.saveCredentialsTokenC(
+            platformUrl = platformUrl,
+            credentialsTokenC = credentials.token
+        )
+
+        return credentials
+    }
+
+    private fun findLatestMutualVersionAndSaveInformation(platformUrl: String, token: String) {
+        val availableServerVersions = versionsClient
+            .getVersions(token = token)
+            .let {
+                it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
+            }
+        val availableClientVersions = versionsRepository.getVersions()
+
+        // Get available versions and pick latest mutual
+        val latestMutualVersion = availableClientVersions
+            .sortedByDescending { clientVersion -> clientVersion.version.index }
+            .firstOrNull { clientVersion ->
+                availableServerVersions
+                    .any { serverVersion -> serverVersion.version == clientVersion.version }
+            }
+            ?: throw OcpiServerUnsupportedVersionException("Could not find mutual version with platform $platformUrl")
+
+        // Get available endpoints for a given version
+        val versionDetails = versionsClient.getVersionDetails(
+            token = token,
+            versionNumber = latestMutualVersion.version.value
+        ).let {
+            it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
+        }
+
+        // Store version & endpoint
+        clientPlatformRepository.saveVersion(platformUrl = platformUrl, version = latestMutualVersion)
+        clientPlatformRepository.saveEndpoints(platformUrl = platformUrl, endpoints = versionDetails.endpoints)
+    }
+
 }
