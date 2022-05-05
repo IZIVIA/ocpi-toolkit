@@ -3,6 +3,10 @@ package tests
 import common.OcpiStatus
 import ocpi.credentials.CredentialsClient
 import ocpi.credentials.CredentialsServer
+import ocpi.credentials.domain.BusinessDetails
+import ocpi.credentials.domain.CiString
+import ocpi.credentials.domain.CredentialRole
+import ocpi.credentials.domain.Role
 import ocpi.credentials.services.CredentialsClientService
 import ocpi.credentials.services.CredentialsServerService
 import ocpi.versions.VersionsClient
@@ -92,7 +96,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Now that we have all the prerequisites, we can begin the registration
         val credentials = credentialsClientService.register(
             clientVersionsEndpointUrl = senderServer.baseUrl,
-            platformUrl = receiverServer.baseUrl
+            platformUrl = receiverServer.baseUrl,
+            listOf(
+                CredentialRole(
+                    role = Role.CPO,
+                    business_details = BusinessDetails(name = "Sender", website = null, logo = null),
+                    party_id = CiString("ABC"),
+                    country_code = CiString("FR")
+                )
+            )
         )
 
         // Now we can do some requests to check if the credentials provided are right (and if token A is now invalid)

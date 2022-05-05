@@ -2,7 +2,7 @@ package ocpi.credentials.services
 
 import common.*
 import ocpi.credentials.CredentialsInterface
-import ocpi.credentials.domain.Credentials
+import ocpi.credentials.domain.*
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.versions.domain.Version
 import ocpi.versions.domain.VersionDetails
@@ -71,7 +71,14 @@ class CredentialsServerService(
         Credentials(
             token = tokenC,
             url = serverUrl,
-            roles = emptyList() // TODO: ???
+            roles = listOf(
+                CredentialRole(
+                    role = Role.EMSP,
+                    business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
+                    party_id = CiString("DEF"),
+                    country_code = CiString("FR")
+                )
+            )
         )
     }
 
