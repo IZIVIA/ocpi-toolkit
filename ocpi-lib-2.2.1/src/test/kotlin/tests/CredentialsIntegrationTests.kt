@@ -7,6 +7,7 @@ import ocpi.credentials.domain.BusinessDetails
 import ocpi.credentials.domain.CiString
 import ocpi.credentials.domain.CredentialRole
 import ocpi.credentials.domain.Role
+import ocpi.credentials.repositories.CredentialsRoleRepository
 import ocpi.credentials.services.CredentialsClientService
 import ocpi.credentials.services.CredentialsServerService
 import ocpi.versions.VersionsClient
@@ -43,6 +44,16 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             transportServer = receiverServer,
             service = CredentialsServerService(
                 platformRepository = receiverPlatformRepo,
+                credentialsRoleRepository = object: CredentialsRoleRepository {
+                    override fun getCredentialsRoles(): List<CredentialRole> = listOf(
+                        CredentialRole(
+                            role = Role.EMSP,
+                            business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
+                            party_id = CiString("DEF"),
+                            country_code = CiString("FR")
+                        )
+                    )
+                },
                 transportClientBuilder = Http4kTransportClientBuilder(),
                 serverUrl = receiverServer.baseUrl
             )
@@ -73,6 +84,16 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val credentialsClientService = CredentialsClientService(
             clientPlatformRepository = PlatformMongoRepository(collection = senderPlatformCollection),
             versionsRepository = versionsRepo,
+            credentialsRoleRepository = object: CredentialsRoleRepository {
+                override fun getCredentialsRoles(): List<CredentialRole> = listOf(
+                    CredentialRole(
+                        role = Role.CPO,
+                        business_details = BusinessDetails(name = "Sender", website = null, logo = null),
+                        party_id = CiString("ABC"),
+                        country_code = CiString("FR")
+                    )
+                )
+            },
             credentialsClient = CredentialsClient(transportClient = transportTowardsReceiver),
             versionsClient = VersionsClient(transportClient = transportTowardsReceiver)
         )
@@ -96,15 +117,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Now that we have all the prerequisites, we can begin the registration
         val credentials = credentialsClientService.register(
             clientVersionsEndpointUrl = senderServer.baseUrl,
-            platformUrl = receiverServer.baseUrl,
-            listOf(
-                CredentialRole(
-                    role = Role.CPO,
-                    business_details = BusinessDetails(name = "Sender", website = null, logo = null),
-                    party_id = CiString("ABC"),
-                    country_code = CiString("FR")
-                )
-            )
+            platformUrl = receiverServer.baseUrl
         )
 
         // Now we can do some requests to check if the credentials provided are right (and if token A is now invalid)

@@ -5,6 +5,7 @@ import ocpi.credentials.domain.BusinessDetails
 import ocpi.credentials.domain.CiString
 import ocpi.credentials.domain.CredentialRole
 import ocpi.credentials.domain.Role
+import ocpi.credentials.repositories.CredentialsRoleRepository
 import ocpi.credentials.services.CredentialsClientService
 import ocpi.versions.VersionsClient
 import ocpi.versions.VersionsServer
@@ -38,6 +39,16 @@ fun main() {
     val credentialsClientService = CredentialsClientService(
         clientPlatformRepository = senderPlatformRepository,
         versionsRepository = senderVersionsRepository,
+        credentialsRoleRepository = object: CredentialsRoleRepository {
+            override fun getCredentialsRoles(): List<CredentialRole> = listOf(
+                CredentialRole(
+                    role = Role.CPO,
+                    business_details = BusinessDetails(name = "Sender", website = null, logo = null),
+                    party_id = CiString("ABC"),
+                    country_code = CiString("FR")
+                )
+            )
+        },
         credentialsClient = CredentialsClient(transportClient = transportTowardsReceiver),
         versionsClient = VersionsClient(transportClient = transportTowardsReceiver)
     )
@@ -45,15 +56,7 @@ fun main() {
     // Register!
     val credentials = credentialsClientService.register(
         clientVersionsEndpointUrl = senderUrl,
-        platformUrl = receiverUrl,
-        roles = listOf(
-            CredentialRole(
-                role = Role.CPO,
-                business_details = BusinessDetails(name = "Sender", website = null, logo = null),
-                party_id = CiString("ABC"),
-                country_code = CiString("FR")
-            )
-        )
+        platformUrl = receiverUrl
     )
 
     println(credentials)

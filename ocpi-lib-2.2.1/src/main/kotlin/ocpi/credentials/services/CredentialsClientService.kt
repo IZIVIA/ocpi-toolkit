@@ -4,8 +4,8 @@ import common.OcpiClientInvalidParametersException
 import common.OcpiServerUnsupportedVersionException
 import common.generateUUIDv4Token
 import ocpi.credentials.CredentialsClient
-import ocpi.credentials.domain.CredentialRole
 import ocpi.credentials.domain.Credentials
+import ocpi.credentials.repositories.CredentialsRoleRepository
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.versions.VersionsClient
 import ocpi.versions.repositories.VersionsRepository
@@ -24,6 +24,7 @@ import ocpi.versions.repositories.VersionsRepository
 class CredentialsClientService(
     private val clientPlatformRepository: PlatformRepository,
     private val versionsRepository: VersionsRepository,
+    private val credentialsRoleRepository: CredentialsRoleRepository,
     private val credentialsClient: CredentialsClient,
     private val versionsClient: VersionsClient
 ) {
@@ -52,7 +53,7 @@ class CredentialsClientService(
      *
      * @return the credentials to use when communicating with the server (receiver)
      */
-    fun register(clientVersionsEndpointUrl: String, platformUrl: String, roles: List<CredentialRole>): Credentials {
+    fun register(clientVersionsEndpointUrl: String, platformUrl: String): Credentials {
 
         // Get token provided by receiver outside the OCPI protocol (for example by an admin)
         val credentialsTokenA = clientPlatformRepository.getCredentialsTokenA(platformUrl = platformUrl)
@@ -98,7 +99,7 @@ class CredentialsClientService(
             credentials = Credentials(
                 token = credentialsTokenB,
                 url = clientVersionsEndpointUrl,
-                roles = roles
+                roles = credentialsRoleRepository.getCredentialsRoles()
             )
         ).let {
             it.data ?: throw Exception("${it.status_code} ${it.status_message}")

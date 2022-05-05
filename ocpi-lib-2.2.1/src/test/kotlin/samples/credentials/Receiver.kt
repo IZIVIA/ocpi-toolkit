@@ -1,6 +1,11 @@
 package samples.credentials
 
 import ocpi.credentials.CredentialsServer
+import ocpi.credentials.domain.BusinessDetails
+import ocpi.credentials.domain.CiString
+import ocpi.credentials.domain.CredentialRole
+import ocpi.credentials.domain.Role
+import ocpi.credentials.repositories.CredentialsRoleRepository
 import ocpi.credentials.services.CredentialsServerService
 import ocpi.versions.VersionsServer
 import ocpi.versions.validation.VersionsValidationService
@@ -21,6 +26,16 @@ fun main() {
         transportServer = receiverServer,
         service = CredentialsServerService(
             platformRepository = receiverPlatformRepository,
+            credentialsRoleRepository = object: CredentialsRoleRepository {
+                override fun getCredentialsRoles(): List<CredentialRole> = listOf(
+                    CredentialRole(
+                        role = Role.EMSP,
+                        business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
+                        party_id = CiString("DEF"),
+                        country_code = CiString("FR")
+                    )
+                )
+            },
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverUrl = receiverUrl
         )
