@@ -21,7 +21,8 @@ fun main() {
         transportServer = receiverServer,
         service = CredentialsServerService(
             platformRepository = receiverPlatformRepository,
-            transportClientBuilder = Http4kTransportClientBuilder()
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverUrl = receiverUrl
         )
     )
     VersionsServer(

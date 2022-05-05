@@ -13,7 +13,8 @@ import transport.domain.HttpRequest
 
 class CredentialsServerService(
     private val platformRepository: PlatformRepository,
-    private val transportClientBuilder: TransportClientBuilder
+    private val transportClientBuilder: TransportClientBuilder,
+    private val serverUrl: String
 ): CredentialsInterface {
 
     override fun get() {
@@ -69,7 +70,7 @@ class CredentialsServerService(
 
         Credentials(
             token = tokenC,
-            url = "", // TODO: properties.url or something
+            url = serverUrl,
             roles = emptyList() // TODO: ???
         )
     }
