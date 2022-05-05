@@ -1,5 +1,6 @@
 package ocpi.versions
 
+import common.OcpiClientUnknownTokenException
 import common.decodeBase64
 import common.httpResponse
 import ocpi.versions.validation.VersionsValidationService
@@ -21,6 +22,10 @@ class VersionsServer(
             validationService
                 .getVersions(
                     token = req.headers["Authorization"]
+                        ?.let {
+                            if (it.startsWith("Token ")) it
+                            else throw OcpiClientUnknownTokenException("Unkown token format: $it")
+                        }
                         ?.removePrefix("Token ")
                         ?.decodeBase64()
                         ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing")
@@ -38,6 +43,10 @@ class VersionsServer(
                 validationService
                     .getVersionDetails(
                         token = req.headers["Authorization"]
+                            ?.let {
+                                if (it.startsWith("Token ")) it
+                                else throw OcpiClientUnknownTokenException("Unkown token format: $it")
+                            }
                             ?.removePrefix("Token ")
                             ?.decodeBase64()
                             ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing"),
