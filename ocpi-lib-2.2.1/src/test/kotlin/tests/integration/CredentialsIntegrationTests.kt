@@ -1,4 +1,4 @@
-package tests
+package tests.integration
 
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase

@@ -1,4 +1,4 @@
-package tests
+package tests.integration
 
 import samples.common.Http4kTransportClient
 import samples.common.Http4kTransportServer
