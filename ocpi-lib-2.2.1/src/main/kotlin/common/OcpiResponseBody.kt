@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import org.apache.logging.log4j.LogManager
 import org.valiktor.ConstraintViolationException
 import transport.domain.HttpException
+import transport.domain.HttpRequest
 import transport.domain.HttpResponse
 import transport.domain.HttpStatus
 import java.time.Instant
@@ -56,7 +57,7 @@ data class OcpiResponseBody<T>(
 
 private val logger = LogManager.getLogger(OcpiResponseBody::class.java)
 
-fun <T> httpResponse(fn: () -> OcpiResponseBody<T>) =
+fun <T> HttpRequest.httpResponse(fn: () -> OcpiResponseBody<T>) =
     try {
         val ocpiResponseBody = fn()
 

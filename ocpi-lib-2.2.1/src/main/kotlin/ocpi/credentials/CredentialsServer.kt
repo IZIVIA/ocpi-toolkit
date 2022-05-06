@@ -20,7 +20,7 @@ class CredentialsServer(
                 FixedPathSegment("/credentials")
             )
         ) { req ->
-            httpResponse {
+            req.httpResponse {
                 service.get(
                     tokenC = req.parseAuthorizationHeader()
                 )
@@ -33,7 +33,7 @@ class CredentialsServer(
                 FixedPathSegment("/credentials")
             )
         ) { req ->
-            httpResponse {
+            req.httpResponse {
                 service.post(
                     tokenA = req.parseAuthorizationHeader(),
                     credentials = mapper.readValue(req.body!!, Credentials::class.java)
@@ -47,7 +47,7 @@ class CredentialsServer(
                 FixedPathSegment("/credentials")
             )
         ) { req ->
-            httpResponse {
+            req.httpResponse {
                 service.put(
                     tokenC = req.parseAuthorizationHeader(),
                     credentials = mapper.readValue(req.body!!, Credentials::class.java)
@@ -61,7 +61,7 @@ class CredentialsServer(
                 FixedPathSegment("/credentials")
             )
         ) { req ->
-            httpResponse {
+            req.httpResponse {
                 service.delete(
                     tokenC = req.parseAuthorizationHeader()
                 )

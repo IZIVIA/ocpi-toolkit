@@ -19,7 +19,8 @@ class VersionsServer(
             path = listOf(
                 FixedPathSegment("/")
             )
-        ) { req -> httpResponse {
+        ) { req ->
+            req.httpResponse {
                 validationService.getVersions(
                     token = req.parseAuthorizationHeader()
                 )
@@ -32,7 +33,7 @@ class VersionsServer(
                 VariablePathSegment("versionNumber")
             )
         ) { req ->
-            httpResponse {
+            req.httpResponse {
                 validationService.getVersionDetails(
                     token = req.parseAuthorizationHeader(),
                     versionNumber = req.pathParams["versionNumber"]!!
