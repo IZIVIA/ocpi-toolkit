@@ -37,7 +37,7 @@ fun main() {
     val transportTowardsReceiver = Http4kTransportClient(baseUrl = receiverUrl)
 
     val credentialsClientService = CredentialsClientService(
-        clientVersionsEndpointUrl = receiverUrl,
+        clientVersionsEndpointUrl = senderUrl,
         clientPlatformRepository = senderPlatformRepository,
         clientVersionsRepository = senderVersionsRepository,
         clientCredentialsRoleRepository = object: CredentialsRoleRepository {
