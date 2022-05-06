@@ -378,4 +378,131 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             )
         ).isEqualTo(credentials)
     }
+
+    @Test
+    fun `should properly run registration process then run update properly`() {
+        val receiverServer = setupReceiver()
+        val senderServer = setupSender()
+
+        val credentialsClientService = setupCredentialsSenderClient(
+            senderServerSetupResult = senderServer,
+            receiverServerSetupResult = receiverServer
+        )
+
+        // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
+        // well in the client so that it knows what token to send
+        val tokenA = UUID.randomUUID().toString()
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+
+        // Start the servers
+        receiverServer.transport.start()
+        senderServer.transport.start()
+
+        val credentials = credentialsClientService.register(
+            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
+            platformUrl = receiverServer.transport.baseUrl
+        )
+
+        val updatedCredentials = credentialsClientService.update(
+            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
+            platformUrl = receiverServer.transport.baseUrl
+        )
+
+        val versionsClient = VersionsClient(
+            transportClient = receiverServer.transport.getClient()
+        )
+
+        expectThat(
+            versionsClient.getVersions(
+                token = updatedCredentials.token
+            )
+        ) {
+            get { data }
+                .isNotNull()
+                .isNotEmpty()
+                .isEqualTo(
+                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                        .getVersions()
+                )
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
+        }
+
+        expectThat(
+            versionsClient.getVersions(
+                token = credentials.token
+            )
+        ) {
+            get { data }
+                .isNull()
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+        }
+    }
+
+    @Test
+    fun `should properly run registration process then delete credentials properly`() {
+        val receiverServer = setupReceiver()
+        val senderServer = setupSender()
+
+        val credentialsClientService = setupCredentialsSenderClient(
+            senderServerSetupResult = senderServer,
+            receiverServerSetupResult = receiverServer
+        )
+
+        // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
+        // well in the client so that it knows what token to send
+        val tokenA = UUID.randomUUID().toString()
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+
+        // Start the servers
+        receiverServer.transport.start()
+        senderServer.transport.start()
+
+        val credentials = credentialsClientService.register(
+            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
+            platformUrl = receiverServer.transport.baseUrl
+        )
+
+        val versionsClient = VersionsClient(
+            transportClient = receiverServer.transport.getClient()
+        )
+
+        expectThat(
+            versionsClient.getVersions(
+                token = credentials.token
+            )
+        ) {
+            get { data }
+                .isNotNull()
+                .isNotEmpty()
+                .isEqualTo(
+                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                        .getVersions()
+                )
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
+        }
+
+        credentialsClientService.delete(
+            platformUrl = receiverServer.transport.baseUrl
+        )
+
+        expectThat(
+            versionsClient.getVersions(
+                token = credentials.token
+            )
+        ) {
+            get { data }
+                .isNull()
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+        }
+    }
 }
