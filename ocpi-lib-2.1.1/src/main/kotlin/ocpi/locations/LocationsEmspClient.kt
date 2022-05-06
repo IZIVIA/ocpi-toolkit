@@ -1,9 +1,6 @@
 package ocpi.locations
 
-import common.OcpiResponseBody
-import common.SearchResult
-import common.parseBody
-import common.parsePaginatedBody
+import common.*
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
@@ -21,6 +18,7 @@ class LocationsEmspClient(
 ) : LocationsCpoInterface {
 
     override fun getLocations(
+        token: String,
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
@@ -36,37 +34,46 @@ class LocationsEmspClient(
                         dateTo?.let { "date_to" to dateTo.toString() },
                         "offset" to offset.toString(),
                         limit?.let { "limit" to limit.toString() }
-                    ).toMap()
+                    ).toMap(),
+                    headers = mapOf(authorizationHeader(token = token))
                 )
             )
             .parsePaginatedBody(offset)
 
-    override fun getLocation(locationId: String): OcpiResponseBody<Location?> =
+    override fun getLocation(token: String, locationId: String): OcpiResponseBody<Location?> =
         transportClient
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/cpo/2.1.1/locations/$locationId"
+                    path = "/ocpi/cpo/2.1.1/locations/$locationId",
+                    headers = mapOf(authorizationHeader(token = token))
                 )
             )
             .parseBody()
 
-    override fun getEvse(locationId: String, evseUid: String): OcpiResponseBody<Evse?> =
+    override fun getEvse(token: String, locationId: String, evseUid: String): OcpiResponseBody<Evse?> =
         transportClient
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/cpo/2.1.1/locations/$locationId/$evseUid"
+                    path = "/ocpi/cpo/2.1.1/locations/$locationId/$evseUid",
+                    headers = mapOf(authorizationHeader(token = token))
                 )
             )
             .parseBody()
 
-    override fun getConnector(locationId: String, evseUid: String, connectorId: String): OcpiResponseBody<Connector?> =
+    override fun getConnector(
+        token: String,
+        locationId: String,
+        evseUid: String,
+        connectorId: String
+    ): OcpiResponseBody<Connector?> =
         transportClient
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/cpo/2.1.1/locations/$locationId/$evseUid/$connectorId"
+                    path = "/ocpi/cpo/2.1.1/locations/$locationId/$evseUid/$connectorId",
+                    headers = mapOf(authorizationHeader(token = token))
                 )
             )
             .parseBody()

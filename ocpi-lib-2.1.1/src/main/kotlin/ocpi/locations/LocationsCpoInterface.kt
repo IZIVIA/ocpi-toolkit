@@ -27,6 +27,7 @@ interface LocationsCpoInterface {
      *
      * This request is paginated, it supports the pagination related URL parameters.
      *
+     * @param token
      * @param dateFrom Instant? Only return Locations that have last_updated after this Date/Time.
      * @param dateTo Instant? Only return Locations that have last_updated before this Date/Time.
      * @param offset Int? The offset of the first object returned. Default is 0.
@@ -35,6 +36,7 @@ interface LocationsCpoInterface {
      * contain the pagination related headers.
      */
     fun getLocations(
+        token: String,
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int = 0,
@@ -42,20 +44,28 @@ interface LocationsCpoInterface {
     ): OcpiResponseBody<SearchResult<Location>>
 
     /**
+     * @param token
      * @param locationId String max-length = 39
      */
-    fun getLocation(locationId: String): OcpiResponseBody<Location?>
+    fun getLocation(token: String, locationId: String): OcpiResponseBody<Location?>
 
     /**
+     * @param token
      * @param locationId String max-length = 39
      * @param evseUid String? max-length = 39
      */
-    fun getEvse(locationId: String, evseUid: String): OcpiResponseBody<Evse?>
+    fun getEvse(token: String, locationId: String, evseUid: String): OcpiResponseBody<Evse?>
 
     /**
+     * @param token
      * @param locationId String max-length = 39
      * @param evseUid max-length = 39
      * @param connectorId max-length = 39
      */
-    fun getConnector(locationId: String, evseUid: String, connectorId: String): OcpiResponseBody<Connector?>
+    fun getConnector(
+        token: String,
+        locationId: String,
+        evseUid: String,
+        connectorId: String
+    ): OcpiResponseBody<Connector?>
 }

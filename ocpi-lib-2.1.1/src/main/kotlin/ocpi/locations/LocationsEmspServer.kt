@@ -2,6 +2,7 @@ package ocpi.locations
 
 import common.httpResponse
 import common.mapper
+import common.parseAuthorizationHeader
 import ocpi.locations.domain.*
 import transport.TransportServer
 import transport.domain.FixedPathSegment
@@ -29,6 +30,7 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .getLocation(
+                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!
@@ -49,6 +51,7 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .getEvse(
+                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -71,6 +74,7 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .getConnector(
+                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -92,6 +96,7 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .putLocation(
+                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -113,6 +118,7 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .putEvse(
+                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -136,6 +142,7 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .putConnector(
+                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -158,6 +165,7 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .patchLocation(
+                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -179,6 +187,7 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .patchEvse(
+                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -202,6 +211,7 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .patchConnector(
+                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,

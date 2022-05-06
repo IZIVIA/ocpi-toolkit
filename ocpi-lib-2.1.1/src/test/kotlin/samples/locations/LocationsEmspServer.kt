@@ -21,7 +21,7 @@ fun main() {
     val service = CacheLocationsEmspService()
 
     // We implement callbacks for the server using the built-in service and our repository implementation
-    LocationsEmspServer(transportServer, LocationsEmspValidationService(service))
+    LocationsEmspServer(transportServer, LocationsEmspValidationService(service, DUMMY_CREDENTIALS_REPOSITORY))
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()

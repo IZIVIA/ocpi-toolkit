@@ -1,5 +1,6 @@
 package tests.integration
 
+import com.mongodb.client.MongoDatabase
 import common.OcpiStatus
 import ocpi.locations.LocationsCpoServer
 import ocpi.locations.LocationsEmspClient
@@ -7,6 +8,8 @@ import ocpi.locations.domain.Location
 import ocpi.locations.validation.LocationsCpoValidationService
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.getCollection
+import samples.common.DummyPlatformCacheRepository
+import samples.common.Http4kTransportServer
 import strikt.api.expectThat
 import strikt.assertions.*
 import tests.integration.common.BaseServerIntegrationTest
@@ -15,40 +18,48 @@ import tests.utils.validConnector
 import tests.utils.validEvse
 import tests.utils.validLocation
 import java.time.Instant
+import java.util.*
 import kotlin.math.min
 
 class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
-    @Test
-    fun getLocationsTest() {
-        // Db setup
-        val database = buildDBClient().getDatabase("ocpi-2-1-1-tests")
-        val collection = database.getCollection<Location>()
-        val locationsCpoService = LocationsCpoMongoService(collection)
+    private val tokenC = UUID.randomUUID().toString()
+    private var database: MongoDatabase? = null
 
-        // Add dummy data
+    private fun setupCpoServer(locations: List<Location>): Http4kTransportServer {
+        if (database == null) database = buildDBClient().getDatabase("ocpi-2-1-1-tests")
+        val collection = database!!.getCollection<Location>("cpo-server-locations-${UUID.randomUUID()}")
+        collection.insertMany(locations)
+        val server = buildTransportServer()
+        LocationsCpoServer(
+            server,
+            LocationsCpoValidationService(
+                service = LocationsCpoMongoService(collection),
+                platformRepository = DummyPlatformCacheRepository(token = tokenC)
+            )
+        )
+        return server
+    }
+
+    @Test
+    fun `getLocations test (paginated)`() {
+
+        // Start CPO server with dummy data
         val numberOfLocations = 500
         val referenceDate = Instant.parse("2022-04-28T09:00:00.000Z")
         val lastDate = referenceDate.plusSeconds(3600L * (numberOfLocations - 1))
-        val locations = mutableListOf<Location>()
-        (0 until numberOfLocations).forEach { index ->
-            locations.add(
+
+        val cpoServer = setupCpoServer(
+            locations = (0 until numberOfLocations).map { index ->
                 validLocation.copy(
                     evses = listOf(validEvse.copy(connectors = listOf(validConnector))),
                     last_updated = referenceDate.plusSeconds(3600L * index)
                 )
-            )
-        }
-        collection.insertMany(locations)
+            }
+        )
+        cpoServer.start()
 
-        // Start CPO server
-        val server = buildTransportServer()
-        val client = server.getClient()
-
-        LocationsCpoServer(server, LocationsCpoValidationService(locationsCpoService))
-        server.start()
-
-        val locationsEmspClient = LocationsEmspClient(client)
+        val locationsEmspClient = LocationsEmspClient(cpoServer.getClient())
 
         // Tests
         var limit = numberOfLocations + 1
@@ -58,6 +69,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
+                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -99,6 +111,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
+                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -129,7 +142,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${server.baseUrl}/ocpi/cpo/2.1.1/locations?limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${cpoServer.baseUrl}/ocpi/cpo/2.1.1/locations?limit=$limit&offset=${offset + limit}")
                 }
         }
 
@@ -140,6 +153,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
+                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -170,7 +184,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${server.baseUrl}/ocpi/cpo/2.1.1/locations?limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${cpoServer.baseUrl}/ocpi/cpo/2.1.1/locations?limit=$limit&offset=${offset + limit}")
                 }
         }
 
@@ -181,6 +195,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
+                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -222,6 +237,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
+                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -263,6 +279,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
+                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -304,6 +321,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
+                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -345,6 +363,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
+                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -386,6 +405,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
+                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -426,6 +446,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
+                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -456,10 +477,8 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${server.baseUrl}/ocpi/cpo/2.1.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${cpoServer.baseUrl}/ocpi/cpo/2.1.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset + limit}")
                 }
         }
-
-        server.stop()
     }
 }

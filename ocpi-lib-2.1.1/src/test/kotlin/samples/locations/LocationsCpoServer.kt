@@ -24,7 +24,7 @@ fun main() {
     val service = CacheLocationsCpoService()
 
     // We implement callbacks for the server using the built-in service and our service implementation
-    LocationsCpoServer(transportServer, LocationsCpoValidationService(service))
+    LocationsCpoServer(transportServer, LocationsCpoValidationService(service, DUMMY_CREDENTIALS_REPOSITORY))
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()

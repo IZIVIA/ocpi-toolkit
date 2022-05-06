@@ -15,6 +15,6 @@ fun main() {
 
     // We can use it
     println(
-        locationsCpoClient.getLocation("fr", "abc", "location1")
+        locationsCpoClient.getLocation(CREDENTIALS_TOKEN_C,"fr", "abc", "location1")
     )
 }

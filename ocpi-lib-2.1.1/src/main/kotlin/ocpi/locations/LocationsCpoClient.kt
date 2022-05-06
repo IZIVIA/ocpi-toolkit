@@ -1,6 +1,7 @@
 package ocpi.locations
 
 import common.OcpiResponseBody
+import common.authorizationHeader
 import common.mapper
 import common.parseBody
 import ocpi.locations.domain.*
@@ -16,17 +17,24 @@ class LocationsCpoClient(
     private val transportClient: TransportClient
 ) : LocationsEmspInterface {
 
-    override fun getLocation(countryCode: String, partyId: String, locationId: String): OcpiResponseBody<Location?> =
+    override fun getLocation(
+        token: String,
+        countryCode: String,
+        partyId: String,
+        locationId: String
+    ): OcpiResponseBody<Location?> =
         transportClient
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId"
+                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId",
+                    headers = mapOf(authorizationHeader(token = token))
                 )
             )
             .parseBody()
 
     override fun getEvse(
+        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -36,12 +44,14 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid"
+                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid",
+                    headers = mapOf(authorizationHeader(token = token))
                 )
             )
             .parseBody()
 
     override fun getConnector(
+        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -52,12 +62,14 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId"
+                    path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                    headers = mapOf(authorizationHeader(token = token))
                 )
             )
             .parseBody()
 
     override fun putLocation(
+        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -68,12 +80,14 @@ class LocationsCpoClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId",
-                    body = mapper.writeValueAsString(location)
+                    body = mapper.writeValueAsString(location),
+                    headers = mapOf(authorizationHeader(token = token))
                 )
             )
             .parseBody()
 
     override fun putEvse(
+        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -85,12 +99,14 @@ class LocationsCpoClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid",
-                    body = mapper.writeValueAsString(evse)
+                    body = mapper.writeValueAsString(evse),
+                    headers = mapOf(authorizationHeader(token = token))
                 )
             )
             .parseBody()
 
     override fun putConnector(
+        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -103,12 +119,14 @@ class LocationsCpoClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
-                    body = mapper.writeValueAsString(connector)
+                    body = mapper.writeValueAsString(connector),
+                    headers = mapOf(authorizationHeader(token = token))
                 )
             )
             .parseBody()
 
     override fun patchLocation(
+        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -118,12 +136,14 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.PATCH,
                 path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(location)
+                body = mapper.writeValueAsString(location),
+                headers = mapOf(authorizationHeader(token = token))
             )
         )
         .parseBody()
 
     override fun patchEvse(
+        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -134,12 +154,14 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.PATCH,
                 path = "/ocpi/emsp/2.1.1/locations/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(evse)
+                body = mapper.writeValueAsString(evse),
+                headers = mapOf(authorizationHeader(token = token))
             )
         )
         .parseBody()
 
     override fun patchConnector(
+        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,

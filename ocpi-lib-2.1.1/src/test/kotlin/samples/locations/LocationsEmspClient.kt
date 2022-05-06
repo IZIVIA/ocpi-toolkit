@@ -15,6 +15,6 @@ fun main() {
 
     // We can use it
     println(
-        locationsEmspClient.getConnector("location1", "evse1", "connector1")
+        locationsEmspClient.getConnector(CREDENTIALS_TOKEN_C, "location1", "evse1", "connector1")
     )
 }

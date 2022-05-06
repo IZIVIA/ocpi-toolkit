@@ -1,6 +1,7 @@
 package ocpi.locations
 
 import common.httpResponse
+import common.parseAuthorizationHeader
 import transport.TransportServer
 import transport.domain.FixedPathSegment
 import transport.domain.HttpMethod
@@ -30,6 +31,7 @@ class LocationsCpoServer(
 
                 service
                     .getLocations(
+                        token = req.parseAuthorizationHeader(),
                         dateFrom = dateFrom?.let { Instant.parse(it) },
                         dateTo = dateTo?.let { Instant.parse(it) },
                         offset = req.queryParams["offset"]?.toInt() ?: 0,
@@ -48,6 +50,7 @@ class LocationsCpoServer(
             req.httpResponse {
                 service
                     .getLocation(
+                        token = req.parseAuthorizationHeader(),
                         locationId = req.pathParams["locationId"]!!
                     )
             }
@@ -64,6 +67,7 @@ class LocationsCpoServer(
             req.httpResponse {
                 service
                     .getEvse(
+                        token = req.parseAuthorizationHeader(),
                         locationId = req.pathParams["locationId"]!!,
                         evseUid = req.pathParams["evseUid"]!!
                     )
@@ -82,6 +86,7 @@ class LocationsCpoServer(
             req.httpResponse {
                 service
                     .getConnector(
+                        token = req.parseAuthorizationHeader(),
                         locationId = req.pathParams["locationId"]!!,
                         evseUid = req.pathParams["evseUid"]!!,
                         connectorId = req.pathParams["connectorId"]!!
