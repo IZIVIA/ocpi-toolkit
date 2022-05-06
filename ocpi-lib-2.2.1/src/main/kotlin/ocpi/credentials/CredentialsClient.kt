@@ -1,7 +1,7 @@
 package ocpi.credentials
 
 import common.OcpiResponseBody
-import common.encodeBase64
+import common.authorizationHeader
 import common.mapper
 import common.parseBody
 import ocpi.credentials.domain.Credentials
@@ -19,9 +19,7 @@ class CredentialsClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/credentials",
-                    headers = mapOf(
-                        "Authorization" to "Token ${tokenC.encodeBase64()}"
-                    )
+                    headers = mapOf(authorizationHeader(token = tokenC))
                 )
             )
             .parseBody()
@@ -33,9 +31,7 @@ class CredentialsClient(
                 HttpRequest(
                     method = HttpMethod.POST,
                     path = "/credentials",
-                    headers = mapOf(
-                        "Authorization" to "Token ${tokenA.encodeBase64()}"
-                    ),
+                    headers = mapOf(authorizationHeader(token = tokenA)),
                     body = mapper.writeValueAsString(credentials)
                 )
             )
@@ -47,9 +43,7 @@ class CredentialsClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/credentials",
-                    headers = mapOf(
-                        "Authorization" to "Token ${tokenC.encodeBase64()}"
-                    ),
+                    headers = mapOf(authorizationHeader(token = tokenC)),
                     body = mapper.writeValueAsString(credentials)
                 )
             )
@@ -61,9 +55,7 @@ class CredentialsClient(
                 HttpRequest(
                     method = HttpMethod.DELETE,
                     path = "/credentials",
-                    headers = mapOf(
-                        "Authorization" to "Token ${tokenC.encodeBase64()}"
-                    )
+                    headers = mapOf(authorizationHeader(token = tokenC))
                 )
             )
             .parseBody()

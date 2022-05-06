@@ -1,11 +1,12 @@
 package ocpi.versions
 
-import common.OcpiClientUnknownTokenException
-import common.decodeBase64
 import common.httpResponse
+import common.parseAuthorizationHeader
 import ocpi.versions.validation.VersionsValidationService
 import transport.TransportServer
-import transport.domain.*
+import transport.domain.FixedPathSegment
+import transport.domain.HttpMethod
+import transport.domain.VariablePathSegment
 
 class VersionsServer(
     transportServer: TransportServer,
@@ -19,16 +20,8 @@ class VersionsServer(
                 FixedPathSegment("/")
             )
         ) { req -> httpResponse {
-            validationService
-                .getVersions(
-                    token = req.headers["Authorization"]
-                        ?.let {
-                            if (it.startsWith("Token ")) it
-                            else throw OcpiClientUnknownTokenException("Unkown token format: $it")
-                        }
-                        ?.removePrefix("Token ")
-                        ?.decodeBase64()
-                        ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing")
+                validationService.getVersions(
+                    token = req.parseAuthorizationHeader()
                 )
             }
         }
@@ -40,18 +33,10 @@ class VersionsServer(
             )
         ) { req ->
             httpResponse {
-                validationService
-                    .getVersionDetails(
-                        token = req.headers["Authorization"]
-                            ?.let {
-                                if (it.startsWith("Token ")) it
-                                else throw OcpiClientUnknownTokenException("Unkown token format: $it")
-                            }
-                            ?.removePrefix("Token ")
-                            ?.decodeBase64()
-                            ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing"),
-                        versionNumber = req.pathParams["versionNumber"]!!
-                    )
+                validationService.getVersionDetails(
+                    token = req.parseAuthorizationHeader(),
+                    versionNumber = req.pathParams["versionNumber"]!!
+                )
             }
         }
     }

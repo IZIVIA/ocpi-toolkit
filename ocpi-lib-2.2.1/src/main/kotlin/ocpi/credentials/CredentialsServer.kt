@@ -1,9 +1,8 @@
 package ocpi.credentials
 
-import common.OcpiClientNotEnoughInformationException
-import common.decodeBase64
 import common.httpResponse
 import common.mapper
+import common.parseAuthorizationHeader
 import ocpi.credentials.domain.Credentials
 import ocpi.credentials.services.CredentialsServerService
 import transport.TransportServer
@@ -23,10 +22,7 @@ class CredentialsServer(
         ) { req ->
             httpResponse {
                 service.get(
-                    tokenC = req.headers["Authorization"]
-                        ?.removePrefix("Token ")
-                        ?.decodeBase64()
-                        ?: throw OcpiClientNotEnoughInformationException("Missing Authorization header")
+                    tokenC = req.parseAuthorizationHeader()
                 )
             }
         }
@@ -39,10 +35,7 @@ class CredentialsServer(
         ) { req ->
             httpResponse {
                 service.post(
-                    tokenA = req.headers["Authorization"]
-                        ?.removePrefix("Token ")
-                        ?.decodeBase64()
-                        ?: throw OcpiClientNotEnoughInformationException("Missing Authorization header"),
+                    tokenA = req.parseAuthorizationHeader(),
                     credentials = mapper.readValue(req.body!!, Credentials::class.java)
                 )
             }
@@ -56,10 +49,7 @@ class CredentialsServer(
         ) { req ->
             httpResponse {
                 service.put(
-                    tokenC = req.headers["Authorization"]
-                        ?.removePrefix("Token ")
-                        ?.decodeBase64()
-                        ?: throw OcpiClientNotEnoughInformationException("Missing Authorization header"),
+                    tokenC = req.parseAuthorizationHeader(),
                     credentials = mapper.readValue(req.body!!, Credentials::class.java)
                 )
             }
@@ -73,10 +63,7 @@ class CredentialsServer(
         ) { req ->
             httpResponse {
                 service.delete(
-                    tokenC = req.headers["Authorization"]
-                        ?.removePrefix("Token ")
-                        ?.decodeBase64()
-                        ?: throw OcpiClientNotEnoughInformationException("Missing Authorization header")
+                    tokenC = req.parseAuthorizationHeader()
                 )
             }
         }
