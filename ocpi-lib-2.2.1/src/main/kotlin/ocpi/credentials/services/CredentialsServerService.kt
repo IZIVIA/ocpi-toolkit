@@ -90,14 +90,16 @@ class CredentialsServerService(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/",
-                    headers = mapOf(
-                        "Authorization" to "Token ${credentials.token.encodeBase64()}"
-                    )
+                    headers = mapOf(authorizationHeader(token = credentials.token))
                 )
             )
             .parseBody<OcpiResponseBody<List<Version>>>()
-            .data
-            ?: throw OcpiServerGenericException("Could not get versions of sender")
+            .let {
+                it.data
+                    ?: throw OcpiServerGenericException(
+                        "Could not get versions of sender, there was an error during the call: '${it.status_message}'"
+                    )
+            }
 
         val matchingVersion = versions.firstOrNull { it.version == VersionNumber.V2_2_1 }
             ?: throw OcpiServerNoMatchingEndpointsException("Expected version 2.2.1 from $versions")
@@ -108,14 +110,16 @@ class CredentialsServerService(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "",
-                    headers = mapOf(
-                        "Authorization" to "Token ${credentials.token.encodeBase64()}"
-                    )
+                    headers = mapOf(authorizationHeader(token = credentials.token))
                 )
             )
             .parseBody<OcpiResponseBody<VersionDetails>>()
-            .data
-            ?: throw OcpiServerGenericException("Could not get versions of sender")
+            .let {
+                it.data
+                    ?: throw OcpiServerGenericException(
+                        "Could not get version of sender, there was an error during the call: '${it.status_message}'"
+                    )
+            }
 
         platformRepository.saveVersion(platformUrl = platformUrl, version = matchingVersion)
         platformRepository.saveEndpoints(platformUrl = platformUrl, endpoints = versionDetail.endpoints)
