@@ -28,7 +28,8 @@ import samples.common.VersionsCacheRepository
 import strikt.api.expectCatching
 import strikt.api.expectThat
 import strikt.assertions.*
-import tests.mock.PlatformMongoRepository
+import tests.integration.common.BaseServerIntegrationTest
+import tests.integration.mock.PlatformMongoRepository
 import java.util.*
 
 class CredentialsIntegrationTests : BaseServerIntegrationTest() {

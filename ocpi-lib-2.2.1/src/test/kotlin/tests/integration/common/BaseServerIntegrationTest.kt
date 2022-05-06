@@ -1,7 +1,7 @@
-package tests
+package tests.integration.common
 
-import samples.Http4kTransportClient
-import samples.Http4kTransportServer
+import samples.common.Http4kTransportClient
+import samples.common.Http4kTransportServer
 import java.net.ServerSocket
 
 abstract class BaseServerIntegrationTest: BaseDBIntegrationTest() {
