@@ -56,3 +56,5 @@ enum class OcpiStatus(val code: Int) {
      */
     SERVER_NO_MATCHING_ENDPOINTS(3003)
 }
+
+fun Int.toOcpiStatus(): OcpiStatus? = OcpiStatus.values().firstOrNull { it.code == this }

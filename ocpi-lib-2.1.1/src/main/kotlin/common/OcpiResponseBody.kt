@@ -1,6 +1,9 @@
 package common
 
+import com.fasterxml.jackson.core.JsonProcessingException
+import org.apache.logging.log4j.LogManager
 import org.valiktor.ConstraintViolationException
+import transport.domain.HttpException
 import transport.domain.HttpRequest
 import transport.domain.HttpResponse
 import transport.domain.HttpStatus
@@ -29,14 +32,14 @@ data class OcpiResponseBody<T>(
     val timestamp: Instant
 ) {
     companion object {
-        private fun <T> success(data: T) = OcpiResponseBody(
+        fun <T> success(data: T) = OcpiResponseBody(
             data = data,
             status_code = OcpiStatus.SUCCESS.code,
             status_message = null,
             timestamp = Instant.now()
         )
 
-        private fun <T> invalid(message: String) = OcpiResponseBody<T>(
+        fun <T> invalid(message: String) = OcpiResponseBody<T>(
             data = null,
             status_code = OcpiStatus.CLIENT_INVALID_PARAMETERS.code,
             status_message = message,
@@ -52,7 +55,9 @@ data class OcpiResponseBody<T>(
     }
 }
 
-fun <T> OcpiResponseBody<SearchResult<T>>.getPaginatedHeaders(request: HttpRequest) =
+private val logger = LogManager.getLogger(OcpiResponseBody::class.java)
+
+fun OcpiResponseBody<SearchResult<*>>.getPaginatedHeaders(request: HttpRequest) =
     if (data != null) {
         val nextPageOffset = (data.offset + data.limit).takeIf { it <= data.totalCount }
 
@@ -72,22 +77,55 @@ fun <T> OcpiResponseBody<SearchResult<T>>.getPaginatedHeaders(request: HttpReque
         emptyMap()
     }
 
-fun <T> OcpiResponseBody<T>.toHttpResponse() =
-    HttpResponse(
-        status = when (status_code) {
-            OcpiStatus.SUCCESS.code -> if(data != null) HttpStatus.OK else HttpStatus.NOT_FOUND
-            OcpiStatus.CLIENT_INVALID_PARAMETERS.code -> HttpStatus.BAD_REQUEST
-            else -> HttpStatus.INTERNAL_SERVER_ERROR
-        },
-        body = mapper.writeValueAsString(this)
-    )
+@Suppress("UNCHECKED_CAST")
+fun <T> HttpRequest.httpResponse(fn: () -> OcpiResponseBody<T>): HttpResponse =
+    try {
+        val ocpiResponseBody = fn()
+        val isPaginated = ocpiResponseBody.data is SearchResult<*>
 
-fun <T> OcpiResponseBody<SearchResult<T>>.toPaginatedHttpResponse(request: HttpRequest) =
-    OcpiResponseBody(
-        data = data?.list,
-        status_code = status_code,
-        status_message = status_message,
-        timestamp = timestamp
-    )
-        .toHttpResponse()
-        .copy(headers = getPaginatedHeaders(request = request))
+        HttpResponse(
+            status = when (ocpiResponseBody.status_code) {
+                OcpiStatus.SUCCESS.code -> if (ocpiResponseBody.data != null) HttpStatus.OK else HttpStatus.NOT_FOUND
+                OcpiStatus.CLIENT_INVALID_PARAMETERS.code -> HttpStatus.BAD_REQUEST
+                else -> HttpStatus.INTERNAL_SERVER_ERROR
+            },
+            body = mapper.writeValueAsString(
+                if (isPaginated) OcpiResponseBody(
+                    data = (ocpiResponseBody.data as SearchResult<*>?)?.list,
+                    status_code = ocpiResponseBody.status_code,
+                    status_message = ocpiResponseBody.status_message,
+                    timestamp = ocpiResponseBody.timestamp
+                )
+                else ocpiResponseBody
+            )
+        ).let {
+            if (isPaginated) it.copy(
+                headers = (ocpiResponseBody as OcpiResponseBody<SearchResult<*>>)
+                    .getPaginatedHeaders(request = this)
+            )
+            else it
+        }
+    } catch (e: OcpiException) {
+        HttpResponse(
+            status = e.httpStatus,
+            body = mapper.writeValueAsString(
+                OcpiResponseBody<T>(
+                    data = null,
+                    status_code = e.ocpiStatus.code,
+                    status_message = e.message,
+                    timestamp = Instant.now()
+                )
+            ),
+            headers = if (e.httpStatus == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap()
+        )
+    } catch (e: HttpException) {
+        logger.error(e)
+        HttpResponse(
+            status = e.status
+        )
+    } catch (e: JsonProcessingException) {
+        logger.error(e)
+        HttpResponse(
+            status = HttpStatus.BAD_REQUEST
+        )
+    }

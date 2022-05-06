@@ -1,7 +1,6 @@
 package ocpi.locations
 
-import common.toHttpResponse
-import common.toPaginatedHttpResponse
+import common.httpResponse
 import transport.TransportServer
 import transport.domain.FixedPathSegment
 import transport.domain.HttpMethod
@@ -25,17 +24,18 @@ class LocationsCpoServer(
             ),
             queryParams = listOf("date_from", "date_to", "offset", "limit")
         ) { req ->
-            val dateFrom = req.queryParams["date_from"]
-            val dateTo = req.queryParams["date_to"]
+            req.httpResponse {
+                val dateFrom = req.queryParams["date_from"]
+                val dateTo = req.queryParams["date_to"]
 
-            service
-                .getLocations(
-                    dateFrom = dateFrom?.let { Instant.parse(it) },
-                    dateTo = dateTo?.let { Instant.parse(it) },
-                    offset = req.queryParams["offset"]?.toInt() ?: 0,
-                    limit = req.queryParams["limit"]?.toInt()
-                )
-                .toPaginatedHttpResponse(request = req)
+                service
+                    .getLocations(
+                        dateFrom = dateFrom?.let { Instant.parse(it) },
+                        dateTo = dateTo?.let { Instant.parse(it) },
+                        offset = req.queryParams["offset"]?.toInt() ?: 0,
+                        limit = req.queryParams["limit"]?.toInt()
+                    )
+            }
         }
 
         transportServer.handle(
@@ -45,11 +45,12 @@ class LocationsCpoServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            service
-                .getLocation(
-                    locationId = req.pathParams["locationId"]!!
-                )
-                .toHttpResponse()
+            req.httpResponse {
+                service
+                    .getLocation(
+                        locationId = req.pathParams["locationId"]!!
+                    )
+            }
         }
 
         transportServer.handle(
@@ -60,12 +61,13 @@ class LocationsCpoServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            service
-                .getEvse(
-                    locationId = req.pathParams["locationId"]!!,
-                    evseUid = req.pathParams["evseUid"]!!
-                )
-                .toHttpResponse()
+            req.httpResponse {
+                service
+                    .getEvse(
+                        locationId = req.pathParams["locationId"]!!,
+                        evseUid = req.pathParams["evseUid"]!!
+                    )
+            }
         }
 
         transportServer.handle(
@@ -77,13 +79,14 @@ class LocationsCpoServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            service
-                .getConnector(
-                    locationId = req.pathParams["locationId"]!!,
-                    evseUid = req.pathParams["evseUid"]!!,
-                    connectorId = req.pathParams["connectorId"]!!
-                )
-                .toHttpResponse()
+            req.httpResponse {
+                service
+                    .getConnector(
+                        locationId = req.pathParams["locationId"]!!,
+                        evseUid = req.pathParams["evseUid"]!!,
+                        connectorId = req.pathParams["connectorId"]!!
+                    )
+            }
         }
     }
 }

@@ -1,11 +1,12 @@
 package ocpi.locations
 
-import com.fasterxml.jackson.core.JsonProcessingException
+import common.httpResponse
 import common.mapper
-import common.toHttpResponse
 import ocpi.locations.domain.*
 import transport.TransportServer
-import transport.domain.*
+import transport.domain.FixedPathSegment
+import transport.domain.HttpMethod
+import transport.domain.VariablePathSegment
 
 /**
  * Receives calls from a CPO
@@ -25,13 +26,14 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            service
-                .getLocation(
-                    countryCode = req.pathParams["countryCode"]!!,
-                    partyId = req.pathParams["partyId"]!!,
-                    locationId = req.pathParams["locationId"]!!
-                )
-                .toHttpResponse()
+            req.httpResponse {
+                service
+                    .getLocation(
+                        countryCode = req.pathParams["countryCode"]!!,
+                        partyId = req.pathParams["partyId"]!!,
+                        locationId = req.pathParams["locationId"]!!
+                    )
+            }
         }
 
         transportServer.handle(
@@ -44,14 +46,15 @@ class LocationsEmspServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            service
-                .getEvse(
-                    countryCode = req.pathParams["countryCode"]!!,
-                    partyId = req.pathParams["partyId"]!!,
-                    locationId = req.pathParams["locationId"]!!,
-                    evseUid = req.pathParams["evseUid"]!!
-                )
-                .toHttpResponse()
+            req.httpResponse {
+                service
+                    .getEvse(
+                        countryCode = req.pathParams["countryCode"]!!,
+                        partyId = req.pathParams["partyId"]!!,
+                        locationId = req.pathParams["locationId"]!!,
+                        evseUid = req.pathParams["evseUid"]!!
+                    )
+            }
         }
 
         transportServer.handle(
@@ -65,15 +68,16 @@ class LocationsEmspServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            service
-                .getConnector(
-                    countryCode = req.pathParams["countryCode"]!!,
-                    partyId = req.pathParams["partyId"]!!,
-                    locationId = req.pathParams["locationId"]!!,
-                    evseUid = req.pathParams["evseUid"]!!,
-                    connectorId = req.pathParams["connectorId"]!!
-                )
-                .toHttpResponse()
+            req.httpResponse {
+                service
+                    .getConnector(
+                        countryCode = req.pathParams["countryCode"]!!,
+                        partyId = req.pathParams["partyId"]!!,
+                        locationId = req.pathParams["locationId"]!!,
+                        evseUid = req.pathParams["evseUid"]!!,
+                        connectorId = req.pathParams["connectorId"]!!
+                    )
+            }
         }
 
         transportServer.handle(
@@ -85,7 +89,7 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            try {
+            req.httpResponse {
                 service
                     .putLocation(
                         countryCode = req.pathParams["countryCode"]!!,
@@ -93,12 +97,6 @@ class LocationsEmspServer(
                         locationId = req.pathParams["locationId"]!!,
                         location = mapper.readValue(req.body, Location::class.java)
                     )
-                    .toHttpResponse()
-            } catch (e: JsonProcessingException) {
-                HttpResponse(
-                    status = HttpStatus.BAD_REQUEST,
-                    body = e.originalMessage
-                )
             }
         }
 
@@ -112,7 +110,7 @@ class LocationsEmspServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            try {
+            req.httpResponse {
                 service
                     .putEvse(
                         countryCode = req.pathParams["countryCode"]!!,
@@ -121,12 +119,6 @@ class LocationsEmspServer(
                         evseUid = req.pathParams["evseUid"]!!,
                         evse = mapper.readValue(req.body!!, Evse::class.java)
                     )
-                    .toHttpResponse()
-            } catch (e: JsonProcessingException) {
-                HttpResponse(
-                    status = HttpStatus.BAD_REQUEST,
-                    body = e.originalMessage
-                )
             }
         }
 
@@ -141,9 +133,9 @@ class LocationsEmspServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            try {
-                 service
-                     .putConnector(
+            req.httpResponse {
+                service
+                    .putConnector(
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -151,12 +143,6 @@ class LocationsEmspServer(
                         connectorId = req.pathParams["connectorId"]!!,
                         connector = mapper.readValue(req.body!!, Connector::class.java)
                     )
-                     .toHttpResponse()
-            } catch (e: JsonProcessingException) {
-                HttpResponse(
-                    status = HttpStatus.BAD_REQUEST,
-                    body = e.originalMessage
-                )
             }
         }
 
@@ -169,7 +155,7 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId")
             )
         ) { req ->
-            try {
+            req.httpResponse {
                 service
                     .patchLocation(
                         countryCode = req.pathParams["countryCode"]!!,
@@ -177,12 +163,6 @@ class LocationsEmspServer(
                         locationId = req.pathParams["locationId"]!!,
                         location = mapper.readValue(req.body!!, LocationPartial::class.java)
                     )
-                    .toHttpResponse()
-            } catch (e: JsonProcessingException) {
-                HttpResponse(
-                    status = HttpStatus.BAD_REQUEST,
-                    body = e.originalMessage
-                )
             }
         }
 
@@ -196,21 +176,15 @@ class LocationsEmspServer(
                 VariablePathSegment("evseUid")
             )
         ) { req ->
-            try {
-               service
-                   .patchEvse(
+            req.httpResponse {
+                service
+                    .patchEvse(
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
                         evseUid = req.pathParams["evseUid"]!!,
                         evse = mapper.readValue(req.body!!, EvsePartial::class.java)
                     )
-                   .toHttpResponse()
-            } catch (e: JsonProcessingException) {
-                HttpResponse(
-                    status = HttpStatus.BAD_REQUEST,
-                    body = e.originalMessage
-                )
             }
         }
 
@@ -225,7 +199,7 @@ class LocationsEmspServer(
                 VariablePathSegment("connectorId")
             )
         ) { req ->
-            try {
+            req.httpResponse {
                 service
                     .patchConnector(
                         countryCode = req.pathParams["countryCode"]!!,
@@ -235,12 +209,6 @@ class LocationsEmspServer(
                         connectorId = req.pathParams["connectorId"]!!,
                         connector = mapper.readValue(req.body!!, ConnectorPartial::class.java)
                     )
-                    .toHttpResponse()
-            } catch (e: JsonProcessingException) {
-                HttpResponse(
-                    status = HttpStatus.BAD_REQUEST,
-                    body = e.originalMessage
-                )
             }
         }
     }
