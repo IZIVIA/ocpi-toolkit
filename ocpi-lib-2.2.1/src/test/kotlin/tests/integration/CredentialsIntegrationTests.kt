@@ -107,9 +107,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Setup sender (client)
         val transportTowardsReceiver = receiverServerSetupResult.transport.getClient()
         return CredentialsClientService(
+            clientVersionsEndpointUrl = senderServerSetupResult.transport.baseUrl,
             clientPlatformRepository = PlatformMongoRepository(collection = senderServerSetupResult.platformCollection),
-            versionsRepository = VersionsCacheRepository(baseUrl = senderServerSetupResult.transport.baseUrl),
-            credentialsRoleRepository = object: CredentialsRoleRepository {
+            clientVersionsRepository = VersionsCacheRepository(baseUrl = senderServerSetupResult.transport.baseUrl),
+            clientCredentialsRoleRepository = object: CredentialsRoleRepository {
                 override fun getCredentialsRoles(): List<CredentialRole> = listOf(
                     CredentialRole(
                         role = Role.CPO,
@@ -119,6 +120,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     )
                 )
             },
+            serverUrl = receiverServerSetupResult.transport.baseUrl,
             credentialsClient = CredentialsClient(transportClient = transportTowardsReceiver),
             versionsClient = VersionsClient(transportClient = transportTowardsReceiver)
         )
@@ -144,10 +146,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentials = credentialsClientService.register(
-            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
-            platformUrl = receiverServer.transport.baseUrl
-        )
+        val credentials = credentialsClientService.register()
 
         // Now we can do some requests to check if the credentials provided are right (and if token A is now invalid)
         val versionsClient = VersionsClient(
@@ -235,10 +234,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         // Fails because the senders does not know the TOKEN_A to send with the request
         expectCatching {
-            credentialsClientService.register(
-                clientVersionsEndpointUrl = senderServer.transport.baseUrl,
-                platformUrl = receiverServer.transport.baseUrl
-            )
+            credentialsClientService.register()
         }.isFailure().isA<OcpiClientInvalidParametersException>()
 
 
@@ -247,10 +243,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         // Fails because the receiver does not know the TOKEN_A used by the sender
         expectCatching {
-            credentialsClientService.register(
-                clientVersionsEndpointUrl = senderServer.transport.baseUrl,
-                platformUrl = receiverServer.transport.baseUrl
-            )
+            credentialsClientService.register()
         }
             .isFailure()
             .isA<OcpiResponseException>()
@@ -262,10 +255,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         // Fails because the token sent by sender is not the same as the one in the receiver
         expectCatching {
-            credentialsClientService.register(
-                clientVersionsEndpointUrl = senderServer.transport.baseUrl,
-                platformUrl = receiverServer.transport.baseUrl
-            )
+            credentialsClientService.register()
         }
             .isFailure()
             .isA<OcpiResponseException>()
@@ -367,15 +357,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentials = credentialsClientService.register(
-            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
-            platformUrl = receiverServer.transport.baseUrl
-        )
+        val credentials = credentialsClientService.register()
 
         expectThat(
-            credentialsClientService.get(
-                platformUrl = receiverServer.transport.baseUrl
-            )
+            credentialsClientService.get()
         ).isEqualTo(credentials)
     }
 
@@ -399,15 +384,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentials = credentialsClientService.register(
-            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
-            platformUrl = receiverServer.transport.baseUrl
-        )
+        val credentials = credentialsClientService.register()
 
-        val updatedCredentials = credentialsClientService.update(
-            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
-            platformUrl = receiverServer.transport.baseUrl
-        )
+        val updatedCredentials = credentialsClientService.update()
 
         val versionsClient = VersionsClient(
             transportClient = receiverServer.transport.getClient()
@@ -463,10 +442,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentials = credentialsClientService.register(
-            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
-            platformUrl = receiverServer.transport.baseUrl
-        )
+        val credentials = credentialsClientService.register()
 
         val versionsClient = VersionsClient(
             transportClient = receiverServer.transport.getClient()
@@ -489,9 +465,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        credentialsClientService.delete(
-            platformUrl = receiverServer.transport.baseUrl
-        )
+        credentialsClientService.delete()
 
         expectThat(
             versionsClient.getVersions(
@@ -526,10 +500,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentialsAfterRegistration = credentialsClientService.register(
-            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
-            platformUrl = receiverServer.transport.baseUrl
-        )
+        val credentialsAfterRegistration = credentialsClientService.register()
 
         val versionsClient = VersionsClient(
             transportClient = receiverServer.transport.getClient()
@@ -553,15 +524,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
 
         expectThat(
-            credentialsClientService.get(
-                platformUrl = receiverServer.transport.baseUrl
-            )
+            credentialsClientService.get()
         ).isEqualTo(credentialsAfterRegistration)
 
-        val updatedCredentials = credentialsClientService.update(
-            clientVersionsEndpointUrl = senderServer.transport.baseUrl,
-            platformUrl = receiverServer.transport.baseUrl
-        )
+        val updatedCredentials = credentialsClientService.update()
 
         expectThat(
             versionsClient.getVersions(
@@ -592,9 +558,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
-        credentialsClientService.delete(
-            platformUrl = receiverServer.transport.baseUrl
-        )
+        credentialsClientService.delete()
 
         expectThat(
             versionsClient.getVersions(

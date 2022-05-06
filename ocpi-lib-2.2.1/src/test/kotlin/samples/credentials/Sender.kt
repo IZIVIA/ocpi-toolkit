@@ -37,9 +37,10 @@ fun main() {
     val transportTowardsReceiver = Http4kTransportClient(baseUrl = receiverUrl)
 
     val credentialsClientService = CredentialsClientService(
+        clientVersionsEndpointUrl = receiverUrl,
         clientPlatformRepository = senderPlatformRepository,
-        versionsRepository = senderVersionsRepository,
-        credentialsRoleRepository = object: CredentialsRoleRepository {
+        clientVersionsRepository = senderVersionsRepository,
+        clientCredentialsRoleRepository = object: CredentialsRoleRepository {
             override fun getCredentialsRoles(): List<CredentialRole> = listOf(
                 CredentialRole(
                     role = Role.CPO,
@@ -49,33 +50,24 @@ fun main() {
                 )
             )
         },
+        serverUrl = receiverUrl,
         credentialsClient = CredentialsClient(transportClient = transportTowardsReceiver),
         versionsClient = VersionsClient(transportClient = transportTowardsReceiver)
     )
 
     println("Registering $senderUrl to $receiverUrl")
-    var credentials = credentialsClientService.register(
-        clientVersionsEndpointUrl = senderUrl,
-        platformUrl = receiverUrl
-    )
+    var credentials = credentialsClientService.register()
     println("Success. Credentials after register : $credentials")
 
     println("Retrieving credentials from $receiverUrl...")
-    credentials = credentialsClientService.get(
-        platformUrl = receiverUrl
-    )
+    credentials = credentialsClientService.get()
     println("Success. Credentials : $credentials")
 
     println("Looking for updates, and updating if needed $receiverUrl...")
-    credentials = credentialsClientService.update(
-        clientVersionsEndpointUrl = senderUrl,
-        platformUrl = receiverUrl
-    )
+    credentials = credentialsClientService.update()
     println("Success. Credentials : $credentials")
 
     println("Deleting credentials of $senderUrl on $receiverUrl...")
-    credentialsClientService.delete(
-        platformUrl = receiverUrl
-    )
+    credentialsClientService.delete()
     println("Success.")
 }
