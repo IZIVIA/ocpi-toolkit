@@ -1,4 +1,4 @@
-package tests.integration
+package tests.integration.common
 
 import org.litote.kmongo.KMongo
 import org.testcontainers.containers.MongoDBContainer

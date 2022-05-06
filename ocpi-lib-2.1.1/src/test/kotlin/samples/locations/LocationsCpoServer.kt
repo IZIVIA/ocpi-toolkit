@@ -1,4 +1,4 @@
-package samples
+package samples.locations
 
 import common.SearchResult
 import ocpi.locations.LocationsCpoServer
@@ -7,6 +7,7 @@ import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
 import ocpi.locations.services.LocationsCpoService
 import ocpi.locations.validation.LocationsCpoValidationService
+import samples.common.Http4kTransportServer
 import java.time.Instant
 
 val cpoServerUrl = "http://localhost:8080"

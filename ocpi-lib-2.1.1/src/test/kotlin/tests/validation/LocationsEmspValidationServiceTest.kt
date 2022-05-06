@@ -1,4 +1,4 @@
-package tests
+package tests.validation
 
 import common.OcpiStatus
 import ocpi.locations.domain.toPartial

@@ -1,4 +1,4 @@
-package tests.mock
+package tests.integration.mock
 
 import com.mongodb.client.MongoCollection
 import common.SearchResult

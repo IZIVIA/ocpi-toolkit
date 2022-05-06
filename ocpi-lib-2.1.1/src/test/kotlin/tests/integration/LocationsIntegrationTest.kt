@@ -1,4 +1,4 @@
-package tests
+package tests.integration
 
 import common.OcpiStatus
 import ocpi.locations.LocationsCpoServer
@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test
 import org.litote.kmongo.getCollection
 import strikt.api.expectThat
 import strikt.assertions.*
-import tests.mock.LocationsCpoMongoService
+import tests.integration.common.BaseServerIntegrationTest
+import tests.integration.mock.LocationsCpoMongoService
 import tests.utils.validConnector
 import tests.utils.validEvse
 import tests.utils.validLocation

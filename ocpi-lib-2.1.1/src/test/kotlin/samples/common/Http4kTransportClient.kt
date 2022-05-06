@@ -1,4 +1,4 @@
-package samples
+package samples.common
 
 import org.http4k.client.JettyClient
 import org.http4k.core.Method

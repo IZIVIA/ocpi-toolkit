@@ -1,4 +1,4 @@
-package samples
+package samples.common
 
 import org.http4k.core.*
 import org.http4k.filter.DebuggingFilters
@@ -47,6 +47,8 @@ class Http4kTransportServer(
                             path = route,
                             pathParams = pathParams.associateWith { param -> req.path(param)!! },
                             queryParams = queryParams.associateWith { param -> req.query(param) },
+                            headers = req.headers.filter { it.second != null}.toMap() as Map<String, String>,
+                            body = req.bodyString()
                         )
                     ).let {
                         Response(Status(it.status.code, null))

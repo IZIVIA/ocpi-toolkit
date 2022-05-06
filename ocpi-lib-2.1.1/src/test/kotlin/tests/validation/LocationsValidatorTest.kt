@@ -1,4 +1,4 @@
-package tests
+package tests.validation
 
 import ocpi.locations.domain.*
 import ocpi.locations.validation.validate

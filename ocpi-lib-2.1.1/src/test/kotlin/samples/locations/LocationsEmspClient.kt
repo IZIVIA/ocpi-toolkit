@@ -1,6 +1,7 @@
-package samples
+package samples.locations
 
 import ocpi.locations.LocationsEmspClient
+import samples.common.Http4kTransportClient
 
 /**
  * Example on how to use the eMSP client
