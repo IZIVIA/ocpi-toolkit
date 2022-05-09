@@ -12,11 +12,11 @@ import org.valiktor.validate
 import java.math.BigDecimal
 
 fun LocationPartial.validate(): LocationPartial = validate(this) {
-    validate(LocationPartial::id).isValid { it.length <= 39 }
-    validate(LocationPartial::name).isValid { it.length <= 255 }
-    validate(LocationPartial::address).isValid { it.length <= 45 }
-    validate(LocationPartial::city).isValid { it.length <= 45 }
-    validate(LocationPartial::postal_code).isValid { it.length <= 10 }
+    validate(LocationPartial::id).isValid { it.isValidPrintableAscii(39) }
+    validate(LocationPartial::name).isValid { it.isValidPrintableAscii(255) }
+    validate(LocationPartial::address).isValid { it.isValidPrintableAscii(45) }
+    validate(LocationPartial::city).isValid { it.isValidPrintableAscii(45) }
+    validate(LocationPartial::postal_code).isValid { it.isValidPrintableAscii(10) }
     validate(LocationPartial::country).isValid { it.isValidCountry() }
     coordinates?.validate()
     related_locations?.forEach { it.validate() }
@@ -51,8 +51,8 @@ fun EnergyMixPartial.validate(): EnergyMixPartial = validate(this) {
     // is_green_energy: nothing to validate
     energy_sources?.forEach { it.validate() }
     environ_impact?.forEach { it.validate() }
-    validate(EnergyMixPartial::supplier_name).isValid { it.length <= 64 }
-    validate(EnergyMixPartial::energy_product_name).isValid { it.length <= 64  }
+    validate(EnergyMixPartial::supplier_name).isValid { it.isValidPrintableAscii(64) }
+    validate(EnergyMixPartial::energy_product_name).isValid { it.isValidPrintableAscii(64)  }
 }
 
 fun ExceptionalPeriodPartial.validate(): ExceptionalPeriodPartial = validate(this) {
@@ -103,13 +103,13 @@ fun ImagePartial.validate(): ImagePartial = validate(this) {
     validate(ImagePartial::url).isValid { it.isValidUrl() }
     validate(ImagePartial::thumbnail).isValid { it.isValidUrl() }
     // category: nothing to validate
-    validate(ImagePartial::type).isValid { it.length <= 4 }
+    validate(ImagePartial::type).isValid { it.isValidPrintableAscii(4) }
     validate(ImagePartial::width).isLessThanOrEqualTo(99999)
     validate(ImagePartial::height).isLessThanOrEqualTo(99999)
 }
 
 fun BusinessDetailsPartial.validate(): BusinessDetailsPartial = validate(this) {
-    validate(BusinessDetailsPartial::name).isValid { it.length <= 100 }
+    validate(BusinessDetailsPartial::name).isValid { it.isValidPrintableAscii(100) }
     validate(BusinessDetailsPartial::website).isValid { it.isValidUrl() }
     logo?.validate()
 }
@@ -127,7 +127,7 @@ fun AdditionalGeoLocationPartial.validate(): AdditionalGeoLocationPartial = vali
 
 fun DisplayTextPartial.validate(): DisplayTextPartial = validate(this) {
     validate(DisplayTextPartial::language).isValid { it.isValidLanguage() }
-    validate(DisplayTextPartial::text).isValid { it.length <= 512 }
+    validate(DisplayTextPartial::text).isValid { it.isValidPrintableAscii(512) }
     validate(DisplayTextPartial::text).isValid { it.isRawString() }
 }
 
@@ -138,15 +138,15 @@ fun StatusSchedulePartial.validate(): StatusSchedulePartial = validate(this) {
 }
 
 fun EvsePartial.validate(): EvsePartial = validate(this) {
-    validate(EvsePartial::uid).isValid { it.length <= 39 }
+    validate(EvsePartial::uid).isValid { it.isValidPrintableAscii(39) }
     validate(EvsePartial::evse_id).isValid { it.isValidEvseId()  }
     // status: nothing to validate
     status_schedule?.forEach { it.validate() }
     // capabilities: nothing to validate
     connectors?.forEach { it.validate() }
-    validate(EvsePartial::floor_level).isValid { it.length <= 4 }
+    validate(EvsePartial::floor_level).isValid { it.isValidPrintableAscii(4) }
     coordinates?.validate()
-    validate(EvsePartial::physical_reference).isValid { it.length <= 16 }
+    validate(EvsePartial::physical_reference).isValid { it.isValidPrintableAscii(16) }
     directions?.forEach { it.validate() }
     // parking_restrictions: nothing to validate
     images?.forEach { it.validate() }
@@ -154,13 +154,13 @@ fun EvsePartial.validate(): EvsePartial = validate(this) {
 }
 
 fun ConnectorPartial.validate(): ConnectorPartial = validate(this) {
-    validate(ConnectorPartial::id).isValid { it.length <= 36 }
+    validate(ConnectorPartial::id).isValid { it.isValidPrintableAscii(36) }
     // standard: nothing to validate
     // format: nothing to validate
     // power_type: nothing to validate
     validate(ConnectorPartial::voltage).isGreaterThanOrEqualTo(0)
     validate(ConnectorPartial::amperage).isGreaterThanOrEqualTo(0)
-    validate(ConnectorPartial::tariff_id).isValid { it.length <= 36 }
+    validate(ConnectorPartial::tariff_id).isValid { it.isValidPrintableAscii(36) }
     validate(ConnectorPartial::terms_and_conditions).isValid { it.isValidUrl() }
     // last_updated: nothing to validate
 }

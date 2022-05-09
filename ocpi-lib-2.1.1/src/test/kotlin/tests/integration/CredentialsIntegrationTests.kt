@@ -309,7 +309,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         expectThat(
             versionsClient.getVersionDetails(
                 token = tokenA,
-                versionNumber = VersionNumber.V2_2.value
+                versionNumber = VersionNumber.V2_0.value
             )
         ) {
             get { data }

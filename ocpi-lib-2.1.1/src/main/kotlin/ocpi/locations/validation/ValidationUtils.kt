@@ -4,6 +4,12 @@ import java.net.URL
 import java.util.*
 
 /**
+ * True if the given string matches only printable ASCII characters and has the given size.
+ */
+fun String.isValidPrintableAscii(size: Int): Boolean =
+    matches("[\\x20-\\x7E]{0,$size}".toRegex())
+
+/**
  * URL type following the w3.org spec. to the operator's terms and conditions
  */
 fun String.isValidUrl(): Boolean =
