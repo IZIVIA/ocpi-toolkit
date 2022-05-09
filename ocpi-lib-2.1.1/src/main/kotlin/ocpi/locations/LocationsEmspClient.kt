@@ -28,7 +28,7 @@ class LocationsEmspClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/cpo/2.1.1/locations",
+                    path = "/locations",
                     queryParams = listOfNotNull(
                         dateFrom?.let { "date_from" to dateFrom.toString() },
                         dateTo?.let { "date_to" to dateTo.toString() },
@@ -45,7 +45,7 @@ class LocationsEmspClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/cpo/2.1.1/locations/$locationId",
+                    path = "/locations/$locationId",
                     headers = mapOf(authorizationHeader(token = token))
                 )
             )
@@ -56,7 +56,7 @@ class LocationsEmspClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/cpo/2.1.1/locations/$locationId/$evseUid",
+                    path = "/locations/$locationId/$evseUid",
                     headers = mapOf(authorizationHeader(token = token))
                 )
             )
@@ -72,7 +72,7 @@ class LocationsEmspClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/ocpi/cpo/2.1.1/locations/$locationId/$evseUid/$connectorId",
+                    path = "/locations/$locationId/$evseUid/$connectorId",
                     headers = mapOf(authorizationHeader(token = token))
                 )
             )
