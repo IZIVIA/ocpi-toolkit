@@ -35,7 +35,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             server,
             LocationsCpoValidationService(
                 service = LocationsCpoMongoService(collection),
-                platformRepository = DummyPlatformCacheRepository(token = tokenC)
+                platformRepository = DummyPlatformCacheRepository(tokenC = tokenC)
             )
         )
         return server

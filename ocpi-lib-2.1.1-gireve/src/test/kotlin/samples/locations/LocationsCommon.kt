@@ -1,7 +1,6 @@
 package samples.locations
 
 import samples.common.DummyPlatformCacheRepository
-import java.util.*
 
-val CREDENTIALS_TOKEN_C = UUID.randomUUID().toString()
-val DUMMY_CREDENTIALS_REPOSITORY = DummyPlatformCacheRepository(token = CREDENTIALS_TOKEN_C)
+const val CREDENTIALS_TOKEN_C = "e0748bbe-d535-4a6b-8f80-94f2457d5b9d"
+val DUMMY_CREDENTIALS_REPOSITORY = DummyPlatformCacheRepository(tokenC = CREDENTIALS_TOKEN_C)

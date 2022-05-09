@@ -23,7 +23,7 @@ class LocationsCpoValidationServiceTest {
     @Test
     fun getLocationsParamsValidationTest() {
         service =
-            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(token = token))
+            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         expectThat(service.getLocations(token = token, dateFrom = from, dateTo = from, offset = 0, limit = null)) {
             get { status_code }
@@ -148,7 +148,7 @@ class LocationsCpoValidationServiceTest {
     @Test
     fun getLocationParamsValidationTest() {
         service =
-            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(token = token))
+            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         val str3chars = "abc"
         val str39chars = "abababababababababababababababababababa"
@@ -173,7 +173,7 @@ class LocationsCpoValidationServiceTest {
     @Test
     fun getEvseParamsValidationTest() {
         service =
-            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(token = token))
+            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         val str3chars = "abc"
         val str39chars = "abababababababababababababababababababa"
@@ -218,7 +218,7 @@ class LocationsCpoValidationServiceTest {
     @Test
     fun getConnectorParamsValidationTest() {
         service =
-            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(token = token))
+            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         val str3chars = "abc"
         val str39chars = "abababababababababababababababababababa"

@@ -28,7 +28,7 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun getLocationParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(token = token))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         expectThat(service.getLocation(token = token, countryCode = str1char, partyId = str2chars, locationId = str4chars)) {
             get { status_code }
@@ -58,7 +58,7 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun getEvseParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(token = token))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         expectThat(
             service.getEvse(
@@ -141,7 +141,7 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun getConnectorParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(token = token))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         expectThat(
             service.getConnector(
@@ -244,7 +244,7 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun patchLocationParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(token = token))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         expectThat(
             service.patchLocation(
@@ -314,7 +314,7 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun patchEvseParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(token = token))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         expectThat(
             service.patchEvse(
@@ -403,7 +403,7 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun patchConnectorParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(token = token))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         expectThat(
             service.patchConnector(
@@ -513,7 +513,7 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun putLocationParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(token = token))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         expectThat(
             service.putLocation(
@@ -583,7 +583,7 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun putEvseParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(token = token))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         expectThat(
             service.putEvse(
@@ -672,7 +672,7 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun putConnectorParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(token = token))
+        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
 
         expectThat(
             service.putConnector(
