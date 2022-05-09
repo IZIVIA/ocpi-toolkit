@@ -18,17 +18,7 @@ enum class VersionNumber(val value: String, val index: Int) {
     /**
      * OCPI version 2.1.1
      */
-    V2_1_1("2.1.1", 2),
-
-    /**
-     * OCPI version 2.2 (DEPRECATED, do not use, use 2.2.1 instead)
-     */
-    V2_2("2.2", 3),
-
-    /**
-     * OCPI version 2.2.1 (this version)
-     */
-    V2_2_1("2.2.1", 4)
+    V2_1_1("2.1.1", 2)
 }
 
 fun parseVersionNumber(value: String): VersionNumber? =
