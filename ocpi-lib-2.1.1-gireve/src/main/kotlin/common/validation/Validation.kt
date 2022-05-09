@@ -1,5 +1,6 @@
-package common
+package common.validation
 
+import common.OcpiClientInvalidParametersException
 import ocpi.credentials.repositories.PlatformRepository
 import org.valiktor.ConstraintViolation
 import org.valiktor.ConstraintViolationException

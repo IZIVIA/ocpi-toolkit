@@ -7,17 +7,16 @@ import org.valiktor.constraints.NotNull
 import org.valiktor.constraints.Null
 import org.valiktor.functions.isGreaterThanOrEqualTo
 import org.valiktor.functions.isLessThanOrEqualTo
-import org.valiktor.functions.isValid
 import org.valiktor.validate
 import java.math.BigDecimal
 
 fun LocationPartial.validate(): LocationPartial = validate(this) {
-    validate(LocationPartial::id).isValid { it.isValidPrintableAscii(39) }
-    validate(LocationPartial::name).isValid { it.isValidPrintableAscii(255) }
-    validate(LocationPartial::address).isValid { it.isValidPrintableAscii(45) }
-    validate(LocationPartial::city).isValid { it.isValidPrintableAscii(45) }
-    validate(LocationPartial::postal_code).isValid { it.isValidPrintableAscii(10) }
-    validate(LocationPartial::country).isValid { it.isValidCountry() }
+    validate(LocationPartial::id).isPrintableAscii().hasMaxLengthOf(39)
+    validate(LocationPartial::name).isPrintableAscii().hasMaxLengthOf(255)
+    validate(LocationPartial::address).isPrintableAscii().hasMaxLengthOf(45)
+    validate(LocationPartial::city).isPrintableAscii().hasMaxLengthOf(45)
+    validate(LocationPartial::postal_code).isPrintableAscii().hasMaxLengthOf(10)
+    validate(LocationPartial::country).isCountryCode()
     coordinates?.validate()
     related_locations?.forEach { it.validate() }
     evses?.forEach { it.validate() }
@@ -26,7 +25,7 @@ fun LocationPartial.validate(): LocationPartial = validate(this) {
     suboperator?.validate()
     owner?.validate()
     // facilities: nothing to validate
-    validate(LocationPartial::time_zone).isValid { it.isValidTimeZone() }
+    validate(LocationPartial::time_zone).isTimeZone()
     opening_times?.validate()
     // charging_when_closed: nothing to validate
     images?.forEach { it.validate() }
@@ -51,8 +50,8 @@ fun EnergyMixPartial.validate(): EnergyMixPartial = validate(this) {
     // is_green_energy: nothing to validate
     energy_sources?.forEach { it.validate() }
     environ_impact?.forEach { it.validate() }
-    validate(EnergyMixPartial::supplier_name).isValid { it.isValidPrintableAscii(64) }
-    validate(EnergyMixPartial::energy_product_name).isValid { it.isValidPrintableAscii(64)  }
+    validate(EnergyMixPartial::supplier_name).isPrintableAscii().hasMaxLengthOf(64)
+    validate(EnergyMixPartial::energy_product_name).isPrintableAscii().hasMaxLengthOf(64)
 }
 
 fun ExceptionalPeriodPartial.validate(): ExceptionalPeriodPartial = validate(this) {
@@ -63,8 +62,8 @@ fun ExceptionalPeriodPartial.validate(): ExceptionalPeriodPartial = validate(thi
 
 fun RegularHoursPartial.validate(): RegularHoursPartial = validate(this) { regularHours ->
     validate(RegularHoursPartial::weekday).isGreaterThanOrEqualTo(1).isLessThanOrEqualTo(7)
-    validate(RegularHoursPartial::period_begin).isValid { it.isValidTime() }
-    validate(RegularHoursPartial::period_end).isValid { it.isValidTime() }
+    validate(RegularHoursPartial::period_begin).isTime()
+    validate(RegularHoursPartial::period_end).isTime()
 
     val beginInMinutes = regularHours.period_begin?.split(":")
         ?.mapIndexed { index, time -> time.toInt() * (1 - index) * 60 }
@@ -100,35 +99,37 @@ fun HoursPartial.validate(): HoursPartial = validate(this) { hours ->
 }
 
 fun ImagePartial.validate(): ImagePartial = validate(this) {
-    validate(ImagePartial::url).isValid { it.isValidUrl() }
-    validate(ImagePartial::thumbnail).isValid { it.isValidUrl() }
+    validate(ImagePartial::url).isUrl()
+    validate(ImagePartial::thumbnail).isUrl()
     // category: nothing to validate
-    validate(ImagePartial::type).isValid { it.isValidPrintableAscii(4) }
+    validate(ImagePartial::type).isPrintableAscii().hasMaxLengthOf(4)
     validate(ImagePartial::width).isLessThanOrEqualTo(99999)
     validate(ImagePartial::height).isLessThanOrEqualTo(99999)
 }
 
 fun BusinessDetailsPartial.validate(): BusinessDetailsPartial = validate(this) {
-    validate(BusinessDetailsPartial::name).isValid { it.isValidPrintableAscii(100) }
-    validate(BusinessDetailsPartial::website).isValid { it.isValidUrl() }
+    validate(BusinessDetailsPartial::name).isPrintableAscii().hasMaxLengthOf(100)
+    validate(BusinessDetailsPartial::website).isUrl()
     logo?.validate()
 }
 
 fun GeoLocationPartial.validate(): GeoLocationPartial = validate(this) {
-    validate(GeoLocationPartial::latitude).isValid { it.isValidLatitude() }
-    validate(GeoLocationPartial::longitude).isValid { it.isValidLongitude() }
+    validate(GeoLocationPartial::latitude).isLatitude()
+    validate(GeoLocationPartial::longitude).isLongitude()
 }
 
 fun AdditionalGeoLocationPartial.validate(): AdditionalGeoLocationPartial = validate(this) {
-    validate(AdditionalGeoLocationPartial::latitude).isValid { it.isValidLatitude() }
-    validate(AdditionalGeoLocationPartial::longitude).isValid { it.isValidLongitude() }
+    validate(AdditionalGeoLocationPartial::latitude).isLatitude()
+    validate(AdditionalGeoLocationPartial::longitude).isLongitude()
     name?.validate()
 }
 
 fun DisplayTextPartial.validate(): DisplayTextPartial = validate(this) {
-    validate(DisplayTextPartial::language).isValid { it.isValidLanguage() }
-    validate(DisplayTextPartial::text).isValid { it.isValidPrintableAscii(512) }
-    validate(DisplayTextPartial::text).isValid { it.isRawString() }
+    validate(DisplayTextPartial::language).isLanguage()
+    validate(DisplayTextPartial::text)
+        .isPrintableAscii()
+        .hasNoHtml()
+        .hasMaxLengthOf(512)
 }
 
 fun StatusSchedulePartial.validate(): StatusSchedulePartial = validate(this) {
@@ -138,15 +139,15 @@ fun StatusSchedulePartial.validate(): StatusSchedulePartial = validate(this) {
 }
 
 fun EvsePartial.validate(): EvsePartial = validate(this) {
-    validate(EvsePartial::uid).isValid { it.isValidPrintableAscii(39) }
-    validate(EvsePartial::evse_id).isValid { it.isValidEvseId()  }
+    validate(EvsePartial::uid).isPrintableAscii().hasMaxLengthOf(39)
+    validate(EvsePartial::evse_id).isEvseId()
     // status: nothing to validate
     status_schedule?.forEach { it.validate() }
     // capabilities: nothing to validate
     connectors?.forEach { it.validate() }
-    validate(EvsePartial::floor_level).isValid { it.isValidPrintableAscii(4) }
+    validate(EvsePartial::floor_level).isPrintableAscii().hasMaxLengthOf(4)
     coordinates?.validate()
-    validate(EvsePartial::physical_reference).isValid { it.isValidPrintableAscii(16) }
+    validate(EvsePartial::physical_reference).isPrintableAscii().hasMaxLengthOf(16)
     directions?.forEach { it.validate() }
     // parking_restrictions: nothing to validate
     images?.forEach { it.validate() }
@@ -154,14 +155,14 @@ fun EvsePartial.validate(): EvsePartial = validate(this) {
 }
 
 fun ConnectorPartial.validate(): ConnectorPartial = validate(this) {
-    validate(ConnectorPartial::id).isValid { it.isValidPrintableAscii(36) }
+    validate(ConnectorPartial::id).isPrintableAscii().hasMaxLengthOf(36)
     // standard: nothing to validate
     // format: nothing to validate
     // power_type: nothing to validate
     validate(ConnectorPartial::voltage).isGreaterThanOrEqualTo(0)
     validate(ConnectorPartial::amperage).isGreaterThanOrEqualTo(0)
-    validate(ConnectorPartial::tariff_id).isValid { it.isValidPrintableAscii(36) }
-    validate(ConnectorPartial::terms_and_conditions).isValid { it.isValidUrl() }
+    validate(ConnectorPartial::tariff_id).isPrintableAscii().hasMaxLengthOf(36)
+    validate(ConnectorPartial::terms_and_conditions).isUrl()
     // last_updated: nothing to validate
 }
 

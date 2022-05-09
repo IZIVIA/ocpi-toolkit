@@ -1,6 +1,7 @@
 package common
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import ocpi.locations.validation.toReadableString
 import org.apache.logging.log4j.LogManager
 import org.valiktor.ConstraintViolationException
 import transport.domain.HttpException
@@ -50,7 +51,7 @@ data class OcpiResponseBody<T>(
             try {
                 success(data = data())
             } catch (e: ConstraintViolationException) {
-                invalid(message = e.constraintViolations.toString())
+                invalid(message = e.toReadableString())
             }
     }
 }

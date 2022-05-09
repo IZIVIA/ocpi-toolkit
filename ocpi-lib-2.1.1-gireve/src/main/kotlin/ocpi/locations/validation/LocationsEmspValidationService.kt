@@ -1,9 +1,9 @@
 package ocpi.locations.validation
 
 import common.OcpiResponseBody
-import common.validate
-import common.validateLength
-import common.validateToken
+import common.validation.validate
+import common.validation.validateLength
+import common.validation.validateToken
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.locations.LocationsEmspInterface
 import ocpi.locations.domain.*

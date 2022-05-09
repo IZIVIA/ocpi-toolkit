@@ -2,7 +2,7 @@ package ocpi.versions.validation
 
 import common.OcpiResponseBody
 import common.OcpiServerUnsupportedVersionException
-import common.validateToken
+import common.validation.validateToken
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.versions.VersionsInterface
 import ocpi.versions.domain.Version

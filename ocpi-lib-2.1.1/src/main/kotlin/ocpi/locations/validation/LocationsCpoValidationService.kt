@@ -1,6 +1,8 @@
 package ocpi.locations.validation
 
-import common.*
+import common.OcpiResponseBody
+import common.SearchResult
+import common.validation.*
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.locations.LocationsCpoInterface
 import ocpi.locations.domain.Connector
