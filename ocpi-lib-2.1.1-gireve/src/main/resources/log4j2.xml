@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="appName">parties</Property>
+        <Property name="filename">logs/app-${appName}.log</Property>
+        <Property name="pattern">%d [%-6p] %c{2} - %m%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern}"/>
+        </Console>
+        <File name="File" fileName="${filename}">
+            <PatternLayout pattern="${pattern}"/>
+        </File>
+        <Async name="AsyncFile">
+            <AppenderRef ref="File"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+             <AppenderRef ref="Console"/>
+            <AppenderRef ref="AsyncFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
