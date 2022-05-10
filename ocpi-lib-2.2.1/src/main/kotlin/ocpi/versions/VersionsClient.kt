@@ -3,6 +3,7 @@ package ocpi.versions
 import common.OcpiResponseBody
 import common.authenticate
 import common.parseBody
+import common.withDebugHeaders
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.versions.domain.Version
 import ocpi.versions.domain.VersionDetails
@@ -21,11 +22,13 @@ class VersionsClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/"
-                ).authenticate(
-                    platformRepository = platformRepository,
-                    baseUrl = transportClient.baseUrl,
-                    allowTokenA = true
                 )
+                    .withDebugHeaders()
+                    .authenticate(
+                        platformRepository = platformRepository,
+                        baseUrl = transportClient.baseUrl,
+                        allowTokenA = true
+                    )
             )
             .parseBody()
 
@@ -35,11 +38,13 @@ class VersionsClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/$versionNumber"
-                ).authenticate(
-                    platformRepository = platformRepository,
-                    baseUrl = transportClient.baseUrl,
-                    allowTokenA = true
                 )
+                    .withDebugHeaders()
+                    .authenticate(
+                        platformRepository = platformRepository,
+                        baseUrl = transportClient.baseUrl,
+                        allowTokenA = true
+                    )
             )
             .parseBody()
 }

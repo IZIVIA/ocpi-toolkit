@@ -37,7 +37,9 @@ class LocationsEmspClient(
                         "offset" to offset.toString(),
                         limit?.let { "limit" to limit.toString() }
                     ).toMap()
-                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
+                )
+                    .withDebugHeaders()
+                    .authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parsePaginatedBody(offset)
 
@@ -47,7 +49,9 @@ class LocationsEmspClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/locations/$locationId",
-                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
+                )
+                    .withDebugHeaders()
+                    .authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -57,7 +61,9 @@ class LocationsEmspClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/locations/$locationId/$evseUid",
-                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
+                )
+                    .withDebugHeaders()
+                    .authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -71,7 +77,9 @@ class LocationsEmspClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/locations/$locationId/$evseUid/$connectorId",
-                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
+                )
+                    .withDebugHeaders()
+                    .authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 }

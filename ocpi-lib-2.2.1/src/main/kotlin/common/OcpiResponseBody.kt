@@ -112,7 +112,8 @@ fun <T> HttpRequest.httpResponse(fn: () -> OcpiResponseBody<T>): HttpResponse =
                     timestamp = ocpiResponseBody.timestamp
                 )
                 else ocpiResponseBody
-            )
+            ),
+            headers = getDebugHeaders()
         ).let {
             if (isPaginated) it.copy(
                 headers = (ocpiResponseBody as OcpiResponseBody<SearchResult<*>>)

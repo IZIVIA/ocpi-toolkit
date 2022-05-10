@@ -80,6 +80,44 @@ fun HttpRequest.authenticate(
 fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
     copy(headers = headers.plus(authorizationHeader(token = token)))
 
+
+/**
+ * For debugging issues, OCPI implementations are required to include unique IDs via HTTP headers in every
+ * request/response
+ *
+ * - X-Request-ID: Every request SHALL contain a unique request ID, the response to this request SHALL contain the same
+ * ID.
+ * - X-Correlation-ID: Every request/response SHALL contain a unique correlation ID, every response to this request
+ * SHALL contain the same ID.
+ *
+ * This method should be called when doing the first request from a client.
+ *
+ * Dev note: When the server does a request (not a response), it must keep the same X-Correlation-ID but generate a new
+ * X-Request-ID. So don't call this method in that case.
+ */
+fun HttpRequest.withDebugHeaders(): HttpRequest =
+    copy(
+        headers = headers
+            .plus("X-Request-ID" to headers.getOrDefault("X-Request-ID", generateUUIDv4Token()))
+            .plus("X-Correlation-ID" to headers.getOrDefault("X-Correlation-ID", generateUUIDv4Token()))
+    )
+
+/**
+ * For debugging issues, OCPI implementations are required to include unique IDs via HTTP headers in every
+ * request/response
+ *
+ * - X-Request-ID: Every request SHALL contain a unique request ID, the response to this request SHALL contain the same
+ * ID.
+ * - X-Correlation-ID: Every request/response SHALL contain a unique correlation ID, every response to this request
+ * SHALL contain the same ID.
+ *
+ * This method should be called when responding to a request from a client.
+ */
+fun HttpRequest.getDebugHeaders() = listOfNotNull(
+    headers["X-Request-ID"]?.let { "X-Request-ID" to it },
+    headers["X-Correlation-ID"]?.let { "X-Request-ID" to it }
+).toMap()
+
 /**
  * Parses authorization header from the HttpRequest
  *

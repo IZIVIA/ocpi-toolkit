@@ -89,9 +89,9 @@ class CredentialsServerService(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/",
-                    headers = mapOf(authorizationHeader(token = credentials.token))
+                    path = "/"
                 )
+                    .authenticate(token = credentials.token)
             )
             .parseBody<OcpiResponseBody<List<Version>>>()
             .let {
@@ -109,9 +109,9 @@ class CredentialsServerService(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "",
-                    headers = mapOf(authorizationHeader(token = credentials.token))
+                    path = ""
                 )
+                    .authenticate(token = credentials.token)
             )
             .parseBody<OcpiResponseBody<VersionDetails>>()
             .let {
