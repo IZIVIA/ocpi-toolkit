@@ -209,7 +209,7 @@ class LocationsValidatorTest {
         }.isFailure()
 
         expectCatching {
-            validLocation.validate()
+            validGeoLocation.validate()
 
             GeoLocation(
                 "1.123456",
