@@ -1,6 +1,7 @@
 package samples.common
 
 import ocpi.locations.domain.*
+import ocpi.tokens.domain.TokenType
 import java.math.BigDecimal
 import java.time.Instant
 
@@ -58,7 +59,7 @@ val validExceptionalPeriod = ExceptionalPeriod(
 
 val validHours = Hours(
     regular_hours = listOf(validRegularHours),
-    twenty_four_seven = null,
+    twenty_four_seven = false,
     exceptional_openings = listOf(validExceptionalPeriod),
     exceptional_closings = emptyList()
 )
@@ -69,7 +70,7 @@ val validEnergySource = EnergySource(
 )
 
 val validEnvironmentalImpact = EnvironmentalImpact(
-    source = EnvironmentalImpactCategory.CARBON_DIOXIDE,
+    category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
     amount = BigDecimal.ZERO
 )
 
@@ -81,16 +82,29 @@ val validEnergyMix = EnergyMix(
     energy_product_name = "energy_product_name"
 )
 
+val validPublishTokenType = PublishTokenType(
+    uid = "uid",
+    type = TokenType.AD_HOC_USER,
+    visual_number = "visual_number",
+    issuer = "issuer",
+    group_id = "group_id"
+)
+
 val validLocation = Location(
+    country_code = "fr",
+    party_id = "abc",
     id = "location1",
-    type = LocationType.ON_STREET,
+    publish = true,
+    publish_allowed_to = listOf(validPublishTokenType),
     name = "name",
     address = "address",
     city = "city",
     postal_code = "33520",
+    state = null,
     country = "FRA",
     coordinates = validGeoLocation,
     related_locations = listOf(validAdditionalGeoLocation),
+    parking_type = ParkingType.ON_STREET,
     evses = emptyList(),
     directions = listOf(validDisplayText),
     operator = validBusinessDetails,
@@ -126,9 +140,10 @@ val validConnector = Connector(
     standard = ConnectorType.DOMESTIC_A,
     format = ConnectorFormat.CABLE,
     power_type = PowerType.AC_1_PHASE,
-    voltage = 12,
-    amperage = 8,
-    tariff_id = "tariff_id",
+    max_voltage = 12,
+    max_amperage = 8,
+    max_electric_power = null,
+    tariff_ids = listOf("tariff_id"),
     terms_and_conditions = "https://myspecs.com/me",
     last_updated = Instant.now()
 )

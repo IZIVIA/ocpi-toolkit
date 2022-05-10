@@ -1,5 +1,7 @@
 package ocpi.credentials.domain
 
+import common.CiString
+
 /**
  * @property role Type of role
  * @property business_details Details of this party

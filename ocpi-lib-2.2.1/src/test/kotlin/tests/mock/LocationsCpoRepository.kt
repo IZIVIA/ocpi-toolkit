@@ -7,6 +7,7 @@ import io.mockk.slot
 import ocpi.locations.domain.Location
 import ocpi.locations.services.LocationsCpoService
 import java.time.Instant
+import java.util.*
 
 fun locationsCpoService(locations: List<Location>): LocationsCpoService = mockk {
     val locationId = slot<String>()
@@ -36,22 +37,22 @@ fun locationsCpoService(locations: List<Location>): LocationsCpoService = mockk 
     }
 
     every { getLocation(capture(locationId)) } answers {
-        locations.find { it.id == locationId.captured }
+        locations.find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
     }
 
     every { getEvse(capture(locationId), capture(evseUid)) } answers {
         locations
-            .find { it.id == locationId.captured  }
+            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH)  }
             ?.evses
-            ?.find { it.uid == evseUid.captured }
+            ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
     }
 
     every { getConnector(capture(locationId), capture(evseUid), capture(connectorId)) } answers {
         locations
-            .find { it.id == locationId.captured  }
+            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH)  }
             ?.evses
-            ?.find { it.uid == evseUid.captured }
+            ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
             ?.connectors
-            ?.find { it.id == connectorId.captured }
+            ?.find { it.id.lowercase(Locale.ENGLISH) == connectorId.captured.lowercase(Locale.ENGLISH) }
     }
 }

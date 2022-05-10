@@ -14,14 +14,14 @@ import kotlin.collections.List
 public data class BusinessDetailsPartial(
   public val name: String?,
   public val website: String?,
-  public val logo: ImagePartial?,
+  public val logo: Image?,
 )
 
 public fun BusinessDetails.toPartial(): BusinessDetailsPartial {
    return BusinessDetailsPartial(
      name = name,
     website = website,
-    logo = logo?.toPartial()
+    logo = logo
    )
 }
 

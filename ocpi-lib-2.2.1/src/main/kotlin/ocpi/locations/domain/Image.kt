@@ -1,6 +1,7 @@
 package ocpi.locations.domain
 
 import io.github.quatresh.annotations.Partial
+import common.CiString
 
 /**
  * This class references images related to a EVSE in terms of a file name or url. According to the roaming connection
@@ -33,7 +34,7 @@ data class Image(
     val url: String,
     val thumbnail: String?,
     val category: ImageCategory,
-    val type: String,
+    val type: CiString,
     val width: Int?,
     val height: Int?
 )

@@ -2,7 +2,7 @@ package samples.credentials
 
 import ocpi.credentials.CredentialsClient
 import ocpi.credentials.domain.BusinessDetails
-import ocpi.credentials.domain.CiString
+import common.CiString
 import ocpi.credentials.domain.CredentialRole
 import ocpi.credentials.domain.Role
 import ocpi.credentials.repositories.CredentialsRoleRepository
@@ -45,8 +45,8 @@ fun main() {
                 CredentialRole(
                     role = Role.CPO,
                     business_details = BusinessDetails(name = "Sender", website = null, logo = null),
-                    party_id = CiString("ABC"),
-                    country_code = CiString("FR")
+                    party_id = "ABC",
+                    country_code = "FR"
                 )
             )
         },

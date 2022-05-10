@@ -5,6 +5,7 @@ import ocpi.locations.domain.*
 import ocpi.locations.services.LocationsEmspService
 import ocpi.locations.validation.LocationsEmspValidationService
 import samples.common.Http4kTransportServer
+import samples.common.validLocation
 import java.time.Instant
 
 val emspServerUrl = "http://localhost:8081"
@@ -33,29 +34,7 @@ fun main() {
 
 class CacheLocationsEmspService : LocationsEmspService {
     override fun getLocation(countryCode: String, partyId: String, locationId: String): Location? {
-        return Location(
-            id = locationId,
-            type = LocationType.ON_STREET,
-            name = null,
-            address = "1 avenue des satellites",
-            city = "Bruges",
-            postal_code = "33520",
-            country = "FRA",
-            coordinates = GeoLocation(latitude = "-15.234567", longitude = "23.234567"),
-            related_locations = emptyList(),
-            evses = emptyList(),
-            directions = emptyList(),
-            operator = null,
-            suboperator = null,
-            owner = null,
-            facilities = emptyList(),
-            time_zone = null,
-            opening_times = null,
-            charging_when_closed = null,
-            images = emptyList(),
-            energy_mix = null,
-            last_updated = Instant.now()
-        )
+        return validLocation
     }
 
     override fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): Evse? {

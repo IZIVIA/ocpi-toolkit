@@ -13,7 +13,7 @@ import kotlin.collections.List
  */
 public data class HoursPartial(
   public val regular_hours: List<RegularHoursPartial>?,
-  public val twenty_four_seven: Boolean?,
+  public val twenty_four_seven: Boolean,
   public val exceptional_openings: List<ExceptionalPeriodPartial>?,
   public val exceptional_closings: List<ExceptionalPeriodPartial>?,
 )

@@ -3,6 +3,7 @@ package ocpi.locations.validation
 import common.OcpiResponseBody
 import common.validation.validate
 import common.validation.validateLength
+import common.CiString
 import ocpi.locations.LocationsEmspInterface
 import ocpi.locations.domain.*
 import ocpi.locations.services.LocationsEmspService
@@ -12,14 +13,14 @@ class LocationsEmspValidationService(
 ) : LocationsEmspInterface {
 
     override fun getLocation(
-        countryCode: String,
-        partyId: String,
-        locationId: String
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString
     ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 39)
+            validateLength("locationId", locationId, 36)
         }
 
         service
@@ -29,16 +30,16 @@ class LocationsEmspValidationService(
 
 
     override fun getEvse(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString
     ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 39)
-            validateLength("evseUid", evseUid, 39)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
         }
 
         service
@@ -47,17 +48,17 @@ class LocationsEmspValidationService(
     }
 
     override fun getConnector(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
-        connectorId: String
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString
     ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 39)
-            validateLength("evseUid", evseUid, 39)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
             validateLength("connectorId", connectorId, 36)
         }
 
@@ -73,15 +74,15 @@ class LocationsEmspValidationService(
     }
 
     override fun putLocation(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
         location: Location
     ): OcpiResponseBody<Location> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 39)
+            validateLength("locationId", locationId, 36)
             location.validate()
         }
 
@@ -91,17 +92,17 @@ class LocationsEmspValidationService(
     }
 
     override fun putEvse(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
         evse: Evse
     ): OcpiResponseBody<Evse> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 39)
-            validateLength("evseUid", evseUid, 39)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
             evse.validate()
         }
 
@@ -117,18 +118,18 @@ class LocationsEmspValidationService(
     }
 
     override fun putConnector(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
-        connectorId: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString,
         connector: Connector
     ): OcpiResponseBody<Connector> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 39)
-            validateLength("evseUid", evseUid, 39)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
             validateLength("connectorId", connectorId, 36)
             connector.validate()
         }
@@ -146,15 +147,15 @@ class LocationsEmspValidationService(
     }
 
     override fun patchLocation(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
         location: LocationPartial
     ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 39)
+            validateLength("locationId", locationId, 36)
             location.validate()
         }
 
@@ -169,17 +170,17 @@ class LocationsEmspValidationService(
     }
 
     override fun patchEvse(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
         evse: EvsePartial
     ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 39)
-            validateLength("evseUid", evseUid, 39)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
             evse.validate()
         }
 
@@ -195,18 +196,18 @@ class LocationsEmspValidationService(
     }
 
     override fun patchConnector(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
-        connectorId: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString,
         connector: ConnectorPartial
     ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 39)
-            validateLength("evseUid", evseUid, 39)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
             validateLength("connectorId", connectorId, 36)
             connector.validate()
         }

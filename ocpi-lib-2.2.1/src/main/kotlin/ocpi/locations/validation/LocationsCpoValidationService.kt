@@ -6,6 +6,7 @@ import common.validation.validate
 import common.validation.validateDates
 import common.validation.validateInt
 import common.validation.validateLength
+import common.CiString
 import ocpi.locations.LocationsCpoInterface
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
@@ -37,10 +38,10 @@ class LocationsCpoValidationService(
     }
 
     override fun getLocation(
-        locationId: String
+        locationId: CiString
     ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
         validate {
-            validateLength("locationId", locationId, 39)
+            validateLength("locationId", locationId, 36)
         }
 
         service
@@ -49,12 +50,12 @@ class LocationsCpoValidationService(
     }
 
     override fun getEvse(
-        locationId: String,
-        evseUid: String
+        locationId: CiString,
+        evseUid: CiString
     ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
         validate {
-            validateLength("locationId", locationId, 39)
-            validateLength("evseUid", evseUid, 39)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
         }
 
         service
@@ -63,14 +64,14 @@ class LocationsCpoValidationService(
     }
 
     override fun getConnector(
-        locationId: String,
-        evseUid: String,
-        connectorId: String
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString
     ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
         validate {
-            validateLength("locationId", locationId, 39)
-            validateLength("evseUid", evseUid, 39)
-            validateLength("connectorId", connectorId, 39)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
+            validateLength("connectorId", connectorId, 36)
         }
 
         service

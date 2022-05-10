@@ -12,13 +12,13 @@ import kotlin.collections.List
  * Partial representation of [ocpi.locations.domain.EnvironmentalImpact]
  */
 public data class EnvironmentalImpactPartial(
-  public val source: EnvironmentalImpactCategory?,
+  public val category: EnvironmentalImpactCategory?,
   public val amount: BigDecimal?,
 )
 
 public fun EnvironmentalImpact.toPartial(): EnvironmentalImpactPartial {
    return EnvironmentalImpactPartial(
-     source = source,
+     category = category,
     amount = amount
    )
 }

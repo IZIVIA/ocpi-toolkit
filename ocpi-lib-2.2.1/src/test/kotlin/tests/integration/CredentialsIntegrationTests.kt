@@ -8,7 +8,7 @@ import common.OcpiStatus
 import ocpi.credentials.CredentialsClient
 import ocpi.credentials.CredentialsServer
 import ocpi.credentials.domain.BusinessDetails
-import ocpi.credentials.domain.CiString
+import common.CiString
 import ocpi.credentials.domain.CredentialRole
 import ocpi.credentials.domain.Role
 import ocpi.credentials.repositories.CredentialsRoleRepository
@@ -59,8 +59,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                         CredentialRole(
                             role = Role.EMSP,
                             business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
-                            party_id = CiString("DEF"),
-                            country_code = CiString("FR")
+                            party_id = "DEF",
+                            country_code = "FR"
                         )
                     )
                 },
@@ -116,8 +116,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     CredentialRole(
                         role = Role.CPO,
                         business_details = BusinessDetails(name = "Sender", website = null, logo = null),
-                        party_id = CiString("ABC"),
-                        country_code = CiString("FR")
+                        party_id = "ABC",
+                        country_code = "FR"
                     )
                 )
             },

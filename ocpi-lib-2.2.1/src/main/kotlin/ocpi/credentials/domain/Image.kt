@@ -1,5 +1,7 @@
 package ocpi.credentials.domain
 
+import common.CiString
+
 /**
  * This class references an image related to an EVSE in terms of a file name or url. According to the roaming connection
  * between one EVSE Operator and one or more Navigation Service Providers, the hosting or file exchange of image payload

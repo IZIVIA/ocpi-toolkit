@@ -4,7 +4,7 @@ import io.github.quatresh.annotations.Partial
 
 /**
  * Opening and access hours of the location.
- * Either regularHours or twentyFourSeven is set. Both cannot be null and both cannot be set.
+ * Note: regular_hours is required when twentyfourseven=false, this is much less confusing.
  *
  * @property regular_hours Regular hours, weekday based. Should not be set for representing 24/7 as this is the most
  * common case.
@@ -17,7 +17,7 @@ import io.github.quatresh.annotations.Partial
 @Partial
 data class Hours(
     val regular_hours: List<RegularHours>?,
-    val twenty_four_seven: Boolean?,
+    val twenty_four_seven: Boolean,
     val exceptional_openings: List<ExceptionalPeriod>,
     val exceptional_closings: List<ExceptionalPeriod>
 )

@@ -17,7 +17,6 @@ class LocationsCpoValidationServiceTest {
     private lateinit var service: LocationsCpoValidationService
     private val from = Instant.parse("2022-04-28T08:00:00.000Z")
     private val to = Instant.parse("2022-04-28T09:00:00.000Z")
-    private val token = UUID.randomUUID().toString()
 
     @Test
     fun getLocationsParamsValidationTest() {
@@ -149,20 +148,20 @@ class LocationsCpoValidationServiceTest {
             LocationsCpoValidationService(service = locationsCpoService(emptyList()))
 
         val str3chars = "abc"
-        val str39chars = "abababababababababababababababababababa"
-        val str40chars = "abababababababababababababababababababab"
+        val str36chars = "abababababababababababababababababab"
+        val str37chars = "ababababababababababababababababababa"
 
         expectThat(service.getLocation(locationId = str3chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getLocation(locationId = str39chars)) {
+        expectThat(service.getLocation(locationId = str36chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getLocation(locationId = str40chars)) {
+        expectThat(service.getLocation(locationId = str37chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -173,20 +172,20 @@ class LocationsCpoValidationServiceTest {
         service = LocationsCpoValidationService(service = locationsCpoService(emptyList()))
 
         val str3chars = "abc"
-        val str39chars = "abababababababababababababababababababa"
-        val str40chars = "abababababababababababababababababababab"
+        val str36chars = "abababababababababababababababababab"
+        val str37chars = "ababababababababababababababababababa"
 
         expectThat(service.getEvse(locationId = str3chars, evseUid = str3chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getEvse(locationId = str39chars, evseUid = str3chars)) {
+        expectThat(service.getEvse(locationId = str36chars, evseUid = str3chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getEvse(locationId = str40chars, evseUid = str3chars)) {
+        expectThat(service.getEvse(locationId = str37chars, evseUid = str3chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -196,17 +195,17 @@ class LocationsCpoValidationServiceTest {
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getEvse(locationId = str3chars, evseUid = str39chars)) {
+        expectThat(service.getEvse(locationId = str3chars, evseUid = str36chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getEvse(locationId = str3chars, evseUid = str40chars)) {
+        expectThat(service.getEvse(locationId = str3chars, evseUid = str37chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
-        expectThat(service.getEvse(locationId = str40chars, evseUid = str40chars)) {
+        expectThat(service.getEvse(locationId = str37chars, evseUid = str37chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -218,8 +217,8 @@ class LocationsCpoValidationServiceTest {
             LocationsCpoValidationService(service = locationsCpoService(emptyList()))
 
         val str3chars = "abc"
-        val str39chars = "abababababababababababababababababababa"
-        val str40chars = "abababababababababababababababababababab"
+        val str36chars = "abababababababababababababababababab"
+        val str37chars = "ababababababababababababababababababa"
 
         expectThat(
             service.getConnector(
@@ -234,7 +233,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                locationId = str39chars,
+                locationId = str36chars,
                 evseUid = str3chars,
                 connectorId = str3chars
             )
@@ -245,7 +244,7 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                locationId = str40chars,
+                locationId = str37chars,
                 evseUid = str3chars,
                 connectorId = str3chars
             )
@@ -268,7 +267,7 @@ class LocationsCpoValidationServiceTest {
         expectThat(
             service.getConnector(
                 locationId = str3chars,
-                evseUid = str39chars,
+                evseUid = str36chars,
                 connectorId = str3chars
             )
         ) {
@@ -279,7 +278,7 @@ class LocationsCpoValidationServiceTest {
         expectThat(
             service.getConnector(
                 locationId = str3chars,
-                evseUid = str40chars,
+                evseUid = str37chars,
                 connectorId = str3chars
             )
         ) {
@@ -289,8 +288,8 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                locationId = str40chars,
-                evseUid = str40chars,
+                locationId = str37chars,
+                evseUid = str37chars,
                 connectorId = str3chars
             )
         ) {
@@ -302,7 +301,7 @@ class LocationsCpoValidationServiceTest {
             service.getConnector(
                 locationId = str3chars,
                 evseUid = str3chars,
-                connectorId = str40chars
+                connectorId = str37chars
             )
         ) {
             get { status_code }
@@ -311,9 +310,9 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                locationId = str40chars,
-                evseUid = str40chars,
-                connectorId = str40chars
+                locationId = str37chars,
+                evseUid = str37chars,
+                connectorId = str37chars
             )
         ) {
             get { status_code }

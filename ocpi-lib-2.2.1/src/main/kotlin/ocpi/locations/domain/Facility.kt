@@ -47,6 +47,11 @@ enum class Facility {
     MUSEUM,
 
     /**
+     * A bike/e-bike/e-scooter sharing location.
+     */
+    BIKE_SHARING,
+
+    /**
      * A bus stop.
      */
     BUS_STOP,
@@ -57,6 +62,16 @@ enum class Facility {
     TAXI_STAND,
 
     /**
+     * A tram stop/station.
+     */
+    TRAM_STOP,
+
+    /**
+     * A metro station.
+     */
+    METRO_STATION,
+
+    /**
      * A train station.
      */
     TRAIN_STATION,
@@ -65,6 +80,11 @@ enum class Facility {
      * An airport.
      */
     AIRPORT,
+
+    /**
+     * A parking lot.
+     */
+    PARKING_LOT,
 
     /**
      * A carpool parking.

@@ -5,6 +5,7 @@
 //  ----------
 package ocpi.locations.domain
 
+import common.CiString
 import kotlin.Int
 import kotlin.String
 import kotlin.collections.List
@@ -16,7 +17,7 @@ public data class ImagePartial(
   public val url: String?,
   public val thumbnail: String?,
   public val category: ImageCategory?,
-  public val type: String?,
+  public val type: CiString?,
   public val width: Int?,
   public val height: Int?,
 )

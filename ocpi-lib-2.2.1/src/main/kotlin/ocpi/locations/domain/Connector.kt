@@ -1,6 +1,7 @@
 package ocpi.locations.domain
 
 import io.github.quatresh.annotations.Partial
+import common.CiString
 import java.time.Instant
 
 /**
@@ -12,9 +13,15 @@ import java.time.Instant
  * @property standard The standard of the installed connector.
  * @property format The format (socket/cable) of the installed connector.
  * @property power_type
- * @property voltage Voltage of the connector (line to neutral for AC_3_PHASE), in volt V.
- * @property amperage maximum amperage of the connector, in ampere A.
- * @property tariff_id (max-length=36) Identifier of the current charging tariff structure. For a "Free of Charge"
+ * @property max_voltage Maximum voltage of the connector (line to neutral for AC_3_PHASE), in volt V. For example: DC
+ * Chargers might vary the voltage during charging when battery almost full.
+ * @property max_amperage Maximum amperage of the connector, in ampere A.
+ * @property max_electric_power Maximum electric power that can be delivered by this connector, in Watts (W). When the
+ * maximum electric power is lower than the calculated value from voltage and amperage, this value should be set. For
+ * example: A DC Charge Point which can delivers up to 920V and up to 400A can be limited to a maximum of 150kW
+ * (max_electric_power = 150000). Depending on the car, it may supply max voltage or current, but not both at the same
+ * time. For AC Charge Points, the amount of phases used can also have influence on the maximum power.
+ * @property tariff_ids (max-length=36) Identifier of the current charging tariff structure. For a "Free of Charge"
  * tariff this field should be set, and point to a defined "Free of Charge" tariff.
  * @property terms_and_conditions URL (string(255) type following the w3.org spec. to the operator's terms and
  * conditions
@@ -22,13 +29,14 @@ import java.time.Instant
  */
 @Partial
 data class Connector(
-    val id: String,
+    val id: CiString,
     val standard: ConnectorType,
     val format: ConnectorFormat,
     val power_type: PowerType,
-    val voltage: Int,
-    val amperage: Int,
-    val tariff_id: String?,
-    val terms_and_conditions: String,
+    val max_voltage: Int,
+    val max_amperage: Int,
+    val max_electric_power: Int?,
+    val tariff_ids: List<CiString>,
+    val terms_and_conditions: String?,
     val last_updated: Instant
 )

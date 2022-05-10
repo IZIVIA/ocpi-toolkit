@@ -15,15 +15,13 @@ import java.util.*
 class LocationsEmspValidationServiceTest {
     private lateinit var service: LocationsEmspValidationService
 
-    val token = UUID.randomUUID().toString()
-    val str1char = "a"
-    val str2chars = "ab"
-    val str3chars = "abc"
-    val str4chars = "abcd"
-    val str36chars = "abababababababababababababababababab"
-    val str37chars = "ababababababababababababababababababa"
-    val str39chars = "abababababababababababababababababababa"
-    val str40chars = "abababababababababababababababababababab"
+    private val str1char = "a"
+    private val str2chars = "ab"
+    private val str3chars = "abc"
+    private val str4chars = "abcd"
+    private val str36chars = "abababababababababababababababababab"
+    private val str37chars = "ababababababababababababababababababa"
+    private val str40chars = "abababababababababababababababababababab"
 
     @Test
     fun getLocationParamsValidationTest() {
@@ -34,17 +32,17 @@ class LocationsEmspValidationServiceTest {
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getLocation(countryCode = str2chars, partyId = str3chars, locationId = str39chars)) {
+        expectThat(service.getLocation(countryCode = str2chars, partyId = str3chars, locationId = str36chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getLocation(countryCode = str3chars, partyId = str3chars, locationId = str39chars)) {
+        expectThat(service.getLocation(countryCode = str3chars, partyId = str3chars, locationId = str36chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
-        expectThat(service.getLocation(countryCode = str2chars, partyId = str4chars, locationId = str39chars)) {
+        expectThat(service.getLocation(countryCode = str2chars, partyId = str4chars, locationId = str36chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -75,8 +73,8 @@ class LocationsEmspValidationServiceTest {
             service.getEvse(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars
+                locationId = str36chars,
+                evseUid = str36chars
             )
         ) {
             get { status_code }
@@ -87,8 +85,8 @@ class LocationsEmspValidationServiceTest {
             service.getEvse(
                 countryCode = str3chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars
+                locationId = str36chars,
+                evseUid = str36chars
             )
         ) {
             get { status_code }
@@ -99,8 +97,8 @@ class LocationsEmspValidationServiceTest {
             service.getEvse(
                 countryCode = str2chars,
                 partyId = str4chars,
-                locationId = str39chars,
-                evseUid = str39chars
+                locationId = str36chars,
+                evseUid = str36chars
             )
         ) {
             get { status_code }
@@ -112,7 +110,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
-                evseUid = str39chars
+                evseUid = str36chars
             )
         ) {
             get { status_code }
@@ -123,7 +121,7 @@ class LocationsEmspValidationServiceTest {
             service.getEvse(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 evseUid = str40chars
             )
         ) {
@@ -153,8 +151,8 @@ class LocationsEmspValidationServiceTest {
             service.getConnector(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str36chars
             )
         ) {
@@ -166,8 +164,8 @@ class LocationsEmspValidationServiceTest {
             service.getConnector(
                 countryCode = str3chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str36chars
             )
         ) {
@@ -179,8 +177,8 @@ class LocationsEmspValidationServiceTest {
             service.getConnector(
                 countryCode = str2chars,
                 partyId = str4chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str36chars
             )
         ) {
@@ -193,7 +191,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
-                evseUid = str39chars,
+                evseUid = str36chars,
                 connectorId = str36chars
             )
         ) {
@@ -205,7 +203,7 @@ class LocationsEmspValidationServiceTest {
             service.getConnector(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 evseUid = str40chars,
                 connectorId = str36chars
             )
@@ -218,8 +216,8 @@ class LocationsEmspValidationServiceTest {
             service.getConnector(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str37chars
             )
         ) {
@@ -248,7 +246,7 @@ class LocationsEmspValidationServiceTest {
             service.patchLocation(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 location = validLocation.toPartial()
             )
         ) {
@@ -260,7 +258,7 @@ class LocationsEmspValidationServiceTest {
             service.patchLocation(
                 countryCode = str3chars,
                 partyId = str3chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 location = validLocation.toPartial()
             )
         ) {
@@ -272,7 +270,7 @@ class LocationsEmspValidationServiceTest {
             service.patchLocation(
                 countryCode = str2chars,
                 partyId = str4chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 location = validLocation.toPartial()
             )
         ) {
@@ -314,8 +312,8 @@ class LocationsEmspValidationServiceTest {
             service.patchEvse(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 evse = validEvse.toPartial()
             )
         ) {
@@ -327,8 +325,8 @@ class LocationsEmspValidationServiceTest {
             service.patchEvse(
                 countryCode = str3chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 evse = validEvse.toPartial()
             )
         ) {
@@ -340,8 +338,8 @@ class LocationsEmspValidationServiceTest {
             service.patchEvse(
                 countryCode = str2chars,
                 partyId = str4chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 evse = validEvse.toPartial()
             )
         ) {
@@ -354,7 +352,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
-                evseUid = str39chars,
+                evseUid = str36chars,
                 evse = validEvse.toPartial()
             )
         ) {
@@ -366,7 +364,7 @@ class LocationsEmspValidationServiceTest {
             service.patchEvse(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 evseUid = str40chars,
                 evse = validEvse.toPartial()
             )
@@ -398,8 +396,8 @@ class LocationsEmspValidationServiceTest {
             service.patchConnector(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str36chars,
                 connector = validConnector.toPartial()
             )
@@ -412,8 +410,8 @@ class LocationsEmspValidationServiceTest {
             service.patchConnector(
                 countryCode = str3chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str36chars,
                 connector = validConnector.toPartial()
             )
@@ -426,8 +424,8 @@ class LocationsEmspValidationServiceTest {
             service.patchConnector(
                 countryCode = str2chars,
                 partyId = str4chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str36chars,
                 connector = validConnector.toPartial()
             )
@@ -441,7 +439,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
-                evseUid = str39chars,
+                evseUid = str36chars,
                 connectorId = str36chars,
                 connector = validConnector.toPartial()
             )
@@ -454,7 +452,7 @@ class LocationsEmspValidationServiceTest {
             service.patchConnector(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 evseUid = str40chars,
                 connectorId = str36chars,
                 connector = validConnector.toPartial()
@@ -468,8 +466,8 @@ class LocationsEmspValidationServiceTest {
             service.patchConnector(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str37chars,
                 connector = validConnector.toPartial()
             )
@@ -499,7 +497,7 @@ class LocationsEmspValidationServiceTest {
             service.putLocation(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 location = validLocation
             )
         ) {
@@ -511,7 +509,7 @@ class LocationsEmspValidationServiceTest {
             service.putLocation(
                 countryCode = str3chars,
                 partyId = str3chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 location = validLocation
             )
         ) {
@@ -523,7 +521,7 @@ class LocationsEmspValidationServiceTest {
             service.putLocation(
                 countryCode = str2chars,
                 partyId = str4chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 location = validLocation
             )
         ) {
@@ -565,8 +563,8 @@ class LocationsEmspValidationServiceTest {
             service.putEvse(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 evse = validEvse
             )
         ) {
@@ -578,8 +576,8 @@ class LocationsEmspValidationServiceTest {
             service.putEvse(
                 countryCode = str3chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 evse = validEvse
             )
         ) {
@@ -591,8 +589,8 @@ class LocationsEmspValidationServiceTest {
             service.putEvse(
                 countryCode = str2chars,
                 partyId = str4chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 evse = validEvse
             )
         ) {
@@ -605,7 +603,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
-                evseUid = str39chars,
+                evseUid = str36chars,
                 evse = validEvse
             )
         ) {
@@ -617,7 +615,7 @@ class LocationsEmspValidationServiceTest {
             service.putEvse(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 evseUid = str40chars,
                 evse = validEvse
             )
@@ -649,8 +647,8 @@ class LocationsEmspValidationServiceTest {
             service.putConnector(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str36chars,
                 connector = validConnector
             )
@@ -663,8 +661,8 @@ class LocationsEmspValidationServiceTest {
             service.putConnector(
                 countryCode = str3chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str36chars,
                 connector = validConnector
             )
@@ -677,8 +675,8 @@ class LocationsEmspValidationServiceTest {
             service.putConnector(
                 countryCode = str2chars,
                 partyId = str4chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str36chars,
                 connector = validConnector
             )
@@ -692,7 +690,7 @@ class LocationsEmspValidationServiceTest {
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
-                evseUid = str39chars,
+                evseUid = str36chars,
                 connectorId = str36chars,
                 connector = validConnector
             )
@@ -705,7 +703,7 @@ class LocationsEmspValidationServiceTest {
             service.putConnector(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
+                locationId = str36chars,
                 evseUid = str40chars,
                 connectorId = str36chars,
                 connector = validConnector
@@ -719,8 +717,8 @@ class LocationsEmspValidationServiceTest {
             service.putConnector(
                 countryCode = str2chars,
                 partyId = str3chars,
-                locationId = str39chars,
-                evseUid = str39chars,
+                locationId = str36chars,
+                evseUid = str36chars,
                 connectorId = str37chars,
                 connector = validConnector
             )

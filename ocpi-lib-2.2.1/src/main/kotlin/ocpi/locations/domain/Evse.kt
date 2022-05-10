@@ -1,6 +1,7 @@
 package ocpi.locations.domain
 
 import io.github.quatresh.annotations.Partial
+import common.CiString
 import java.time.Instant
 
 /**
@@ -13,7 +14,7 @@ import java.time.Instant
  * An EVSE object has a list of connectors which can not be used simultaneously: only one connector per EVSE can be used
  * at the time.
  *
- * @property uid (max-length=39) Uniquely identifies the EVSE within the CPOs platform (and suboperator platforms). For
+ * @property uid (max-length=36) Uniquely identifies the EVSE within the CPOs platform (and suboperator platforms). For
  * example a database unique ID or the "EVSE ID". This field can never be changed, modified or renamed. This is the
  * 'technical' identification of the EVSE, not to be used as 'human readable' identification, use the field: evse_id for
  * that.
@@ -39,8 +40,8 @@ import java.time.Instant
  */
 @Partial
 data class Evse(
-    val uid: String,
-    val evse_id: String,
+    val uid: CiString,
+    val evse_id: CiString,
     val status: Status,
     val status_schedule: List<StatusSchedule>,
     val capabilities: List<Capability>,

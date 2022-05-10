@@ -26,7 +26,7 @@ class LocationsValidatorTest {
         }.isSuccess()
 
         expectCatching {
-            validLocation.copy(id = generateRandomString(40)).validate()
+            validLocation.copy(id = generateRandomString(37)).validate()
         }.isFailure()
 
         expectCatching {
@@ -125,8 +125,8 @@ class LocationsValidatorTest {
     fun `Connector validator`() {
         expectCatching {
             validConnector.validate()
-            validConnector.copy(voltage = 0).validate()
-            validConnector.copy(amperage = 0).validate()
+            validConnector.copy(max_voltage = 0).validate()
+            validConnector.copy(max_amperage = 0).validate()
         }.isSuccess()
 
         expectCatching {
@@ -134,15 +134,15 @@ class LocationsValidatorTest {
         }.isFailure()
 
         expectCatching {
-            validConnector.copy(voltage = -1).validate()
+            validConnector.copy(max_voltage = -1).validate()
         }.isFailure()
 
         expectCatching {
-            validConnector.copy(amperage = -1).validate()
+            validConnector.copy(max_amperage = -1).validate()
         }.isFailure()
 
         expectCatching {
-            validConnector.copy(tariff_id = generateRandomString(37)).validate()
+            validConnector.copy(tariff_ids = listOf(generateRandomString(37))).validate()
         }.isFailure()
 
         expectCatching {
@@ -242,36 +242,36 @@ class LocationsValidatorTest {
     fun `EnvironmentalImpact validator`() {
         expectCatching {
             EnvironmentalImpact(
-                source = EnvironmentalImpactCategory.CARBON_DIOXIDE,
+                category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
                 amount = BigDecimal(0.0)
             ).validate()
 
             EnvironmentalImpact(
-                source = EnvironmentalImpactCategory.CARBON_DIOXIDE,
+                category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
                 amount = BigDecimal(1.0)
             ).validate()
 
             EnvironmentalImpact(
-                source = EnvironmentalImpactCategory.CARBON_DIOXIDE,
+                category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
                 amount = BigDecimal(12.0)
             ).validate()
 
             EnvironmentalImpact(
-                source = EnvironmentalImpactCategory.CARBON_DIOXIDE,
+                category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
                 amount = BigDecimal(12.1234)
             ).validate()
         }.isSuccess()
 
         expectCatching {
             EnvironmentalImpact(
-                source = EnvironmentalImpactCategory.CARBON_DIOXIDE,
+                category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
                 amount = BigDecimal(-0.1)
             ).validate()
         }.isFailure()
 
         expectCatching {
             EnvironmentalImpact(
-                source = EnvironmentalImpactCategory.CARBON_DIOXIDE,
+                category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
                 amount = BigDecimal(-10)
             ).validate()
         }.isFailure()
@@ -435,13 +435,6 @@ class LocationsValidatorTest {
         }.isSuccess()
 
         expectCatching {
-            validHours.toPartial().validate()
-
-            // This fails when not partial, but does not when partial
-            validHours.toPartial().copy(regular_hours = null, twenty_four_seven = null).validate()
-        }.isSuccess()
-
-        expectCatching {
             validHours.copy(
                 regular_hours = listOf(validRegularHours),
                 twenty_four_seven = true
@@ -458,7 +451,7 @@ class LocationsValidatorTest {
         expectCatching {
             validHours.copy(
                 regular_hours = null,
-                twenty_four_seven = null
+                twenty_four_seven = false
             ).validate()
         }.isFailure()
     }

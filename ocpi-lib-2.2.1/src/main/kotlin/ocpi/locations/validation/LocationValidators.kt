@@ -4,22 +4,26 @@ import common.validation.*
 import ocpi.locations.domain.*
 import org.valiktor.DefaultConstraintViolation
 import org.valiktor.constraints.Greater
-import org.valiktor.constraints.NotNull
-import org.valiktor.constraints.Null
 import org.valiktor.functions.isGreaterThanOrEqualTo
 import org.valiktor.functions.isLessThanOrEqualTo
 import org.valiktor.validate
 import java.math.BigDecimal
 
 fun LocationPartial.validate(): LocationPartial = validate(this) {
-    validate(LocationPartial::id).isPrintableAscii().hasMaxLengthOf(39)
-    validate(LocationPartial::name).isPrintableAscii().hasMaxLengthOf(255)
-    validate(LocationPartial::address).isPrintableAscii().hasMaxLengthOf(45)
-    validate(LocationPartial::city).isPrintableAscii().hasMaxLengthOf(45)
-    validate(LocationPartial::postal_code).isPrintableAscii().hasMaxLengthOf(10)
-    validate(LocationPartial::country).isCountryCode()
+    validate(LocationPartial::country_code).isCountryCode(caseSensitive = false, alpha2 = true)
+    validate(LocationPartial::party_id).isPrintableAscii().hasMaxLengthOf(3)
+    validate(LocationPartial::id).isPrintableAscii().hasMaxLengthOf(36)
+    // publish: nothing to validate
+    // publish_allowed_to: nothing to validate
+    validate(LocationPartial::name).isPrintableUtf8().hasMaxLengthOf(255)
+    validate(LocationPartial::address).isPrintableUtf8().hasMaxLengthOf(45)
+    validate(LocationPartial::city).isPrintableUtf8().hasMaxLengthOf(45)
+    validate(LocationPartial::postal_code).isPrintableUtf8().hasMaxLengthOf(10)
+    validate(LocationPartial::state).isPrintableUtf8().hasMaxLengthOf(20)
+    validate(LocationPartial::country).isCountryCode(caseSensitive = true, alpha2 = false)
     coordinates?.validate()
     related_locations?.forEach { it.validate() }
+    // parking_type: nothing to validate
     evses?.forEach { it.validate() }
     directions?.forEach { it.validate() }
     operator?.validate()
@@ -51,8 +55,8 @@ fun EnergyMixPartial.validate(): EnergyMixPartial = validate(this) {
     // is_green_energy: nothing to validate
     energy_sources?.forEach { it.validate() }
     environ_impact?.forEach { it.validate() }
-    validate(EnergyMixPartial::supplier_name).isPrintableAscii().hasMaxLengthOf(64)
-    validate(EnergyMixPartial::energy_product_name).isPrintableAscii().hasMaxLengthOf(64)
+    validate(EnergyMixPartial::supplier_name).isPrintableUtf8().hasMaxLengthOf(64)
+    validate(EnergyMixPartial::energy_product_name).isPrintableUtf8().hasMaxLengthOf(64)
 }
 
 fun ExceptionalPeriodPartial.validate(): ExceptionalPeriodPartial = validate(this) {
@@ -84,11 +88,18 @@ fun RegularHoursPartial.validate(): RegularHoursPartial = validate(this) { regul
 }
 
 fun HoursPartial.validate(): HoursPartial = validate(this) { hours ->
-    if (hours.regular_hours != null && hours.twenty_four_seven != null) {
+    if (hours.regular_hours == null && !hours.twenty_four_seven) {
         constraintViolations.add(
             DefaultConstraintViolation(
-                property = "regular_hours and twenty_four_seven are both set (only one must be set)",
-                constraint = NotNull
+                property = "regular_hours is not set whereas twenty_four_seven is false",
+                constraint = RegularHoursSetWhenNotTwentyFourSevenConstraint()
+            )
+        )
+    } else if (hours.regular_hours != null && hours.twenty_four_seven) {
+        constraintViolations.add(
+            DefaultConstraintViolation(
+                property = "twenty_four_seven is set to true whereas regular_hours are set",
+                constraint = RegularHoursSetAtTheSameTimeAsTwentyFourSevenConstraint()
             )
         )
     }
@@ -109,7 +120,7 @@ fun ImagePartial.validate(): ImagePartial = validate(this) {
 }
 
 fun BusinessDetailsPartial.validate(): BusinessDetailsPartial = validate(this) {
-    validate(BusinessDetailsPartial::name).isPrintableAscii().hasMaxLengthOf(100)
+    validate(BusinessDetailsPartial::name).isPrintableUtf8().hasMaxLengthOf(100)
     validate(BusinessDetailsPartial::website).isUrl()
     logo?.validate()
 }
@@ -128,7 +139,7 @@ fun AdditionalGeoLocationPartial.validate(): AdditionalGeoLocationPartial = vali
 fun DisplayTextPartial.validate(): DisplayTextPartial = validate(this) {
     validate(DisplayTextPartial::language).isLanguage()
     validate(DisplayTextPartial::text)
-        .isPrintableAscii()
+        .isPrintableUtf8()
         .hasNoHtml()
         .hasMaxLengthOf(512)
 }
@@ -146,9 +157,9 @@ fun EvsePartial.validate(): EvsePartial = validate(this) {
     status_schedule?.forEach { it.validate() }
     // capabilities: nothing to validate
     connectors?.forEach { it.validate() }
-    validate(EvsePartial::floor_level).isPrintableAscii().hasMaxLengthOf(4)
+    validate(EvsePartial::floor_level).isPrintableUtf8().hasMaxLengthOf(4)
     coordinates?.validate()
-    validate(EvsePartial::physical_reference).isPrintableAscii().hasMaxLengthOf(16)
+    validate(EvsePartial::physical_reference).isPrintableUtf8().hasMaxLengthOf(16)
     directions?.forEach { it.validate() }
     // parking_restrictions: nothing to validate
     images?.forEach { it.validate() }
@@ -160,9 +171,27 @@ fun ConnectorPartial.validate(): ConnectorPartial = validate(this) {
     // standard: nothing to validate
     // format: nothing to validate
     // power_type: nothing to validate
-    validate(ConnectorPartial::voltage).isGreaterThanOrEqualTo(0)
-    validate(ConnectorPartial::amperage).isGreaterThanOrEqualTo(0)
-    validate(ConnectorPartial::tariff_id).isPrintableAscii().hasMaxLengthOf(36)
+    validate(ConnectorPartial::max_voltage).isGreaterThanOrEqualTo(0)
+    validate(ConnectorPartial::max_amperage).isGreaterThanOrEqualTo(0)
+    validate(ConnectorPartial::max_voltage).isGreaterThanOrEqualTo(0)
+    tariff_ids?.forEach { tariffId ->
+        if (tariffId.length > 36) {
+            constraintViolations.add(
+                DefaultConstraintViolation(
+                    property = "tariff_ids",
+                    constraint = MaxLengthContraint(36)
+                )
+            )
+        }
+        if (!tariffId.isPrintableAscii()) {
+            constraintViolations.add(
+                DefaultConstraintViolation(
+                    property = "tariff_ids",
+                    constraint = PrintableAsciiConstraint()
+                )
+            )
+        }
+    }
     validate(ConnectorPartial::terms_and_conditions).isUrl()
     // last_updated: nothing to validate
 }
@@ -186,15 +215,6 @@ fun RegularHours.validate(): RegularHours = validate(this) {
     toPartial().validate()
 }
 fun Hours.validate(): Hours = validate(this) { hours ->
-     if (hours.regular_hours == null && hours.twenty_four_seven == null) {
-        constraintViolations.add(
-            DefaultConstraintViolation(
-                property = "regular_hours or twenty_four_seven must be set (both are null)",
-                constraint = Null
-            )
-        )
-    }
-
     toPartial().validate()
 }
 fun Image.validate(): Image = validate(this) {

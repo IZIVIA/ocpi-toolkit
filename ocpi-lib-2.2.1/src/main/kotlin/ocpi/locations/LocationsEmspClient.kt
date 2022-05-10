@@ -1,6 +1,7 @@
 package ocpi.locations
 
 import common.*
+import common.CiString
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
@@ -41,7 +42,7 @@ class LocationsEmspClient(
             )
             .parsePaginatedBody(offset)
 
-    override fun getLocation(locationId: String): OcpiResponseBody<Location?> =
+    override fun getLocation(locationId: CiString): OcpiResponseBody<Location?> =
         transportClient
             .send(
                 HttpRequest(
@@ -52,7 +53,7 @@ class LocationsEmspClient(
             )
             .parseBody()
 
-    override fun getEvse(locationId: String, evseUid: String): OcpiResponseBody<Evse?> =
+    override fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?> =
         transportClient
             .send(
                 HttpRequest(
@@ -64,9 +65,9 @@ class LocationsEmspClient(
             .parseBody()
 
     override fun getConnector(
-        locationId: String,
-        evseUid: String,
-        connectorId: String
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString
     ): OcpiResponseBody<Connector?> =
         transportClient
             .send(

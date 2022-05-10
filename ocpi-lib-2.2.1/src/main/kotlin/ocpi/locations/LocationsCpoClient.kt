@@ -1,9 +1,6 @@
 package ocpi.locations
 
-import common.OcpiResponseBody
-import common.buildAuthorizationHeader
-import common.mapper
-import common.parseBody
+import common.*
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.locations.domain.*
 import transport.TransportClient
@@ -20,9 +17,9 @@ class LocationsCpoClient(
 ) : LocationsEmspInterface {
 
     override fun getLocation(
-        countryCode: String,
-        partyId: String,
-        locationId: String
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString
     ): OcpiResponseBody<Location?> =
         transportClient
             .send(
@@ -35,10 +32,10 @@ class LocationsCpoClient(
             .parseBody()
 
     override fun getEvse(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString
     ): OcpiResponseBody<Evse?> =
         transportClient
             .send(
@@ -51,11 +48,11 @@ class LocationsCpoClient(
             .parseBody()
 
     override fun getConnector(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
-        connectorId: String
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString
     ): OcpiResponseBody<Connector?> =
         transportClient
             .send(
@@ -68,9 +65,9 @@ class LocationsCpoClient(
             .parseBody()
 
     override fun putLocation(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
         location: Location
     ): OcpiResponseBody<Location> =
         transportClient
@@ -85,10 +82,10 @@ class LocationsCpoClient(
             .parseBody()
 
     override fun putEvse(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
         evse: Evse
     ): OcpiResponseBody<Evse> =
         transportClient
@@ -103,11 +100,11 @@ class LocationsCpoClient(
             .parseBody()
 
     override fun putConnector(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
-        connectorId: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString,
         connector: Connector
     ): OcpiResponseBody<Connector> =
         transportClient
@@ -122,9 +119,9 @@ class LocationsCpoClient(
             .parseBody()
 
     override fun patchLocation(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
         location: LocationPartial
     ): OcpiResponseBody<Location?> = transportClient
         .send(
@@ -138,10 +135,10 @@ class LocationsCpoClient(
         .parseBody()
 
     override fun patchEvse(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
         evse: EvsePartial
     ): OcpiResponseBody<Evse?> = transportClient
         .send(
@@ -155,11 +152,11 @@ class LocationsCpoClient(
         .parseBody()
 
     override fun patchConnector(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
-        connectorId: String,
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString,
         connector: ConnectorPartial
     ): OcpiResponseBody<Connector?> = transportClient
         .send(

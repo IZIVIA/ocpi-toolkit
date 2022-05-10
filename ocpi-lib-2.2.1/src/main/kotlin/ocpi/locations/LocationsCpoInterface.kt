@@ -2,6 +2,7 @@ package ocpi.locations
 
 import common.OcpiResponseBody
 import common.SearchResult
+import common.CiString
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
@@ -42,24 +43,24 @@ interface LocationsCpoInterface {
     ): OcpiResponseBody<SearchResult<Location>>
 
     /**
-     * @param locationId String max-length = 39
+     * @param locationId String max-length = 36
      */
-    fun getLocation(locationId: String): OcpiResponseBody<Location?>
+    fun getLocation(locationId: CiString): OcpiResponseBody<Location?>
 
     /**
-     * @param locationId String max-length = 39
-     * @param evseUid String? max-length = 39
+     * @param locationId String max-length = 36
+     * @param evseUid String? max-length = 36
      */
-    fun getEvse(locationId: String, evseUid: String): OcpiResponseBody<Evse?>
+    fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?>
 
     /**
-     * @param locationId String max-length = 39
-     * @param evseUid max-length = 39
-     * @param connectorId max-length = 39
+     * @param locationId String max-length = 36
+     * @param evseUid max-length = 36
+     * @param connectorId max-length = 36
      */
     fun getConnector(
-        locationId: String,
-        evseUid: String,
-        connectorId: String
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString
     ): OcpiResponseBody<Connector?>
 }

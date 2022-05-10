@@ -7,9 +7,9 @@ import io.github.quatresh.annotations.Partial
  * is WGS 84.
  *
  * @property latitude String (max-length=10) Latitude of the point in decimal degree. Example: 50.770774. Decimal
- * separator: "." Regex: -?[0-9]{1,2}\.[0-9]{6}
+ * separator: "." Regex: -?[0-9]{1,2}\.[0-9]{5,7}
  * @property longitude String (max-length=11) Longitude of the point in decimal degree. Example: -126.104965. Decimal
- * separator: "." Regex: -?[0-9]{1,3}\.[0-9]{6}
+ * separator: "." Regex: -?[0-9]{1,3}\.[0-9]{5,7}
  * @property name DisplayText? Name of the point in local language or as written at the location. For example the street
  * name of a parking lot entrance, or its number.
  */

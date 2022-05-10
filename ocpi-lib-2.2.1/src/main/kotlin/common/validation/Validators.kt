@@ -1,5 +1,6 @@
 package common.validation
 
+import common.CiString
 import org.valiktor.Constraint
 import org.valiktor.ConstraintViolationException
 import org.valiktor.Validator
@@ -12,6 +13,7 @@ fun ConstraintViolationException.toReadableString(): String = constraintViolatio
     .joinToString(",") { "${it.property}: ${it.message}" }
 
 class PrintableAsciiConstraint : Constraint
+class PrintableUtf8Constraint : Constraint
 class MaxLengthContraint(val length: Int) : Constraint
 class CountryCodeConstraint : Constraint
 class UrlConstraint : Constraint
@@ -22,15 +24,27 @@ class LanguageConstraint : Constraint
 class TimeConstraint : Constraint
 class EvseIdConstraint : Constraint
 class NoHtmlConstraint : Constraint
+class RegularHoursSetWhenNotTwentyFourSevenConstraint : Constraint
+class RegularHoursSetAtTheSameTimeAsTwentyFourSevenConstraint : Constraint
+
+fun String.isPrintableAscii(): Boolean = matches("[\\x20-\\x7E]*".toRegex())
+fun String.isPrintableUtf8(): Boolean = matches("[\\x20-\\x7E]*".toRegex())
 
 /**
  * Valid if the given string only has printable ASCII characters and is smaller or has the same length as the given one.
  */
-fun <E> Validator<E>.Property<String?>.isPrintableAscii() =
-    this.validate(PrintableAsciiConstraint()) {
-        it == null || it.matches("[\\x20-\\x7E]*".toRegex())
+fun <E> Validator<E>.Property<String?>.isPrintableUtf8() =
+    this.validate(PrintableUtf8Constraint()) {
+        it == null || it.isPrintableUtf8()
     }
 
+/**
+ * Valid if the given string only has printable UTF-8 characters and is smaller or has the same length as the given one.
+ */
+fun <E> Validator<E>.Property<String?>.isPrintableAscii() =
+    this.validate(PrintableAsciiConstraint()) {
+        it == null || it.isPrintableAscii()
+    }
 
 fun <E> Validator<E>.Property<String?>.hasNoHtml() =
     this.validate(NoHtmlConstraint()) {
@@ -44,11 +58,15 @@ fun <E> Validator<E>.Property<String?>.hasMaxLengthOf(length: Int) =
     this.validate(MaxLengthContraint(length)) { it == null || it.length <= length }
 
 /**
- * Valid if the string correspond is a ISO 3166-1 alpha-3 code
+ * Valid if the string correspond is a ISO 3166-1 alpha-2 or alpha-3 code
  */
-fun <E> Validator<E>.Property<String?>.isCountryCode() =
+fun <E> Validator<E>.Property<String?>.isCountryCode(caseSensitive: Boolean, alpha2: Boolean) =
     this.validate(CountryCodeConstraint()) {
-        it == null || Locale.getISOCountries(Locale.IsoCountryCode.PART1_ALPHA3).contains(it)
+        it == null || Locale
+            .getISOCountries(if (alpha2) Locale.IsoCountryCode.PART1_ALPHA2 else Locale.IsoCountryCode.PART1_ALPHA3)
+            .contains(
+                if (caseSensitive) it else it.uppercase(Locale.ENGLISH)
+            )
     }
 
 /**
@@ -74,7 +92,7 @@ fun <E> Validator<E>.Property<String?>.isTimeZone() =
  */
 fun <E> Validator<E>.Property<String?>.isLatitude() =
     this.validate(LatitudeConstraint()) {
-        it == null || it.matches("-?\\d{1,2}\\.\\d{6}".toRegex())
+        it == null || it.matches("-?\\d{1,2}\\.\\d{5,7}".toRegex())
     }
 
 /**
@@ -82,7 +100,7 @@ fun <E> Validator<E>.Property<String?>.isLatitude() =
  */
 fun <E> Validator<E>.Property<String?>.isLongitude() =
     this.validate(LongitudeConstraint()) {
-        it == null || it.matches("-?\\d{1,3}\\.\\d{6}".toRegex())
+        it == null || it.matches("-?\\d{1,3}\\.\\d{5,7}".toRegex())
     }
 
 /**
@@ -125,7 +143,7 @@ fun <E> Validator<E>.Property<String?>.isTime() =
  * say one of its EVSEs.NOTE: In contrast to the eMA ID, no check digit is specified for the EVSE ID in this document.
  * Alpha characters SHALL be interpreted case insensitively.
  */
-fun <E> Validator<E>.Property<String?>.isEvseId() =
+fun <E> Validator<E>.Property<CiString?>.isEvseId() =
     this.validate(EvseIdConstraint()) {
         it == null || it.matches("(?i)[a-z]{2}\\*?[a-z\\d]{3}\\*?E[a-z\\d*]{1,31}".toRegex())
     }
