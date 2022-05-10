@@ -21,8 +21,8 @@ import io.github.quatresh.annotations.Partial
 @Partial
 data class EnergyMix(
     val is_green_energy: Boolean,
-    val energy_sources: List<EnergySource>,
-    val environ_impact: List<EnvironmentalImpact>,
+    val energy_sources: List<EnergySource>?,
+    val environ_impact: List<EnvironmentalImpact>?,
     val supplier_name: String?,
     val energy_product_name: String?
 )

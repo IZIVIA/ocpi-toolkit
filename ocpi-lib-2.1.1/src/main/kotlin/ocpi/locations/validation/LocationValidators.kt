@@ -7,6 +7,7 @@ import org.valiktor.constraints.NotNull
 import org.valiktor.constraints.Null
 import org.valiktor.functions.isGreaterThanOrEqualTo
 import org.valiktor.functions.isLessThanOrEqualTo
+import org.valiktor.functions.isNotEmpty
 import org.valiktor.validate
 import java.math.BigDecimal
 
@@ -144,6 +145,7 @@ fun EvsePartial.validate(): EvsePartial = validate(this) {
     // status: nothing to validate
     status_schedule?.forEach { it.validate() }
     // capabilities: nothing to validate
+    validate(EvsePartial::connectors).isNotEmpty()
     connectors?.forEach { it.validate() }
     validate(EvsePartial::floor_level).isPrintableAscii().hasMaxLengthOf(4)
     coordinates?.validate()

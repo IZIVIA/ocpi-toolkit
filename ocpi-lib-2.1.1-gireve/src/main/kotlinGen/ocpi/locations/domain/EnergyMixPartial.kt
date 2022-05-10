@@ -14,8 +14,8 @@ import kotlin.collections.List
  */
 public data class EnergyMixPartial(
   public val is_green_energy: Boolean?,
-  public val energy_sources: List<EnergySourcePartial>?,
-  public val environ_impact: List<EnvironmentalImpactPartial>?,
+  public val energy_sources: List<EnergySource>?,
+  public val environ_impact: List<EnvironmentalImpact>?,
   public val supplier_name: String?,
   public val energy_product_name: String?,
 )
@@ -23,8 +23,8 @@ public data class EnergyMixPartial(
 public fun EnergyMix.toPartial(): EnergyMixPartial {
    return EnergyMixPartial(
      is_green_energy = is_green_energy,
-    energy_sources = energy_sources.toPartial(),
-    environ_impact = environ_impact.toPartial(),
+    energy_sources = energy_sources,
+    environ_impact = environ_impact,
     supplier_name = supplier_name,
     energy_product_name = energy_product_name
    )

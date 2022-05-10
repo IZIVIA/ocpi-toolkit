@@ -6,6 +6,7 @@ import org.valiktor.DefaultConstraintViolation
 import org.valiktor.constraints.Greater
 import org.valiktor.functions.isGreaterThanOrEqualTo
 import org.valiktor.functions.isLessThanOrEqualTo
+import org.valiktor.functions.isNotEmpty
 import org.valiktor.validate
 import java.math.BigDecimal
 
@@ -88,14 +89,14 @@ fun RegularHoursPartial.validate(): RegularHoursPartial = validate(this) { regul
 }
 
 fun HoursPartial.validate(): HoursPartial = validate(this) { hours ->
-    if (hours.regular_hours == null && !hours.twenty_four_seven) {
+    if (hours.regular_hours == null && hours.twenty_four_seven == false) {
         constraintViolations.add(
             DefaultConstraintViolation(
                 property = "regular_hours is not set whereas twenty_four_seven is false",
                 constraint = RegularHoursSetWhenNotTwentyFourSevenConstraint()
             )
         )
-    } else if (hours.regular_hours != null && hours.twenty_four_seven) {
+    } else if (hours.regular_hours != null && hours.twenty_four_seven == true) {
         constraintViolations.add(
             DefaultConstraintViolation(
                 property = "twenty_four_seven is set to true whereas regular_hours are set",
@@ -156,6 +157,7 @@ fun EvsePartial.validate(): EvsePartial = validate(this) {
     // status: nothing to validate
     status_schedule?.forEach { it.validate() }
     // capabilities: nothing to validate
+    validate(EvsePartial::connectors).isNotEmpty()
     connectors?.forEach { it.validate() }
     validate(EvsePartial::floor_level).isPrintableUtf8().hasMaxLengthOf(4)
     coordinates?.validate()

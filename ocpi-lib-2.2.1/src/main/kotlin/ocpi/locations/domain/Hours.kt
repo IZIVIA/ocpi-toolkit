@@ -18,6 +18,6 @@ import io.github.quatresh.annotations.Partial
 data class Hours(
     val regular_hours: List<RegularHours>?,
     val twenty_four_seven: Boolean,
-    val exceptional_openings: List<ExceptionalPeriod>,
-    val exceptional_closings: List<ExceptionalPeriod>
+    val exceptional_openings: List<ExceptionalPeriod>?,
+    val exceptional_closings: List<ExceptionalPeriod>?
 )

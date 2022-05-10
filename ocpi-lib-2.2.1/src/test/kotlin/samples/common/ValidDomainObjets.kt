@@ -119,22 +119,6 @@ val validLocation = Location(
     last_updated = Instant.now()
 )
 
-val validEvse = Evse(
-    uid = "uid",
-    evse_id = "FR*A23*E45B*78C",
-    status = Status.AVAILABLE,
-    status_schedule = listOf(validStatusSchedule),
-    capabilities = listOf(Capability.CHARGING_PROFILE_CAPABLE),
-    connectors = emptyList(),
-    floor_level = "5",
-    coordinates = validGeoLocation,
-    physical_reference = "visualid1",
-    directions = listOf(validDisplayText),
-    parking_restrictions = listOf(ParkingRestriction.CUSTOMERS),
-    images = listOf(validImage),
-    last_updated = Instant.now()
-)
-
 val validConnector = Connector(
     id = "id",
     standard = ConnectorType.DOMESTIC_A,
@@ -145,5 +129,21 @@ val validConnector = Connector(
     max_electric_power = null,
     tariff_ids = listOf("tariff_id"),
     terms_and_conditions = "https://myspecs.com/me",
+    last_updated = Instant.now()
+)
+
+val validEvse = Evse(
+    uid = "uid",
+    evse_id = "FR*A23*E45B*78C",
+    status = Status.AVAILABLE,
+    status_schedule = listOf(validStatusSchedule),
+    capabilities = listOf(Capability.CHARGING_PROFILE_CAPABLE),
+    connectors = listOf(validConnector),
+    floor_level = "5",
+    coordinates = validGeoLocation,
+    physical_reference = "visualid1",
+    directions = listOf(validDisplayText),
+    parking_restrictions = listOf(ParkingRestriction.CUSTOMERS),
+    images = listOf(validImage),
     last_updated = Instant.now()
 )

@@ -36,7 +36,7 @@ data class Connector(
     val max_voltage: Int,
     val max_amperage: Int,
     val max_electric_power: Int?,
-    val tariff_ids: List<CiString>,
+    val tariff_ids: List<CiString>?,
     val terms_and_conditions: String?,
     val last_updated: Instant
 )

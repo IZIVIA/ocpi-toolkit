@@ -25,7 +25,7 @@ public data class EvsePartial(
   public val physical_reference: String?,
   public val directions: List<DisplayText>?,
   public val parking_restrictions: List<ParkingRestriction>?,
-  public val images: List<ImagePartial>?,
+  public val images: List<Image>?,
   public val last_updated: Instant?,
 )
 
@@ -42,7 +42,7 @@ public fun Evse.toPartial(): EvsePartial {
     physical_reference = physical_reference,
     directions = directions,
     parking_restrictions = parking_restrictions,
-    images = images.toPartial(),
+    images = images,
     last_updated = last_updated
    )
 }
