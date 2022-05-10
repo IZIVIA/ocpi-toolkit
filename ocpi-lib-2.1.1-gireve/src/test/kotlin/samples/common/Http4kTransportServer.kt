@@ -49,7 +49,9 @@ class Http4kTransportServer(
                         path = route,
                         pathParams = pathParams.associateWith { param -> req.path(param)!! },
                         queryParams = queryParams.associateWith { param -> req.query(param) },
-                        headers = req.headers.filter { it.second != null }.toMap() as Map<String, String>,
+                        headers = req.headers
+                            .filter { (_, value) -> value != null }
+                            .associate { (key, value) -> key to value!! },
                         body = req.bodyString()
                     )
                         .also { httpRequest -> filters.forEach { filter -> filter(httpRequest) } }
