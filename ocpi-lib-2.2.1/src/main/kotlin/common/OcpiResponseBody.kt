@@ -1,6 +1,7 @@
 package common
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import common.validation.toReadableString
 import org.apache.logging.log4j.LogManager
 import org.valiktor.ConstraintViolationException
 import transport.domain.HttpException
@@ -50,38 +51,77 @@ data class OcpiResponseBody<T>(
             try {
                 success(data = data())
             } catch (e: ConstraintViolationException) {
-                invalid(message = e.constraintViolations.toString())
+                invalid(message = e.toReadableString())
             }
     }
 }
 
 private val logger = LogManager.getLogger(OcpiResponseBody::class.java)
 
-fun <T> HttpRequest.httpResponse(fn: () -> OcpiResponseBody<T>) =
+fun OcpiResponseBody<SearchResult<*>>.getPaginatedHeaders(request: HttpRequest) =
+    if (data != null) {
+        val nextPageOffset = (data.offset + data.limit).takeIf { it <= data.totalCount }
+
+        val queries = request
+            .queryParams
+            .filter { it.key != "offset" && it.value != null }
+            .plus("offset" to (data.limit + data.offset))
+            .map { "${it.key}=${it.value}" }
+            .joinToString("&", "?")
+
+        listOfNotNull(
+            nextPageOffset?.let { "Link" to "<${request.baseUrl}${request.path}$queries>; rel=\"next\"" },
+            "X-Total-Count" to data.totalCount.toString(),
+            "X-Limit" to data.limit.toString()
+        ).toMap()
+    } else {
+        emptyMap()
+    }
+
+fun OcpiException.toHttpResponse(): HttpResponse =
+    HttpResponse(
+        status = httpStatus,
+        body = mapper.writeValueAsString(
+            OcpiResponseBody(
+                data = null,
+                status_code = ocpiStatus.code,
+                status_message = message,
+                timestamp = Instant.now()
+            )
+        ),
+        headers = if (httpStatus == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap()
+    )
+
+@Suppress("UNCHECKED_CAST")
+fun <T> HttpRequest.httpResponse(fn: () -> OcpiResponseBody<T>): HttpResponse =
     try {
         val ocpiResponseBody = fn()
+        val isPaginated = ocpiResponseBody.data is SearchResult<*>
 
         HttpResponse(
             status = when (ocpiResponseBody.status_code) {
-                OcpiStatus.SUCCESS.code -> if(ocpiResponseBody.data != null) HttpStatus.OK else HttpStatus.NOT_FOUND
+                OcpiStatus.SUCCESS.code -> if (ocpiResponseBody.data != null) HttpStatus.OK else HttpStatus.NOT_FOUND
                 OcpiStatus.CLIENT_INVALID_PARAMETERS.code -> HttpStatus.BAD_REQUEST
                 else -> HttpStatus.INTERNAL_SERVER_ERROR
             },
-            body = mapper.writeValueAsString(ocpiResponseBody)
-        )
-    } catch (e: OcpiException) {
-        HttpResponse(
-            status = e.httpStatus,
             body = mapper.writeValueAsString(
-                OcpiResponseBody<T>(
-                    data = null,
-                    status_code = e.ocpiStatus.code,
-                    status_message = e.message,
-                    timestamp = Instant.now()
+                if (isPaginated) OcpiResponseBody(
+                    data = (ocpiResponseBody.data as SearchResult<*>?)?.list,
+                    status_code = ocpiResponseBody.status_code,
+                    status_message = ocpiResponseBody.status_message,
+                    timestamp = ocpiResponseBody.timestamp
                 )
-            ),
-            headers = if(e.httpStatus == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap()
-        )
+                else ocpiResponseBody
+            )
+        ).let {
+            if (isPaginated) it.copy(
+                headers = (ocpiResponseBody as OcpiResponseBody<SearchResult<*>>)
+                    .getPaginatedHeaders(request = this)
+            )
+            else it
+        }
+    } catch (e: OcpiException) {
+        e.toHttpResponse()
     } catch (e: HttpException) {
         logger.error(e)
         HttpResponse(

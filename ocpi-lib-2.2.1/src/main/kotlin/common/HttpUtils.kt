@@ -1,11 +1,30 @@
 package common
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import ocpi.credentials.repositories.PlatformRepository
+import transport.TransportClient
 import transport.domain.HttpException
 import transport.domain.HttpRequest
 import transport.domain.HttpResponse
 import transport.domain.HttpStatus
 import java.util.*
+
+
+fun <T> HttpResponse.parsePaginatedBody(offset: Int): OcpiResponseBody<SearchResult<T>> =
+    parseBody<OcpiResponseBody<List<T>>>()
+        .let { parsedBody ->
+            OcpiResponseBody(
+                data = parsedBody.data?.toSearchResult(
+                    totalCount = headers["X-Total-Count"]!!.toInt(),
+                    limit = headers["X-Limit"]!!.toInt(),
+                    offset = offset,
+                    nextPageUrl = headers["Link"]?.split("<")?.get(1)?.split(">")?.first()
+                ),
+                status_code = parsedBody.status_code,
+                status_message = parsedBody.status_message,
+                timestamp = parsedBody.timestamp
+            )
+        }
 
 /**
  * Parses the body of the given HttpResponse to the specified type
@@ -33,16 +52,50 @@ fun String.decodeBase64(): String = Base64.getDecoder().decode(this).decodeToStr
 fun authorizationHeader(token: String): Pair<String, String> = "Authorization" to "Token ${token.encodeBase64()}"
 
 /**
+ * Creates the authorization header by taking the right token in the platform repository
+ */
+fun PlatformRepository.buildAuthorizationHeader(transportClient: TransportClient, allowTokenA: Boolean = false) =
+    ((if (allowTokenA) getCredentialsTokenA(platformUrl = transportClient.baseUrl) else null)
+        ?: getCredentialsTokenC(platformUrl = transportClient.baseUrl))
+        ?.let { token -> authorizationHeader(token = token) }
+        ?: throw throw OcpiClientGenericException(
+            "Could not find CREDENTIALS_TOKEN_C associated with platform ${transportClient.baseUrl}"
+        )
+
+/**
  * Parses authorization header from the HttpRequest
  *
- * @throws OcpiClientUnknownTokenException if the token format is invalid (does not start by "Token ")
  * @throws OcpiClientNotEnoughInformationException if the token is missing
+ * @throws HttpException if the authorization header is missing
  */
 fun HttpRequest.parseAuthorizationHeader() = headers["Authorization"]
     ?.let {
         if (it.startsWith("Token ")) it
-        else throw OcpiClientUnknownTokenException("Unkown token format: $it")
+        else throw OcpiClientInvalidParametersException("Unkown token format: $it")
     }
     ?.removePrefix("Token ")
     ?.decodeBase64()
     ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing")
+
+/**
+ * Throws an exception if the token is invalid. Does nothing otherwise.
+ *
+ * TODO: is it the good behaviour given:
+ * - tokenA: Valid in receiver context, during sender registration (only for sender -> receiver calls)
+ * - tokenB: Valid in sender context, during sender registration (only for receiver -> sender calls)
+ * - tokenC: Valid when the sender is registered with the receiver (only for sender -> receiver)
+ *
+ * @throws OcpiClientInvalidParametersException if the token is invalid, otherwise does nothing
+ * @throws OcpiClientNotEnoughInformationException if the token is missing
+ * @throws HttpException if the authorization header is missing
+ */
+fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
+    val token = httpRequest.parseAuthorizationHeader()
+
+    if (getPlatformByTokenA(token) == null &&
+        getPlatformByTokenB(token) == null &&
+        getPlatformByTokenC(token) == null) {
+
+        throw OcpiClientInvalidParametersException("Invalid token: $token")
+    }
+}
