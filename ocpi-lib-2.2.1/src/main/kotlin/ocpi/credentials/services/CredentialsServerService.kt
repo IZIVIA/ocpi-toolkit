@@ -37,12 +37,17 @@ class CredentialsServerService(
 
     override fun post(
         tokenA: String,
-        credentials: Credentials
+        credentials: Credentials,
+        debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
         val platformUrl = platformRepository.getPlatformByTokenA(tokenA)
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($tokenA)")
 
-        findLatestMutualVersionAndStoreInformation(platformUrl = platformUrl, credentials = credentials)
+        findLatestMutualVersionAndStoreInformation(
+            platformUrl = platformUrl,
+            credentials = credentials,
+            debugHeaders = debugHeaders
+        )
 
         platformRepository.removeCredentialsTokenA(platformUrl = platformUrl)
 
@@ -54,11 +59,19 @@ class CredentialsServerService(
         )
     }
 
-    override fun put(tokenC: String, credentials: Credentials): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
+    override fun put(
+        tokenC: String,
+        credentials: Credentials,
+        debugHeaders: Map<String, String>
+    ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
         val platformUrl = platformRepository.getPlatformByTokenC(tokenC)
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
 
-        findLatestMutualVersionAndStoreInformation(platformUrl = platformUrl, credentials = credentials)
+        findLatestMutualVersionAndStoreInformation(
+            platformUrl = platformUrl,
+            credentials = credentials,
+            debugHeaders = debugHeaders
+        )
 
         getCredentials(
             token = platformRepository.saveCredentialsTokenC(
@@ -83,7 +96,11 @@ class CredentialsServerService(
         null
     }
 
-    private fun findLatestMutualVersionAndStoreInformation(platformUrl: String, credentials: Credentials) {
+    private fun findLatestMutualVersionAndStoreInformation(
+        platformUrl: String,
+        credentials: Credentials,
+        debugHeaders: Map<String, String>
+    ) {
         val versions = transportClientBuilder
             .build(credentials.url)
             .send(
@@ -91,6 +108,7 @@ class CredentialsServerService(
                     method = HttpMethod.GET,
                     path = "/"
                 )
+                    .withUpdatedDebugHeaders(headers = debugHeaders)
                     .authenticate(token = credentials.token)
             )
             .parseBody<OcpiResponseBody<List<Version>>>()
@@ -111,6 +129,7 @@ class CredentialsServerService(
                     method = HttpMethod.GET,
                     path = ""
                 )
+                    .withUpdatedDebugHeaders(headers = debugHeaders)
                     .authenticate(token = credentials.token)
             )
             .parseBody<OcpiResponseBody<VersionDetails>>()

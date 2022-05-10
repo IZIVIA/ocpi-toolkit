@@ -1,5 +1,6 @@
 package ocpi.credentials
 
+import common.getDebugHeaders
 import common.httpResponse
 import common.mapper
 import common.parseAuthorizationHeader
@@ -36,7 +37,8 @@ class CredentialsServer(
             req.httpResponse {
                 service.post(
                     tokenA = req.parseAuthorizationHeader(),
-                    credentials = mapper.readValue(req.body!!, Credentials::class.java)
+                    credentials = mapper.readValue(req.body!!, Credentials::class.java),
+                    debugHeaders = req.getDebugHeaders()
                 )
             }
         }
@@ -50,7 +52,8 @@ class CredentialsServer(
             req.httpResponse {
                 service.put(
                     tokenC = req.parseAuthorizationHeader(),
-                    credentials = mapper.readValue(req.body!!, Credentials::class.java)
+                    credentials = mapper.readValue(req.body!!, Credentials::class.java),
+                    debugHeaders = req.getDebugHeaders()
                 )
             }
         }

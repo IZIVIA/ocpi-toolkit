@@ -23,7 +23,7 @@ class CredentialsClient(
             .parseBody()
 
 
-    override fun post(tokenA: String, credentials: Credentials): OcpiResponseBody<Credentials> =
+    override fun post(tokenA: String, credentials: Credentials, debugHeaders: Map<String, String>): OcpiResponseBody<Credentials> =
         transportClient
             .send(
                 HttpRequest(
@@ -36,7 +36,7 @@ class CredentialsClient(
             )
             .parseBody()
 
-    override fun put(tokenC: String, credentials: Credentials): OcpiResponseBody<Credentials> =
+    override fun put(tokenC: String, credentials: Credentials, debugHeaders: Map<String, String>): OcpiResponseBody<Credentials> =
         transportClient
             .send(
                 HttpRequest(

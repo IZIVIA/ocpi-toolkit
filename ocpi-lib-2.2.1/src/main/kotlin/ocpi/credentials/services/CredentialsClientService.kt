@@ -88,7 +88,8 @@ class CredentialsClientService(
                 token = credentialsTokenB,
                 url = clientVersionsEndpointUrl,
                 roles = clientCredentialsRoleRepository.getCredentialsRoles()
-            )
+            ),
+            debugHeaders = emptyMap()
         ).let {
             it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
         }
@@ -125,7 +126,8 @@ class CredentialsClientService(
                 token = credentialsTokenB,
                 url = clientVersionsEndpointUrl,
                 roles = clientCredentialsRoleRepository.getCredentialsRoles()
-            )
+            ),
+            debugHeaders = emptyMap()
         ).let {
             it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
         }

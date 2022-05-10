@@ -2,7 +2,6 @@ package common
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import ocpi.credentials.repositories.PlatformRepository
-import transport.TransportClient
 import transport.domain.HttpException
 import transport.domain.HttpRequest
 import transport.domain.HttpResponse
@@ -100,6 +99,26 @@ fun HttpRequest.withDebugHeaders(): HttpRequest =
         headers = headers
             .plus("X-Request-ID" to headers.getOrDefault("X-Request-ID", generateUUIDv4Token()))
             .plus("X-Correlation-ID" to headers.getOrDefault("X-Correlation-ID", generateUUIDv4Token()))
+    )
+
+/**
+ * For debugging issues, OCPI implementations are required to include unique IDs via HTTP headers in every
+ * request/response
+ *
+ * - X-Request-ID: Every request SHALL contain a unique request ID, the response to this request SHALL contain the same
+ * ID.
+ * - X-Correlation-ID: Every request/response SHALL contain a unique correlation ID, every response to this request
+ * SHALL contain the same ID.
+ *
+ * This method should be called when doing the a request from a server.
+ *
+ * TODO: test debug headers with integration tests
+ */
+fun HttpRequest.withUpdatedDebugHeaders(headers: Map<String, String>): HttpRequest =
+    copy(
+        headers = headers
+            .plus("X-Request-ID" to generateUUIDv4Token())
+            .plus("X-Correlation-ID" to headers.getOrDefault("X-Correlation-ID", "error"))
     )
 
 /**
