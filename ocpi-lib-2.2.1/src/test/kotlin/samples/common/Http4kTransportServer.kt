@@ -1,5 +1,7 @@
 package samples.common
 
+import common.OcpiException
+import common.toHttpResponse
 import org.http4k.core.*
 import org.http4k.filter.DebuggingFilters
 import org.http4k.routing.RoutingHttpHandler
@@ -25,7 +27,7 @@ class Http4kTransportServer(
         path: List<PathSegment>,
         queryParams: List<String>,
         filters: List<(request: HttpRequest) -> Unit>,
-        callback: (request: HttpRequest) -> HttpResponse
+        callback: (request: HttpRequest) -> HttpResponse,
     ) {
         val pathParams = path
             .filterIsInstance(VariablePathSegment::class.java)
@@ -41,30 +43,39 @@ class Http4kTransportServer(
         serverRoutes.add(
             route bind Method.valueOf(method.name) to { req: Request ->
                 try {
-                    callback(
-                        HttpRequest(
-                            baseUrl = baseUrl,
-                            method = method,
-                            path = route,
-                            pathParams = pathParams.associateWith { param -> req.path(param)!! },
-                            queryParams = queryParams.associateWith { param -> req.query(param) },
-                            headers = req.headers.filter { it.second != null}.toMap() as Map<String, String>,
-                            body = req.bodyString()
-                        )
-                    ).let {
-                        Response(Status(it.status.code, null))
-                            .body(it.body ?: "")
-                            .headers(it.headers.toList())
-                    }
+                    HttpRequest(
+                        baseUrl = baseUrl,
+                        method = method,
+                        path = route,
+                        pathParams = pathParams.associateWith { param -> req.path(param)!! },
+                        queryParams = queryParams.associateWith { param -> req.query(param) },
+                        headers = req.headers
+                            .filter { (_, value) -> value != null }
+                            .associate { (key, value) -> key to value!! },
+                        body = req.bodyString()
+                    )
+                        .also { httpRequest -> filters.forEach { filter -> filter(httpRequest) } }
+                        .let { httpRequest -> callback(httpRequest) }
+                        .let { httpResponse ->
+                            Response(Status(httpResponse.status.code, null))
+                                .body(httpResponse.body ?: "")
+                                .headers(httpResponse.headers.toList())
+                        }
+                } catch (ocpiException: OcpiException) {
+                    ocpiException.toHttpResponse().toHttp4kResponse()
                 } catch (httpException: HttpException) {
                     Response(Status(httpException.status.code, httpException.reason))
-                        .body(httpException.reason)
                 } catch (exception: Exception) {
                     Response(Status.INTERNAL_SERVER_ERROR)
                 }
             }
         )
     }
+
+    private fun HttpResponse.toHttp4kResponse() =
+        Response(Status(status.code, null))
+            .body(body ?: "")
+            .headers(headers.toList())
 
     override fun start() {
         server = DebuggingFilters.PrintRequestAndResponse()

@@ -4,7 +4,7 @@ import ocpi.credentials.repositories.PlatformRepository
 import ocpi.versions.domain.Endpoint
 import ocpi.versions.domain.Version
 
-class PlatformCacheRepository: PlatformRepository {
+open class PlatformCacheRepository: PlatformRepository {
     val platforms = mutableMapOf<String, Platform>()
 
     override fun saveVersion(platformUrl: String, version: Version): Version = platforms

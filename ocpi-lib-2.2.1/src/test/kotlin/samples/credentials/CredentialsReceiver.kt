@@ -42,9 +42,9 @@ fun main() {
     )
     VersionsServer(
         transportServer = receiverServer,
+        platformRepository = receiverPlatformRepository,
         validationService = VersionsValidationService(
-            repository = VersionsCacheRepository(baseUrl = receiverServer.baseUrl),
-            platformRepository = receiverPlatformRepository
+            repository = VersionsCacheRepository(baseUrl = receiverServer.baseUrl)
         )
     )
     receiverServer.start()

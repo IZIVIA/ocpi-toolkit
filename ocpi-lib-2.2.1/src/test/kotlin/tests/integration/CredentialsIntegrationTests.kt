@@ -70,9 +70,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         )
         VersionsServer(
             transportServer = receiverServer,
+            platformRepository = receiverPlatformRepo,
             validationService = VersionsValidationService(
-                repository = receiverVersionsCacheRepository,
-                platformRepository = receiverPlatformRepo
+                repository = receiverVersionsCacheRepository
             )
         )
 
@@ -92,9 +92,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         VersionsServer(
             transportServer = senderServer,
+            platformRepository = PlatformMongoRepository(collection = senderPlatformCollection),
             validationService = VersionsValidationService(
-                repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl),
-                platformRepository = PlatformMongoRepository(collection = senderPlatformCollection)
+                repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl)
             )
         )
 
@@ -123,97 +123,11 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             },
             serverUrl = receiverServerSetupResult.transport.baseUrl,
             credentialsClient = CredentialsClient(transportClient = transportTowardsReceiver),
-            versionsClient = VersionsClient(transportClient = transportTowardsReceiver)
+            versionsClient = VersionsClient(
+                transportClient = transportTowardsReceiver,
+                platformRepository = PlatformMongoRepository(collection = senderServerSetupResult.platformCollection)
+            )
         )
-    }
-
-    @Test
-    fun `should properly run registration process then credentials provided are working and the old ones are not`() {
-        val receiverServer = setupReceiver()
-        val senderServer = setupSender()
-
-        val credentialsClientService = setupCredentialsSenderClient(
-            senderServerSetupResult = senderServer,
-            receiverServerSetupResult = receiverServer
-        )
-
-        // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
-        // well in the client so that it knows what token to send
-        val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
-
-        // Start the servers
-        receiverServer.transport.start()
-        senderServer.transport.start()
-
-        val credentials = credentialsClientService.register()
-
-        // Now we can do some requests to check if the credentials provided are right (and if token A is now invalid)
-        val versionsClient = VersionsClient(
-            transportClient = receiverServer.transport.getClient()
-        )
-
-        expectThat(
-            versionsClient.getVersions(
-                token = credentials.token
-            )
-        ) {
-            get { data }
-                .isNotNull()
-                .isNotEmpty()
-                .isEqualTo(
-                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                        .getVersions()
-                )
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
-        }
-
-        var versionNumber = VersionNumber.V2_2_1
-        expectThat(
-            versionsClient.getVersionDetails(
-                token = credentials.token,
-                versionNumber = versionNumber.value
-            )
-        ) {
-            get { data }
-                .isNotNull()
-                .isEqualTo(
-                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                        .getVersionDetails(versionNumber)
-                )
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
-        }
-
-        expectThat(
-            versionsClient.getVersions(
-                token = tokenA
-            )
-        ) {
-            get { data }
-                .isNull()
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-        }
-
-        versionNumber = VersionNumber.V2_2_1
-        expectThat(
-            versionsClient.getVersionDetails(
-                token = tokenA,
-                versionNumber = versionNumber.value
-            )
-        ) {
-            get { data }
-                .isNull()
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-        }
     }
 
     @Test
@@ -279,13 +193,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // We don't need to register, we will use TOKEN_A for our requests
 
         val versionsClient = VersionsClient(
-            transportClient = receiverServer.transport.getClient()
+            transportClient = receiverServer.transport.getClient(),
+            platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
         )
 
         expectThat(
-            versionsClient.getVersions(
-                token = tokenA
-            )
+            versionsClient.getVersions()
         ) {
             get { data }
                 .isNotNull()
@@ -297,7 +210,6 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         expectThat(
             versionsClient.getVersionDetails(
-                token = tokenA,
                 versionNumber = VersionNumber.V2_2_1.value
             )
         ) {
@@ -313,20 +225,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
 
         expectThat(
-            versionsClient.getVersions(
-                token = "!$tokenA"
-            )
-        ) {
-            get { data }
-                .isNull()
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-        }
-
-        expectThat(
             versionsClient.getVersionDetails(
-                token = tokenA,
                 versionNumber = VersionNumber.V2_2.value
             )
         ) {
@@ -385,18 +284,16 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentials = credentialsClientService.register()
-
-        val updatedCredentials = credentialsClientService.update()
+        credentialsClientService.register()
+        credentialsClientService.update()
 
         val versionsClient = VersionsClient(
-            transportClient = receiverServer.transport.getClient()
+            transportClient = receiverServer.transport.getClient(),
+            platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
         )
 
         expectThat(
-            versionsClient.getVersions(
-                token = updatedCredentials.token
-            )
+            versionsClient.getVersions()
         ) {
             get { data }
                 .isNotNull()
@@ -408,18 +305,6 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
-        }
-
-        expectThat(
-            versionsClient.getVersions(
-                token = credentials.token
-            )
-        ) {
-            get { data }
-                .isNull()
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -443,16 +328,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentials = credentialsClientService.register()
+        credentialsClientService.register()
 
         val versionsClient = VersionsClient(
-            transportClient = receiverServer.transport.getClient()
+            transportClient = receiverServer.transport.getClient(),
+            platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
         )
 
         expectThat(
-            versionsClient.getVersions(
-                token = credentials.token
-            )
+            versionsClient.getVersions()
         ) {
             get { data }
                 .isNotNull()
@@ -469,9 +353,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         credentialsClientService.delete()
 
         expectThat(
-            versionsClient.getVersions(
-                token = credentials.token
-            )
+            versionsClient.getVersions()
         ) {
             get { data }
                 .isNull()
@@ -504,13 +386,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val credentialsAfterRegistration = credentialsClientService.register()
 
         val versionsClient = VersionsClient(
-            transportClient = receiverServer.transport.getClient()
+            transportClient = receiverServer.transport.getClient(),
+            platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
         )
 
         expectThat(
-            versionsClient.getVersions(
-                token = credentialsAfterRegistration.token
-            )
+            versionsClient.getVersions()
         ) {
             get { data }
                 .isNotNull()
@@ -528,12 +409,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             credentialsClientService.get()
         ).isEqualTo(credentialsAfterRegistration)
 
-        val updatedCredentials = credentialsClientService.update()
+        credentialsClientService.update()
 
         expectThat(
-            versionsClient.getVersions(
-                token = updatedCredentials.token
-            )
+            versionsClient.getVersions()
         ) {
             get { data }
                 .isNotNull()
@@ -547,24 +426,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(
-            versionsClient.getVersions(
-                token = credentialsAfterRegistration.token
-            )
-        ) {
-            get { data }
-                .isNull()
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-        }
-
         credentialsClientService.delete()
 
         expectThat(
-            versionsClient.getVersions(
-                token = updatedCredentials.token
-            )
+            versionsClient.getVersions()
         ) {
             get { data }
                 .isNull()
@@ -574,9 +439,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
 
         expectThat(
-            versionsClient.getVersions(
-                token = credentialsAfterRegistration.token
-            )
+            versionsClient.getVersions()
         ) {
             get { data }
                 .isNull()

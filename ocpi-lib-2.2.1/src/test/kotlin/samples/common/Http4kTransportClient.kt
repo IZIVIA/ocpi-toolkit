@@ -38,8 +38,8 @@ class Http4kTransportClient(
                 status = parseHttpStatus(it.status.code),
                 body = it.bodyString(),
                 headers = it.headers
-                    .filter { header -> header.second != null }
-                    .toMap() as Map<String, String>
+                    .filter { (_, value) -> value != null }
+                    .associate { (key, value) -> key to value!! }
             )
         }
     }
