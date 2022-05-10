@@ -9,6 +9,7 @@ import transport.domain.HttpResponse
 import transport.domain.HttpStatus
 import java.util.*
 
+typealias AuthenticatedHttpRequest = HttpRequest
 
 fun <T> HttpResponse.parsePaginatedBody(offset: Int): OcpiResponseBody<SearchResult<T>> =
     parseBody<OcpiResponseBody<List<T>>>()
@@ -54,13 +55,30 @@ fun authorizationHeader(token: String): Pair<String, String> = "Authorization" t
 /**
  * Creates the authorization header by taking the right token in the platform repository
  */
-fun PlatformRepository.buildAuthorizationHeader(transportClient: TransportClient, allowTokenA: Boolean = false) =
-    ((if (allowTokenA) getCredentialsTokenA(platformUrl = transportClient.baseUrl) else null)
-        ?: getCredentialsTokenC(platformUrl = transportClient.baseUrl))
+fun PlatformRepository.buildAuthorizationHeader(baseUrl: String, allowTokenA: Boolean = false) =
+    ((if (allowTokenA) getCredentialsTokenA(platformUrl = baseUrl) else null)
+        ?: getCredentialsTokenC(platformUrl = baseUrl))
         ?.let { token -> authorizationHeader(token = token) }
         ?: throw throw OcpiClientGenericException(
-            "Could not find CREDENTIALS_TOKEN_C associated with platform ${transportClient.baseUrl}"
+            "Could not find CREDENTIALS_TOKEN_C associated with platform $baseUrl"
         )
+
+fun HttpRequest.authenticate(
+    platformRepository: PlatformRepository,
+    baseUrl: String,
+    allowTokenA: Boolean = false
+): AuthenticatedHttpRequest =
+    copy(
+        headers = headers.plus(
+            platformRepository.buildAuthorizationHeader(
+                baseUrl = baseUrl,
+                allowTokenA = allowTokenA
+            )
+        )
+    )
+
+fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
+    copy(headers = headers.plus(authorizationHeader(token = token)))
 
 /**
  * Parses authorization header from the HttpRequest
@@ -94,7 +112,8 @@ fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
 
     if (getPlatformByTokenA(token) == null &&
         getPlatformByTokenB(token) == null &&
-        getPlatformByTokenC(token) == null) {
+        getPlatformByTokenC(token) == null
+    ) {
 
         throw OcpiClientInvalidParametersException("Invalid token: $token")
     }

@@ -1,9 +1,6 @@
 package ocpi.credentials
 
-import common.OcpiResponseBody
-import common.authorizationHeader
-import common.mapper
-import common.parseBody
+import common.*
 import ocpi.credentials.domain.Credentials
 import transport.TransportClient
 import transport.domain.HttpMethod
@@ -18,9 +15,8 @@ class CredentialsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/credentials",
-                    headers = mapOf(authorizationHeader(token = tokenC))
-                )
+                    path = "/credentials"
+                ).authenticate(token = tokenC)
             )
             .parseBody()
 
@@ -31,9 +27,8 @@ class CredentialsClient(
                 HttpRequest(
                     method = HttpMethod.POST,
                     path = "/credentials",
-                    headers = mapOf(authorizationHeader(token = tokenA)),
                     body = mapper.writeValueAsString(credentials)
-                )
+                ).authenticate(token = tokenA)
             )
             .parseBody()
 
@@ -43,9 +38,8 @@ class CredentialsClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/credentials",
-                    headers = mapOf(authorizationHeader(token = tokenC)),
                     body = mapper.writeValueAsString(credentials)
-                )
+                ).authenticate(token = tokenC)
             )
             .parseBody()
 
@@ -54,9 +48,8 @@ class CredentialsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.DELETE,
-                    path = "/credentials",
-                    headers = mapOf(authorizationHeader(token = tokenC))
-                )
+                    path = "/credentials"
+                ).authenticate(token = tokenC)
             )
             .parseBody()
 }

@@ -26,8 +26,7 @@ class LocationsCpoClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/locations/$countryCode/$partyId/$locationId",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -41,9 +40,8 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/locations/$countryCode/$partyId/$locationId/$evseUid",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                    path = "/locations/$countryCode/$partyId/$locationId/$evseUid"
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -58,9 +56,8 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                    path = "/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId"
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -75,9 +72,8 @@ class LocationsCpoClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/locations/$countryCode/$partyId/$locationId",
-                    body = mapper.writeValueAsString(location),
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                    body = mapper.writeValueAsString(location)
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -93,9 +89,8 @@ class LocationsCpoClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/locations/$countryCode/$partyId/$locationId/$evseUid",
-                    body = mapper.writeValueAsString(evse),
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                    body = mapper.writeValueAsString(evse)
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -112,9 +107,8 @@ class LocationsCpoClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
-                    body = mapper.writeValueAsString(connector),
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                    body = mapper.writeValueAsString(connector)
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -128,9 +122,8 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.PATCH,
                 path = "/locations/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(location),
-                headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-            )
+                body = mapper.writeValueAsString(location)
+            ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
         )
         .parseBody()
 
@@ -145,9 +138,8 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.PATCH,
                 path = "/locations/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(evse),
-                headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-            )
+                body = mapper.writeValueAsString(evse)
+            ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
         )
         .parseBody()
 
@@ -164,7 +156,7 @@ class LocationsCpoClient(
                 method = HttpMethod.PATCH,
                 path = "/locations/$countryCode/$partyId/$locationId",
                 body = mapper.writeValueAsString(connector)
-            )
+            ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
         )
         .parseBody()
 }

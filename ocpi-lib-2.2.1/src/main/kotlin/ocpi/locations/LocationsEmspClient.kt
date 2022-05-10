@@ -36,9 +36,8 @@ class LocationsEmspClient(
                         dateTo?.let { "date_to" to dateTo.toString() },
                         "offset" to offset.toString(),
                         limit?.let { "limit" to limit.toString() }
-                    ).toMap(),
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                    ).toMap()
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parsePaginatedBody(offset)
 
@@ -48,8 +47,7 @@ class LocationsEmspClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/locations/$locationId",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -59,8 +57,7 @@ class LocationsEmspClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/locations/$locationId/$evseUid",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -74,8 +71,7 @@ class LocationsEmspClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/locations/$locationId/$evseUid/$connectorId",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 }

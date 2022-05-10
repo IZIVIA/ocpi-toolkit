@@ -1,6 +1,7 @@
 package ocpi.versions
 
 import common.OcpiResponseBody
+import common.authenticate
 import common.buildAuthorizationHeader
 import common.parseBody
 import ocpi.credentials.repositories.PlatformRepository
@@ -20,8 +21,11 @@ class VersionsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient, allowTokenA = true))
+                    path = "/"
+                ).authenticate(
+                    platformRepository = platformRepository,
+                    baseUrl = transportClient.baseUrl,
+                    allowTokenA = true
                 )
             )
             .parseBody()
@@ -31,8 +35,11 @@ class VersionsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/$versionNumber",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient, allowTokenA = true))
+                    path = "/$versionNumber"
+                ).authenticate(
+                    platformRepository = platformRepository,
+                    baseUrl = transportClient.baseUrl,
+                    allowTokenA = true
                 )
             )
             .parseBody()

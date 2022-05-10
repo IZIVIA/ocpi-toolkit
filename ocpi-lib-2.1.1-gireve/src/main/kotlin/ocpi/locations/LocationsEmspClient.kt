@@ -35,9 +35,8 @@ class LocationsEmspClient(
                         dateTo?.let { "date_to" to dateTo.toString() },
                         "offset" to offset.toString(),
                         limit?.let { "limit" to limit.toString() }
-                    ).toMap(),
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                    ).toMap()
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parsePaginatedBody(offset)
 
@@ -46,9 +45,8 @@ class LocationsEmspClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/locations/$locationId",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                    path = "/locations/$locationId"
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -57,9 +55,8 @@ class LocationsEmspClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/locations/$locationId/$evseUid",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                    path = "/locations/$locationId/$evseUid"
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 
@@ -72,9 +69,8 @@ class LocationsEmspClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/locations/$locationId/$evseUid/$connectorId",
-                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
-                )
+                    path = "/locations/$locationId/$evseUid/$connectorId"
+                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
             )
             .parseBody()
 }
