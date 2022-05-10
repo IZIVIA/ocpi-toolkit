@@ -17,7 +17,6 @@ class LocationsCpoValidationServiceTest {
     private lateinit var service: LocationsCpoValidationService
     private val from = Instant.parse("2022-04-28T08:00:00.000Z")
     private val to = Instant.parse("2022-04-28T09:00:00.000Z")
-    private val token = UUID.randomUUID().toString()
 
     @Test
     fun getLocationsParamsValidationTest() {
@@ -218,6 +217,7 @@ class LocationsCpoValidationServiceTest {
             LocationsCpoValidationService(service = locationsCpoService(emptyList()))
 
         val str3chars = "abc"
+        val str37chars = "ababababababababababababababababababa"
         val str39chars = "abababababababababababababababababababa"
         val str40chars = "abababababababababababababababababababab"
 
@@ -302,7 +302,7 @@ class LocationsCpoValidationServiceTest {
             service.getConnector(
                 locationId = str3chars,
                 evseUid = str3chars,
-                connectorId = str40chars
+                connectorId = str37chars
             )
         ) {
             get { status_code }
@@ -313,7 +313,7 @@ class LocationsCpoValidationServiceTest {
             service.getConnector(
                 locationId = str40chars,
                 evseUid = str40chars,
-                connectorId = str40chars
+                connectorId = str37chars
             )
         ) {
             get { status_code }

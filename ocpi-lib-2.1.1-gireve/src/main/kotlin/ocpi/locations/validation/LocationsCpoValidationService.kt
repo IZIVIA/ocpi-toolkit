@@ -70,7 +70,7 @@ class LocationsCpoValidationService(
         validate {
             validateLength("locationId", locationId, 39)
             validateLength("evseUid", evseUid, 39)
-            validateLength("connectorId", connectorId, 39)
+            validateLength("connectorId", connectorId, 36)
         }
 
         service
