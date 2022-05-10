@@ -116,67 +116,6 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     }
 
     @Test
-    fun `should properly run registration process then credentials provided are working and the old ones are not`() {
-        val receiverServer = setupReceiver()
-        val senderServer = setupSender()
-
-        val credentialsClientService = setupCredentialsSenderClient(
-            senderServerSetupResult = senderServer,
-            receiverServerSetupResult = receiverServer
-        )
-
-        // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
-        // well in the client so that it knows what token to send
-        val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
-
-        // Start the servers
-        receiverServer.transport.start()
-        senderServer.transport.start()
-
-        credentialsClientService.register()
-
-        // Now we can do some requests to check if the credentials provided are right (and if token A is now invalid)
-        val versionsClient = VersionsClient(
-            transportClient = receiverServer.transport.getClient(),
-            platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
-        )
-
-        expectThat(
-            versionsClient.getVersions()
-        ) {
-            get { data }
-                .isNotNull()
-                .isNotEmpty()
-                .isEqualTo(
-                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                        .getVersions()
-                )
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
-        }
-
-        val versionNumber = VersionNumber.V2_1_1
-        expectThat(
-            versionsClient.getVersionDetails(
-                versionNumber = versionNumber.value
-            )
-        ) {
-            get { data }
-                .isNotNull()
-                .isEqualTo(
-                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                        .getVersionDetails(versionNumber)
-                )
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
-        }
-    }
-
-    @Test
     fun `should not properly run registration because wrong setup of token A`() {
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
