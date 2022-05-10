@@ -5,16 +5,19 @@
 //  ----------
 package ocpi.locations.domain
 
+import kotlin.String
+import kotlin.collections.List
+
 /**
  * Partial representation of [ocpi.locations.domain.BusinessDetails]
  */
-data class BusinessDetailsPartial(
-  val name: String?,
-  val website: String?,
-  val logo: ImagePartial?,
+public data class BusinessDetailsPartial(
+  public val name: String?,
+  public val website: String?,
+  public val logo: ImagePartial?,
 )
 
-fun BusinessDetails.toPartial(): BusinessDetailsPartial {
+public fun BusinessDetails.toPartial(): BusinessDetailsPartial {
    return BusinessDetailsPartial(
      name = name,
     website = website,
@@ -22,6 +25,6 @@ fun BusinessDetails.toPartial(): BusinessDetailsPartial {
    )
 }
 
-fun List<BusinessDetails>.toPartial(): List<BusinessDetailsPartial> {
+public fun List<BusinessDetails>.toPartial(): List<BusinessDetailsPartial> {
    return mapNotNull { it.toPartial() }
 }

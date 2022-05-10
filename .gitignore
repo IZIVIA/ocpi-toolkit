@@ -4,3 +4,6 @@
 # gradle
 build
 .gradle
+
+# logs
+logs

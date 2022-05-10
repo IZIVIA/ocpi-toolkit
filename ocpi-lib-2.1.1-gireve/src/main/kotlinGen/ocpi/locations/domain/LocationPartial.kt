@@ -6,35 +6,38 @@
 package ocpi.locations.domain
 
 import java.time.Instant
+import kotlin.Boolean
+import kotlin.String
+import kotlin.collections.List
 
 /**
  * Partial representation of [ocpi.locations.domain.Location]
  */
-data class LocationPartial(
-  val id: String?,
-  val type: LocationType?,
-  val name: String?,
-  val address: String?,
-  val city: String?,
-  val postal_code: String?,
-  val country: String?,
-  val coordinates: GeoLocationPartial?,
-  val related_locations: List<AdditionalGeoLocationPartial>?,
-  val evses: List<EvsePartial>?,
-  val directions: List<DisplayTextPartial>?,
-  val `operator`: BusinessDetailsPartial?,
-  val suboperator: BusinessDetailsPartial?,
-  val owner: BusinessDetailsPartial?,
-  val facilities: List<Facility>?,
-  val time_zone: String?,
-  val opening_times: HoursPartial?,
-  val charging_when_closed: Boolean?,
-  val images: List<ImagePartial>?,
-  val energy_mix: EnergyMixPartial?,
-  val last_updated: Instant?,
+public data class LocationPartial(
+  public val id: String?,
+  public val type: LocationType?,
+  public val name: String?,
+  public val address: String?,
+  public val city: String?,
+  public val postal_code: String?,
+  public val country: String?,
+  public val coordinates: GeoLocationPartial?,
+  public val related_locations: List<AdditionalGeoLocationPartial>?,
+  public val evses: List<EvsePartial>?,
+  public val directions: List<DisplayTextPartial>?,
+  public val `operator`: BusinessDetailsPartial?,
+  public val suboperator: BusinessDetailsPartial?,
+  public val owner: BusinessDetailsPartial?,
+  public val facilities: List<Facility>?,
+  public val time_zone: String?,
+  public val opening_times: HoursPartial?,
+  public val charging_when_closed: Boolean?,
+  public val images: List<ImagePartial>?,
+  public val energy_mix: EnergyMixPartial?,
+  public val last_updated: Instant?,
 )
 
-fun Location.toPartial(): LocationPartial {
+public fun Location.toPartial(): LocationPartial {
    return LocationPartial(
      id = id,
     type = type,
@@ -60,6 +63,6 @@ fun Location.toPartial(): LocationPartial {
    )
 }
 
-fun List<Location>.toPartial(): List<LocationPartial> {
+public fun List<Location>.toPartial(): List<LocationPartial> {
    return mapNotNull { it.toPartial() }
 }

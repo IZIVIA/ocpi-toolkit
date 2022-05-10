@@ -5,17 +5,20 @@
 //  ----------
 package ocpi.locations.domain
 
+import kotlin.Boolean
+import kotlin.collections.List
+
 /**
  * Partial representation of [ocpi.locations.domain.Hours]
  */
-data class HoursPartial(
-  val regular_hours: List<RegularHoursPartial>?,
-  val twenty_four_seven: Boolean?,
-  val exceptional_openings: List<ExceptionalPeriodPartial>?,
-  val exceptional_closings: List<ExceptionalPeriodPartial>?,
+public data class HoursPartial(
+  public val regular_hours: List<RegularHoursPartial>?,
+  public val twenty_four_seven: Boolean?,
+  public val exceptional_openings: List<ExceptionalPeriodPartial>?,
+  public val exceptional_closings: List<ExceptionalPeriodPartial>?,
 )
 
-fun Hours.toPartial(): HoursPartial {
+public fun Hours.toPartial(): HoursPartial {
    return HoursPartial(
      regular_hours = regular_hours?.toPartial(),
     twenty_four_seven = twenty_four_seven,
@@ -24,6 +27,6 @@ fun Hours.toPartial(): HoursPartial {
    )
 }
 
-fun List<Hours>.toPartial(): List<HoursPartial> {
+public fun List<Hours>.toPartial(): List<HoursPartial> {
    return mapNotNull { it.toPartial() }
 }

@@ -5,18 +5,22 @@
 //  ----------
 package ocpi.locations.domain
 
+import kotlin.Boolean
+import kotlin.String
+import kotlin.collections.List
+
 /**
  * Partial representation of [ocpi.locations.domain.EnergyMix]
  */
-data class EnergyMixPartial(
-  val is_green_energy: Boolean?,
-  val energy_sources: List<EnergySourcePartial>?,
-  val environ_impact: List<EnvironmentalImpactPartial>?,
-  val supplier_name: String?,
-  val energy_product_name: String?,
+public data class EnergyMixPartial(
+  public val is_green_energy: Boolean?,
+  public val energy_sources: List<EnergySourcePartial>?,
+  public val environ_impact: List<EnvironmentalImpactPartial>?,
+  public val supplier_name: String?,
+  public val energy_product_name: String?,
 )
 
-fun EnergyMix.toPartial(): EnergyMixPartial {
+public fun EnergyMix.toPartial(): EnergyMixPartial {
    return EnergyMixPartial(
      is_green_energy = is_green_energy,
     energy_sources = energy_sources.toPartial(),
@@ -26,6 +30,6 @@ fun EnergyMix.toPartial(): EnergyMixPartial {
    )
 }
 
-fun List<EnergyMix>.toPartial(): List<EnergyMixPartial> {
+public fun List<EnergyMix>.toPartial(): List<EnergyMixPartial> {
    return mapNotNull { it.toPartial() }
 }

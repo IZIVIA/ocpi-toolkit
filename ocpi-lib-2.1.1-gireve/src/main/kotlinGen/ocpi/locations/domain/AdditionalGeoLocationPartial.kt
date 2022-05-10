@@ -5,16 +5,19 @@
 //  ----------
 package ocpi.locations.domain
 
+import kotlin.String
+import kotlin.collections.List
+
 /**
  * Partial representation of [ocpi.locations.domain.AdditionalGeoLocation]
  */
-data class AdditionalGeoLocationPartial(
-  val latitude: String?,
-  val longitude: String?,
-  val name: DisplayTextPartial?,
+public data class AdditionalGeoLocationPartial(
+  public val latitude: String?,
+  public val longitude: String?,
+  public val name: DisplayTextPartial?,
 )
 
-fun AdditionalGeoLocation.toPartial(): AdditionalGeoLocationPartial {
+public fun AdditionalGeoLocation.toPartial(): AdditionalGeoLocationPartial {
    return AdditionalGeoLocationPartial(
      latitude = latitude,
     longitude = longitude,
@@ -22,6 +25,6 @@ fun AdditionalGeoLocation.toPartial(): AdditionalGeoLocationPartial {
    )
 }
 
-fun List<AdditionalGeoLocation>.toPartial(): List<AdditionalGeoLocationPartial> {
+public fun List<AdditionalGeoLocation>.toPartial(): List<AdditionalGeoLocationPartial> {
    return mapNotNull { it.toPartial() }
 }

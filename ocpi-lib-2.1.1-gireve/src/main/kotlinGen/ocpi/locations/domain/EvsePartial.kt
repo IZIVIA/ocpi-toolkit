@@ -6,27 +6,29 @@
 package ocpi.locations.domain
 
 import java.time.Instant
+import kotlin.String
+import kotlin.collections.List
 
 /**
  * Partial representation of [ocpi.locations.domain.Evse]
  */
-data class EvsePartial(
-  val uid: String?,
-  val evse_id: String?,
-  val status: Status?,
-  val status_schedule: List<StatusSchedulePartial>?,
-  val capabilities: List<Capability>?,
-  val connectors: List<ConnectorPartial>?,
-  val floor_level: String?,
-  val coordinates: GeoLocationPartial?,
-  val physical_reference: String?,
-  val directions: List<DisplayTextPartial>?,
-  val parking_restrictions: List<ParkingRestriction>?,
-  val images: List<ImagePartial>?,
-  val last_updated: Instant?,
+public data class EvsePartial(
+  public val uid: String?,
+  public val evse_id: String?,
+  public val status: Status?,
+  public val status_schedule: List<StatusSchedulePartial>?,
+  public val capabilities: List<Capability>?,
+  public val connectors: List<ConnectorPartial>?,
+  public val floor_level: String?,
+  public val coordinates: GeoLocationPartial?,
+  public val physical_reference: String?,
+  public val directions: List<DisplayTextPartial>?,
+  public val parking_restrictions: List<ParkingRestriction>?,
+  public val images: List<ImagePartial>?,
+  public val last_updated: Instant?,
 )
 
-fun Evse.toPartial(): EvsePartial {
+public fun Evse.toPartial(): EvsePartial {
    return EvsePartial(
      uid = uid,
     evse_id = evse_id,
@@ -44,6 +46,6 @@ fun Evse.toPartial(): EvsePartial {
    )
 }
 
-fun List<Evse>.toPartial(): List<EvsePartial> {
+public fun List<Evse>.toPartial(): List<EvsePartial> {
    return mapNotNull { it.toPartial() }
 }

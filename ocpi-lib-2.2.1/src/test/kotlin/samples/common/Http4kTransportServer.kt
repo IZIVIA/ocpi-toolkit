@@ -24,6 +24,7 @@ class Http4kTransportServer(
         method: HttpMethod,
         path: List<PathSegment>,
         queryParams: List<String>,
+        filters: List<(request: HttpRequest) -> Unit>,
         callback: (request: HttpRequest) -> HttpResponse
     ) {
         val pathParams = path

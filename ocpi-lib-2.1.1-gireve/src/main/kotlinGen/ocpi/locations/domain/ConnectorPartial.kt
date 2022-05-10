@@ -6,23 +6,26 @@
 package ocpi.locations.domain
 
 import java.time.Instant
+import kotlin.Int
+import kotlin.String
+import kotlin.collections.List
 
 /**
  * Partial representation of [ocpi.locations.domain.Connector]
  */
-data class ConnectorPartial(
-  val id: String?,
-  val standard: ConnectorType?,
-  val format: ConnectorFormat?,
-  val power_type: PowerType?,
-  val voltage: Int?,
-  val amperage: Int?,
-  val tariff_id: String?,
-  val terms_and_conditions: String?,
-  val last_updated: Instant?,
+public data class ConnectorPartial(
+  public val id: String?,
+  public val standard: ConnectorType?,
+  public val format: ConnectorFormat?,
+  public val power_type: PowerType?,
+  public val voltage: Int?,
+  public val amperage: Int?,
+  public val tariff_id: String?,
+  public val terms_and_conditions: String?,
+  public val last_updated: Instant?,
 )
 
-fun Connector.toPartial(): ConnectorPartial {
+public fun Connector.toPartial(): ConnectorPartial {
    return ConnectorPartial(
      id = id,
     standard = standard,
@@ -36,6 +39,6 @@ fun Connector.toPartial(): ConnectorPartial {
    )
 }
 
-fun List<Connector>.toPartial(): List<ConnectorPartial> {
+public fun List<Connector>.toPartial(): List<ConnectorPartial> {
    return mapNotNull { it.toPartial() }
 }

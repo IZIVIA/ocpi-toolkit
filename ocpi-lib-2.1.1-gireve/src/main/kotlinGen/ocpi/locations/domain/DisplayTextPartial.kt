@@ -5,21 +5,24 @@
 //  ----------
 package ocpi.locations.domain
 
+import kotlin.String
+import kotlin.collections.List
+
 /**
  * Partial representation of [ocpi.locations.domain.DisplayText]
  */
-data class DisplayTextPartial(
-  val language: String?,
-  val text: String?,
+public data class DisplayTextPartial(
+  public val language: String?,
+  public val text: String?,
 )
 
-fun DisplayText.toPartial(): DisplayTextPartial {
+public fun DisplayText.toPartial(): DisplayTextPartial {
    return DisplayTextPartial(
      language = language,
     text = text
    )
 }
 
-fun List<DisplayText>.toPartial(): List<DisplayTextPartial> {
+public fun List<DisplayText>.toPartial(): List<DisplayTextPartial> {
    return mapNotNull { it.toPartial() }
 }

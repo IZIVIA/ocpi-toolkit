@@ -6,22 +6,23 @@
 package ocpi.locations.domain
 
 import java.math.BigDecimal
+import kotlin.collections.List
 
 /**
  * Partial representation of [ocpi.locations.domain.EnvironmentalImpact]
  */
-data class EnvironmentalImpactPartial(
-  val source: EnvironmentalImpactCategory?,
-  val amount: BigDecimal?,
+public data class EnvironmentalImpactPartial(
+  public val source: EnvironmentalImpactCategory?,
+  public val amount: BigDecimal?,
 )
 
-fun EnvironmentalImpact.toPartial(): EnvironmentalImpactPartial {
+public fun EnvironmentalImpact.toPartial(): EnvironmentalImpactPartial {
    return EnvironmentalImpactPartial(
      source = source,
     amount = amount
    )
 }
 
-fun List<EnvironmentalImpact>.toPartial(): List<EnvironmentalImpactPartial> {
+public fun List<EnvironmentalImpact>.toPartial(): List<EnvironmentalImpactPartial> {
    return mapNotNull { it.toPartial() }
 }

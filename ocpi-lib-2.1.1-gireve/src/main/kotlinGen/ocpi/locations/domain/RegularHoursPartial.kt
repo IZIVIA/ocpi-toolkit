@@ -5,16 +5,20 @@
 //  ----------
 package ocpi.locations.domain
 
+import kotlin.Int
+import kotlin.String
+import kotlin.collections.List
+
 /**
  * Partial representation of [ocpi.locations.domain.RegularHours]
  */
-data class RegularHoursPartial(
-  val weekday: Int?,
-  val period_begin: String?,
-  val period_end: String?,
+public data class RegularHoursPartial(
+  public val weekday: Int?,
+  public val period_begin: String?,
+  public val period_end: String?,
 )
 
-fun RegularHours.toPartial(): RegularHoursPartial {
+public fun RegularHours.toPartial(): RegularHoursPartial {
    return RegularHoursPartial(
      weekday = weekday,
     period_begin = period_begin,
@@ -22,6 +26,6 @@ fun RegularHours.toPartial(): RegularHoursPartial {
    )
 }
 
-fun List<RegularHours>.toPartial(): List<RegularHoursPartial> {
+public fun List<RegularHours>.toPartial(): List<RegularHoursPartial> {
    return mapNotNull { it.toPartial() }
 }

@@ -6,22 +6,23 @@
 package ocpi.locations.domain
 
 import java.time.Instant
+import kotlin.collections.List
 
 /**
  * Partial representation of [ocpi.locations.domain.ExceptionalPeriod]
  */
-data class ExceptionalPeriodPartial(
-  val period_begin: Instant?,
-  val period_end: Instant?,
+public data class ExceptionalPeriodPartial(
+  public val period_begin: Instant?,
+  public val period_end: Instant?,
 )
 
-fun ExceptionalPeriod.toPartial(): ExceptionalPeriodPartial {
+public fun ExceptionalPeriod.toPartial(): ExceptionalPeriodPartial {
    return ExceptionalPeriodPartial(
      period_begin = period_begin,
     period_end = period_end
    )
 }
 
-fun List<ExceptionalPeriod>.toPartial(): List<ExceptionalPeriodPartial> {
+public fun List<ExceptionalPeriod>.toPartial(): List<ExceptionalPeriodPartial> {
    return mapNotNull { it.toPartial() }
 }

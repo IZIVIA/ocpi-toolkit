@@ -6,17 +6,18 @@
 package ocpi.locations.domain
 
 import java.time.Instant
+import kotlin.collections.List
 
 /**
  * Partial representation of [ocpi.locations.domain.StatusSchedule]
  */
-data class StatusSchedulePartial(
-  val period_begin: Instant?,
-  val period_end: Instant?,
-  val status: Status?,
+public data class StatusSchedulePartial(
+  public val period_begin: Instant?,
+  public val period_end: Instant?,
+  public val status: Status?,
 )
 
-fun StatusSchedule.toPartial(): StatusSchedulePartial {
+public fun StatusSchedule.toPartial(): StatusSchedulePartial {
    return StatusSchedulePartial(
      period_begin = period_begin,
     period_end = period_end,
@@ -24,6 +25,6 @@ fun StatusSchedule.toPartial(): StatusSchedulePartial {
    )
 }
 
-fun List<StatusSchedule>.toPartial(): List<StatusSchedulePartial> {
+public fun List<StatusSchedule>.toPartial(): List<StatusSchedulePartial> {
    return mapNotNull { it.toPartial() }
 }
