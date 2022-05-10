@@ -29,6 +29,6 @@ data class Connector(
     val voltage: Int,
     val amperage: Int,
     val tariff_id: String?,
-    val terms_and_conditions: String,
+    val terms_and_conditions: String?,
     val last_updated: Instant
 )
