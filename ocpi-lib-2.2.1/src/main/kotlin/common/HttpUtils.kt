@@ -97,8 +97,8 @@ fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
 fun HttpRequest.withDebugHeaders(): HttpRequest =
     copy(
         headers = headers
-            .plus("X-Request-ID" to headers.getOrDefault("X-Request-ID", generateUUIDv4Token()))
-            .plus("X-Correlation-ID" to headers.getOrDefault("X-Correlation-ID", generateUUIDv4Token()))
+            .plus("X-Request-ID" to generateUUIDv4Token())
+            .plus("X-Correlation-ID" to generateUUIDv4Token())
     )
 
 /**
@@ -113,12 +113,19 @@ fun HttpRequest.withDebugHeaders(): HttpRequest =
  * This method should be called when doing the a request from a server.
  *
  * TODO: test debug headers with integration tests
+ *
+ * @param headers Headers of the caller. It will re-use the X-Correlation-ID header and regenerate X-Request-ID
  */
 fun HttpRequest.withUpdatedDebugHeaders(headers: Map<String, String>): HttpRequest =
     copy(
         headers = headers
             .plus("X-Request-ID" to generateUUIDv4Token())
-            .plus("X-Correlation-ID" to headers.getOrDefault("X-Correlation-ID", "error"))
+            .plus(
+                "X-Correlation-ID" to headers.getOrDefault(
+                    "X-Correlation-ID",
+                    "error - could not get X-Correlation-ID header"
+                )
+            )
     )
 
 /**
@@ -134,7 +141,7 @@ fun HttpRequest.withUpdatedDebugHeaders(headers: Map<String, String>): HttpReque
  */
 fun HttpRequest.getDebugHeaders() = listOfNotNull(
     headers["X-Request-ID"]?.let { "X-Request-ID" to it },
-    headers["X-Correlation-ID"]?.let { "X-Request-ID" to it }
+    headers["X-Correlation-ID"]?.let { "X-Correlation-ID" to it }
 ).toMap()
 
 /**
