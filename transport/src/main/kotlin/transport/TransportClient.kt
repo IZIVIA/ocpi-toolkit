@@ -3,7 +3,9 @@ package transport
 import transport.domain.HttpRequest
 import transport.domain.HttpResponse
 
-abstract class TransportClient {
+abstract class TransportClient(
+    open val baseUrl: String
+) {
 
     /**
      * Send a provided request to a server using a particular transport layer

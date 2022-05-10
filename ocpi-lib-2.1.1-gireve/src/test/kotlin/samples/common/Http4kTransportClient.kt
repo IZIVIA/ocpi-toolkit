@@ -9,8 +9,8 @@ import transport.domain.HttpResponse
 import transport.domain.parseHttpStatus
 
 class Http4kTransportClient(
-    private val baseUrl: String
-) : TransportClient() {
+    baseUrl: String
+) : TransportClient(baseUrl) {
 
     val client = JettyClient()
 

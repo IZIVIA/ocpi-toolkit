@@ -2,7 +2,8 @@ package ocpi.locations
 
 import common.httpResponse
 import common.mapper
-import common.parseAuthorizationHeader
+import common.tokenFilter
+import ocpi.credentials.repositories.PlatformRepository
 import ocpi.locations.domain.*
 import transport.TransportServer
 import transport.domain.FixedPathSegment
@@ -15,6 +16,7 @@ import transport.domain.VariablePathSegment
  */
 class LocationsEmspServer(
     private val transportServer: TransportServer,
+    private val platformRepository: PlatformRepository,
     private val service: LocationsEmspInterface
 ) {
     init {
@@ -25,12 +27,12 @@ class LocationsEmspServer(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .getLocation(
-                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!
@@ -46,12 +48,12 @@ class LocationsEmspServer(
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .getEvse(
-                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -69,12 +71,12 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .getConnector(
-                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -91,12 +93,12 @@ class LocationsEmspServer(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .putLocation(
-                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -113,12 +115,12 @@ class LocationsEmspServer(
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .putEvse(
-                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -137,12 +139,12 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .putConnector(
-                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -160,12 +162,12 @@ class LocationsEmspServer(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .patchLocation(
-                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -182,12 +184,12 @@ class LocationsEmspServer(
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .patchEvse(
-                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,
@@ -206,12 +208,12 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .patchConnector(
-                        token = req.parseAuthorizationHeader(),
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         locationId = req.pathParams["locationId"]!!,

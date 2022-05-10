@@ -22,9 +22,9 @@ fun main() {
 
     VersionsServer(
         transportServer = senderServer,
+        platformRepository = senderPlatformRepository,
         validationService = VersionsValidationService(
-            repository = senderVersionsRepository,
-            platformRepository = senderPlatformRepository
+            repository = senderVersionsRepository
         )
     )
     senderServer.start()
@@ -41,7 +41,10 @@ fun main() {
         clientCountryCode = "FR",
         serverUrl = receiverUrl,
         credentialsClient = CredentialsClient(transportClient = transportTowardsReceiver),
-        versionsClient = VersionsClient(transportClient = transportTowardsReceiver)
+        versionsClient = VersionsClient(
+            transportClient = transportTowardsReceiver,
+            platformRepository = senderPlatformRepository
+        )
     )
 
     println("Registering $senderUrl to $receiverUrl")

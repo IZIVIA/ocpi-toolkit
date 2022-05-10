@@ -33,9 +33,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         val server = buildTransportServer()
         LocationsCpoServer(
             server,
+            platformRepository = DummyPlatformCacheRepository(tokenC = tokenC),
             LocationsCpoValidationService(
                 service = LocationsCpoMongoService(collection),
-                platformRepository = DummyPlatformCacheRepository(tokenC = tokenC)
             )
         )
         return server
@@ -59,7 +59,10 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         )
         cpoServer.start()
 
-        val locationsEmspClient = LocationsEmspClient(cpoServer.getClient())
+        val locationsEmspClient = LocationsEmspClient(
+            transportClient = cpoServer.getClient(),
+            platformRepository = DummyPlatformCacheRepository(tokenC = tokenC)
+        )
 
         // Tests
         var limit = numberOfLocations + 1
@@ -69,7 +72,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
-                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -111,7 +113,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
-                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -153,7 +154,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
-                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -195,7 +195,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
-                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -237,7 +236,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
-                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -279,7 +277,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
-                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -321,7 +318,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
-                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -363,7 +359,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
-                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -405,7 +400,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
-                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
@@ -446,7 +440,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         expectThat(
             locationsEmspClient.getLocations(
-                token = tokenC,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,

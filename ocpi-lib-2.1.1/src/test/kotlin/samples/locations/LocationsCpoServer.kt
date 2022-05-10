@@ -18,13 +18,17 @@ val cpoServerPort = 8080
  */
 fun main() {
     // We specify the transport to serve the cpo server
-    val transportServer = Http4kTransportServer(cpoServerUrl, cpoServerPort)
+    val transportServer = Http4kTransportServer(baseUrl = cpoServerUrl, port = cpoServerPort)
 
     // We specify service for the validation service
     val service = CacheLocationsCpoService()
 
     // We implement callbacks for the server using the built-in service and our service implementation
-    LocationsCpoServer(transportServer, LocationsCpoValidationService(service, DUMMY_CREDENTIALS_REPOSITORY))
+    LocationsCpoServer(
+        transportServer = transportServer,
+        platformRepository = DUMMY_PLATFORM_REPOSITORY,
+        service = LocationsCpoValidationService(service = service)
+    )
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()

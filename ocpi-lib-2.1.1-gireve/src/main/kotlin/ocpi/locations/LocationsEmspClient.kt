@@ -1,6 +1,7 @@
 package ocpi.locations
 
 import common.*
+import ocpi.credentials.repositories.PlatformRepository
 import ocpi.locations.domain.Connector
 import ocpi.locations.domain.Evse
 import ocpi.locations.domain.Location
@@ -14,11 +15,11 @@ import java.time.Instant
  * @property transportClient
  */
 class LocationsEmspClient(
-    private val transportClient: TransportClient
+    private val transportClient: TransportClient,
+    private val platformRepository: PlatformRepository
 ) : LocationsCpoInterface {
 
     override fun getLocations(
-        token: String,
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
@@ -35,35 +36,34 @@ class LocationsEmspClient(
                         "offset" to offset.toString(),
                         limit?.let { "limit" to limit.toString() }
                     ).toMap(),
-                    headers = mapOf(authorizationHeader(token = token))
+                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
                 )
             )
             .parsePaginatedBody(offset)
 
-    override fun getLocation(token: String, locationId: String): OcpiResponseBody<Location?> =
+    override fun getLocation(locationId: String): OcpiResponseBody<Location?> =
         transportClient
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/locations/$locationId",
-                    headers = mapOf(authorizationHeader(token = token))
+                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
                 )
             )
             .parseBody()
 
-    override fun getEvse(token: String, locationId: String, evseUid: String): OcpiResponseBody<Evse?> =
+    override fun getEvse(locationId: String, evseUid: String): OcpiResponseBody<Evse?> =
         transportClient
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/locations/$locationId/$evseUid",
-                    headers = mapOf(authorizationHeader(token = token))
+                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
                 )
             )
             .parseBody()
 
     override fun getConnector(
-        token: String,
         locationId: String,
         evseUid: String,
         connectorId: String
@@ -73,7 +73,7 @@ class LocationsEmspClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/locations/$locationId/$evseUid/$connectorId",
-                    headers = mapOf(authorizationHeader(token = token))
+                    headers = mapOf(platformRepository.buildAuthorizationHeader(transportClient))
                 )
             )
             .parseBody()

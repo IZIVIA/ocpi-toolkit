@@ -8,13 +8,13 @@ import samples.common.Http4kTransportClient
  */
 fun main() {
     // We specify the transport client to communicate with the eMSP
-    val transportClient = Http4kTransportClient(emspServerUrl)
+    val transportClient = Http4kTransportClient(baseUrl = emspServerUrl)
 
     // We instantiate the clients that we want to use
-    val locationsCpoClient = LocationsCpoClient(transportClient)
+    val locationsCpoClient = LocationsCpoClient(transportClient = transportClient, platformRepository = DUMMY_PLATFORM_REPOSITORY)
 
     // We can use it
     println(
-        locationsCpoClient.getLocation(CREDENTIALS_TOKEN_C,"fr", "abc", "location1")
+        locationsCpoClient.getLocation(countryCode = "fr", partyId = "abc", locationId = "location1")
     )
 }

@@ -15,13 +15,17 @@ val emspServerPort = 8081
  */
 fun main() {
     // We specify the transport to serve the eMSP server
-    val transportServer = Http4kTransportServer(emspServerUrl, emspServerPort)
+    val transportServer = Http4kTransportServer(baseUrl = emspServerUrl, port = emspServerPort)
 
     // We specify service for the validation service
     val service = CacheLocationsEmspService()
 
     // We implement callbacks for the server using the built-in service and our repository implementation
-    LocationsEmspServer(transportServer, LocationsEmspValidationService(service, DUMMY_CREDENTIALS_REPOSITORY))
+    LocationsEmspServer(
+        transportServer = transportServer,
+        platformRepository = DUMMY_PLATFORM_REPOSITORY,
+        service = LocationsEmspValidationService(service = service)
+    )
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()

@@ -1,7 +1,8 @@
 package ocpi.locations
 
 import common.httpResponse
-import common.parseAuthorizationHeader
+import common.tokenFilter
+import ocpi.credentials.repositories.PlatformRepository
 import transport.TransportServer
 import transport.domain.FixedPathSegment
 import transport.domain.HttpMethod
@@ -14,6 +15,7 @@ import java.time.Instant
  */
 class LocationsCpoServer(
     private val transportServer: TransportServer,
+    private val platformRepository: PlatformRepository,
     private val service: LocationsCpoInterface
 ) {
 
@@ -23,7 +25,8 @@ class LocationsCpoServer(
             path = listOf(
                 FixedPathSegment("/locations")
             ),
-            queryParams = listOf("date_from", "date_to", "offset", "limit")
+            queryParams = listOf("date_from", "date_to", "offset", "limit"),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 val dateFrom = req.queryParams["date_from"]
@@ -31,7 +34,6 @@ class LocationsCpoServer(
 
                 service
                     .getLocations(
-                        token = req.parseAuthorizationHeader(),
                         dateFrom = dateFrom?.let { Instant.parse(it) },
                         dateTo = dateTo?.let { Instant.parse(it) },
                         offset = req.queryParams["offset"]?.toInt() ?: 0,
@@ -45,12 +47,12 @@ class LocationsCpoServer(
             path = listOf(
                 FixedPathSegment("/locations"),
                 VariablePathSegment("locationId")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .getLocation(
-                        token = req.parseAuthorizationHeader(),
                         locationId = req.pathParams["locationId"]!!
                     )
             }
@@ -62,12 +64,12 @@ class LocationsCpoServer(
                 FixedPathSegment("/locations"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .getEvse(
-                        token = req.parseAuthorizationHeader(),
                         locationId = req.pathParams["locationId"]!!,
                         evseUid = req.pathParams["evseUid"]!!
                     )
@@ -81,12 +83,12 @@ class LocationsCpoServer(
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")
-            )
+            ),
+            filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
                 service
                     .getConnector(
-                        token = req.parseAuthorizationHeader(),
                         locationId = req.pathParams["locationId"]!!,
                         evseUid = req.pathParams["evseUid"]!!,
                         connectorId = req.pathParams["connectorId"]!!

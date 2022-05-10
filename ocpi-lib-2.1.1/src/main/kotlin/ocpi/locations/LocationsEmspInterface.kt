@@ -25,13 +25,11 @@ interface LocationsEmspInterface {
      * illogical if the eMSP system had a different status or was missing an object. If a discrepancy is found, the CPO
      * might push an update to the eMSP via a PUT or PATCH call.
      *
-     * @param token
      * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the Location object to retrieve.
      */
     fun getLocation(
-        token: String,
         countryCode: String,
         partyId: String,
         locationId: String
@@ -43,14 +41,12 @@ interface LocationsEmspInterface {
      * illogical if the eMSP system had a different status or was missing an object. If a discrepancy is found, the CPO
      * might push an update to the eMSP via a PUT or PATCH call.
      *
-     * @param token
      * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the Location object to retrieve.
      * @param evseUid (max-length=39) Evse.uid, required when requesting an EVSE or Connector object.
      */
     fun getEvse(
-        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -63,7 +59,6 @@ interface LocationsEmspInterface {
      * illogical if the eMSP system had a different status or was missing an object. If a discrepancy is found, the CPO
      * might push an update to the eMSP via a PUT or PATCH call.
      *
-     * @param token
      * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the Location object to retrieve.
@@ -71,7 +66,6 @@ interface LocationsEmspInterface {
      * @param connectorId (max-length=36) Connector.id, required when requesting a Connector object.
      */
     fun getConnector(
-        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -83,14 +77,12 @@ interface LocationsEmspInterface {
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
      * to the eMSP, or to replace existing Locations.
      *
-     * @param token
      * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the new Location object, or the Location of which an EVSE or
      * Location object is send
      */
     fun putLocation(
-        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -101,7 +93,6 @@ interface LocationsEmspInterface {
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
      * to the eMSP, or to replace existing Locations.
      *
-     * @param token
      * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the new Location object, or the Location of which an EVSE or
@@ -109,7 +100,6 @@ interface LocationsEmspInterface {
      * @param evseUid (max-length=39) Evse.uid, required when an EVSE or Connector object is send/replaced.
      */
     fun putEvse(
-        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -121,7 +111,6 @@ interface LocationsEmspInterface {
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
      * to the eMSP, or to replace existing Locations.
      *
-     * @param token
      * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the new Location object, or the Location of which an EVSE or
@@ -130,7 +119,6 @@ interface LocationsEmspInterface {
      * @param connectorId (max-length=36) Connector.id, required when a Connector object is send/replaced.
      */
     fun putConnector(
-        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -143,13 +131,11 @@ interface LocationsEmspInterface {
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
      * fields/objects that are not specified are considered unchanged.
      *
-     * @param token
      * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the new Location object
      */
     fun patchLocation(
-        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -160,14 +146,12 @@ interface LocationsEmspInterface {
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
      * fields/objects that are not specified are considered unchanged.
      *
-     * @param token
      * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the Location of which an EVSE or Location object is send
      * @param evseUid (max-length=39) Evse.uid, required when an EVSE or Connector object is send/replaced.
      */
     fun patchEvse(
-        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -179,7 +163,6 @@ interface LocationsEmspInterface {
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
      * fields/objects that are not specified are considered unchanged.
      *
-     * @param token
      * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=39) Location.id of the Location of which an EVSE or Location object is send
@@ -187,7 +170,6 @@ interface LocationsEmspInterface {
      * @param connectorId (max-length=36) Connector.id, required when a Connector object is send/replaced.
      */
     fun patchConnector(
-        token: String,
         countryCode: String,
         partyId: String,
         locationId: String,

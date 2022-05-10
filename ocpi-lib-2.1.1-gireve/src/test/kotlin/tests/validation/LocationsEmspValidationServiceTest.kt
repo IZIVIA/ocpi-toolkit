@@ -4,7 +4,6 @@ import common.OcpiStatus
 import ocpi.locations.domain.toPartial
 import ocpi.locations.validation.LocationsEmspValidationService
 import org.junit.jupiter.api.Test
-import samples.common.DummyPlatformCacheRepository
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import tests.mock.locationsEmspService
@@ -28,29 +27,29 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun getLocationParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsEmspValidationService(service = locationsEmspService(emptyList()))
 
-        expectThat(service.getLocation(token = token, countryCode = str1char, partyId = str2chars, locationId = str4chars)) {
+        expectThat(service.getLocation(countryCode = str1char, partyId = str2chars, locationId = str4chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getLocation(token = token, countryCode = str2chars, partyId = str3chars, locationId = str39chars)) {
+        expectThat(service.getLocation(countryCode = str2chars, partyId = str3chars, locationId = str39chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getLocation(token = token, countryCode = str3chars, partyId = str3chars, locationId = str39chars)) {
+        expectThat(service.getLocation(countryCode = str3chars, partyId = str3chars, locationId = str39chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
-        expectThat(service.getLocation(token = token, countryCode = str2chars, partyId = str4chars, locationId = str39chars)) {
+        expectThat(service.getLocation(countryCode = str2chars, partyId = str4chars, locationId = str39chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
-        expectThat(service.getLocation(token = token, countryCode = str2chars, partyId = str3chars, locationId = str40chars)) {
+        expectThat(service.getLocation(countryCode = str2chars, partyId = str3chars, locationId = str40chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -58,11 +57,10 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun getEvseParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsEmspValidationService(service = locationsEmspService(emptyList()))
 
         expectThat(
             service.getEvse(
-                token = token,
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
@@ -75,7 +73,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -88,7 +85,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getEvse(
-                token = token,
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -101,7 +97,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
@@ -114,7 +109,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
@@ -127,7 +121,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -141,11 +134,10 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun getConnectorParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsEmspValidationService(service = locationsEmspService(emptyList()))
 
         expectThat(
             service.getConnector(
-                token = token,
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
@@ -159,7 +151,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -173,7 +164,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -187,7 +177,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
@@ -201,7 +190,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
@@ -215,7 +203,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -229,7 +216,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -244,11 +230,10 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun patchLocationParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsEmspValidationService(service = locationsEmspService(emptyList()))
 
         expectThat(
             service.patchLocation(
-                token = token,
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
@@ -261,7 +246,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchLocation(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -274,7 +258,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchLocation(
-                token = token,
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -287,7 +270,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchLocation(
-                token = token,
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
@@ -300,7 +282,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchLocation(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
@@ -314,11 +295,10 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun patchEvseParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsEmspValidationService(service = locationsEmspService(emptyList()))
 
         expectThat(
             service.patchEvse(
-                token = token,
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
@@ -332,7 +312,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -346,7 +325,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchEvse(
-                token = token,
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -360,7 +338,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
@@ -374,7 +351,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
@@ -388,7 +364,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -403,11 +378,10 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun patchConnectorParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsEmspValidationService(service = locationsEmspService(emptyList()))
 
         expectThat(
             service.patchConnector(
-                token = token,
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
@@ -422,7 +396,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -437,7 +410,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchConnector(
-                token = token,
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -452,7 +424,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
@@ -467,7 +438,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
@@ -482,7 +452,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -497,7 +466,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.patchConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -513,11 +481,10 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun putLocationParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsEmspValidationService(service = locationsEmspService(emptyList()))
 
         expectThat(
             service.putLocation(
-                token = token,
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
@@ -530,7 +497,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putLocation(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -543,7 +509,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putLocation(
-                token = token,
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -556,7 +521,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putLocation(
-                token = token,
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
@@ -569,7 +533,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putLocation(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
@@ -583,11 +546,10 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun putEvseParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsEmspValidationService(service = locationsEmspService(emptyList()))
 
         expectThat(
             service.putEvse(
-                token = token,
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
@@ -601,7 +563,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -615,7 +576,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putEvse(
-                token = token,
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -629,7 +589,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
@@ -643,7 +602,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
@@ -657,7 +615,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putEvse(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -672,11 +629,10 @@ class LocationsEmspValidationServiceTest {
 
     @Test
     fun putConnectorParamsValidationTest() {
-        service = LocationsEmspValidationService(locationsEmspService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsEmspValidationService(service = locationsEmspService(emptyList()))
 
         expectThat(
             service.putConnector(
-                token = token,
                 countryCode = str1char,
                 partyId = str2chars,
                 locationId = str4chars,
@@ -691,7 +647,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -706,7 +661,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putConnector(
-                token = token,
                 countryCode = str3chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -721,7 +675,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str4chars,
                 locationId = str39chars,
@@ -736,7 +689,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str40chars,
@@ -751,7 +703,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,
@@ -766,7 +717,6 @@ class LocationsEmspValidationServiceTest {
 
         expectThat(
             service.putConnector(
-                token = token,
                 countryCode = str2chars,
                 partyId = str3chars,
                 locationId = str39chars,

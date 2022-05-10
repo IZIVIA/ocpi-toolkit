@@ -5,7 +5,6 @@ import common.SearchResult
 import ocpi.locations.domain.Location
 import ocpi.locations.validation.LocationsCpoValidationService
 import org.junit.jupiter.api.Test
-import samples.common.DummyPlatformCacheRepository
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
@@ -22,10 +21,9 @@ class LocationsCpoValidationServiceTest {
 
     @Test
     fun getLocationsParamsValidationTest() {
-        service =
-            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsCpoValidationService(service = locationsCpoService(emptyList()))
 
-        expectThat(service.getLocations(token = token, dateFrom = from, dateTo = from, offset = 0, limit = null)) {
+        expectThat(service.getLocations(dateFrom = from, dateTo = from, offset = 0, limit = null)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -35,7 +33,7 @@ class LocationsCpoValidationServiceTest {
                 .isEqualTo(0)
         }
 
-        expectThat(service.getLocations(token = token, dateFrom = to, dateTo = from, offset = 0, limit = null)) {
+        expectThat(service.getLocations(dateFrom = to, dateTo = from, offset = 0, limit = null)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
@@ -43,7 +41,7 @@ class LocationsCpoValidationServiceTest {
                 .isNull()
         }
 
-        expectThat(service.getLocations(token = token, dateFrom = from, dateTo = to, offset = 0, limit = null)) {
+        expectThat(service.getLocations(dateFrom = from, dateTo = to, offset = 0, limit = null)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -53,7 +51,7 @@ class LocationsCpoValidationServiceTest {
                 .isEqualTo(0)
         }
 
-        expectThat(service.getLocations(token = token, dateFrom = null, dateTo = to, offset = 0, limit = null)) {
+        expectThat(service.getLocations(dateFrom = null, dateTo = to, offset = 0, limit = null)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -63,7 +61,7 @@ class LocationsCpoValidationServiceTest {
                 .isEqualTo(0)
         }
 
-        expectThat(service.getLocations(token = token, dateFrom = from, dateTo = null, offset = 0, limit = null)) {
+        expectThat(service.getLocations(dateFrom = from, dateTo = null, offset = 0, limit = null)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -73,7 +71,7 @@ class LocationsCpoValidationServiceTest {
                 .isEqualTo(0)
         }
 
-        expectThat(service.getLocations(token = token, dateFrom = null, dateTo = null, offset = 0, limit = null)) {
+        expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = null)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -83,7 +81,7 @@ class LocationsCpoValidationServiceTest {
                 .isEqualTo(0)
         }
 
-        expectThat(service.getLocations(token = token, dateFrom = null, dateTo = null, offset = -10, limit = null)) {
+        expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = -10, limit = null)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
@@ -91,7 +89,7 @@ class LocationsCpoValidationServiceTest {
                 .isNull()
         }
 
-        expectThat(service.getLocations(token = token, dateFrom = null, dateTo = null, offset = 0, limit = -10)) {
+        expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = -10)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
@@ -99,7 +97,7 @@ class LocationsCpoValidationServiceTest {
                 .isNull()
         }
 
-        expectThat(service.getLocations(token = token, dateFrom = null, dateTo = null, offset = 0, limit = 100)) {
+        expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = 100)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -114,7 +112,7 @@ class LocationsCpoValidationServiceTest {
                 .isEqualTo(100)
         }
 
-        expectThat(service.getLocations(token = token, dateFrom = null, dateTo = null, offset = 100, limit = 100)) {
+        expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = 100, limit = 100)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -129,7 +127,7 @@ class LocationsCpoValidationServiceTest {
                 .isEqualTo(100)
         }
 
-        expectThat(service.getLocations(token = token, dateFrom = null, dateTo = null, offset = 0, limit = 0)) {
+        expectThat(service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = 0)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -148,23 +146,23 @@ class LocationsCpoValidationServiceTest {
     @Test
     fun getLocationParamsValidationTest() {
         service =
-            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+            LocationsCpoValidationService(service = locationsCpoService(emptyList()))
 
         val str3chars = "abc"
         val str39chars = "abababababababababababababababababababa"
         val str40chars = "abababababababababababababababababababab"
 
-        expectThat(service.getLocation(token = token, locationId = str3chars)) {
+        expectThat(service.getLocation(locationId = str3chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getLocation(token = token, locationId = str39chars)) {
+        expectThat(service.getLocation(locationId = str39chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getLocation(token = token, locationId = str40chars)) {
+        expectThat(service.getLocation(locationId = str40chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -172,44 +170,43 @@ class LocationsCpoValidationServiceTest {
 
     @Test
     fun getEvseParamsValidationTest() {
-        service =
-            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+        service = LocationsCpoValidationService(service = locationsCpoService(emptyList()))
 
         val str3chars = "abc"
         val str39chars = "abababababababababababababababababababa"
         val str40chars = "abababababababababababababababababababab"
 
-        expectThat(service.getEvse(token = token, locationId = str3chars, evseUid = str3chars)) {
+        expectThat(service.getEvse(locationId = str3chars, evseUid = str3chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getEvse(token = token, locationId = str39chars, evseUid = str3chars)) {
+        expectThat(service.getEvse(locationId = str39chars, evseUid = str3chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getEvse(token = token, locationId = str40chars, evseUid = str3chars)) {
+        expectThat(service.getEvse(locationId = str40chars, evseUid = str3chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
-        expectThat(service.getEvse(token = token, locationId = str3chars, evseUid = str3chars)) {
+        expectThat(service.getEvse(locationId = str3chars, evseUid = str3chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getEvse(token = token, locationId = str3chars, evseUid = str39chars)) {
+        expectThat(service.getEvse(locationId = str3chars, evseUid = str39chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(service.getEvse(token = token, locationId = str3chars, evseUid = str40chars)) {
+        expectThat(service.getEvse(locationId = str3chars, evseUid = str40chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
-        expectThat(service.getEvse(token = token, locationId = str40chars, evseUid = str40chars)) {
+        expectThat(service.getEvse(locationId = str40chars, evseUid = str40chars)) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -218,7 +215,7 @@ class LocationsCpoValidationServiceTest {
     @Test
     fun getConnectorParamsValidationTest() {
         service =
-            LocationsCpoValidationService(locationsCpoService(emptyList()), DummyPlatformCacheRepository(tokenC = token))
+            LocationsCpoValidationService(service = locationsCpoService(emptyList()))
 
         val str3chars = "abc"
         val str39chars = "abababababababababababababababababababa"
@@ -226,7 +223,6 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 locationId = str3chars,
                 evseUid = str3chars,
                 connectorId = str3chars
@@ -238,7 +234,6 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 locationId = str39chars,
                 evseUid = str3chars,
                 connectorId = str3chars
@@ -250,7 +245,6 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 locationId = str40chars,
                 evseUid = str3chars,
                 connectorId = str3chars
@@ -262,7 +256,6 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 locationId = str3chars,
                 evseUid = str3chars,
                 connectorId = str3chars
@@ -274,7 +267,6 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 locationId = str3chars,
                 evseUid = str39chars,
                 connectorId = str3chars
@@ -286,7 +278,6 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 locationId = str3chars,
                 evseUid = str40chars,
                 connectorId = str3chars
@@ -298,7 +289,6 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 locationId = str40chars,
                 evseUid = str40chars,
                 connectorId = str3chars
@@ -310,7 +300,6 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 locationId = str3chars,
                 evseUid = str3chars,
                 connectorId = str40chars
@@ -322,7 +311,6 @@ class LocationsCpoValidationServiceTest {
 
         expectThat(
             service.getConnector(
-                token = token,
                 locationId = str40chars,
                 evseUid = str40chars,
                 connectorId = str40chars

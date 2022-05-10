@@ -78,6 +78,20 @@ fun OcpiResponseBody<SearchResult<*>>.getPaginatedHeaders(request: HttpRequest) 
         emptyMap()
     }
 
+fun OcpiException.toHttpResponse(): HttpResponse =
+    HttpResponse(
+        status = httpStatus,
+        body = mapper.writeValueAsString(
+            OcpiResponseBody(
+                data = null,
+                status_code = ocpiStatus.code,
+                status_message = message,
+                timestamp = Instant.now()
+            )
+        ),
+        headers = if (httpStatus == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap()
+    )
+
 @Suppress("UNCHECKED_CAST")
 fun <T> HttpRequest.httpResponse(fn: () -> OcpiResponseBody<T>): HttpResponse =
     try {
@@ -107,18 +121,7 @@ fun <T> HttpRequest.httpResponse(fn: () -> OcpiResponseBody<T>): HttpResponse =
             else it
         }
     } catch (e: OcpiException) {
-        HttpResponse(
-            status = e.httpStatus,
-            body = mapper.writeValueAsString(
-                OcpiResponseBody<T>(
-                    data = null,
-                    status_code = e.ocpiStatus.code,
-                    status_message = e.message,
-                    timestamp = Instant.now()
-                )
-            ),
-            headers = if (e.httpStatus == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap()
-        )
+        e.toHttpResponse()
     } catch (e: HttpException) {
         logger.error(e)
         HttpResponse(
