@@ -10,6 +10,11 @@ import java.util.*
 
 typealias AuthenticatedHttpRequest = HttpRequest
 
+/**
+ * Parse body of a paginated request. The result will be stored in a SearchResult which contains all pagination
+ * information.
+ * @param offset
+ */
 fun <T> HttpResponse.parsePaginatedBody(offset: Int): OcpiResponseBody<SearchResult<T>> =
     parseBody<OcpiResponseBody<List<T>>>()
         .let { parsedBody ->
@@ -62,6 +67,13 @@ fun PlatformRepository.buildAuthorizationHeader(baseUrl: String, allowTokenA: Bo
             "Could not find CREDENTIALS_TOKEN_C associated with platform $baseUrl"
         )
 
+/**
+ * Adds the authentification header to the request.
+ *
+ * @param platformRepository use to retrieve tokens
+ * @param baseUrl used to know what platform is being requested
+ * @param allowTokenA true if we can authenticate using token A
+ */
 fun HttpRequest.authenticate(
     platformRepository: PlatformRepository,
     baseUrl: String,
@@ -76,6 +88,12 @@ fun HttpRequest.authenticate(
         )
     )
 
+
+/**
+ * Adds the authentification header to the request.
+ *
+ * @param token the token to use to authenticate
+ */
 fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
     copy(headers = headers.plus(authorizationHeader(token = token)))
 
