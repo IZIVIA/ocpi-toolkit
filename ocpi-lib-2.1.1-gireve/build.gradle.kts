@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":transport"))
+    api(project(":transport"))
 
     api("org.apache.logging.log4j:log4j-api:${Versions.log4j}")
     api("org.apache.logging.log4j:log4j-core:${Versions.log4j}")
