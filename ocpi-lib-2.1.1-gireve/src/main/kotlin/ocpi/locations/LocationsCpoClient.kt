@@ -3,30 +3,42 @@ package ocpi.locations
 import common.*
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.locations.domain.*
+import ocpi.versions.domain.ModuleID
 import transport.TransportClient
+import transport.TransportClientBuilder
 import transport.domain.HttpMethod
 import transport.domain.HttpRequest
 
 /**
  * Sends calls to an eMSP server
- * @property transportClient
+ * @property transportClientBuilder used to build transport client
+ * @property serverVersionsEndpointUrl used to know which platform to communicate with
+ * @property platformRepository used to get information about the platform (endpoint, token)
  */
 class LocationsCpoClient(
-    private val transportClient: TransportClient,
+    private val transportClientBuilder: TransportClientBuilder,
+    private val serverVersionsEndpointUrl: String,
     private val platformRepository: PlatformRepository
 ) : LocationsEmspInterface {
+
+    private fun buildTransport(): TransportClient = transportClientBuilder
+        .buildFor(
+            module = ModuleID.locations,
+            platform = serverVersionsEndpointUrl,
+            platformRepository = platformRepository
+        )
 
     override fun getLocation(
         countryCode: String,
         partyId: String,
         locationId: String
     ): OcpiResponseBody<Location?> =
-        transportClient
+        buildTransport()
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/locations/$countryCode/$partyId/$locationId"
-                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
+                    path = "/$countryCode/$partyId/$locationId"
+                ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
 
@@ -36,12 +48,12 @@ class LocationsCpoClient(
         locationId: String,
         evseUid: String
     ): OcpiResponseBody<Evse?> =
-        transportClient
+        buildTransport()
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/locations/$countryCode/$partyId/$locationId/$evseUid"
-                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
+                    path = "/$countryCode/$partyId/$locationId/$evseUid"
+                ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
 
@@ -52,12 +64,12 @@ class LocationsCpoClient(
         evseUid: String,
         connectorId: String
     ): OcpiResponseBody<Connector?> =
-        transportClient
+        buildTransport()
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
-                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
+                    path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
 
@@ -67,13 +79,13 @@ class LocationsCpoClient(
         locationId: String,
         location: Location
     ): OcpiResponseBody<Location> =
-        transportClient
+        buildTransport()
             .send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/locations/$countryCode/$partyId/$locationId",
+                    path = "/$countryCode/$partyId/$locationId",
                     body = mapper.writeValueAsString(location)
-                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
+                ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
 
@@ -84,13 +96,13 @@ class LocationsCpoClient(
         evseUid: String,
         evse: Evse
     ): OcpiResponseBody<Evse> =
-        transportClient
+        buildTransport()
             .send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/locations/$countryCode/$partyId/$locationId/$evseUid",
+                    path = "/$countryCode/$partyId/$locationId/$evseUid",
                     body = mapper.writeValueAsString(evse)
-                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
+                ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
 
@@ -102,13 +114,13 @@ class LocationsCpoClient(
         connectorId: String,
         connector: Connector
     ): OcpiResponseBody<Connector> =
-        transportClient
+        buildTransport()
             .send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/locations/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                    path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
                     body = mapper.writeValueAsString(connector)
-                ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
+                ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
 
@@ -117,15 +129,16 @@ class LocationsCpoClient(
         partyId: String,
         locationId: String,
         location: LocationPartial
-    ): OcpiResponseBody<Location?> = transportClient
-        .send(
-            HttpRequest(
-                method = HttpMethod.PATCH,
-                path = "/locations/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(location)
-            ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
-        )
-        .parseBody()
+    ): OcpiResponseBody<Location?> =
+        buildTransport()
+            .send(
+                HttpRequest(
+                    method = HttpMethod.PATCH,
+                    path = "/$countryCode/$partyId/$locationId",
+                    body = mapper.writeValueAsString(location)
+                ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+            )
+            .parseBody()
 
     override fun patchEvse(
         countryCode: String,
@@ -133,15 +146,16 @@ class LocationsCpoClient(
         locationId: String,
         evseUid: String,
         evse: EvsePartial
-    ): OcpiResponseBody<Evse?> = transportClient
-        .send(
-            HttpRequest(
-                method = HttpMethod.PATCH,
-                path = "/locations/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(evse)
-            ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
-        )
-        .parseBody()
+    ): OcpiResponseBody<Evse?> =
+        buildTransport()
+            .send(
+                HttpRequest(
+                    method = HttpMethod.PATCH,
+                    path = "/$countryCode/$partyId/$locationId",
+                    body = mapper.writeValueAsString(evse)
+                ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+            )
+            .parseBody()
 
     override fun patchConnector(
         countryCode: String,
@@ -150,13 +164,14 @@ class LocationsCpoClient(
         evseUid: String,
         connectorId: String,
         connector: ConnectorPartial
-    ): OcpiResponseBody<Connector?> = transportClient
-        .send(
-            HttpRequest(
-                method = HttpMethod.PATCH,
-                path = "/locations/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(connector)
-            ).authenticate(platformRepository = platformRepository, baseUrl = transportClient.baseUrl)
-        )
-        .parseBody()
+    ): OcpiResponseBody<Connector?> =
+        buildTransport()
+            .send(
+                HttpRequest(
+                    method = HttpMethod.PATCH,
+                    path = "/$countryCode/$partyId/$locationId",
+                    body = mapper.writeValueAsString(connector)
+                ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+            )
+            .parseBody()
 }

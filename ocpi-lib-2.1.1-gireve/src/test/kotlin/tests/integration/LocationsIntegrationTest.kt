@@ -6,10 +6,13 @@ import ocpi.locations.LocationsCpoServer
 import ocpi.locations.LocationsEmspClient
 import ocpi.locations.domain.Location
 import ocpi.locations.validation.LocationsCpoValidationService
+import ocpi.versions.domain.VersionNumber
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.getCollection
 import samples.common.DummyPlatformCacheRepository
+import samples.common.Http4kTransportClientBuilder
 import samples.common.Http4kTransportServer
+import samples.common.VersionDetailsCacheRepository
 import strikt.api.expectThat
 import strikt.assertions.*
 import tests.integration.common.BaseServerIntegrationTest
@@ -21,13 +24,14 @@ import java.time.Instant
 import java.util.*
 import kotlin.math.min
 
+
 class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
     private val tokenC = UUID.randomUUID().toString()
     private var database: MongoDatabase? = null
 
     private fun setupCpoServer(locations: List<Location>): Http4kTransportServer {
-        if (database == null) database = buildDBClient().getDatabase("ocpi-2-1-1-tests")
+        if (database == null) database = buildDBClient().getDatabase("ocpi-2-1-1-gireve-tests")
         val collection = database!!.getCollection<Location>("cpo-server-locations-${UUID.randomUUID()}")
         collection.insertMany(locations)
         val server = buildTransportServer()
@@ -59,9 +63,21 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         )
         cpoServer.start()
 
+        val cpoServerVersionsUrl = "${cpoServer.baseUrl}/versions"
+
+        val platformRepo = DummyPlatformCacheRepository(tokenC = tokenC).also {
+            val versionDetailsCpo = VersionDetailsCacheRepository(baseUrl = cpoServer.baseUrl)
+
+            it.saveEndpoints(
+                cpoServerVersionsUrl,
+                versionDetailsCpo.getVersionDetails(VersionNumber.V2_1_1)!!.endpoints
+            )
+        }
+
         val locationsEmspClient = LocationsEmspClient(
-            transportClient = cpoServer.getClient(),
-            platformRepository = DummyPlatformCacheRepository(tokenC = tokenC)
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverVersionsEndpointUrl = cpoServerVersionsUrl,
+            platformRepository = platformRepo
         )
 
         // Tests

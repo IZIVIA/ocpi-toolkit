@@ -15,7 +15,7 @@ import transport.TransportServer
 import transport.domain.*
 
 class Http4kTransportServer(
-    val baseUrl: String,
+    val baseUrl: String, // TODO: remove
     val port: Int
 ) : TransportServer() {
 

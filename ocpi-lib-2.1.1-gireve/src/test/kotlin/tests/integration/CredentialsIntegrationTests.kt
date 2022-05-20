@@ -5,24 +5,21 @@ import com.mongodb.client.MongoDatabase
 import common.OcpiClientInvalidParametersException
 import common.OcpiResponseException
 import common.OcpiStatus
-import ocpi.credentials.CredentialsClient
 import ocpi.credentials.CredentialsServer
 import ocpi.credentials.services.CredentialsClientService
 import ocpi.credentials.services.CredentialsServerService
 import ocpi.locations.domain.BusinessDetails
+import ocpi.versions.VersionDetailsServer
 import ocpi.versions.VersionsClient
 import ocpi.versions.VersionsServer
-import ocpi.versions.domain.VersionNumber
+import ocpi.versions.validation.VersionDetailsValidationService
 import ocpi.versions.validation.VersionsValidationService
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 import org.litote.kmongo.set
 import org.litote.kmongo.setTo
-import samples.common.Http4kTransportClientBuilder
-import samples.common.Http4kTransportServer
-import samples.common.Platform
-import samples.common.VersionsCacheRepository
+import samples.common.*
 import strikt.api.expectCatching
 import strikt.api.expectThat
 import strikt.assertions.*
@@ -34,7 +31,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     data class ServerSetupResult(
         val transport: Http4kTransportServer,
-        val platformCollection: MongoCollection<Platform>
+        val platformCollection: MongoCollection<Platform>,
+        val versionsEndpoint: String
     )
 
     private var database: MongoDatabase? = null
@@ -46,8 +44,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         // Setup receiver (only server)
         val receiverServer = buildTransportServer()
+        val receiverServerVersionsUrl = "${receiverServer.baseUrl}/versions"
         val receiverPlatformRepo = PlatformMongoRepository(collection = receiverPlatformCollection)
         val receiverVersionsCacheRepository = VersionsCacheRepository(baseUrl = receiverServer.baseUrl)
+        val receiverVersionDetailsCacheRepository = VersionDetailsCacheRepository(baseUrl = receiverServer.baseUrl)
         CredentialsServer(
             transportServer = receiverServer,
             service = CredentialsServerService(
@@ -56,7 +56,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 serverPartyId = "DEF",
                 serverCountryCode = "FR",
                 transportClientBuilder = Http4kTransportClientBuilder(),
-                serverUrl = receiverServer.baseUrl
+                serverVersionsUrl = receiverServerVersionsUrl
             )
         )
         VersionsServer(
@@ -66,10 +66,18 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 repository = receiverVersionsCacheRepository
             )
         )
+        VersionDetailsServer(
+            transportServer = receiverServer,
+            platformRepository = receiverPlatformRepo,
+            validationService = VersionDetailsValidationService(
+                repository = receiverVersionDetailsCacheRepository
+            )
+        )
 
         return ServerSetupResult(
             transport = receiverServer,
-            platformCollection = receiverPlatformCollection
+            platformCollection = receiverPlatformCollection,
+            versionsEndpoint = receiverServerVersionsUrl
         )
     }
 
@@ -80,6 +88,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         // Setup sender (server)
         val senderServer = buildTransportServer()
+        val senderServerVersionsUrl = "${senderServer.baseUrl}/versions"
 
         VersionsServer(
             transportServer = senderServer,
@@ -88,10 +97,18 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl)
             )
         )
+        VersionDetailsServer(
+            transportServer = senderServer,
+            platformRepository = PlatformMongoRepository(collection = senderPlatformCollection),
+            validationService = VersionDetailsValidationService(
+                repository = VersionDetailsCacheRepository(baseUrl = senderServer.baseUrl)
+            )
+        )
 
         return ServerSetupResult(
             transport = senderServer,
-            platformCollection = senderPlatformCollection
+            platformCollection = senderPlatformCollection,
+            versionsEndpoint = senderServerVersionsUrl
         )
     }
 
@@ -100,20 +117,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServerSetupResult: ServerSetupResult
     ): CredentialsClientService {
         // Setup sender (client)
-        val transportTowardsReceiver = receiverServerSetupResult.transport.getClient()
         return CredentialsClientService(
-            clientVersionsEndpointUrl = senderServerSetupResult.transport.baseUrl,
+            clientVersionsEndpointUrl = senderServerSetupResult.versionsEndpoint,
             clientPlatformRepository = PlatformMongoRepository(collection = senderServerSetupResult.platformCollection),
             clientVersionsRepository = VersionsCacheRepository(baseUrl = senderServerSetupResult.transport.baseUrl),
             clientBusinessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
             clientPartyId = "ABC",
             clientCountryCode = "FR",
-            serverUrl = receiverServerSetupResult.transport.baseUrl,
-            credentialsClient = CredentialsClient(transportClient = transportTowardsReceiver),
-            versionsClient = VersionsClient(
-                transportClient = transportTowardsReceiver,
-                platformRepository = PlatformMongoRepository(collection = senderServerSetupResult.platformCollection)
-            )
+            serverVersionsEndpointUrl = receiverServerSetupResult.versionsEndpoint,
+            transportClientBuilder = Http4kTransportClientBuilder()
         )
     }
 
@@ -128,7 +140,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         )
 
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
 
         // Start the servers
         receiverServer.transport.start()
@@ -139,8 +151,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             credentialsClientService.register()
         }.isFailure().isA<OcpiClientInvalidParametersException>()
 
-        receiverServer.platformCollection.deleteOne(Platform::url eq senderServer.transport.baseUrl)
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+        receiverServer.platformCollection.deleteOne(Platform::url eq senderServer.versionsEndpoint)
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         // Fails because the receiver does not know the TOKEN_A used by the sender
         expectCatching {
@@ -151,10 +163,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             .get { statusCode }
             .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
-        receiverServer.platformCollection.deleteOne(Platform::url eq senderServer.transport.baseUrl)
+        receiverServer.platformCollection.deleteOne(Platform::url eq senderServer.versionsEndpoint)
         receiverServer.platformCollection.insertOne(
             Platform(
-                url = receiverServer.transport.baseUrl,
+                url = receiverServer.versionsEndpoint,
                 tokenA = "!$tokenA"
             )
         )
@@ -175,8 +187,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val senderServer = setupSender()
 
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         receiverServer.transport.start()
         senderServer.transport.start()
@@ -184,7 +196,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // We don't need to register, we will use TOKEN_A for our requests
 
         val versionsClient = VersionsClient(
-            transportClient = receiverServer.transport.getClient(),
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
             platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
         )
 
@@ -213,8 +226,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
         // well in the client so that it knows what token to send
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         // Start the servers
         receiverServer.transport.start()
@@ -240,8 +253,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
         // well in the client so that it knows what token to send
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         // Start the servers
         receiverServer.transport.start()
@@ -250,7 +263,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         credentialsClientService.register()
 
         val versionsClient = VersionsClient(
-            transportClient = receiverServer.transport.getClient(),
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
             platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
         )
 
@@ -283,8 +297,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
         // well in the client so that it knows what token to send
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         // Start the servers
         receiverServer.transport.start()
@@ -293,7 +307,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         credentialsClientService.register()
 
         val versionsClient = VersionsClient(
-            transportClient = receiverServer.transport.getClient(),
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
             platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
         )
 
@@ -338,8 +353,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
         // well in the client so that it knows what token to send
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.transport.baseUrl, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.transport.baseUrl, tokenA = tokenA))
+        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         // Start the servers
         receiverServer.transport.start()
@@ -348,7 +363,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val credentialsAfterRegistration = credentialsClientService.register()
 
         val versionsClient = VersionsClient(
-            transportClient = receiverServer.transport.getClient(),
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
             platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
         )
 
@@ -374,8 +390,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Gireve update process (delete then register)
         credentialsClientService.delete()
         val newTokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.updateOne(Platform::url eq senderServer.transport.baseUrl, set(Platform::tokenA setTo newTokenA))
-        senderServer.platformCollection.updateOne(Platform::url eq receiverServer.transport.baseUrl, set(Platform::tokenA setTo newTokenA))
+        receiverServer.platformCollection.updateOne(Platform::url eq senderServer.versionsEndpoint, set(Platform::tokenA setTo newTokenA))
+        senderServer.platformCollection.updateOne(Platform::url eq receiverServer.versionsEndpoint, set(Platform::tokenA setTo newTokenA))
         credentialsClientService.register()
 
         expectThat(

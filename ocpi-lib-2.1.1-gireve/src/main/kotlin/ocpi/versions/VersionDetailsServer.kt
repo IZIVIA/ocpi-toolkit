@@ -3,28 +3,30 @@ package ocpi.versions
 import common.httpResponse
 import common.tokenFilter
 import ocpi.credentials.repositories.PlatformRepository
-import ocpi.versions.validation.VersionsValidationService
+import ocpi.versions.validation.VersionDetailsValidationService
 import transport.TransportServer
 import transport.domain.FixedPathSegment
 import transport.domain.HttpMethod
+import transport.domain.VariablePathSegment
 
-class VersionsServer(
+class VersionDetailsServer(
     transportServer: TransportServer,
     platformRepository: PlatformRepository,
-    validationService: VersionsValidationService,
-    basePath: List<FixedPathSegment> = listOf(
-        FixedPathSegment("/versions")
-    )
+    validationService: VersionDetailsValidationService,
+    basePath: List<FixedPathSegment> = emptyList()
 ) {
-
     init {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePath,
+            path = basePath + listOf(
+                VariablePathSegment("versionNumber")
+            ),
             filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
-                validationService.getVersions()
+                validationService.getVersionDetails(
+                    versionNumber = req.pathParams["versionNumber"]!!
+                )
             }
         }
     }

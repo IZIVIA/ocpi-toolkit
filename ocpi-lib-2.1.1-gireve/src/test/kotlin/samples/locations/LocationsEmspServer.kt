@@ -8,6 +8,7 @@ import samples.common.Http4kTransportServer
 import java.time.Instant
 
 val emspServerUrl = "http://localhost:8081"
+val emspServerVersionsUrl = "http://localhost:8081/versions"
 val emspServerPort = 8081
 
 /**

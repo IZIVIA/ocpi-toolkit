@@ -44,6 +44,12 @@ open class PlatformCacheRepository: PlatformRepository {
     override fun getPlatformByTokenC(token: String): String? = platforms
         .values.firstOrNull { it.tokenC == token }?.url
 
+    override fun getEndpoints(platformUrl: String): List<Endpoint> = platforms
+        .values.firstOrNull { it.url == platformUrl }?.endpoints ?: emptyList()
+
+    override fun getVersion(platformUrl: String): Version? = platforms
+        .values.firstOrNull { it.url == platformUrl }?.version
+
     override fun removeCredentialsTokenA(platformUrl: String) {
         platforms
             .getOrDefault(platformUrl, Platform(platformUrl))

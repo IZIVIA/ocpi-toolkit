@@ -1,15 +1,16 @@
 package samples.credentials
 
-import ocpi.credentials.CredentialsClient
 import ocpi.credentials.services.CredentialsClientService
 import ocpi.locations.domain.BusinessDetails
-import ocpi.versions.VersionsClient
+import ocpi.versions.VersionDetailsServer
 import ocpi.versions.VersionsServer
+import ocpi.versions.validation.VersionDetailsValidationService
 import ocpi.versions.validation.VersionsValidationService
 import samples.common.*
 
 const val senderPort = 8081
 const val senderUrl = "http://localhost:$senderPort"
+const val senderVersionsUrl = "http://localhost:$senderPort/versions"
 
 fun main() {
     // Server
@@ -17,8 +18,9 @@ fun main() {
 
     // Add token A associated with the sender
     val senderVersionsRepository = VersionsCacheRepository(baseUrl = senderUrl)
+    val senderVersionDetailsRepository = VersionDetailsCacheRepository(baseUrl = senderUrl)
     val senderPlatformRepository = PlatformCacheRepository()
-    senderPlatformRepository.platforms[receiverUrl] = Platform(url = receiverUrl, tokenA = tokenA)
+    senderPlatformRepository.platforms[receiverVersionsUrl] = Platform(url = receiverVersionsUrl, tokenA = tokenA)
 
     VersionsServer(
         transportServer = senderServer,
@@ -27,24 +29,26 @@ fun main() {
             repository = senderVersionsRepository
         )
     )
+    VersionDetailsServer(
+        transportServer = senderServer,
+        platformRepository = senderPlatformRepository,
+        validationService = VersionDetailsValidationService(
+            repository = senderVersionDetailsRepository
+        )
+    )
     senderServer.start()
 
     // Client
-    val transportTowardsReceiver = Http4kTransportClient(baseUrl = receiverUrl)
 
     val credentialsClientService = CredentialsClientService(
-        clientVersionsEndpointUrl = senderUrl,
+        clientVersionsEndpointUrl = senderVersionsUrl,
         clientPlatformRepository = senderPlatformRepository,
         clientVersionsRepository = senderVersionsRepository,
         clientBusinessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
         clientPartyId = "ABC",
         clientCountryCode = "FR",
-        serverUrl = receiverUrl,
-        credentialsClient = CredentialsClient(transportClient = transportTowardsReceiver),
-        versionsClient = VersionsClient(
-            transportClient = transportTowardsReceiver,
-            platformRepository = senderPlatformRepository
-        )
+        serverVersionsEndpointUrl = receiverVersionsUrl,
+        transportClientBuilder = Http4kTransportClientBuilder()
     )
 
     println("Registering $senderUrl to $receiverUrl")
