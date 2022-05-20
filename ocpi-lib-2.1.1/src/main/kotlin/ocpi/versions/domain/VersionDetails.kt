@@ -12,6 +12,6 @@ package ocpi.versions.domain
  * @property endpoints A list of supported endpoints for this version. (at least one in the list)
  */
 data class VersionDetails(
-    val version: VersionNumber,
+    val version: String,
     val endpoints: List<Endpoint>
 )

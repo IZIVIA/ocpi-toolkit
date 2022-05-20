@@ -1,11 +1,18 @@
 package ocpi.credentials
 
-import common.*
+import common.OcpiResponseBody
+import common.authenticate
+import common.mapper
+import common.parseBody
 import ocpi.credentials.domain.Credentials
 import transport.TransportClient
 import transport.domain.HttpMethod
 import transport.domain.HttpRequest
 
+/**
+ * Use this class only if you know what you are doing. Instead, use CredentialsClientService.
+ * @property transportClient TransportClient
+ */
 class CredentialsClient(
     private val transportClient: TransportClient
 ): CredentialsInterface {
@@ -14,8 +21,7 @@ class CredentialsClient(
         transportClient
             .send(
                 HttpRequest(
-                    method = HttpMethod.GET,
-                    path = "/credentials"
+                    method = HttpMethod.GET
                 ).authenticate(token = tokenC)
             )
             .parseBody()
@@ -26,7 +32,6 @@ class CredentialsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.POST,
-                    path = "/credentials",
                     body = mapper.writeValueAsString(credentials)
                 ).authenticate(token = tokenA)
             )
@@ -37,7 +42,6 @@ class CredentialsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/credentials",
                     body = mapper.writeValueAsString(credentials)
                 ).authenticate(token = tokenC)
             )
@@ -48,7 +52,7 @@ class CredentialsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.DELETE,
-                    path = "/credentials"
+                    path = "/"
                 ).authenticate(token = tokenC)
             )
             .parseBody()

@@ -5,12 +5,10 @@ import ocpi.credentials.CredentialsInterface
 import ocpi.credentials.domain.Credentials
 import ocpi.credentials.repositories.PlatformRepository
 import ocpi.locations.domain.BusinessDetails
-import ocpi.versions.domain.Version
-import ocpi.versions.domain.VersionDetails
+import ocpi.versions.VersionDetailsClient
+import ocpi.versions.VersionsClient
 import ocpi.versions.domain.VersionNumber
 import transport.TransportClientBuilder
-import transport.domain.HttpMethod
-import transport.domain.HttpRequest
 
 class CredentialsServerService(
     private val platformRepository: PlatformRepository,
@@ -18,7 +16,7 @@ class CredentialsServerService(
     private val serverPartyId: String,
     private val serverCountryCode: String,
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverUrl: String
+    private val serverVersionsUrl: String
 ) : CredentialsInterface {
 
     override fun get(
@@ -44,7 +42,7 @@ class CredentialsServerService(
         val platformUrl = platformRepository.getPlatformByTokenA(tokenA)
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($tokenA)")
 
-        findLatestMutualVersionAndStoreInformation(platformUrl = platformUrl, credentials = credentials)
+        findLatestMutualVersionAndStoreInformation(credentials = credentials)
 
         platformRepository.removeCredentialsTokenA(platformUrl = platformUrl)
 
@@ -60,7 +58,7 @@ class CredentialsServerService(
         val platformUrl = platformRepository.getPlatformByTokenC(tokenC)
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
 
-        findLatestMutualVersionAndStoreInformation(platformUrl = platformUrl, credentials = credentials)
+        findLatestMutualVersionAndStoreInformation(credentials = credentials)
 
         getCredentials(
             token = platformRepository.saveCredentialsTokenC(
@@ -85,17 +83,13 @@ class CredentialsServerService(
         null
     }
 
-    private fun findLatestMutualVersionAndStoreInformation(platformUrl: String, credentials: Credentials) {
-        val versions = transportClientBuilder
-            .build(credentials.url)
-            .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = "/",
-                    headers = mapOf(authorizationHeader(token = credentials.token))
-                )
-            )
-            .parseBody<OcpiResponseBody<List<Version>>>()
+    private fun findLatestMutualVersionAndStoreInformation(credentials: Credentials) {
+        val versions = VersionsClient(
+            transportClientBuilder = transportClientBuilder,
+            serverVersionsEndpointUrl = credentials.url,
+            platformRepository = platformRepository
+        )
+            .getVersions()
             .let {
                 it.data
                     ?: throw OcpiServerGenericException(
@@ -103,19 +97,17 @@ class CredentialsServerService(
                     )
             }
 
-        val matchingVersion = versions.firstOrNull { it.version == VersionNumber.V2_1_1 }
+        val matchingVersion = versions.firstOrNull { it.version == VersionNumber.V2_1_1.value }
             ?: throw OcpiServerNoMatchingEndpointsException("Expected version 2.1.1 from $versions")
 
-        val versionDetail = transportClientBuilder
-            .build(matchingVersion.url)
-            .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = "",
-                    headers = mapOf(authorizationHeader(token = credentials.token))
-                )
-            )
-            .parseBody<OcpiResponseBody<VersionDetails>>()
+        platformRepository.saveVersion(platformUrl = credentials.url, version = matchingVersion)
+
+        val versionDetail = VersionDetailsClient(
+            transportClientBuilder = transportClientBuilder,
+            serverVersionsEndpointUrl = credentials.url,
+            platformRepository = platformRepository
+        )
+            .getVersionDetails()
             .let {
                 it.data
                     ?: throw OcpiServerGenericException(
@@ -123,13 +115,12 @@ class CredentialsServerService(
                     )
             }
 
-        platformRepository.saveVersion(platformUrl = platformUrl, version = matchingVersion)
-        platformRepository.saveEndpoints(platformUrl = platformUrl, endpoints = versionDetail.endpoints)
+        platformRepository.saveEndpoints(platformUrl = credentials.url, endpoints = versionDetail.endpoints)
     }
 
     private fun getCredentials(token: String): Credentials = Credentials(
         token = token,
-        url = serverUrl,
+        url = serverVersionsUrl,
         business_details = serverBusinessDetails,
         party_id = serverPartyId,
         country_code = serverCountryCode

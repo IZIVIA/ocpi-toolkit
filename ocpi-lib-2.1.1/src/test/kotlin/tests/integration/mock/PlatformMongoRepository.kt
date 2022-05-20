@@ -50,6 +50,12 @@ class PlatformMongoRepository(
     override fun getPlatformByTokenC(token: String): String? = collection
         .findOne(Platform::tokenC eq token)?.url
 
+    override fun getEndpoints(platformUrl: String): List<Endpoint> = collection
+        .findOne(Platform::url eq platformUrl)?.endpoints ?: emptyList()
+
+    override fun getVersion(platformUrl: String): Version? = collection
+        .findOne(Platform::url eq platformUrl)?.version
+
     override fun removeCredentialsTokenA(platformUrl: String) {
         collection.updateOne(Platform::url eq platformUrl, set(Platform::tokenA setTo null))
     }

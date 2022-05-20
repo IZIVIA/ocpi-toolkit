@@ -16,15 +16,15 @@ import java.time.Instant
 class LocationsCpoServer(
     private val transportServer: TransportServer,
     private val platformRepository: PlatformRepository,
-    private val service: LocationsCpoInterface
+    private val service: LocationsCpoInterface,
+    basePath: List<FixedPathSegment> = listOf(
+        FixedPathSegment("/locations")
+    )
 ) {
-
     init {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = listOf(
-                FixedPathSegment("/locations")
-            ),
+            path = basePath,
             queryParams = listOf("date_from", "date_to", "offset", "limit"),
             filters = listOf(platformRepository::tokenFilter)
         ) { req ->
@@ -44,10 +44,7 @@ class LocationsCpoServer(
 
         transportServer.handle(
             method = HttpMethod.GET,
-            path = listOf(
-                FixedPathSegment("/locations"),
-                VariablePathSegment("locationId")
-            ),
+            path = basePath + VariablePathSegment("locationId"),
             filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
@@ -60,8 +57,7 @@ class LocationsCpoServer(
 
         transportServer.handle(
             method = HttpMethod.GET,
-            path = listOf(
-                FixedPathSegment("/locations"),
+            path = basePath + listOf(
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
             ),
@@ -78,8 +74,7 @@ class LocationsCpoServer(
 
         transportServer.handle(
             method = HttpMethod.GET,
-            path = listOf(
-                FixedPathSegment("/locations"),
+            path = basePath + listOf(
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")

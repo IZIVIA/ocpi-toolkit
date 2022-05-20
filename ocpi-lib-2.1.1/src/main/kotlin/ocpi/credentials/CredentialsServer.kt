@@ -11,14 +11,15 @@ import transport.domain.HttpMethod
 
 class CredentialsServer(
     transportServer: TransportServer,
-    service: CredentialsServerService
+    service: CredentialsServerService,
+    basePath: List<FixedPathSegment> = listOf(
+        FixedPathSegment("/credentials")
+    )
 ) {
     init {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = listOf(
-                FixedPathSegment("/credentials")
-            )
+            path = basePath
         ) { req ->
             req.httpResponse {
                 service.get(
@@ -29,9 +30,7 @@ class CredentialsServer(
 
         transportServer.handle(
             method = HttpMethod.POST,
-            path = listOf(
-                FixedPathSegment("/credentials")
-            )
+            path = basePath
         ) { req ->
             req.httpResponse {
                 service.post(
@@ -43,9 +42,7 @@ class CredentialsServer(
 
         transportServer.handle(
             method = HttpMethod.PUT,
-            path = listOf(
-                FixedPathSegment("/credentials")
-            )
+            path = basePath
         ) { req ->
             req.httpResponse {
                 service.put(
@@ -57,9 +54,7 @@ class CredentialsServer(
 
         transportServer.handle(
             method = HttpMethod.DELETE,
-            path = listOf(
-                FixedPathSegment("/credentials")
-            )
+            path = basePath
         ) { req ->
             req.httpResponse {
                 service.delete(
@@ -67,6 +62,5 @@ class CredentialsServer(
                 )
             }
         }
-
     }
 }
