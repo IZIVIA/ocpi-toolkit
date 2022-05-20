@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
-import io.github.quatresh.annotations.Partial
+import com.izivia.ocpi.toolkit.annotations.Partial
 
 /**
  * @property language (max-length=2) Language Code ISO 639-1

@@ -1,8 +1,8 @@
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
+import com.izivia.ocpi.toolkit.annotations.Partial
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
-import io.github.quatresh.annotations.Partial
 
 /**
  * Defines the set of values that identify a token to which a Location might be published.

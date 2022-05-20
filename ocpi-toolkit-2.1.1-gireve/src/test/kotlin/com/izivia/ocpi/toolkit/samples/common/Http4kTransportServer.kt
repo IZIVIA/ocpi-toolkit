@@ -2,6 +2,8 @@ package com.izivia.ocpi.toolkit.samples.common
 
 import com.izivia.ocpi.toolkit.common.OcpiException
 import com.izivia.ocpi.toolkit.common.toHttpResponse
+import com.izivia.ocpi.toolkit.transport.TransportServer
+import com.izivia.ocpi.toolkit.transport.domain.*
 import org.http4k.core.*
 import org.http4k.filter.DebuggingFilters
 import org.http4k.routing.RoutingHttpHandler
@@ -11,8 +13,6 @@ import org.http4k.routing.routes
 import org.http4k.server.Http4kServer
 import org.http4k.server.Netty
 import org.http4k.server.asServer
-import transport.TransportServer
-import transport.domain.*
 
 class Http4kTransportServer(
     val baseUrl: String, // TODO: remove

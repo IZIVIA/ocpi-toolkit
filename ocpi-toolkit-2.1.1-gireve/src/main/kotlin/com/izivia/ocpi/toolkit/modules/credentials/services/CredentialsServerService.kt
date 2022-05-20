@@ -7,7 +7,7 @@ import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsClient
 import com.izivia.ocpi.toolkit.modules.versions.VersionsClient
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
-import transport.TransportClientBuilder
+import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 
 class CredentialsServerService(
     private val platformRepository: PlatformRepository,

@@ -8,7 +8,7 @@ plugins {
     id("maven-publish")
 }
 
-val versionNumber = System.getenv("version")?.substringAfter("R-") ?: "0.0.1"
+val versionNumber = System.getenv("version")?.substringAfter("R-") ?: "0.0.3"
 
 allprojects {
 

@@ -4,10 +4,10 @@ import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.tokenFilter
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.validation.VersionDetailsValidationService
-import transport.TransportServer
-import transport.domain.FixedPathSegment
-import transport.domain.HttpMethod
-import transport.domain.VariablePathSegment
+import com.izivia.ocpi.toolkit.transport.TransportServer
+import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 
 class VersionDetailsServer(
     transportServer: TransportServer,

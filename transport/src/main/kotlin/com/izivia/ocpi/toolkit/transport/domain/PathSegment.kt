@@ -1,4 +1,4 @@
-package transport.domain
+package com.izivia.ocpi.toolkit.transport.domain
 
 
 sealed interface PathSegment {

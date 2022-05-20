@@ -4,10 +4,10 @@ import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
-import transport.TransportClient
-import transport.TransportClientBuilder
-import transport.domain.HttpMethod
-import transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.TransportClient
+import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
 /**
  * Sends calls to an eMSP server

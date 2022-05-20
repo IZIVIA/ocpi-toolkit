@@ -6,9 +6,9 @@ import com.izivia.ocpi.toolkit.common.authenticate
 import com.izivia.ocpi.toolkit.common.parseBody
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
-import transport.TransportClientBuilder
-import transport.domain.HttpMethod
-import transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
 /**
  * Used to get the version details of a platform

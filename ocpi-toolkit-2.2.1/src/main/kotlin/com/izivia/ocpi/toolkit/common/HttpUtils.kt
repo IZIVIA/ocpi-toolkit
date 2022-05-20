@@ -3,11 +3,11 @@ package com.izivia.ocpi.toolkit.common
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
-import transport.TransportClientBuilder
-import transport.domain.HttpException
-import transport.domain.HttpRequest
-import transport.domain.HttpResponse
-import transport.domain.HttpStatus
+import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
+import com.izivia.ocpi.toolkit.transport.domain.HttpException
+import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
+import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import java.util.*
 
 typealias AuthenticatedHttpRequest = HttpRequest

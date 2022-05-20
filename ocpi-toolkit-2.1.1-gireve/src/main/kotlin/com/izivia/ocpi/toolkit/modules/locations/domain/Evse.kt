@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
-import io.github.quatresh.annotations.Partial
+import com.izivia.ocpi.toolkit.annotations.Partial
 import java.time.Instant
 
 /**

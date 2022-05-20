@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
-import io.github.quatresh.annotations.Partial
+import com.izivia.ocpi.toolkit.annotations.Partial
 
 /**
  * This type is used to specify the energy mix and environmental impact of the supplied energy at a location or in a

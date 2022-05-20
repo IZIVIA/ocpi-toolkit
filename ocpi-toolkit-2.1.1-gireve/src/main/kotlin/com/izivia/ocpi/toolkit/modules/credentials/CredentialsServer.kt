@@ -5,9 +5,9 @@ import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.common.parseAuthorizationHeader
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
-import transport.TransportServer
-import transport.domain.FixedPathSegment
-import transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.TransportServer
+import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 
 class CredentialsServer(
     transportServer: TransportServer,
