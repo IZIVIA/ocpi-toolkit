@@ -6,6 +6,10 @@ import transport.TransportClient
 import transport.domain.HttpMethod
 import transport.domain.HttpRequest
 
+/**
+ * Use this class only if you know what you are doing. Instead, use CredentialsClientService.
+ * @property transportClient TransportClient
+ */
 class CredentialsClient(
     private val transportClient: TransportClient
 ): CredentialsInterface {
@@ -13,10 +17,7 @@ class CredentialsClient(
     override fun get(tokenC: String): OcpiResponseBody<Credentials> =
         transportClient
             .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = "/credentials"
-                )
+                HttpRequest(method = HttpMethod.GET)
                     .withDebugHeaders()
                     .authenticate(token = tokenC)
             )
@@ -28,7 +29,6 @@ class CredentialsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.POST,
-                    path = "/credentials",
                     body = mapper.writeValueAsString(credentials)
                 )
                     .withDebugHeaders()
@@ -41,7 +41,6 @@ class CredentialsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/credentials",
                     body = mapper.writeValueAsString(credentials)
                 )
                     .withDebugHeaders()
@@ -52,10 +51,7 @@ class CredentialsClient(
     override fun delete(tokenC: String): OcpiResponseBody<Credentials?> =
         transportClient
             .send(
-                HttpRequest(
-                    method = HttpMethod.DELETE,
-                    path = "/credentials"
-                )
+                HttpRequest(method = HttpMethod.DELETE)
                     .withDebugHeaders()
                     .authenticate(token = tokenC)
             )

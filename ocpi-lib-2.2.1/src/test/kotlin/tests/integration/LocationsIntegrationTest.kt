@@ -6,17 +6,14 @@ import ocpi.locations.LocationsCpoServer
 import ocpi.locations.LocationsEmspClient
 import ocpi.locations.domain.Location
 import ocpi.locations.validation.LocationsCpoValidationService
+import ocpi.versions.domain.VersionNumber
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.getCollection
-import samples.common.DummyPlatformCacheRepository
-import samples.common.Http4kTransportServer
+import samples.common.*
 import strikt.api.expectThat
 import strikt.assertions.*
 import tests.integration.common.BaseServerIntegrationTest
 import tests.integration.mock.LocationsCpoMongoService
-import samples.common.validConnector
-import samples.common.validEvse
-import samples.common.validLocation
 import java.time.Instant
 import java.util.*
 import kotlin.math.min
@@ -59,9 +56,22 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         )
         cpoServer.start()
 
+        val cpoServerVersionsUrl = "${cpoServer.baseUrl}/versions"
+
+        val platformRepo = DummyPlatformCacheRepository(tokenC = tokenC).also {
+            val versionDetailsCpo = VersionDetailsCacheRepository(baseUrl = cpoServer.baseUrl)
+
+            it.saveEndpoints(
+                cpoServerVersionsUrl,
+                versionDetailsCpo.getVersionDetails(VersionNumber.V2_2_1)!!.endpoints
+            )
+        }
+
+
         val locationsEmspClient = LocationsEmspClient(
-            transportClient = cpoServer.getClient(),
-            platformRepository = DummyPlatformCacheRepository(tokenC = tokenC)
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverVersionsEndpointUrl = cpoServerVersionsUrl,
+            platformRepository = platformRepo
         )
 
         // Tests

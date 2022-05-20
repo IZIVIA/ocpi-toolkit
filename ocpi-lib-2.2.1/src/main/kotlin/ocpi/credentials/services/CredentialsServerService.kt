@@ -16,7 +16,7 @@ class CredentialsServerService(
     private val platformRepository: PlatformRepository,
     private val credentialsRoleRepository: CredentialsRoleRepository,
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverUrl: String
+    private val serverVersionsUrl: String
 ) : CredentialsInterface {
 
     override fun get(
@@ -44,7 +44,6 @@ class CredentialsServerService(
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($tokenA)")
 
         findLatestMutualVersionAndStoreInformation(
-            platformUrl = platformUrl,
             credentials = credentials,
             debugHeaders = debugHeaders
         )
@@ -68,7 +67,6 @@ class CredentialsServerService(
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
 
         findLatestMutualVersionAndStoreInformation(
-            platformUrl = platformUrl,
             credentials = credentials,
             debugHeaders = debugHeaders
         )
@@ -97,17 +95,13 @@ class CredentialsServerService(
     }
 
     private fun findLatestMutualVersionAndStoreInformation(
-        platformUrl: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ) {
         val versions = transportClientBuilder
             .build(credentials.url)
             .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = "/"
-                )
+                HttpRequest(method = HttpMethod.GET)
                     .withUpdatedDebugHeaders(headers = debugHeaders)
                     .authenticate(token = credentials.token)
             )
@@ -119,16 +113,15 @@ class CredentialsServerService(
                     )
             }
 
-        val matchingVersion = versions.firstOrNull { it.version == VersionNumber.V2_2_1 }
+        val matchingVersion = versions.firstOrNull { it.version == VersionNumber.V2_2_1.value }
             ?: throw OcpiServerNoMatchingEndpointsException("Expected version 2.2.1 from $versions")
+
+        platformRepository.saveVersion(platformUrl = credentials.url, version = matchingVersion)
 
         val versionDetail = transportClientBuilder
             .build(matchingVersion.url)
             .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = ""
-                )
+                HttpRequest(method = HttpMethod.GET)
                     .withUpdatedDebugHeaders(headers = debugHeaders)
                     .authenticate(token = credentials.token)
             )
@@ -140,13 +133,12 @@ class CredentialsServerService(
                     )
             }
 
-        platformRepository.saveVersion(platformUrl = platformUrl, version = matchingVersion)
-        platformRepository.saveEndpoints(platformUrl = platformUrl, endpoints = versionDetail.endpoints)
+        platformRepository.saveEndpoints(platformUrl = credentials.url, endpoints = versionDetail.endpoints)
     }
 
     private fun getCredentials(token: String): Credentials = Credentials(
         token = token,
-        url = serverUrl,
+        url = serverVersionsUrl,
         roles = credentialsRoleRepository.getCredentialsRoles()
     )
 }

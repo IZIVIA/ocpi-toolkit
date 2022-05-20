@@ -1,18 +1,16 @@
 package samples.locations
 
 import ocpi.locations.LocationsEmspClient
-import samples.common.Http4kTransportClient
+import samples.common.Http4kTransportClientBuilder
 
 /**
  * Example on how to use the eMSP client
  */
 fun main() {
-    // We specify the transport client to communicate with the CPO
-    val transportClient = Http4kTransportClient(baseUrl = cpoServerUrl)
-
     // We instantiate the clients that we want to use
     val locationsEmspClient = LocationsEmspClient(
-        transportClient = transportClient,
+        transportClientBuilder = Http4kTransportClientBuilder(),
+        serverVersionsEndpointUrl = cpoServerVersionsUrl,
         platformRepository = DUMMY_PLATFORM_REPOSITORY
     )
 

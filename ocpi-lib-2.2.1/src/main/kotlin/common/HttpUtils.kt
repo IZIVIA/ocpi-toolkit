@@ -2,6 +2,8 @@ package common
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import ocpi.credentials.repositories.PlatformRepository
+import ocpi.versions.domain.ModuleID
+import transport.TransportClientBuilder
 import transport.domain.HttpException
 import transport.domain.HttpRequest
 import transport.domain.HttpResponse
@@ -168,7 +170,7 @@ fun HttpRequest.getDebugHeaders() = listOfNotNull(
  * @throws OcpiClientNotEnoughInformationException if the token is missing
  * @throws HttpException if the authorization header is missing
  */
-fun HttpRequest.parseAuthorizationHeader() = headers["Authorization"]
+fun HttpRequest.parseAuthorizationHeader() = (headers["Authorization"] ?: headers["authorization"])
     ?.let {
         if (it.startsWith("Token ")) it
         else throw OcpiClientInvalidParametersException("Unkown token format: $it")
@@ -200,3 +202,10 @@ fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
         throw OcpiClientInvalidParametersException("Invalid token: $token")
     }
 }
+
+fun TransportClientBuilder.buildFor(module: ModuleID, platform: String, platformRepository: PlatformRepository) =
+    platformRepository
+        .getEndpoints(platformUrl = platform)
+        .find { it.identifier == module }
+        ?.let { build(url = it.url) }
+        ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)

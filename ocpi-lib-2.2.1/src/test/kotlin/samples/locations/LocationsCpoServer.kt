@@ -11,6 +11,7 @@ import samples.common.Http4kTransportServer
 import java.time.Instant
 
 val cpoServerUrl = "http://localhost:8080"
+val cpoServerVersionsUrl = "http://localhost:8080/versions"
 val cpoServerPort = 8080
 
 /**

@@ -6,9 +6,9 @@ import ocpi.locations.services.LocationsEmspService
 import ocpi.locations.validation.LocationsEmspValidationService
 import samples.common.Http4kTransportServer
 import samples.common.validLocation
-import java.time.Instant
 
 val emspServerUrl = "http://localhost:8081"
+val emspServerVersionsUrl = "http://localhost:8081/versions"
 val emspServerPort = 8081
 
 /**
