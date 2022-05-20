@@ -1,0 +1,102 @@
+package com.izivia.ocpi.toolkit.samples.locations
+
+import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspServer
+import com.izivia.ocpi.toolkit.modules.locations.domain.*
+import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspService
+import com.izivia.ocpi.toolkit.modules.locations.validation.LocationsEmspValidationService
+import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
+import com.izivia.ocpi.toolkit.samples.common.validLocation
+
+val emspServerUrl = "http://localhost:8081"
+val emspServerVersionsUrl = "http://localhost:8081/versions"
+val emspServerPort = 8081
+
+/**
+ * Example on how to server an eMSP server
+ */
+fun main() {
+    // We specify the transport to serve the eMSP server
+    val transportServer = Http4kTransportServer(baseUrl = emspServerUrl, port = emspServerPort)
+
+    // We specify service for the validation service
+    val service = CacheLocationsEmspService()
+
+    // We implement callbacks for the server using the built-in service and our repository implementation
+    LocationsEmspServer(
+        transportServer = transportServer,
+        platformRepository = DUMMY_PLATFORM_REPOSITORY,
+        service = LocationsEmspValidationService(service = service)
+    )
+
+    // It is recommended to start the server after setting up the routes to handle
+    transportServer.start()
+}
+
+class CacheLocationsEmspService : LocationsEmspService {
+    override fun getLocation(countryCode: String, partyId: String, locationId: String): Location? {
+        return validLocation
+    }
+
+    override fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): Evse? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getConnector(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String,
+        connectorId: String
+    ): Connector? {
+        TODO("Not yet implemented")
+    }
+
+    override fun putLocation(countryCode: String, partyId: String, locationId: String, location: Location): Location {
+        TODO("Not yet implemented")
+    }
+
+    override fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: Evse): Evse {
+        TODO("Not yet implemented")
+    }
+
+    override fun putConnector(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String,
+        connectorId: String,
+        connector: Connector
+    ): Connector {
+        TODO("Not yet implemented")
+    }
+
+    override fun patchLocation(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        location: LocationPartial
+    ): Location? {
+        TODO("Not yet implemented")
+    }
+
+    override fun patchEvse(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String,
+        evse: EvsePartial
+    ): Evse? {
+        TODO("Not yet implemented")
+    }
+
+    override fun patchConnector(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String,
+        connectorId: String,
+        connector: ConnectorPartial
+    ): Connector? {
+        TODO("Not yet implemented")
+    }
+}
