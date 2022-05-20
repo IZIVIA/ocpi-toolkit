@@ -1,10 +1,10 @@
-rootProject.name = "ocpi-lib"
+rootProject.name = "ocpi-toolkit"
 
 include(
     "common",
     "annotation-processor",
     "transport",
-    "ocpi-lib-2.1.1",
-    "ocpi-lib-2.2.1",
-    "ocpi-lib-2.1.1-gireve"
+    "ocpi-toolkit-2.1.1",
+    "ocpi-toolkit-2.2.1",
+    "ocpi-toolkit-2.1.1-gireve"
 )

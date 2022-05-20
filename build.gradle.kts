@@ -8,10 +8,11 @@ plugins {
     id("maven-publish")
 }
 
-val versionNumber = System.getenv("version")?.substringAfter("R-") ?: "dev"
+val versionNumber = System.getenv("version")?.substringAfter("R-") ?: "0.0.1"
 
 allprojects {
-    group = "io.github.4sh.ocpi-lib"
+
+    group = "com.izivia.ocpi-toolkit"
     version = versionNumber
 
     repositories {
