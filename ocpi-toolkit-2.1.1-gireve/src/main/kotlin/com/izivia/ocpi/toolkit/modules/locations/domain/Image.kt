@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
-import io.github.quatresh.annotations.Partial
+import com.izivia.ocpi.toolkit.annotations.Partial
 
 /**
  * This class references images related to a EVSE in terms of a file name or url. According to the roaming connection

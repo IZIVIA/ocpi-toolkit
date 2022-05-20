@@ -1,12 +1,12 @@
 package com.izivia.ocpi.toolkit.samples.common
 
+import com.izivia.ocpi.toolkit.transport.TransportClient
+import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
+import com.izivia.ocpi.toolkit.transport.domain.parseHttpStatus
 import org.http4k.client.JettyClient
 import org.http4k.core.Method
 import org.http4k.core.Request
-import transport.TransportClient
-import transport.domain.HttpRequest
-import transport.domain.HttpResponse
-import transport.domain.parseHttpStatus
 
 class Http4kTransportClient(
     baseUrl: String

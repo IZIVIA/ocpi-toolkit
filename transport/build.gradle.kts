@@ -12,7 +12,7 @@ val repo4shPassword: String by project
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            artifactId = "transport"
+            artifactId = "ocpi-transport"
             from(components["java"])
         }
     }

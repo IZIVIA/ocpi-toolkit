@@ -10,7 +10,7 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.parseVersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.VersionsRepository
-import transport.TransportClientBuilder
+import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 
 /**
  * Automates authentification process

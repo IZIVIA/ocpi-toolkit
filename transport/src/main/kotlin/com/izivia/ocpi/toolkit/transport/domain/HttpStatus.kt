@@ -1,4 +1,4 @@
-package transport.domain
+package com.izivia.ocpi.toolkit.transport.domain
 
 enum class HttpStatus(val code: Int, val label: String) {
     //1xx: Informational

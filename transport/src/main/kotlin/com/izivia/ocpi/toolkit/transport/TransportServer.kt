@@ -1,9 +1,9 @@
-package transport
+package com.izivia.ocpi.toolkit.transport
 
-import transport.domain.HttpMethod
-import transport.domain.HttpRequest
-import transport.domain.HttpResponse
-import transport.domain.PathSegment
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
+import com.izivia.ocpi.toolkit.transport.domain.PathSegment
 
 
 abstract class TransportServer {

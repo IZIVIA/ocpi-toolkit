@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit.common
 
-import transport.domain.HttpStatus
+import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 
 sealed class OcpiException(
     message: String,

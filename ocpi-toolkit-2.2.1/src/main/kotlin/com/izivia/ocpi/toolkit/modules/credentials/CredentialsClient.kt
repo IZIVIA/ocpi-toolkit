@@ -2,9 +2,9 @@ package com.izivia.ocpi.toolkit.modules.credentials
 
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
-import transport.TransportClient
-import transport.domain.HttpMethod
-import transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.TransportClient
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
 /**
  * Use this class only if you know what you are doing. Instead, use CredentialsClientService.

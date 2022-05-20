@@ -8,9 +8,9 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformReposito
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
-import transport.TransportClientBuilder
-import transport.domain.HttpMethod
-import transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
 class CredentialsServerService(
     private val platformRepository: PlatformRepository,

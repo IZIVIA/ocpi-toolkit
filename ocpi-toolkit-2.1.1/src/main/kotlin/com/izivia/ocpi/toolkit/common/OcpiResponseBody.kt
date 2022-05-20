@@ -2,12 +2,12 @@ package com.izivia.ocpi.toolkit.common
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.izivia.ocpi.toolkit.common.validation.toReadableString
+import com.izivia.ocpi.toolkit.transport.domain.HttpException
+import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
+import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import org.apache.logging.log4j.LogManager
 import org.valiktor.ConstraintViolationException
-import transport.domain.HttpException
-import transport.domain.HttpRequest
-import transport.domain.HttpResponse
-import transport.domain.HttpStatus
 import java.time.Instant
 
 /**

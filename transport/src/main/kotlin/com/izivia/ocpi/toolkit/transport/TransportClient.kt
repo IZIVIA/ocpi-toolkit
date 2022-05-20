@@ -1,7 +1,7 @@
-package transport
+package com.izivia.ocpi.toolkit.transport
 
-import transport.domain.HttpRequest
-import transport.domain.HttpResponse
+import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 
 abstract class TransportClient(
     open val baseUrl: String
