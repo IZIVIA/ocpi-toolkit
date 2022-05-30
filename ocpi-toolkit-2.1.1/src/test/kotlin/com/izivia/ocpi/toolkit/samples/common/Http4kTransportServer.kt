@@ -15,7 +15,7 @@ import org.http4k.server.Netty
 import org.http4k.server.asServer
 
 class Http4kTransportServer(
-    val baseUrl: String, // TODO: remove
+    val baseUrl: String,
     val port: Int
 ) : TransportServer() {
 
