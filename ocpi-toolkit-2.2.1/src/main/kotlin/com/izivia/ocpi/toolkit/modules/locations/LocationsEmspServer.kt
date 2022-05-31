@@ -19,7 +19,7 @@ class LocationsEmspServer(
     private val platformRepository: PlatformRepository,
     private val service: LocationsEmspInterface,
     basePath: List<FixedPathSegment> = listOf(
-        FixedPathSegment("/locations")
+        FixedPathSegment("/2.2.1/locations")
     )
 ) {
     init {

@@ -23,6 +23,12 @@ class PlatformMongoRepository(
             .updateOne(Platform::url eq platformUrl, set(Platform::endpoints setTo it))
     }
 
+    override fun saveCredentialsTokenA(platformUrl: String, credentialsTokenA: String): String =
+        credentialsTokenA.also {
+            collection
+                .updateOne(Platform::url eq platformUrl, set(Platform::tokenA setTo it))
+        }
+
     override fun saveCredentialsTokenB(platformUrl: String, credentialsTokenB: String): String =
         credentialsTokenB.also {
             collection
@@ -37,6 +43,9 @@ class PlatformMongoRepository(
 
     override fun getCredentialsTokenA(platformUrl: String): String? = collection
         .findOne(Platform::url eq platformUrl)?.tokenA
+
+    override fun getCredentialsTokenB(platformUrl: String): String? = collection
+        .findOne(Platform::url eq platformUrl)?.tokenB
 
     override fun getCredentialsTokenC(platformUrl: String): String? = collection
         .findOne(Platform::url eq platformUrl)?.tokenC
@@ -58,6 +67,10 @@ class PlatformMongoRepository(
 
     override fun removeCredentialsTokenA(platformUrl: String) {
         collection.updateOne(Platform::url eq platformUrl, set(Platform::tokenA setTo null))
+    }
+
+    override fun removeCredentialsTokenB(platformUrl: String) {
+        collection.updateOne(Platform::url eq platformUrl, set(Platform::tokenB setTo null))
     }
 
     override fun removeCredentialsTokenC(platformUrl: String) {

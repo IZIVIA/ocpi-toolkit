@@ -14,12 +14,12 @@ class VersionDetailsCacheRepository(
                 Endpoint(
                     identifier = ModuleID.credentials,
                     role = InterfaceRole.RECEIVER,
-                    url = "$baseUrl/credentials"
+                    url = "$baseUrl/${VersionNumber.V2_2_1.value}/credentials"
                 ),
                 Endpoint(
                     identifier = ModuleID.locations,
                     role = InterfaceRole.RECEIVER,
-                    url = "$baseUrl/locations"
+                    url = "$baseUrl/${VersionNumber.V2_2_1.value}/locations"
                 )
             )
         ).takeIf { versionNumber.value == it.version }

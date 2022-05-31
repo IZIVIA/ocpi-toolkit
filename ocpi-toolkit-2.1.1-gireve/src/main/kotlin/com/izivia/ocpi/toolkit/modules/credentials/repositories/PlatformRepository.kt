@@ -10,6 +10,7 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.Version
  */
 interface PlatformRepository {
     fun getCredentialsTokenA(platformUrl: String): String?
+    fun getCredentialsTokenB(platformUrl: String): String?
     fun getCredentialsTokenC(platformUrl: String): String?
     fun getPlatformByTokenA(token: String): String?
     fun getPlatformByTokenB(token: String): String?
@@ -18,9 +19,11 @@ interface PlatformRepository {
     fun getVersion(platformUrl: String): Version?
     fun saveVersion(platformUrl: String, version: Version): Version
     fun saveEndpoints(platformUrl: String, endpoints: List<Endpoint>): List<Endpoint>
+    fun saveCredentialsTokenA(platformUrl: String, credentialsTokenA: String): String
     fun saveCredentialsTokenB(platformUrl: String, credentialsTokenB: String): String
     fun saveCredentialsTokenC(platformUrl: String, credentialsTokenC: String): String
     fun removeCredentialsTokenA(platformUrl: String)
+    fun removeCredentialsTokenB(platformUrl: String)
     fun removeCredentialsTokenC(platformUrl: String)
     fun removeVersion(platformUrl: String)
     fun removeEndpoints(platformUrl: String)

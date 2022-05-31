@@ -18,7 +18,7 @@ class LocationsCpoServer(
     private val platformRepository: PlatformRepository,
     private val service: LocationsCpoInterface,
     basePath: List<FixedPathSegment> = listOf(
-        FixedPathSegment("/locations")
+        FixedPathSegment("/2.1.1/locations")
     )
 ) {
     init {

@@ -16,11 +16,11 @@ class VersionDetailsCacheRepository(
             endpoints = listOf(
                 Endpoint(
                     identifier = ModuleID.credentials,
-                    url = "$baseUrl/credentials"
+                    url = "$baseUrl/${VersionNumber.V2_1_1.value}/credentials"
                 ),
                 Endpoint(
                     identifier = ModuleID.locations,
-                    url = "$baseUrl/locations"
+                    url = "$baseUrl/${VersionNumber.V2_1_1.value}/locations"
                 )
             )
         ).takeIf { versionNumber.value == it.version }

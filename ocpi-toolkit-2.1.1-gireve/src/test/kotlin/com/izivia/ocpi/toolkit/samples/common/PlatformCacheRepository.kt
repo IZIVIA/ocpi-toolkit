@@ -19,6 +19,12 @@ open class PlatformCacheRepository: PlatformRepository {
         .also { platforms[it.url] = it }
         .let { it.endpoints!! }
 
+    override fun saveCredentialsTokenA(platformUrl: String, credentialsTokenA: String): String = platforms
+        .getOrDefault(platformUrl, Platform(platformUrl))
+        .copy(tokenA = credentialsTokenA)
+        .also { platforms[it.url] = it }
+        .let { it.tokenA!! }
+
     override fun saveCredentialsTokenB(platformUrl: String, credentialsTokenB: String): String = platforms
         .getOrDefault(platformUrl, Platform(platformUrl))
         .copy(tokenB = credentialsTokenB)
@@ -32,6 +38,8 @@ open class PlatformCacheRepository: PlatformRepository {
         .let { it.tokenC!! }
 
     override fun getCredentialsTokenC(platformUrl: String): String? = platforms[platformUrl]?.tokenC
+
+    override fun getCredentialsTokenB(platformUrl: String): String? = platforms[platformUrl]?.tokenB
 
     override fun getCredentialsTokenA(platformUrl: String): String? = platforms[platformUrl]?.tokenA
 
@@ -54,6 +62,13 @@ open class PlatformCacheRepository: PlatformRepository {
         platforms
             .getOrDefault(platformUrl, Platform(platformUrl))
             .copy(tokenA = null)
+            .also { platforms[it.url] = it }
+    }
+
+    override fun removeCredentialsTokenB(platformUrl: String) {
+        platforms
+            .getOrDefault(platformUrl, Platform(platformUrl))
+            .copy(tokenB = null)
             .also { platforms[it.url] = it }
     }
 

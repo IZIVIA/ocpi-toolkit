@@ -14,7 +14,7 @@ class CredentialsServer(
     transportServer: TransportServer,
     service: CredentialsServerService,
     basePath: List<FixedPathSegment> = listOf(
-        FixedPathSegment("/credentials")
+        FixedPathSegment("/2.2.1/credentials")
     )
 ) {
     init {

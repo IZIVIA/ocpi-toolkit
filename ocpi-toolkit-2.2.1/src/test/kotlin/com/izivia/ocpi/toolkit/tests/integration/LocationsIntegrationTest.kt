@@ -153,7 +153,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${cpoServer.baseUrl}/locations?limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${cpoServer.baseUrl}/2.2.1/locations?limit=$limit&offset=${offset + limit}")
                 }
         }
 
@@ -194,7 +194,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${cpoServer.baseUrl}/locations?limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${cpoServer.baseUrl}/2.2.1/locations?limit=$limit&offset=${offset + limit}")
                 }
         }
 
@@ -480,7 +480,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${cpoServer.baseUrl}/locations?date_to=${dateTo}&limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${cpoServer.baseUrl}/2.2.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset + limit}")
                 }
         }
     }
