@@ -46,6 +46,11 @@ sourceSets.main {
 val repo4shUser: String by project
 val repo4shPassword: String by project
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
