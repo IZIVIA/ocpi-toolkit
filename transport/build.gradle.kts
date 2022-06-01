@@ -21,8 +21,8 @@ publishing {
             name = "libs-release-local"
             url = uri("https://repo.4sh.fr/artifactory/libs-release-local")
             credentials {
-                username = "***REMOVED***"
-                password = "***REMOVED***"
+                username = repo4shUser
+                password = repo4shPassword
             }
         }
     }
