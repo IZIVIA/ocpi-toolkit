@@ -87,6 +87,9 @@ LocationsCpoServer(
     ),
     platformRepository = platformRepository
 )
+
+// Once that all the modules are defined, you need to start the server
+server.start()
 ```
 
 **eMSP code:**
@@ -107,6 +110,9 @@ LocationsEmspServer(
     ),
     platformRepository = platformRepository
 )
+
+// Once that all the modules are defined, you need to start the server
+server.start()
 ```
 
 **Optional arguments**
@@ -130,6 +136,11 @@ for the `locations` module.
 Examples:
 - [Http4kTransportClient](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/Http4kTransportClient.kt): `TransportClient` implementation example
 - [Http4kTransportClientBuilder](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/Http4kTransportClientBuilder.kt): `TransportClientBuilder` implementation example
+
+> **Note:** Since you need to register to communicate with a server (CPO or eMSP), to use the client, you must have a
+> server defined with version & versionDetails modules. During registration, the receiver will make requests to these
+> endpoints to retrieve the latest available version between the two servers. Note that if you strictly follow the OCPI
+> protocol, you must also have a credentials module set. We don't enforce that in the lib.
 
 **Common (registration)**
 
@@ -172,6 +183,8 @@ val credentialsClientService = CredentialsClientService(
     serverVersionsEndpointUrl = receiverVersionsEndpoint,
     transportClientBuilder = Http4kTransportClientBuilder()
 )
+
+credentialsClientService.register()
 ```
 
 **Communicating with an eMSP**
