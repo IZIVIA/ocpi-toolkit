@@ -1,4 +1,4 @@
-# ocpi-lib
+# Ocpi Toolkit
 Open Charge Point Interface (OCPI) java / kotlin library
 
 ## Usage
@@ -124,6 +124,87 @@ LocationsEmspServer(
 
 Make sure that `VersionDetailsRepository` points to the right endpoint (in that case `/2.1.1/cpo/locations`)
 for the `locations` module.
+
+### Client
+
+Examples:
+- [Http4kTransportClient](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/Http4kTransportClient.kt): `TransportClient` implementation example
+- [Http4kTransportClientBuilder](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/Http4kTransportClientBuilder.kt): `TransportClientBuilder` implementation example
+
+**Common (registration)**
+
+```kotlin
+// sender: the one that wants to register
+// receiver: the one that receives the registration request
+
+// PlatformMongoRepository is an implementation of PlatformRepository using mongo
+// It will be used to store information about platforms with whom the client is communicating:
+// A platform has: Tokens (A, B, C), Endpoints, Versions
+// You can see an  example in the list above 
+val senderPlatformRepository = PlatformMongoRepository(
+    collection = mongoDatabase.getCollection<Location>(config.platformCollection)
+)
+
+// VersionsCacheRepository is an implementation of VersionsRepository
+// It defines which OCPI version the client supports, and the endpoints associated with it
+// You can see an  example in the list above 
+val senderVersionsRepository = VersionsCacheRepository()
+
+// Will be sent during registration for the receiver to use to request what versions the sender supports
+val senderVersionsEndpoint = "https://sender.com/versions"
+
+// Will be the first endpoint used by the sender to perform the registration process:
+// - First it retrieves the available versions, it picks the latest
+// - Then it retrieves the details of that version
+// - Finally it requests a registration on the credentials module of the receiver
+val receiverVersionsEndpoint = "https://receiver.com/versions"
+
+// Http4kTransportClientBuilder is used to build a transport client during runtime to make all the
+// registration process for you. You can do everything manually, but it's recommended to use CredentialsClientService.
+
+val credentialsClientService = CredentialsClientService(
+    clientVersionsEndpointUrl = senderVersionsEndpint,
+    clientPlatformRepository = senderPlatformRepository,
+    clientVersionsRepository = senderVersionsRepository,
+    clientBusinessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
+    clientPartyId = "ABC",
+    clientCountryCode = "FR",
+    serverVersionsEndpointUrl = receiverVersionsEndpoint,
+    transportClientBuilder = Http4kTransportClientBuilder()
+)
+```
+
+**Communicating with an eMSP**
+
+```kotlin
+// Now that the CPO is registered with the eMSP, all the information (tokens & endpoints) is stored in
+// platformRepository. It is now possible to access the locations module of the eMSP using LocationsCpoClient.
+
+val locationsCpoClient = LocationsCpoClient(
+    transportClientBuilder = Http4kTransportClientBuilder(),
+    serverVersionsEndpointUrl = "https://emsp.com/versions", // Used as ID for the platform (to retrieve information)
+    platformRepository = platformRepository
+)
+
+// Example on how to get a specific location
+locationsCpoClient.getLocation(countryCode = "fr", partyId = "abc", locationId = "location1")
+```
+
+**Communicating with a CPO**
+
+```kotlin
+// Now that the eMSP is registered with the CPO, all the information (tokens & endpoints) is stored in
+// platformRepository. It is now possible to access the locations module of the CPO using LocationsEmspClient.
+
+val locationsEmspClient = LocationsEmspClient(
+    transportClientBuilder = Http4kTransportClientBuilder(),
+    serverVersionsEndpointUrl = "https://cpo.com/versions",
+    platformRepository = platformRepository
+)
+
+// Example on how to get a specific location
+locationsEmspClient.getLocation(locationId = "location1")
+```
 
 ## Differences
 
