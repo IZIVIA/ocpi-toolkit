@@ -41,9 +41,12 @@ class CredentialsServerService(
         val platformUrl = platformRepository.getPlatformByTokenA(tokenA)
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($tokenA)")
 
+        platformRepository.saveCredentialsTokenB(platformUrl = credentials.url, credentialsTokenB = credentials.token)
+
         findLatestMutualVersionAndStoreInformation(credentials = credentials)
 
         platformRepository.removeCredentialsTokenA(platformUrl = platformUrl)
+        platformRepository.removeCredentialsTokenB(platformUrl = platformUrl)
 
         getCredentials(
             token = platformRepository.saveCredentialsTokenC(
