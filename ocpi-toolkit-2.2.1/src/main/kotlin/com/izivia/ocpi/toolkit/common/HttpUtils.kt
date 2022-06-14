@@ -61,31 +61,38 @@ fun authorizationHeader(token: String): Pair<String, String> = "Authorization" t
 /**
  * Creates the authorization header by taking the right token in the platform repository
  */
-fun PlatformRepository.buildAuthorizationHeader(baseUrl: String, allowTokenA: Boolean = false) =
-    ((if (allowTokenA) getCredentialsTokenA(platformUrl = baseUrl) else null)
-        ?: getCredentialsTokenC(platformUrl = baseUrl))
-        ?.let { token -> authorizationHeader(token = token) }
-        ?: throw throw OcpiClientGenericException(
-            "Could not find CREDENTIALS_TOKEN_C associated with platform $baseUrl"
-        )
+fun PlatformRepository.buildAuthorizationHeader(baseUrl: String, allowTokenAOrTokenB: Boolean = false) =
+    if (allowTokenAOrTokenB) {
+        getCredentialsTokenB(platformUrl = baseUrl)
+            ?: getCredentialsTokenA(platformUrl = baseUrl)
+            ?: getCredentialsTokenC(platformUrl = baseUrl)
+            ?: throw throw OcpiClientGenericException(
+                "Could not find CREDENTIALS TOKEN A OR B OR C associated with platform $baseUrl"
+            )
+    } else {
+        getCredentialsTokenC(platformUrl = baseUrl)
+            ?: throw throw OcpiClientGenericException(
+                "Could not find CREDENTIALS TOKEN C associated with platform $baseUrl"
+            )
+    }.let { token -> authorizationHeader(token = token) }
 
 /**
  * Adds the authentification header to the request.
  *
  * @param platformRepository use to retrieve tokens
  * @param baseUrl used to know what platform is being requested
- * @param allowTokenA true if we can authenticate using token A
+ * @param allowTokenAOrTokenB true if we can authenticate using token A
  */
 fun HttpRequest.authenticate(
     platformRepository: PlatformRepository,
     baseUrl: String,
-    allowTokenA: Boolean = false
+    allowTokenAOrTokenB: Boolean = false
 ): AuthenticatedHttpRequest =
     copy(
         headers = headers.plus(
             platformRepository.buildAuthorizationHeader(
                 baseUrl = baseUrl,
-                allowTokenA = allowTokenA
+                allowTokenAOrTokenB = allowTokenAOrTokenB
             )
         )
     )
