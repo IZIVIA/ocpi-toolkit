@@ -1,17 +1,14 @@
 plugins {
     base
-    java
     `java-library`
-    kotlin("jvm")
     kotlin("kapt")
-    id("maven-publish")
 }
 
 kotlinProject()
 
 publishing {
     publications {
-        create<MavenPublication>("mavenJava") {
+        named<MavenPublication>("maven") {
             groupId = "com.izivia"
             artifactId = "ocpi-annotation-processor"
             version = "1.0.0"

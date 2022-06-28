@@ -8,7 +8,7 @@ dependencies {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        named<MavenPublication>("maven") {
             artifactId = "ocpi-transport"
             from(components["java"])
         }

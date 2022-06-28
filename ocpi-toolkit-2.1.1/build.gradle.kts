@@ -1,7 +1,5 @@
 plugins {
-    kotlin("jvm")
     id("com.izivia.ocpi.toolkit.processor")
-    id("maven-publish")
 }
 
 dependencies {
@@ -50,7 +48,7 @@ java {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        named<MavenPublication>("maven") {
             artifactId = "ocpi-2-1-1"
             from(components["java"])
         }
