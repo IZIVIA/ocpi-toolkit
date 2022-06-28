@@ -3,7 +3,9 @@ plugins {
     id("maven-publish")
 }
 
-dependencies {
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 publishing {
@@ -11,6 +13,12 @@ publishing {
         named<MavenPublication>("maven") {
             artifactId = "ocpi-transport"
             from(components["java"])
+
+            pom {
+                name.set("OCPI Transport")
+                artifactId = "ocpi-transport"
+                description.set("This module hosts all transport implementations")
+            }
         }
     }
 }

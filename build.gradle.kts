@@ -49,6 +49,30 @@ subprojects {
         create<MavenPublication>("maven") {
             pom {
                 url.set("https://github.com/IZIVIA/ocpi-toolkit")
+
+                scm {
+                    connection.set("scm:git:https://github.com/IZIVIA/ocpi-toolkit.git")
+                    developerConnection.set("scm:git:git@github.com:IZIVIA/ocpi-toolkit.git")
+                    url.set("https://github.com/IZIVIA/ocpi-toolkit")
+                }
+
+                licenses {
+                    license {
+                        name.set("MIT")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("IZIVIA")
+                        name.set("IZIVIA")
+                        email.set("izivia-fr-dms-deliv@izivia.com")
+                        url.set("https://www.izivia.com/")
+                        organization.set("IZIVIA")
+                        organizationUrl.set("https://www.izivia.com/")
+                    }
+                }
             }
         }
     }

@@ -51,6 +51,12 @@ publishing {
         named<MavenPublication>("maven") {
             artifactId = "ocpi-2-1-1-gireve"
             from(components["java"])
+
+            pom {
+                name.set("OCPI 2.1.1-gireve")
+                artifactId = "ocpi-2-1-1-gireve"
+                description.set("This module implements the v2.1.1 of the GIREVE OCPI spec")
+            }
         }
     }
 }

@@ -6,13 +6,24 @@ plugins {
 
 kotlinProject()
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 publishing {
     publications {
         named<MavenPublication>("maven") {
             groupId = "com.izivia"
             artifactId = "ocpi-annotation-processor"
-            version = "1.0.0"
+            version = System.getenv("VERSION") ?: "1.0.0"
             from(components["java"])
+
+            pom {
+                name.set("OCPI Annotation processor")
+                artifactId = "ocpi-annotation-processor"
+                description.set("This module processes annotations during compilation time in order to generate some code (partial representation, etc ...)")
+            }
         }
     }
 }

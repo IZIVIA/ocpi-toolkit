@@ -8,10 +8,14 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 
 class AptGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
-    override fun applyToCompilation(kotlinCompilation: KotlinCompilation<*>): Provider<List<SubpluginOption>> =
-        kotlinCompilation.target.project.provider {
+    private var version: String? = null
+
+    override fun applyToCompilation(kotlinCompilation: KotlinCompilation<*>): Provider<List<SubpluginOption>> {
+        version = kotlinCompilation.target.project.version.toString()
+        return kotlinCompilation.target.project.provider {
             emptyList<SubpluginOption>()
         }
+    }
 
     override fun getCompilerPluginId(): String = "AptGradlePlugin"
 
@@ -19,7 +23,7 @@ class AptGradlePlugin : KotlinCompilerPluginSupportPlugin {
         SubpluginArtifact(
             groupId = "com.izivia",
             artifactId = "ocpi-annotation-processor",
-            version = "1.0.0"
+            version = System.getenv("VERSION") ?: "1.0.0"
         )
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true

@@ -51,6 +51,12 @@ publishing {
         named<MavenPublication>("maven") {
             artifactId = "ocpi-2-1-1"
             from(components["java"])
+
+            pom {
+                name.set("OCPI 2.1.1")
+                artifactId = "ocpi-2-1-1"
+                description.set("This module implements the v2.1.1 of the OCPI spec")
+            }
         }
     }
 }
