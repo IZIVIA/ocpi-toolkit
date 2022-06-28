@@ -16,7 +16,7 @@ publishing {
         named<MavenPublication>("maven") {
             groupId = "com.izivia"
             artifactId = "ocpi-annotation-processor"
-            version = System.getenv("VERSION") ?: "1.0.0"
+            version = System.getenv("VERSION")?.substringAfter("R-") ?: "1.0.0"
             from(components["java"])
 
             pom {

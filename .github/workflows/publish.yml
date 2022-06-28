@@ -3,7 +3,7 @@ name: OCPI Publish
 on:
     push:
         tags:
-          - *
+          - "R-*"
 
 permissions:
     contents: read
