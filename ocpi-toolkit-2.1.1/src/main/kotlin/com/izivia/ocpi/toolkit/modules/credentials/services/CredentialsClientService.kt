@@ -108,9 +108,9 @@ class CredentialsClientService(
             credentialsTokenC = credentials.token
         )
 
-        // Remove token A because it is useless from now on
+        // Remove token A and B because it is useless from now on
         clientPlatformRepository.removeCredentialsTokenA(platformUrl = serverVersionsEndpointUrl)
-
+        clientPlatformRepository.removeCredentialsTokenB(platformUrl = serverVersionsEndpointUrl)
         return credentials
     }
 
