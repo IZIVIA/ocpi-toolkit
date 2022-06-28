@@ -338,15 +338,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         credentialsClientService.delete()
 
-        expectThat(
+        expectCatching {
             versionsClient.getVersions()
-        ) {
-            get { data }
-                .isNull()
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-        }
+        }.isFailure()
     }
 
     @Test
