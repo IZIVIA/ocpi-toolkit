@@ -1,3 +1,5 @@
+[![OCPI CI](https://github.com/IZIVIA/ocpi-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/IZIVIA/ocpi-toolkit/actions/workflows/ci.yml)
+
 # Ocpi Toolkit
 Open Charge Point Interface (OCPI) java / kotlin library
 
