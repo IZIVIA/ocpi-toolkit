@@ -63,9 +63,9 @@ fun authorizationHeader(token: String): Pair<String, String> = "Authorization" t
  */
 fun PlatformRepository.buildAuthorizationHeader(baseUrl: String, allowTokenAOrTokenB: Boolean = false) =
     if (allowTokenAOrTokenB) {
-        getCredentialsTokenB(platformUrl = baseUrl)
+        getCredentialsTokenC(platformUrl = baseUrl)
+            ?: getCredentialsTokenB(platformUrl = baseUrl)
             ?: getCredentialsTokenA(platformUrl = baseUrl)
-            ?: getCredentialsTokenC(platformUrl = baseUrl)
             ?: throw throw OcpiClientGenericException(
                 "Could not find CREDENTIALS TOKEN A OR B OR C associated with platform $baseUrl"
             )
