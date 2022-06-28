@@ -150,6 +150,9 @@ class CredentialsClientService(
             buildCredentialClient()
                 .delete(tokenC = tokenC)
                 .also {
+                    clientPlatformRepository.removeCredentialsTokenC(platformUrl = serverVersionsEndpointUrl)
+                }
+                .also {
                     if (it.status_code != OcpiStatus.SUCCESS.code)
                         throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
                 }
