@@ -418,15 +418,5 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
-
-        expectThat(
-            versionsClient.getVersions()
-        ) {
-            get { data }
-                .isNull()
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-        }
     }
 }

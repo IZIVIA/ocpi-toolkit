@@ -36,7 +36,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     private var database: MongoDatabase? = null
 
-    private fun setupReceiver(): com.izivia.ocpi.toolkit.tests.integration.CredentialsIntegrationTests.ServerSetupResult {
+    private fun setupReceiver(): ServerSetupResult {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-1-1-tests")
         val receiverPlatformCollection = database!!
             .getCollection<Platform>("receiver-server-${UUID.randomUUID()}")
@@ -73,14 +73,14 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             )
         )
 
-        return com.izivia.ocpi.toolkit.tests.integration.CredentialsIntegrationTests.ServerSetupResult(
+        return ServerSetupResult(
             transport = receiverServer,
             platformCollection = receiverPlatformCollection,
             versionsEndpoint = receiverServerVersionsUrl
         )
     }
 
-    private fun setupSender(): com.izivia.ocpi.toolkit.tests.integration.CredentialsIntegrationTests.ServerSetupResult {
+    private fun setupSender(): ServerSetupResult {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-1-1-tests")
         val senderPlatformCollection = database!!
             .getCollection<Platform>("sender-server-${UUID.randomUUID()}")
@@ -104,7 +104,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             )
         )
 
-        return com.izivia.ocpi.toolkit.tests.integration.CredentialsIntegrationTests.ServerSetupResult(
+        return ServerSetupResult(
             transport = senderServer,
             platformCollection = senderPlatformCollection,
             versionsEndpoint = senderServerVersionsUrl
@@ -112,8 +112,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     }
 
     private fun setupCredentialsSenderClient(
-        senderServerSetupResult: com.izivia.ocpi.toolkit.tests.integration.CredentialsIntegrationTests.ServerSetupResult,
-        receiverServerSetupResult: com.izivia.ocpi.toolkit.tests.integration.CredentialsIntegrationTests.ServerSetupResult
+        senderServerSetupResult: ServerSetupResult,
+        receiverServerSetupResult: ServerSetupResult
     ): CredentialsClientService {
         // Setup sender (client)
         return CredentialsClientService(
@@ -328,15 +328,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         credentialsClientService.delete()
 
-        expectThat(
+        expectCatching {
             versionsClient.getVersions()
-        ) {
-            get { data }
-                .isNull()
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-        }
+        }.isFailure()
     }
 
     @Test
