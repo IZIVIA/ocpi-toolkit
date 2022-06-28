@@ -33,6 +33,5 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
-        ignoreFailures = true
     }
 }
