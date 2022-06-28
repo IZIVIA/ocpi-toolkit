@@ -1,4 +1,4 @@
-package io.github.quatresh
+package com.izivia.ocpi.toolkit.processor
 
 import de.jensklingenberg.mpapt.common.MpAptProject
 import org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension

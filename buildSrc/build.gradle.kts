@@ -22,8 +22,8 @@ dependencies {
 gradlePlugin {
     plugins {
         create("simplePlugin") {
-            id = "io.github.4sh.apt.partial"
-            implementationClass = "io.github.quatresh.PartialAptGradlePlugin"
+            id = "com.izivia.ocpi.toolkit.processor"
+            implementationClass = "com.izivia.ocpi.toolkit.processor.AptGradlePlugin"
         }
     }
 }

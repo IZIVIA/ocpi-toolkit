@@ -7,6 +7,9 @@ package com.izivia.ocpi.toolkit.modules.locations.domain
 
 import com.izivia.ocpi.toolkit.common.CiString
 import java.time.Instant
+import kotlin.Int
+import kotlin.String
+import kotlin.collections.List
 
 /**
  * Partial representation of [com.izivia.ocpi.toolkit.modules.locations.domain.Connector]

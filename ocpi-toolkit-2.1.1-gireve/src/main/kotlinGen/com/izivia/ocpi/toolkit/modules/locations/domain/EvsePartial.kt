@@ -6,6 +6,8 @@
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
 import java.time.Instant
+import kotlin.String
+import kotlin.collections.List
 
 /**
  * Partial representation of [com.izivia.ocpi.toolkit.modules.locations.domain.Evse]

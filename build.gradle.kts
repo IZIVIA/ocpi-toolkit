@@ -8,11 +8,11 @@ plugins {
     id("maven-publish")
 }
 
-val versionNumber = System.getenv("version")?.substringAfter("R-") ?: "0.0.5"
+val versionNumber = System.getenv("version")?.substringAfter("R-") ?: "0.0.6"
 
 allprojects {
 
-    group = "com.izivia.ocpi-toolkit"
+    group = "com.izivia"
     version = versionNumber
 
     repositories {

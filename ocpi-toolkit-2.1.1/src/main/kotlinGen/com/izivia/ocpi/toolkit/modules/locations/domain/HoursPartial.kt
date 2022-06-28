@@ -5,6 +5,9 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
+import kotlin.Boolean
+import kotlin.collections.List
+
 /**
  * Partial representation of [com.izivia.ocpi.toolkit.modules.locations.domain.Hours]
  */

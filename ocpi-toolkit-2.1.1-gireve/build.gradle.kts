@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("io.github.4sh.apt.partial")
+    id("com.izivia.ocpi.toolkit.processor")
     id("maven-publish")
 }
 

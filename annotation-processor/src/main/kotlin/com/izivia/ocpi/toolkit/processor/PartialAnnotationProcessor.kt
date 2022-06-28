@@ -1,4 +1,4 @@
-package io.github.quatresh
+package com.izivia.ocpi.toolkit.processor
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -12,7 +12,7 @@ import java.io.File
 
 class PartialAnnotationProcessor : AbstractProcessor() {
 
-    private val annotationFqdn = "io.github.quatresh.annotations.Partial"
+    private val annotationFqdn = "com.izivia.ocpi.toolkit.annotations.Partial"
     private val partialClasses: MutableList<ClassDescriptor> = mutableListOf()
 
     override fun getSupportedAnnotationTypes(): Set<String> = setOf(annotationFqdn)

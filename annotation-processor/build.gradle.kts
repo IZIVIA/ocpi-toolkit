@@ -12,8 +12,8 @@ kotlinProject()
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            groupId = "io.github.4sh"
-            artifactId = "partial-annotation-processor"
+            groupId = "com.izivia"
+            artifactId = "ocpi-annotation-processor"
             version = "1.0.0"
             from(components["java"])
         }
