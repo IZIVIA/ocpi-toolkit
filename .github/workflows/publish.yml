@@ -27,6 +27,8 @@ jobs:
 
             -   name: Build OCPI annotation processor with Gradle
                 uses: gradle/gradle-build-action@v2.2.1
+                env:
+                    VERSION: ${{ github.ref }}
                 with:
                     gradle-version: 7.4.2
                     arguments: ":annotation-processor:publishToMavenLocal"
