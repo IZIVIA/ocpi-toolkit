@@ -3,7 +3,7 @@ name: OCPI Publish
 on:
     push:
         tags:
-          - "R-*"
+            - "R-*"
 
 permissions:
     contents: read
@@ -25,14 +25,20 @@ jobs:
             -   name: Checkout IZIVIA OCPI toolkit library code from GH
                 uses: actions/checkout@v3
 
+            -   name: Build OCPI annotation processor with Gradle
+                uses: gradle/gradle-build-action@v2.2.1
+                with:
+                    gradle-version: 7.4.2
+                    arguments: ":annotation-processor:publishToMavenLocal"
+
             -   name: Build OCPI toolkit with Gradle
                 uses: gradle/gradle-build-action@v2.2.1
                 env:
-                  VERSION: ${{ github.ref }}
-                  SONATYPE_USERNAME: ${{ secrets.DELIVERY_SONATYPE_USERNAME }}
-                  SONATYPE_PASSWORD: ${{ secrets.DELIVERY_SONATYPE_PASSWORD }}
-                  GPG_PRIVATE_KEY: ${{ secrets.DELIVERY_GPG_SECRET_KEY }}
-                  GPG_PASSPHRASE: ${{ secrets.DELIVERY_GPG_KEY_PASSPHRASE }}
+                    VERSION: ${{ github.ref }}
+                    SONATYPE_USERNAME: ${{ secrets.DELIVERY_SONATYPE_USERNAME }}
+                    SONATYPE_PASSWORD: ${{ secrets.DELIVERY_SONATYPE_PASSWORD }}
+                    GPG_PRIVATE_KEY: ${{ secrets.DELIVERY_GPG_SECRET_KEY }}
+                    GPG_PASSPHRASE: ${{ secrets.DELIVERY_GPG_KEY_PASSPHRASE }}
                 with:
                     gradle-version: 7.4.2
                     arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository
