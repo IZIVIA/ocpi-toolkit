@@ -14,6 +14,7 @@ class PartialAnnotationProcessor : AbstractProcessor() {
 
     private val annotationFqdn = "com.izivia.ocpi.toolkit.annotations.Partial"
     private val partialClasses: MutableList<ClassDescriptor> = mutableListOf()
+    private val toPartialMethodName = "toPartial"
 
     override fun getSupportedAnnotationTypes(): Set<String> = setOf(annotationFqdn)
 
@@ -49,6 +50,10 @@ class PartialAnnotationProcessor : AbstractProcessor() {
                 .addType(partialClassType)
                 .addFunction(partialBuilderFun)
                 .addFunction(partialListBuilderFun)
+                .apply {
+                    getParameterTypesOutsidePackage(partialClassType, packageName)
+                        .forEach { addImport(it.packageName, toPartialMethodName) }
+                }
                 .build()
                 .writeTo(File(partialGenFolder))
         }
@@ -103,10 +108,10 @@ class PartialAnnotationProcessor : AbstractProcessor() {
             .joinToString(separator = ",\n  ") { param ->
                 "${param.parameterName} = ${
                     findPartialClassByName(param.type.asString()!!.toBase())
-                        ?.let { "${param.parameterName}${if (param.nullable) "?" else ""}.toPartial()" } ?: param.parameterName
+                        ?.let { "${param.parameterName}${if (param.nullable) "?" else ""}.${toPartialMethodName}()" } ?: param.parameterName
                 }"
             }
-        return FunSpec.builder("toPartial")
+        return FunSpec.builder(toPartialMethodName)
             .receiver(ClassName(packageName, className))
             .returns(ClassName(packageName, className.toPartial()))
             .addCode(
@@ -119,10 +124,19 @@ class PartialAnnotationProcessor : AbstractProcessor() {
             .build()
     }
 
+    private fun getParameterTypesOutsidePackage(classType: TypeSpec, packageName: String): List<ClassName> =
+        classType.primaryConstructor
+            ?.parameters
+            ?.map { it.type }
+            ?.filterIsInstance<ClassName>()
+            ?.filter { it.packageName != packageName }
+            ?.filter { it.isPartialType() }
+            .orEmpty()
+
     private fun buildPartialDataClassListBuilderFunction(classDescriptor: ClassDescriptor): FunSpec {
         val packageName = classDescriptor.containingPackage().toString()
         val className = classDescriptor.name.asString()
-        return FunSpec.builder("toPartial")
+        return FunSpec.builder(toPartialMethodName)
             .receiver(
                 ClassName("kotlin.collections", "List")
                     .parameterizedBy(ClassName(packageName, className))
@@ -133,7 +147,7 @@ class PartialAnnotationProcessor : AbstractProcessor() {
             )
             .addCode(
                 """
-                | return mapNotNull { it.toPartial() }
+                | return mapNotNull { it.${toPartialMethodName}() }
                 """.trimMargin()
             )
             .build()
@@ -202,6 +216,9 @@ class PartialAnnotationProcessor : AbstractProcessor() {
     }
 
     private fun String.toPartial() = "${this}Partial"
+
+    private fun ClassName.isPartialType() = simpleName.contains("Partial")
+
     private fun String.toBase() = replace("Partial", "")
 
     private fun FileSpec.Builder.generateComments() =
