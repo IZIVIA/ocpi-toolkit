@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.samples.common
 
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
+import com.izivia.ocpi.toolkit.modules.types.DisplayText
 import java.math.BigDecimal
 import java.time.Instant
 
