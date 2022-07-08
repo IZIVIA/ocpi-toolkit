@@ -6,6 +6,7 @@
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
 import com.izivia.ocpi.toolkit.modules.tariff.domain.TariffPartial
+import com.izivia.ocpi.toolkit.modules.tariff.domain.toPartial
 import com.izivia.ocpi.toolkit.modules.types.PricePartial
 import com.izivia.ocpi.toolkit.modules.types.toPartial
 import java.math.BigDecimal

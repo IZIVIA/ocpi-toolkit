@@ -124,14 +124,26 @@ class PartialAnnotationProcessor : AbstractProcessor() {
             .build()
     }
 
-    private fun getParameterTypesOutsidePackage(classType: TypeSpec, packageName: String): List<ClassName> =
-        classType.primaryConstructor
+    private fun getParameterTypesOutsidePackage(classType: TypeSpec, packageName: String): Set<ClassName> {
+        val constructorSimpleTypes = classType.primaryConstructor
             ?.parameters
+            ?.asSequence()
             ?.map { it.type }
             ?.filterIsInstance<ClassName>()
-            ?.filter { it.packageName != packageName }
-            ?.filter { it.isPartialType() }
             .orEmpty()
+        val constructorParameterizedTypes = classType.primaryConstructor
+            ?.parameters
+            ?.asSequence()
+            ?.map { it.type }
+            ?.filterIsInstance<ParameterizedTypeName>()
+            ?.flatMap { it.typeArguments }
+            ?.filterIsInstance<ClassName>()
+            .orEmpty()
+        return (constructorSimpleTypes + constructorParameterizedTypes)
+            .filter { it.packageName != packageName }
+            .filter { it.isPartialType() }
+            .toSet()
+    }
 
     private fun buildPartialDataClassListBuilderFunction(classDescriptor: ClassDescriptor): FunSpec {
         val packageName = classDescriptor.containingPackage().toString()
