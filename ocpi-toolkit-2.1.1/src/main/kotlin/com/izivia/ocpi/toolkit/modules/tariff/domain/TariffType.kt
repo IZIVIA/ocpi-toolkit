@@ -2,7 +2,6 @@ package com.izivia.ocpi.toolkit.modules.tariff.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
 
-@Partial
 enum class TariffType {
     /**
      *Used to describe that a Tariff is valid when ad-hoc payment is used at the Charge Point (for example: Debit or

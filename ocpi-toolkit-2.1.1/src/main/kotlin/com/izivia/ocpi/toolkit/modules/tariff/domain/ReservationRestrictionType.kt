@@ -2,7 +2,6 @@ package com.izivia.ocpi.toolkit.modules.tariff.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
 
-@Partial
 enum class ReservationRestrictionType {
     /**
      *  Used in TariffElements to describe costs for a reservation

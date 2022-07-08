@@ -5,6 +5,8 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
+import com.izivia.ocpi.toolkit.modules.types.DisplayTextPartial
+import com.izivia.ocpi.toolkit.modules.types.toPartial
 import java.time.Instant
 import kotlin.String
 import kotlin.collections.List
