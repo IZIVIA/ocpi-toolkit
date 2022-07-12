@@ -31,7 +31,7 @@ interface TokensCpoInterface {
         countryCode: String,
         partyId: String,
         tokenUid: String
-    ): OcpiResponseBody<Token>
+    ): OcpiResponseBody<Token?>
 
     /**
      * New or updated Token objects are pushed from the eMSP to the CPO.
