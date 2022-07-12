@@ -1,4 +1,4 @@
-package com.izivia.ocpi.toolkit.modules.locations.domain
+package com.izivia.ocpi.toolkit.modules.types
 
 import com.izivia.ocpi.toolkit.annotations.Partial
 

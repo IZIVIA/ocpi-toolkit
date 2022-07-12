@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
+import com.izivia.ocpi.toolkit.common.CiString
 
 
 /**
@@ -18,7 +19,7 @@ from "eMI3 standard version V1.0" (http://emi3group.com/documents-links/) "Part 
  */
 @Partial
 data class CdrToken(
-    val uid: String,
+    val uid: CiString,
     val type: TokenType,
-    val contract_id: String,
+    val contract_id: CiString,
 )

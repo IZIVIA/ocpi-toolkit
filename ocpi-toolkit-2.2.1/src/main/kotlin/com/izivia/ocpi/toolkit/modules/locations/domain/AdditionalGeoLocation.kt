@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
+import com.izivia.ocpi.toolkit.modules.types.DisplayText
 
 /**
  * This class defines an additional geolocation that is relevant for the Charge Point. The geodetic system to be used

@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.tariff.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
+import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.types.DisplayText
 import com.izivia.ocpi.toolkit.modules.locations.domain.EnergyMix
 import com.izivia.ocpi.toolkit.modules.types.Price
@@ -40,13 +41,13 @@ import java.time.Instant
 
 @Partial
 data class Tariff(
-    val id: String,
+    val id: CiString,
     val type: TariffType? = null,
-    val party_id: String,
-    val country_code: String,
+    val party_id: CiString,
+    val country_code: CiString,
     val currency: String,
     val tariff_alt_text: List<DisplayText>? = null,
-    val tariff_alt_url: String? = null,
+    val tariff_alt_url: CiString? = null,
     val min_price: Price? = null,
     val max_price: Price? = null,
     val elements: List<TariffElement>,

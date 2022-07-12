@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
+import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.tariff.domain.Tariff
 import com.izivia.ocpi.toolkit.modules.types.Price
 import java.math.BigDecimal
@@ -81,12 +82,12 @@ of the CDR for which this is a Credit CDR.
 
 @Partial
 data class Cdr(
-    val id: String,
-    val country_code: String,
-    val party_id: String,
+    val id: CiString,
+    val country_code: CiString,
+    val party_id: CiString,
     val start_date_time: Instant,
     val end_date_time: Instant,
-    val session_id: String? = null,
+    val session_id: CiString? = null,
     val cdr_token: CdrToken,
     val auth_method: AuthMethod,
     val authorization_reference: String? = null,
@@ -106,8 +107,8 @@ data class Cdr(
     val total_parking_cost: Price? = null,
     val total_reservation_cost: Price? = null,
     val remark: String? = null,
-    val invoice_reference_id: String? = null,
+    val invoice_reference_id: CiString? = null,
     val credit: Boolean? = null,
-    val credit_reference_id: String? = null,
+    val credit_reference_id: CiString? = null,
     val last_updated: Instant
 )

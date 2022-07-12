@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
+import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.locations.domain.ConnectorFormat
 import com.izivia.ocpi.toolkit.modules.locations.domain.ConnectorType
 import com.izivia.ocpi.toolkit.modules.locations.domain.PowerType
@@ -29,16 +30,16 @@ objects.".
  *
  */
 data class CdrLocation(
-    val id: String,
+    val id: CiString,
     val name: String? = null,
     val address: String,
     val city: String,
     val postal_code: String,
     val country: String,
     val coordinates: String,
-    val evse_uid: String,
-    val evse_id: String,
-    val connector_id: String,
+    val evse_uid: CiString,
+    val evse_id: CiString,
+    val connector_id: CiString,
     val connector_standard: ConnectorType,
     val connector_format: ConnectorFormat,
     val connector_power_type: PowerType,
