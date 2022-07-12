@@ -27,7 +27,7 @@ class TokensEmspClient(
         countryCode: String,
         partyId: String,
         tokenUid: String
-    ): OcpiResponseBody<Token> =
+    ): OcpiResponseBody<Token?> =
         buildTransport()
             .send(
                 HttpRequest(
