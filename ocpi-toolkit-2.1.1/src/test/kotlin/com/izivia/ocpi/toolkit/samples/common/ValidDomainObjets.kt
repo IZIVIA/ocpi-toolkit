@@ -1,6 +1,10 @@
 package com.izivia.ocpi.toolkit.samples.common
 
+import com.izivia.ocpi.toolkit.common.validation.Iso639Alpha2
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
+import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
+import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
+import com.izivia.ocpi.toolkit.modules.tokens.domain.WhitelistType
 import com.izivia.ocpi.toolkit.modules.types.DisplayText
 import java.math.BigDecimal
 import java.time.Instant
@@ -132,4 +136,16 @@ val validEvse = Evse(
     parking_restrictions = listOf(ParkingRestriction.CUSTOMERS),
     images = listOf(validImage),
     last_updated = Instant.now()
+)
+
+val validToken = Token(
+    uid = "012345678",
+    type = TokenType.RFID,
+    auth_id = "DE8ACC12E46L89",
+    visual_number = "DF000-2001-8999",
+    issuer = "TheNewMotion",
+    valid = true,
+    whitelist = WhitelistType.ALLOWED,
+    last_updated = Instant.parse("2015-06-29T22:39:09Z"),
+    language = Iso639Alpha2.fr.name
 )
