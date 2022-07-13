@@ -5,19 +5,19 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
+import com.izivia.ocpi.toolkit.common.CiString
 import kotlin.Int
-import kotlin.String
 import kotlin.collections.List
 
 /**
  * Partial representation of [com.izivia.ocpi.toolkit.modules.cdr.domain.SignedData]
  */
 public data class SignedDataPartial(
-  public val encoding_method: String?,
+  public val encoding_method: CiString?,
   public val encoding_method_version: Int?,
-  public val public_key: String?,
+  public val public_key: CiString?,
   public val signed_values: List<SignedValuePartial>?,
-  public val url: String?,
+  public val url: CiString?,
 )
 
 public fun SignedData.toPartial(): SignedDataPartial {

@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
+import com.izivia.ocpi.toolkit.common.CiString
 
 
 /**
@@ -17,9 +18,9 @@ the possibility to check the signed data from a charging session.
  */
 @Partial
 data class SignedData(
-    val encoding_method: String,
+    val encoding_method: CiString,
     val encoding_method_version: Int,
-    val public_key: String? = null,
+    val public_key: CiString? = null,
     val signed_values: List<SignedValue>,
-    val url: String? = null,
+    val url: CiString? = null,
 )

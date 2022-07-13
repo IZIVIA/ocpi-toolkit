@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
+import com.izivia.ocpi.toolkit.common.CiString
 import java.time.Instant
 
 /**
@@ -17,6 +18,6 @@ provided, no Tariff is relevant during this period.
 data class ChargingPeriod(
     val start_date_time: Instant,
     val dimension: List<CdrDimension>,
-    val tariff_id: String
+    val tariff_id: CiString
 )
 

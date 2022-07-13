@@ -2,6 +2,7 @@ package com.izivia.ocpi.toolkit.modules.locations.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.modules.types.DisplayText
 import java.time.Instant
 
 /**

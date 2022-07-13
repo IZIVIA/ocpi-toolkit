@@ -3,13 +3,13 @@
 //  ----------
 //  This code is generated AND MUST NOT BE EDITED
 //  ----------
-package com.izivia.ocpi.toolkit.modules.locations.domain
+package com.izivia.ocpi.toolkit.modules.types
 
 import kotlin.String
 import kotlin.collections.List
 
 /**
- * Partial representation of [com.izivia.ocpi.toolkit.modules.locations.domain.DisplayText]
+ * Partial representation of [com.izivia.ocpi.toolkit.modules.types.DisplayText]
  */
 public data class DisplayTextPartial(
   public val language: String?,

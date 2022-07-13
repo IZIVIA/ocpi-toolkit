@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
+import com.izivia.ocpi.toolkit.common.CiString
 
 /**
  * This class contains the signed and the plain/unsigned data. By decoding the data, the receiver can check if the content has not
@@ -18,7 +19,7 @@ EncodingMethod field.
  */
 @Partial
 data class SignedValue(
-    val nature: String,
-    val plain_data: String,
-    val signed_data: String
+    val nature: CiString,
+    val plain_data: CiString,
+    val signed_data: CiString
 )

@@ -5,6 +5,7 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.tariff.domain
 
+import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.locations.domain.EnergyMixPartial
 import com.izivia.ocpi.toolkit.modules.locations.domain.toPartial
 import com.izivia.ocpi.toolkit.modules.types.DisplayTextPartial
@@ -18,13 +19,13 @@ import kotlin.collections.List
  * Partial representation of [com.izivia.ocpi.toolkit.modules.tariff.domain.Tariff]
  */
 public data class TariffPartial(
-  public val id: String?,
+  public val id: CiString?,
   public val type: TariffType?,
-  public val party_id: String?,
-  public val country_code: String?,
+  public val party_id: CiString?,
+  public val country_code: CiString?,
   public val currency: String?,
   public val tariff_alt_text: List<DisplayTextPartial>?,
-  public val tariff_alt_url: String?,
+  public val tariff_alt_url: CiString?,
   public val min_price: PricePartial?,
   public val max_price: PricePartial?,
   public val elements: List<TariffElementPartial>?,

@@ -5,16 +5,16 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
-import kotlin.String
+import com.izivia.ocpi.toolkit.common.CiString
 import kotlin.collections.List
 
 /**
  * Partial representation of [com.izivia.ocpi.toolkit.modules.cdr.domain.SignedValue]
  */
 public data class SignedValuePartial(
-  public val nature: String?,
-  public val plain_data: String?,
-  public val signed_data: String?,
+  public val nature: CiString?,
+  public val plain_data: CiString?,
+  public val signed_data: CiString?,
 )
 
 public fun SignedValue.toPartial(): SignedValuePartial {

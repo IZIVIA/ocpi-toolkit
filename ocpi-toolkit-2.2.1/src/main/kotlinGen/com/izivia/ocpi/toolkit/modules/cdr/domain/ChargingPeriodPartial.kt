@@ -5,8 +5,8 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
+import com.izivia.ocpi.toolkit.common.CiString
 import java.time.Instant
-import kotlin.String
 import kotlin.collections.List
 
 /**
@@ -15,7 +15,7 @@ import kotlin.collections.List
 public data class ChargingPeriodPartial(
   public val start_date_time: Instant?,
   public val dimension: List<CdrDimensionPartial>?,
-  public val tariff_id: String?,
+  public val tariff_id: CiString?,
 )
 
 public fun ChargingPeriod.toPartial(): ChargingPeriodPartial {

@@ -5,6 +5,7 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
+import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.tariff.domain.TariffPartial
 import com.izivia.ocpi.toolkit.modules.tariff.domain.toPartial
 import com.izivia.ocpi.toolkit.modules.types.PricePartial
@@ -19,12 +20,12 @@ import kotlin.collections.List
  * Partial representation of [com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr]
  */
 public data class CdrPartial(
-  public val id: String?,
-  public val country_code: String?,
-  public val party_id: String?,
+  public val id: CiString?,
+  public val country_code: CiString?,
+  public val party_id: CiString?,
   public val start_date_time: Instant?,
   public val end_date_time: Instant?,
-  public val session_id: String?,
+  public val session_id: CiString?,
   public val cdr_token: CdrTokenPartial?,
   public val auth_method: AuthMethod?,
   public val authorization_reference: String?,
@@ -44,9 +45,9 @@ public data class CdrPartial(
   public val total_parking_cost: PricePartial?,
   public val total_reservation_cost: PricePartial?,
   public val remark: String?,
-  public val invoice_reference_id: String?,
+  public val invoice_reference_id: CiString?,
   public val credit: Boolean?,
-  public val credit_reference_id: String?,
+  public val credit_reference_id: CiString?,
   public val last_updated: Instant?,
 )
 
