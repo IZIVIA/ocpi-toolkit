@@ -2,6 +2,7 @@ package com.izivia.ocpi.toolkit.samples.common
 
 import com.izivia.ocpi.toolkit.common.validation.Iso639Alpha2
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
+import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.domain.WhitelistType
@@ -148,4 +149,10 @@ val validToken = Token(
     whitelist = WhitelistType.ALLOWED,
     last_updated = Instant.parse("2015-06-29T22:39:09Z"),
     language = Iso639Alpha2.fr.name
+)
+
+val validLocationReferences = LocationReferences(
+    location_id = validLocation.id,
+    evse_uids = listOf(validEvse.uid),
+    connector_ids = listOf(validConnector.id)
 )

@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.tests.validation
 
 import com.izivia.ocpi.toolkit.modules.tokens.validation.validate
+import com.izivia.ocpi.toolkit.samples.common.validLocationReferences
 import com.izivia.ocpi.toolkit.samples.common.validToken
 import org.junit.jupiter.api.Test
 import strikt.api.expectCatching
@@ -37,6 +38,31 @@ class TokensValidatorTest {
 
         expectCatching {
             validToken.copy(issuer = generateRandomString(65)).validate()
+        }.isFailure()
+    }
+
+    @Test
+    fun `LocationReferences validator`() {
+        expectCatching {
+            validLocationReferences.validate()
+        }.isSuccess()
+
+        expectCatching {
+            validLocationReferences
+                .copy(location_id = generateRandomString(40))
+                .validate()
+        }.isFailure()
+
+        expectCatching {
+            validLocationReferences
+                .copy(evse_uids = listOf(generateRandomString(40)))
+                .validate()
+        }.isFailure()
+
+        expectCatching {
+            validLocationReferences
+                .copy(connector_ids = listOf(generateRandomString(40)))
+                .validate()
         }.isFailure()
     }
 }

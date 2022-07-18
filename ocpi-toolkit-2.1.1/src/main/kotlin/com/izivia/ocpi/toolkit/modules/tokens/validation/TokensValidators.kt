@@ -22,7 +22,7 @@ fun TokenPartial.validate(): TokenPartial = validate(this) {
 }
 
 fun LocationReferences.validate(): LocationReferences = validate(this) {
-    validate(LocationReferences::location_id)
+    validate(LocationReferences::location_id).isPrintableAscii().hasMaxLengthOf(39)
     evse_uids
         .map { StringWrapper(it) }
         .forEach {
