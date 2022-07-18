@@ -13,12 +13,23 @@ fun tokensEmspService(tokens: List<Token>): TokensEmspService = mockk {
     val dateTo = mutableListOf<Instant?>()
     val offset = slot<Int>()
     val limit = mutableListOf<Int?>()
+    val countryCode = mutableListOf<String?>()
+    val partyId = mutableListOf<String?>()
 
     val tokenUid = slot<String>()
     val tokenType = slot<TokenType>()
-    val locationReferences = mutableListOf<LocationReferences?>()
+    val locationReferences = slot<LocationReferences>()
 
-    every { getTokens(captureNullable(dateFrom), captureNullable(dateTo), capture(offset), captureNullable(limit)) } answers {
+    every {
+        getTokens(
+            captureNullable(dateFrom),
+            captureNullable(dateTo),
+            capture(offset),
+            captureNullable(limit),
+            captureNullable(countryCode),
+            captureNullable(partyId),
+        )
+    } answers {
         val capturedOffset = offset.captured
         val capturedLimit = limit.captured() ?: 10
 
@@ -36,14 +47,28 @@ fun tokensEmspService(tokens: List<Token>): TokensEmspService = mockk {
             .toSearchResult(totalCount = tokens.size, limit = capturedLimit, offset = capturedOffset)
     }
 
-    every { postToken(capture(tokenUid), capture(tokenType), captureNullable(locationReferences)) } answers {
+    every { getToken(capture(tokenUid), capture(tokenType)) } answers {
+        tokens
+            .find { it.uid == tokenUid.captured }
+            ?.let {
+                AuthorizationInfo(
+                    allowed = Allowed.ALLOWED,
+                    location = null,
+                    info = null,
+                    authorization_id = "auth_id"
+                )
+            }
+    }
+
+    every { postToken(capture(tokenUid), capture(tokenType), capture(locationReferences)) } answers {
         tokens
             .find { it.uid == tokenUid.captured }
             .let {
                 AuthorizationInfo(
                     allowed = Allowed.ALLOWED,
-                    location = locationReferences[0],
-                    info = null
+                    location = locationReferences.captured,
+                    info = null,
+                    authorization_id = "auth_id"
                 )
             }
     }

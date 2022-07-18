@@ -17,7 +17,14 @@ class TokensEmspMongoRepository(
     private val collection: MongoCollection<Token>
 ) : TokensEmspService {
 
-    override fun getTokens(dateFrom: Instant?, dateTo: Instant?, offset: Int, limit: Int?): SearchResult<Token> =
+    override fun getTokens(
+        dateFrom: Instant?,
+        dateTo: Instant?,
+        offset: Int,
+        limit: Int?,
+        countryCode: String?,
+        partyId: String?
+    ): SearchResult<Token> =
         collection
             .run {
                 find(
@@ -38,10 +45,14 @@ class TokensEmspMongoRepository(
                     .toSearchResult(totalCount = size, limit = actualLimit, offset = offset)
             }
 
+    override fun getToken(tokenUid: String, tokenType: TokenType): AuthorizationInfo? {
+        TODO("Not yet implemented")
+    }
+
     override fun postToken(
         tokenUid: String,
         tokenType: TokenType,
-        locationReferences: LocationReferences?
+        locationReferences: LocationReferences
     ): AuthorizationInfo {
         TODO("Not yet implemented")
     }

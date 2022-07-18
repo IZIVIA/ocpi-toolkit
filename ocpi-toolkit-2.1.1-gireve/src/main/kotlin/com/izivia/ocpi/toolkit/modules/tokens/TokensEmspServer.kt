@@ -24,7 +24,7 @@ class TokensEmspServer(
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePath,
-            queryParams = listOf("date_from", "date_to", "offset", "limit"),
+            queryParams = listOf("date_from", "date_to", "offset", "limit", "ocpi-to-country-code", "ocpi-to-party-id"),
             filters = listOf(platformRepository::tokenFilter)
         ) { req ->
             req.httpResponse {
@@ -36,7 +36,26 @@ class TokensEmspServer(
                         dateFrom = dateFrom?.let { Instant.parse(it) },
                         dateTo = dateTo?.let { Instant.parse(it) },
                         offset = req.queryParams["offset"]?.toInt() ?: 0,
-                        limit = req.queryParams["limit"]?.toInt()
+                        limit = req.queryParams["limit"]?.toInt(),
+                        countryCode = req.queryParams["ocpi-to-country-code"],
+                        partyId = req.queryParams["ocpi-to-party-id"],
+                    )
+            }
+        }
+
+        transportServer.handle(
+            method = HttpMethod.GET,
+            path = basePath + listOf(
+                VariablePathSegment("tokenUid")
+            ),
+            queryParams = listOf("type"),
+            filters = listOf(platformRepository::tokenFilter)
+        ) { req ->
+            req.httpResponse {
+                service
+                    .getToken(
+                        tokenUid = req.pathParams["tokenUid"]!!,
+                        tokenType = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
                     )
             }
         }
@@ -55,7 +74,7 @@ class TokensEmspServer(
                     .postToken(
                         tokenUid = req.pathParams["tokenUid"]!!,
                         tokenType = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
-                        locationReferences = req.body?.run { mapper.readValue(this, LocationReferences::class.java) }
+                        locationReferences = req.body.run { mapper.readValue(this, LocationReferences::class.java) }
                     )
             }
         }

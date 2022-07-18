@@ -30,7 +30,9 @@ class TokensCpoClient(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
-        limit: Int?
+        limit: Int?,
+        countryCode: String?,
+        partyId: String?
     ): OcpiResponseBody<SearchResult<Token>> =
         buildTransport()
             .send(
@@ -40,16 +42,29 @@ class TokensCpoClient(
                         dateFrom?.let { "date_from" to dateFrom.toString() },
                         dateTo?.let { "date_to" to dateTo.toString() },
                         "offset" to offset.toString(),
-                        limit?.let { "limit" to limit.toString() }
+                        limit?.let { "limit" to limit.toString() },
+                        countryCode?.let { "ocpi-to-country-code" to countryCode },
+                        partyId?.let { "ocpi-to-party-id" to partyId }
                     ).toMap()
                 ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parsePaginatedBody(offset)
 
+    override fun getToken(tokenUid: String, tokenType: TokenType): OcpiResponseBody<AuthorizationInfo?> =
+        buildTransport()
+            .send(
+                HttpRequest(
+                    method = HttpMethod.GET,
+                    path = "/$tokenUid",
+                    queryParams = mapOf("type" to tokenType.name),
+                ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+            )
+            .parseBody()
+
     override fun postToken(
         tokenUid: String,
         tokenType: TokenType,
-        locationReferences: LocationReferences?
+        locationReferences: LocationReferences
     ): OcpiResponseBody<AuthorizationInfo> =
         buildTransport()
             .send(
@@ -57,7 +72,7 @@ class TokensCpoClient(
                     method = HttpMethod.POST,
                     path = "/$tokenUid/authorize",
                     queryParams = mapOf("type" to tokenType.name),
-                    body = locationReferences?.run(mapper::writeValueAsString)
+                    body = locationReferences.run(mapper::writeValueAsString)
                 ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()

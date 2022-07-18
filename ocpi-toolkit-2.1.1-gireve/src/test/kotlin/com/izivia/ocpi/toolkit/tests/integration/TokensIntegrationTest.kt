@@ -79,13 +79,17 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
         var offset = 0
         var dateFrom: Instant? = null
         var dateTo: Instant? = null
+        val countryCode: String = "fr"
+        val partyId: String = "abc"
 
         expectThat(
             tokensCpoClient.getTokens(
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
-                limit = limit
+                limit = limit,
+                countryCode = countryCode,
+                partyId = partyId
             )
         ) {
             get { status_code }
@@ -126,7 +130,9 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
-                limit = limit
+                limit = limit,
+                countryCode = countryCode,
+                partyId = partyId
             )
         ) {
             get { status_code }
@@ -153,7 +159,7 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${emspServer.baseUrl}/2.1.1/tokens?limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${emspServer.baseUrl}/2.1.1/tokens?limit=$limit&ocpi-to-country-code=$countryCode&ocpi-to-party-id=$partyId&offset=${offset + limit}")
                 }
         }
 
@@ -167,7 +173,9 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
-                limit = limit
+                limit = limit,
+                countryCode = countryCode,
+                partyId = partyId
             )
         ) {
             get { status_code }
@@ -194,7 +202,7 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${emspServer.baseUrl}/2.1.1/tokens?limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${emspServer.baseUrl}/2.1.1/tokens?limit=$limit&ocpi-to-country-code=$countryCode&ocpi-to-party-id=$partyId&offset=${offset + limit}")
                 }
         }
 
@@ -208,7 +216,9 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
-                limit = limit
+                limit = limit,
+                countryCode = countryCode,
+                partyId = partyId
             )
         ) {
             get { status_code }
@@ -249,7 +259,9 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
-                limit = limit
+                limit = limit,
+                countryCode = countryCode,
+                partyId = partyId
             )
         ) {
             get { status_code }
@@ -290,7 +302,9 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
-                limit = limit
+                limit = limit,
+                countryCode = countryCode,
+                partyId = partyId
             )
         ) {
             get { status_code }
@@ -331,7 +345,9 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
-                limit = limit
+                limit = limit,
+                countryCode = countryCode,
+                partyId = partyId
             )
         ) {
             get { status_code }
@@ -372,7 +388,9 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
-                limit = limit
+                limit = limit,
+                countryCode = countryCode,
+                partyId = partyId
             )
         ) {
             get { status_code }
@@ -413,7 +431,9 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
-                limit = limit
+                limit = limit,
+                countryCode = countryCode,
+                partyId = partyId
             )
         ) {
             get { status_code }
@@ -453,7 +473,9 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 offset = offset,
-                limit = limit
+                limit = limit,
+                countryCode = countryCode,
+                partyId = partyId
             )
         ) {
             get { status_code }
@@ -480,7 +502,7 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${emspServer.baseUrl}/2.1.1/tokens?date_to=${dateTo}&limit=$limit&offset=${offset + limit}")
+                        .isEqualTo("${emspServer.baseUrl}/2.1.1/tokens?date_to=${dateTo}&limit=$limit&ocpi-to-country-code=$countryCode&ocpi-to-party-id=$partyId&offset=${offset + limit}")
                 }
         }
     }

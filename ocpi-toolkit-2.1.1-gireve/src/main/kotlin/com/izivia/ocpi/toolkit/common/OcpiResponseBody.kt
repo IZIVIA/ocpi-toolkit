@@ -47,6 +47,13 @@ data class OcpiResponseBody<T>(
             timestamp = Instant.now()
         )
 
+        fun <T> notEnoughInformation(message: String) = OcpiResponseBody<T>(
+            data = null,
+            status_code = OcpiStatus.CLIENT_NOT_ENOUGH_INFORMATION.code,
+            status_message = message,
+            timestamp = Instant.now()
+        )
+
         fun <T> of(data: () -> T) =
             try {
                 success(data = data())

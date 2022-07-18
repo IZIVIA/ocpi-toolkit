@@ -6,10 +6,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.validation.TokensEmspValidationService
-import com.izivia.ocpi.toolkit.samples.common.validEvse
-import com.izivia.ocpi.toolkit.samples.common.validLocation
-import com.izivia.ocpi.toolkit.samples.common.validLocationReferences
-import com.izivia.ocpi.toolkit.samples.common.validToken
+import com.izivia.ocpi.toolkit.samples.common.*
 import com.izivia.ocpi.toolkit.tests.mock.tokensEmspService
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
@@ -30,7 +27,16 @@ class TokensEmspValidationServiceTest {
     fun getTokensParamsValidationTest() {
         service = TokensEmspValidationService(service = tokensEmspService(emptyList()))
 
-        expectThat(service.getTokens(dateFrom = from, dateTo = from, offset = 0, limit = null)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = from,
+                dateTo = from,
+                offset = 0,
+                limit = null,
+                countryCode = null,
+                partyId = null
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -40,7 +46,16 @@ class TokensEmspValidationServiceTest {
                 .isEqualTo(0)
         }
 
-        expectThat(service.getTokens(dateFrom = to, dateTo = from, offset = 0, limit = null)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = to,
+                dateTo = from,
+                offset = 0,
+                limit = null,
+                countryCode = null,
+                partyId = null
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
@@ -48,7 +63,16 @@ class TokensEmspValidationServiceTest {
                 .isNull()
         }
 
-        expectThat(service.getTokens(dateFrom = from, dateTo = to, offset = 0, limit = null)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = from,
+                dateTo = to,
+                offset = 0,
+                limit = null,
+                countryCode = null,
+                partyId = null
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -58,7 +82,16 @@ class TokensEmspValidationServiceTest {
                 .isEqualTo(0)
         }
 
-        expectThat(service.getTokens(dateFrom = null, dateTo = to, offset = 0, limit = null)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = null,
+                dateTo = to,
+                offset = 0,
+                limit = null,
+                countryCode = null,
+                partyId = null
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -68,7 +101,16 @@ class TokensEmspValidationServiceTest {
                 .isEqualTo(0)
         }
 
-        expectThat(service.getTokens(dateFrom = from, dateTo = null, offset = 0, limit = null)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = from,
+                dateTo = null,
+                offset = 0,
+                limit = null,
+                countryCode = null,
+                partyId = null
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -78,7 +120,16 @@ class TokensEmspValidationServiceTest {
                 .isEqualTo(0)
         }
 
-        expectThat(service.getTokens(dateFrom = null, dateTo = null, offset = 0, limit = null)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = null,
+                dateTo = null,
+                offset = 0,
+                limit = null,
+                countryCode = null,
+                partyId = null
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -88,7 +139,16 @@ class TokensEmspValidationServiceTest {
                 .isEqualTo(0)
         }
 
-        expectThat(service.getTokens(dateFrom = null, dateTo = null, offset = -10, limit = null)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = null,
+                dateTo = null,
+                offset = -10,
+                limit = null,
+                countryCode = null,
+                partyId = null
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
@@ -96,7 +156,16 @@ class TokensEmspValidationServiceTest {
                 .isNull()
         }
 
-        expectThat(service.getTokens(dateFrom = null, dateTo = null, offset = 0, limit = -10)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = null,
+                dateTo = null,
+                offset = 0,
+                limit = -10,
+                countryCode = null,
+                partyId = null
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
@@ -104,7 +173,16 @@ class TokensEmspValidationServiceTest {
                 .isNull()
         }
 
-        expectThat(service.getTokens(dateFrom = null, dateTo = null, offset = 0, limit = 100)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = null,
+                dateTo = null,
+                offset = 0,
+                limit = 100,
+                countryCode = null,
+                partyId = null
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -119,7 +197,16 @@ class TokensEmspValidationServiceTest {
                 .isEqualTo(100)
         }
 
-        expectThat(service.getTokens(dateFrom = null, dateTo = null, offset = 100, limit = 100)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = null,
+                dateTo = null,
+                offset = 100,
+                limit = 100,
+                countryCode = null,
+                partyId = null
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -134,7 +221,16 @@ class TokensEmspValidationServiceTest {
                 .isEqualTo(100)
         }
 
-        expectThat(service.getTokens(dateFrom = null, dateTo = null, offset = 0, limit = 0)) {
+        expectThat(
+            service.getTokens(
+                dateFrom = null,
+                dateTo = null,
+                offset = 0,
+                limit = 0,
+                countryCode = "fr",
+                partyId = "abc"
+            )
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
@@ -147,6 +243,59 @@ class TokensEmspValidationServiceTest {
                 .isNotNull()
                 .get(SearchResult<Token>::limit)
                 .isEqualTo(0)
+        }
+
+        expectThat(
+            service.getTokens(
+                dateFrom = null,
+                dateTo = null,
+                offset = 0,
+                limit = 0,
+                countryCode = "frx",
+                partyId = "abc"
+            )
+        ) {
+            get { status_code }
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+        }
+
+        expectThat(
+            service.getTokens(
+                dateFrom = null,
+                dateTo = null,
+                offset = 0,
+                limit = 0,
+                countryCode = "fr",
+                partyId = "abcx"
+            )
+        ) {
+            get { status_code }
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+        }
+    }
+
+    @Test
+    fun getTokenParamsValidationTest() {
+        service = TokensEmspValidationService(service = tokensEmspService(emptyList()))
+
+        expectThat(
+            service.getToken(
+                tokenUid = validToken.uid,
+                tokenType = TokenType.RFID
+            )
+        ) {
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
+        }
+
+        expectThat(
+            service.getToken(
+                tokenUid = str37chars,
+                tokenType = TokenType.RFID
+            )
+        ) {
+            get { status_code }
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -158,7 +307,7 @@ class TokensEmspValidationServiceTest {
             service.postToken(
                 tokenUid = validToken.uid,
                 tokenType = TokenType.RFID,
-                locationReferences = null
+                locationReferences = validLocationReferences
             )
         ) {
             get { status_code }
@@ -180,7 +329,7 @@ class TokensEmspValidationServiceTest {
             service.postToken(
                 tokenUid = str37chars,
                 tokenType = TokenType.RFID,
-                locationReferences = null
+                locationReferences = validLocationReferences
             )
         ) {
             get { status_code }
@@ -193,7 +342,7 @@ class TokensEmspValidationServiceTest {
                 tokenType = TokenType.RFID,
                 locationReferences = LocationReferences(
                     location_id = str40chars,
-                    evse_uids = emptyList(),
+                    evse_uids = listOf(validEvse.uid),
                     connector_ids = emptyList()
                 )
             )
@@ -230,6 +379,36 @@ class TokensEmspValidationServiceTest {
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+        }
+
+        expectThat(
+            service.postToken(
+                tokenUid = validToken.uid,
+                tokenType = TokenType.RFID,
+                locationReferences = LocationReferences(
+                    location_id = validLocation.id,
+                    evse_uids = listOf(validEvse.uid, validEvse.uid),
+                    connector_ids = listOf(validConnector.id)
+                )
+            )
+        ) {
+            get { status_code }
+                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+        }
+
+        expectThat(
+            service.postToken(
+                tokenUid = validToken.uid,
+                tokenType = TokenType.RFID,
+                locationReferences = LocationReferences(
+                    location_id = validLocation.id,
+                    evse_uids = emptyList(),
+                    connector_ids = emptyList()
+                )
+            )
+        ) {
+            get { status_code }
+                .isEqualTo(OcpiStatus.CLIENT_NOT_ENOUGH_INFORMATION.code)
         }
     }
 }
