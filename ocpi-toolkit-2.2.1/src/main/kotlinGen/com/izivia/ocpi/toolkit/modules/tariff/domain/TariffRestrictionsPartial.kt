@@ -7,6 +7,7 @@ package com.izivia.ocpi.toolkit.modules.tariff.domain
 
 import java.math.BigDecimal
 import java.time.DayOfWeek
+import kotlin.Int
 import kotlin.String
 import kotlin.collections.List
 
@@ -24,9 +25,9 @@ public data class TariffRestrictionsPartial(
   public val max_current: BigDecimal?,
   public val min_power: BigDecimal?,
   public val max_power: BigDecimal?,
-  public val min_duration: BigDecimal?,
-  public val max_duration: BigDecimal?,
-  public val day_of_week: DayOfWeek?,
+  public val min_duration: Int?,
+  public val max_duration: Int?,
+  public val day_of_week: List<DayOfWeek>?,
   public val reservation: ReservationRestrictionType?,
 )
 

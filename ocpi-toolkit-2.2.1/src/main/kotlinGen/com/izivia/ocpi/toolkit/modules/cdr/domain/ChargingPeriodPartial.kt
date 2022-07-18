@@ -14,14 +14,14 @@ import kotlin.collections.List
  */
 public data class ChargingPeriodPartial(
   public val start_date_time: Instant?,
-  public val dimension: List<CdrDimensionPartial>?,
+  public val dimensions: List<CdrDimensionPartial>?,
   public val tariff_id: CiString?,
 )
 
 public fun ChargingPeriod.toPartial(): ChargingPeriodPartial {
    return ChargingPeriodPartial(
      start_date_time = start_date_time,
-    dimension = dimension.toPartial(),
+    dimensions = dimensions.toPartial(),
     tariff_id = tariff_id
    )
 }

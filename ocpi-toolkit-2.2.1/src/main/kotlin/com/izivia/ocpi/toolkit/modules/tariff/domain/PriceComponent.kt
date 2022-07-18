@@ -20,6 +20,6 @@ import java.math.BigDecimal
 data class PriceComponent(
     val type: TariffDimensionType,
     val price: BigDecimal,
-    val vat: BigDecimal,
+    val vat: BigDecimal? = null,
     val step_size: Int
 )

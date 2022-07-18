@@ -100,7 +100,7 @@ data class Cdr(
     val total_cost: Price,
     val total_fixed_cost: Price? = null,
     val total_energy: BigDecimal,
-    val total_energy_cost: BigDecimal? = null,
+    val total_energy_cost: Price? = null,
     val total_time: BigDecimal,
     val total_time_cost: Price? = null,
     val total_parking_time: BigDecimal? = null,
