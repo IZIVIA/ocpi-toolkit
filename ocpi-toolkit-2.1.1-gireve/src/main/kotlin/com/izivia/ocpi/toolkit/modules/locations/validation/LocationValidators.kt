@@ -2,6 +2,9 @@ package com.izivia.ocpi.toolkit.modules.locations.validation
 
 import com.izivia.ocpi.toolkit.common.validation.*
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
+import com.izivia.ocpi.toolkit.modules.types.DisplayText
+import com.izivia.ocpi.toolkit.modules.types.DisplayTextPartial
+import com.izivia.ocpi.toolkit.modules.types.toPartial
 import org.valiktor.DefaultConstraintViolation
 import org.valiktor.constraints.Greater
 import org.valiktor.constraints.NotNull
