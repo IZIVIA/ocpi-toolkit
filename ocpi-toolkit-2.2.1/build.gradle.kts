@@ -1,5 +1,7 @@
 plugins {
     id("com.izivia.ocpi.toolkit.processor")
+    id("java-library")
+    id("maven-publish")
 }
 
 dependencies {
@@ -50,6 +52,9 @@ publishing {
     publications {
         named<MavenPublication>("maven") {
             artifactId = "ocpi-2-2-1"
+            groupId = "com.izivia"
+            version = "1.1"
+
             from(components["java"])
 
             pom {
@@ -60,3 +65,4 @@ publishing {
         }
     }
 }
+
