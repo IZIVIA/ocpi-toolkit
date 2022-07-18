@@ -44,7 +44,7 @@ class TokensCpoClient(
                     ).toMap()
                 ).authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
-            .parseBody()
+            .parsePaginatedBody(offset)
 
     override fun postToken(
         tokenUid: String,
