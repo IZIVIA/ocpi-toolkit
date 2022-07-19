@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit.common
 
-import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.core.type.TypeReference
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
@@ -17,8 +17,8 @@ typealias AuthenticatedHttpRequest = HttpRequest
  * information.
  * @param offset
  */
-fun <T> HttpResponse.parsePaginatedBody(offset: Int): OcpiResponseBody<SearchResult<T>> =
-    parseBody<OcpiResponseBody<List<T>>>()
+inline fun <reified T> HttpResponse.parsePaginatedBody(offset: Int): OcpiResponseBody<SearchResult<T>> =
+    mapper.readValue(body, object : TypeReference<OcpiResponseBody<List<T>>>() {})
         .let { parsedBody ->
             OcpiResponseBody(
                 data = parsedBody.data?.toSearchResult(
@@ -41,7 +41,7 @@ fun <T> HttpResponse.parsePaginatedBody(offset: Int): OcpiResponseBody<SearchRes
  * @throws DatabindException – if the input JSON structure does not match structure expected for result type (or has
  * other mismatch issues)
  */
-inline fun <reified T> HttpResponse.parseBody(): T = mapper.readValue(body!!)
+inline fun <reified T> HttpResponse.parseBody(): T = mapper.readValue(body!!, object: TypeReference<T>() {})
 
 /**
  * Encode a string in base64, also @see String#decodeBase64()

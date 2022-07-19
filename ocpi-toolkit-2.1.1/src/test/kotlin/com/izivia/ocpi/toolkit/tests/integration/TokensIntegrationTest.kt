@@ -97,6 +97,10 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                     get { list }
                         .isNotEmpty()
                         .hasSize(min(limit, numberOfTokens))
+
+                    get { list }
+                        .first()
+                        .isA<Token>()
                 }
                 .and {
                     get { limit }
@@ -138,6 +142,10 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                     get { list }
                         .isNotEmpty()
                         .hasSize(min(limit, numberOfTokens))
+
+                    get { list }
+                        .first()
+                        .isA<Token>()
                 }
                 .and {
                     get { limit }
@@ -179,6 +187,10 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                     get { list }
                         .isNotEmpty()
                         .hasSize(min(limit, numberOfTokens))
+
+                    get { list }
+                        .first()
+                        .isA<Token>()
                 }
                 .and {
                     get { limit }
@@ -220,6 +232,10 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                     get { list }
                         .isNotEmpty()
                         .hasSize(min(limit, numberOfTokens))
+
+                    get { list }
+                        .first()
+                        .isA<Token>()
                 }
                 .and {
                     get { limit }
@@ -261,6 +277,10 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                     get { list }
                         .isNotEmpty()
                         .hasSize(min(limit, numberOfTokens))
+
+                    get { list }
+                        .first()
+                        .isA<Token>()
                 }
                 .and {
                     get { limit }
@@ -302,6 +322,10 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                     get { list }
                         .isNotEmpty()
                         .hasSize(min(limit, numberOfTokens))
+
+                    get { list }
+                        .first()
+                        .isA<Token>()
                 }
                 .and {
                     get { limit }
@@ -343,6 +367,10 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                     get { list }
                         .isNotEmpty()
                         .hasSize(1)
+
+                    get { list }
+                        .first()
+                        .isA<Token>()
                 }
                 .and {
                     get { limit }
@@ -384,6 +412,10 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                     get { list }
                         .isNotEmpty()
                         .hasSize(1)
+
+                    get { list }
+                        .first()
+                        .isA<Token>()
                 }
                 .and {
                     get { limit }
@@ -465,6 +497,10 @@ class TokensIntegrationTest : BaseServerIntegrationTest() {
                     get { list }
                         .isNotEmpty()
                         .hasSize(1)
+
+                    get { list }
+                        .first()
+                        .isA<Token>()
                 }
                 .and {
                     get { limit }
