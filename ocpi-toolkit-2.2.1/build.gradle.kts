@@ -53,7 +53,6 @@ publishing {
         named<MavenPublication>("maven") {
             artifactId = "ocpi-2-2-1"
             groupId = "com.izivia"
-            version = "1.1"
 
             from(components["java"])
 
