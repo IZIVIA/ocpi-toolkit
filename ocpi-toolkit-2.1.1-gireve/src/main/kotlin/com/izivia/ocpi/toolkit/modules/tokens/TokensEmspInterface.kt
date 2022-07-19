@@ -66,8 +66,10 @@ interface TokensEmspInterface {
      *
      * If the CPO is allowed to get Tokens of the eMSP owner, the response includes the full description of the Token.
      *
+     * Gireve notes:
      * This new flow prevents CPOs to download all Tokens of all eMSPs. For more description, see 2.3.5 Custom OCPI flow
      * to prevent eMSP Tokens download by CPOs
+     *
      * @param tokenUid (max-length 36) 	Token.uid of the Token for which this authorization is.
      * @param tokenType Token.type of the Token for which this authorization is. Default if omitted: RFID
      * @return Standard OCPI response including the Token description in data field. In case of an unknown Token or
@@ -76,7 +78,7 @@ interface TokensEmspInterface {
     fun getToken(
         tokenUid: String,
         tokenType: TokenType = TokenType.RFID
-    ): OcpiResponseBody<AuthorizationInfo?>
+    ): OcpiResponseBody<Token?>
 
     /**
      * Updated by Gireve, LocationReferences is mandatory and must contain one and only one EVSE.

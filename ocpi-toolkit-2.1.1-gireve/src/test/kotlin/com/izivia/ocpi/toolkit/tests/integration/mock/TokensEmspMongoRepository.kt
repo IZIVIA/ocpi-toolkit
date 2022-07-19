@@ -45,7 +45,7 @@ class TokensEmspMongoRepository(
                     .toSearchResult(totalCount = size, limit = actualLimit, offset = offset)
             }
 
-    override fun getToken(tokenUid: String, tokenType: TokenType): AuthorizationInfo? {
+    override fun getToken(tokenUid: String, tokenType: TokenType): Token? {
         TODO("Not yet implemented")
     }
 

@@ -50,7 +50,7 @@ class TokensCpoClient(
             )
             .parsePaginatedBody(offset)
 
-    override fun getToken(tokenUid: String, tokenType: TokenType): OcpiResponseBody<AuthorizationInfo?> =
+    override fun getToken(tokenUid: String, tokenType: TokenType): OcpiResponseBody<Token?> =
         buildTransport()
             .send(
                 HttpRequest(

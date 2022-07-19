@@ -43,7 +43,7 @@ class TokensEmspValidationService(
             }
     }
 
-    override fun getToken(tokenUid: String, tokenType: TokenType): OcpiResponseBody<AuthorizationInfo?> =
+    override fun getToken(tokenUid: String, tokenType: TokenType): OcpiResponseBody<Token?> =
         OcpiResponseBody.of {
             validate {
                 validateLength("tokenUid", tokenUid, 36)

@@ -48,16 +48,7 @@ fun tokensEmspService(tokens: List<Token>): TokensEmspService = mockk {
     }
 
     every { getToken(capture(tokenUid), capture(tokenType)) } answers {
-        tokens
-            .find { it.uid == tokenUid.captured }
-            ?.let {
-                AuthorizationInfo(
-                    allowed = Allowed.ALLOWED,
-                    location = null,
-                    info = null,
-                    authorization_id = "auth_id"
-                )
-            }
+        tokens.find { it.uid == tokenUid.captured }
     }
 
     every { postToken(capture(tokenUid), capture(tokenType), capture(locationReferences)) } answers {
