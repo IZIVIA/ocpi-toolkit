@@ -19,7 +19,7 @@ Examples:
 ```kotlin
 // Http4kTransportServer is an implementation of TransportServer using htt4k. You have to code your own implementation.
 // It defines the HTTP server, and how to handle requests.
-// You can see an  example in the list above 
+// You can see an  example in the list above
 val server = Http4kTransportServer(
     baseUrl = config.baseUrl, // Example: http://localhost:8080, only used for pagination
     port = config.port // Example: 8080, used to know on which port the server will run
@@ -28,14 +28,14 @@ val server = Http4kTransportServer(
 // PlatformMongoRepository is an implementation of PlatformRepository using mongo
 // It will be used to store information about platforms with whom the server is communicating:
 // A platform has: Tokens (A, B, C), Endpoints, Versions
-// You can see an  example in the list above 
+// You can see an  example in the list above
 val platformRepository = PlatformMongoRepository(
     collection = mongoDatabase.getCollection<Location>(config.platformCollection)
 )
 
 // VersionsCacheRepository is an implementation of VersionsRepository
 // It defines which OCPI version the server support, and the endpoints associated with it
-// You can see an  example in the list above 
+// You can see an  example in the list above
 val versionsRepository = VersionsCacheRepository()
 
 // VersionDetailsCacheRepository is an implementation of VersionDetailRepository
@@ -154,14 +154,14 @@ Examples:
 // PlatformMongoRepository is an implementation of PlatformRepository using mongo
 // It will be used to store information about platforms with whom the client is communicating:
 // A platform has: Tokens (A, B, C), Endpoints, Versions
-// You can see an  example in the list above 
+// You can see an  example in the list above
 val senderPlatformRepository = PlatformMongoRepository(
     collection = mongoDatabase.getCollection<Location>(config.platformCollection)
 )
 
 // VersionsCacheRepository is an implementation of VersionsRepository
 // It defines which OCPI version the client supports, and the endpoints associated with it
-// You can see an  example in the list above 
+// You can see an  example in the list above
 val senderVersionsRepository = VersionsCacheRepository()
 
 // Will be sent during registration for the receiver to use to request what versions the sender supports
@@ -240,9 +240,10 @@ What actually changed in the lib:
 
 ### ocpi-lib-2.1.1 -> ocpi-lib-2.1.1-gireve
 
-| Module      | Changements                                                                                                                                                |
-|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Common      | nothing changed                                                                                                                                            |
-| Versions    | - Removed V_2_0 and V_2_1 in VersionNumber enum                                                                                                            |
-| Credentials | - Removed PUT (the user has to first delete() then register() to update (so token A has to be exchanged outside OCPI protocol between delete and register) |
-| Locations   | - evse_id is now required (added doc to explain that in Locations object)                                                                                  |
+| Module      | Changements                                                                                                                                                                      |
+|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Common      | nothing changed                                                                                                                                                                  |
+| Versions    | - Removed V_2_0 and V_2_1 in VersionNumber enum                                                                                                                                  |
+| Credentials | - Removed PUT (the user has to first delete() then register() to update (so token A has to be exchanged outside OCPI protocol between delete and register)                       |
+| Locations   | - evse_id is now required (added doc to explain that in Locations object)                                                                                                        |
+| Tokens      | - Too many changements, see [this commit for an insight (things may have changed since then)](https://github.com/4sh/ocpi-lib/commit/4f664247a888dcc475270f92855a191e13b42342)   |
