@@ -2,13 +2,13 @@ package com.izivia.ocpi.toolkit.modules.versions
 
 import com.izivia.ocpi.toolkit.common.OcpiModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.modules.versions.validation.VersionDetailsValidationService
+import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 
 class VersionDetailsServer(
-    private val service: VersionDetailsValidationService,
+    private val service: VersionDetailsService,
     basePath: String = ""
 ) : OcpiModuleServer(basePath) {
 

@@ -1,4 +1,4 @@
-package com.izivia.ocpi.toolkit.modules.versions.validation
+package com.izivia.ocpi.toolkit.modules.versions.services
 
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.OcpiServerUnsupportedVersionException
@@ -6,7 +6,7 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
 import com.izivia.ocpi.toolkit.modules.versions.domain.parseVersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.VersionDetailsRepository
 
-class VersionDetailsValidationService(
+class VersionDetailsService(
     private val repository: VersionDetailsRepository
 ) {
     fun getVersionDetails(

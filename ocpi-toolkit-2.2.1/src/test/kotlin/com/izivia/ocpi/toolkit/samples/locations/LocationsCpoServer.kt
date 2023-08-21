@@ -6,8 +6,8 @@ import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.Connector
 import com.izivia.ocpi.toolkit.modules.locations.domain.Evse
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
+import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
-import com.izivia.ocpi.toolkit.modules.locations.validation.LocationsCpoValidationService
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import java.time.Instant
 
@@ -27,18 +27,18 @@ fun main() {
     )
 
     // We specify service for the validation service
-    val service = CacheLocationsCpoService()
+    val service = CacheLocationsCpoRepository()
 
     // We implement callbacks for the server using the built-in service and our service implementation
     LocationsCpoServer(
-        service = LocationsCpoValidationService(service = service)
+        service = LocationsCpoService(service = service)
     ).registerOn(transportServer)
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()
 }
 
-class CacheLocationsCpoService : LocationsCpoService {
+class CacheLocationsCpoRepository : LocationsCpoRepository {
     override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int, limit: Int?): SearchResult<Location> {
         TODO("Not yet implemented")
     }

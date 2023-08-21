@@ -13,8 +13,8 @@ import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerSer
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsClient
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
-import com.izivia.ocpi.toolkit.modules.versions.validation.VersionDetailsValidationService
-import com.izivia.ocpi.toolkit.modules.versions.validation.VersionsValidationService
+import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
+import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
 import com.izivia.ocpi.toolkit.tests.integration.mock.PlatformMongoRepository
@@ -67,12 +67,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             )
         ).registerOn(receiverServer)
         VersionsServer(
-            service = VersionsValidationService(
+            service = VersionsService(
                 repository = receiverVersionsCacheRepository
             )
         ).registerOn(receiverServer)
         VersionDetailsServer(
-            service = VersionDetailsValidationService(
+            service = VersionDetailsService(
                 repository = receiverVersionDetailsCacheRepository
             )
         ).registerOn(receiverServer)
@@ -94,12 +94,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val senderServerVersionsUrl = "${senderServer.baseUrl}/versions"
 
         VersionsServer(
-            service = VersionsValidationService(
+            service = VersionsService(
                 repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl)
             )
         ).registerOn(senderServer)
         VersionDetailsServer(
-            service = VersionDetailsValidationService(
+            service = VersionDetailsService(
                 repository = VersionDetailsCacheRepository(baseUrl = senderServer.baseUrl)
             )
         ).registerOn(senderServer)

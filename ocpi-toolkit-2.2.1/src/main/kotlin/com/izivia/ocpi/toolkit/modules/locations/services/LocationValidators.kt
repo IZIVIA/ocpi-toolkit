@@ -1,4 +1,4 @@
-package com.izivia.ocpi.toolkit.modules.locations.validation
+package com.izivia.ocpi.toolkit.modules.locations.services
 
 import com.izivia.ocpi.toolkit.common.validation.*
 import com.izivia.ocpi.toolkit.modules.locations.domain.*

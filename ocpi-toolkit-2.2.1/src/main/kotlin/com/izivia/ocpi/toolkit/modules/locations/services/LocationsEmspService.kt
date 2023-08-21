@@ -1,170 +1,226 @@
 package com.izivia.ocpi.toolkit.modules.locations.services
 
+import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.OcpiResponseBody
+import com.izivia.ocpi.toolkit.common.validation.validate
+import com.izivia.ocpi.toolkit.common.validation.validateLength
+import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspInterface
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
+import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
+
+class LocationsEmspService(
+    private val service: LocationsEmspRepository
+) : LocationsEmspInterface {
+
+    override fun getLocation(
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString
+    ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
+        validate {
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 36)
+        }
+
+        service
+            .getLocation(countryCode = countryCode, partyId = partyId, locationId = locationId)
+            ?.validate()
+    }
 
 
-/**
- * Locations is a client owned object, so the end-points need to contain the required extra fields: {party_id} and
- * {country_code}. Example endpoint structures:
- * - /ocpi/emsp/2.1.1/locations/{country_code}/{party_id}/{location_id}
- * - /ocpi/emsp/2.1.1/locations/{country_code}/{party_id}/{location_id}/{evse_uid}
- * - /ocpi/emsp/2.1.1/locations/{country_code}/{party_id}/{location_id}/{evse_uid}/{connector_id}
- *
- * Method: Description
- * - GET: Retrieve a Location as it is stored in the eMSP system.
- * - POST: n/a (use PUT)
- * - PUT: Push new/updated Location, EVSE and/or Connectors to the eMSP
- * - PATCH: Notify the eMSP of partial updates to a Location, EVSEs or Connector (such as the status).
- * - DELETE: n/a (use PATCH)
- */
-interface LocationsEmspService {
-    /**
-     * If the CPO wants to check the status of a Location, EVSE or Connector object in the eMSP system, it might GET the
-     * object from the eMSP system for validation purposes. The CPO is the owner of the objects, so it would be
-     * illogical if the eMSP system had a different status or was missing an object. If a discrepancy is found, the CPO
-     * might push an update to the eMSP via a PUT or PATCH call.
-     *
-     * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
-     * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
-     * @param locationId (max-length=39) Location.id of the Location object to retrieve.
-     */
-    fun getLocation(countryCode: String, partyId: String, locationId: String): Location?
+    override fun getEvse(
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString
+    ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
+        validate {
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
+        }
 
-    /**
-     * If the CPO wants to check the status of a Location, EVSE or Connector object in the eMSP system, it might GET the
-     * object from the eMSP system for validation purposes. The CPO is the owner of the objects, so it would be
-     * illogical if the eMSP system had a different status or was missing an object. If a discrepancy is found, the CPO
-     * might push an update to the eMSP via a PUT or PATCH call.
-     *
-     * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
-     * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
-     * @param locationId (max-length=39) Location.id of the Location object to retrieve.
-     * @param evseUid (max-length=39) Evse.uid, required when requesting an EVSE or Connector object.
-     */
-    fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): Evse?
+        service
+            .getEvse(countryCode = countryCode, partyId = partyId, locationId = locationId, evseUid = evseUid)
+            ?.validate()
+    }
 
-    /**
-     * If the CPO wants to check the status of a Location, EVSE or Connector object in the eMSP system, it might GET the
-     * object from the eMSP system for validation purposes. The CPO is the owner of the objects, so it would be
-     * illogical if the eMSP system had a different status or was missing an object. If a discrepancy is found, the CPO
-     * might push an update to the eMSP via a PUT or PATCH call.
-     *
-     * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
-     * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
-     * @param locationId (max-length=39) Location.id of the Location object to retrieve.
-     * @param evseUid (max-length=39) Evse.uid, required when requesting an EVSE or Connector object.
-     * @param connectorId (max-length=36) Connector.id, required when requesting a Connector object.
-     */
-    fun getConnector(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
-        connectorId: String
-    ): Connector?
+    override fun getConnector(
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString
+    ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
+        validate {
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
+            validateLength("connectorId", connectorId, 36)
+        }
 
-    /**
-     * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
-     * to the eMSP, or to replace existing Locations.
-     *
-     * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
-     * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
-     * @param locationId (max-length=39) Location.id of the new Location object, or the Location of which an EVSE or
-     * Location object is send
-     */
-    fun putLocation(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
+        service
+            .getConnector(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                evseUid = evseUid,
+                connectorId = connectorId
+            )
+            ?.validate()
+    }
+
+    override fun putLocation(
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
         location: Location
-    ): Location
+    ): OcpiResponseBody<Location> = OcpiResponseBody.of {
+        validate {
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 36)
+            location.validate()
+        }
 
-    /**
-     * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
-     * to the eMSP, or to replace existing Locations.
-     *
-     * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
-     * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
-     * @param locationId (max-length=39) Location.id of the new Location object, or the Location of which an EVSE or
-     * Location object is send
-     * @param evseUid (max-length=39) Evse.uid, required when an EVSE or Connector object is send/replaced.
-     */
-    fun putEvse(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
+        service
+            .putLocation(countryCode = countryCode, partyId = partyId, locationId = locationId, location = location)
+            .validate()
+    }
+
+    override fun putEvse(
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
         evse: Evse
-    ): Evse
+    ): OcpiResponseBody<Evse> = OcpiResponseBody.of {
+        validate {
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
+            evse.validate()
+        }
 
-    /**
-     * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
-     * to the eMSP, or to replace existing Locations.
-     *
-     * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
-     * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
-     * @param locationId (max-length=39) Location.id of the new Location object, or the Location of which an EVSE or
-     * Location object is send
-     * @param evseUid (max-length=39) Evse.uid, required when an EVSE or Connector object is send/replaced.
-     * @param connectorId (max-length=36) Connector.id, required when a Connector object is send/replaced.
-     */
-    fun putConnector(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
-        connectorId: String,
+        service
+            .putEvse(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                evseUid = evseUid,
+                evse = evse
+            )
+            .validate()
+    }
+
+    override fun putConnector(
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString,
         connector: Connector
-    ): Connector
+    ): OcpiResponseBody<Connector> = OcpiResponseBody.of {
+        validate {
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
+            validateLength("connectorId", connectorId, 36)
+            connector.validate()
+        }
 
-    /**
-     * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
-     * fields/objects that are not specified are considered unchanged.
-     *
-     * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
-     * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
-     * @param locationId (max-length=39) Location.id of the new Location object
-     */
-    fun patchLocation(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
+        service
+            .putConnector(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                evseUid = evseUid,
+                connectorId = connectorId,
+                connector = connector
+            )
+            .validate()
+    }
+
+    override fun patchLocation(
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
         location: LocationPartial
-    ): Location?
+    ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
+        validate {
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 36)
+            location.validate()
+        }
 
-    /**
-     * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
-     * fields/objects that are not specified are considered unchanged.
-     *
-     * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
-     * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
-     * @param locationId (max-length=39) Location.id of the Location of which an EVSE or Location object is send
-     * @param evseUid (max-length=39) Evse.uid, required when an EVSE or Connector object is send/replaced.
-     */
-    fun patchEvse(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
+        service
+            .patchLocation(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                location = location
+            )
+            ?.validate()
+    }
+
+    override fun patchEvse(
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
         evse: EvsePartial
-    ): Evse?
+    ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
+        validate {
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
+            evse.validate()
+        }
 
-    /**
-     * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
-     * fields/objects that are not specified are considered unchanged.
-     *
-     * @param countryCode (max-length=2) Country code of the CPO requesting this PUT to the eMSP system.
-     * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
-     * @param locationId (max-length=39) Location.id of the Location of which an EVSE or Location object is send
-     * @param evseUid (max-length=39) Evse.uid, required when an EVSE or Connector object is send/replaced.
-     * @param connectorId (max-length=36) Connector.id, required when a Connector object is send/replaced.
-     */
-    fun patchConnector(
-        countryCode: String,
-        partyId: String,
-        locationId: String,
-        evseUid: String,
-        connectorId: String,
+        service
+            .patchEvse(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                evseUid = evseUid,
+                evse = evse
+            )
+            ?.validate()
+    }
+
+    override fun patchConnector(
+        countryCode: CiString,
+        partyId: CiString,
+        locationId: CiString,
+        evseUid: CiString,
+        connectorId: CiString,
         connector: ConnectorPartial
-    ): Connector?
+    ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
+        validate {
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("locationId", locationId, 36)
+            validateLength("evseUid", evseUid, 36)
+            validateLength("connectorId", connectorId, 36)
+            connector.validate()
+        }
+
+        service
+            .patchConnector(
+                countryCode = countryCode,
+                partyId = partyId,
+                locationId = locationId,
+                evseUid = evseUid,
+                connectorId = connectorId,
+                connector = connector
+            )
+            ?.validate()
+    }
 }

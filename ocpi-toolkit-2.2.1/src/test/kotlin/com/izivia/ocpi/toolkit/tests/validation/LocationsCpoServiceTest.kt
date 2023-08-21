@@ -3,7 +3,7 @@ package com.izivia.ocpi.toolkit.tests.validation
 import com.izivia.ocpi.toolkit.common.OcpiStatus
 import com.izivia.ocpi.toolkit.common.SearchResult
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
-import com.izivia.ocpi.toolkit.modules.locations.validation.LocationsCpoValidationService
+import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
 import com.izivia.ocpi.toolkit.tests.mock.locationsCpoService
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
@@ -13,14 +13,14 @@ import strikt.assertions.isNull
 import java.time.Instant
 import java.util.*
 
-class LocationsCpoValidationServiceTest {
-    private lateinit var service: LocationsCpoValidationService
+class LocationsCpoServiceTest {
+    private lateinit var service: LocationsCpoService
     private val from = Instant.parse("2022-04-28T08:00:00.000Z")
     private val to = Instant.parse("2022-04-28T09:00:00.000Z")
 
     @Test
     fun getLocationsParamsValidationTest() {
-        service = LocationsCpoValidationService(service = locationsCpoService(emptyList()))
+        service = LocationsCpoService(service = locationsCpoService(emptyList()))
 
         expectThat(service.getLocations(dateFrom = from, dateTo = from, offset = 0, limit = null)) {
             get { status_code }
@@ -145,7 +145,7 @@ class LocationsCpoValidationServiceTest {
     @Test
     fun getLocationParamsValidationTest() {
         service =
-            LocationsCpoValidationService(service = locationsCpoService(emptyList()))
+            LocationsCpoService(service = locationsCpoService(emptyList()))
 
         val str3chars = "abc"
         val str36chars = "abababababababababababababababababab"
@@ -169,7 +169,7 @@ class LocationsCpoValidationServiceTest {
 
     @Test
     fun getEvseParamsValidationTest() {
-        service = LocationsCpoValidationService(service = locationsCpoService(emptyList()))
+        service = LocationsCpoService(service = locationsCpoService(emptyList()))
 
         val str3chars = "abc"
         val str36chars = "abababababababababababababababababab"
@@ -214,7 +214,7 @@ class LocationsCpoValidationServiceTest {
     @Test
     fun getConnectorParamsValidationTest() {
         service =
-            LocationsCpoValidationService(service = locationsCpoService(emptyList()))
+            LocationsCpoService(service = locationsCpoService(emptyList()))
 
         val str3chars = "abc"
         val str36chars = "abababababababababababababababababab"

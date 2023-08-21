@@ -8,8 +8,8 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleR
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsClientService
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
-import com.izivia.ocpi.toolkit.modules.versions.validation.VersionDetailsValidationService
-import com.izivia.ocpi.toolkit.modules.versions.validation.VersionsValidationService
+import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
+import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
 
 const val senderPort = 8081
@@ -31,12 +31,12 @@ fun main() {
     )
 
     VersionsServer(
-        service = VersionsValidationService(
+        service = VersionsService(
             repository = senderVersionsRepository
         )
     ).registerOn(senderServer)
     VersionDetailsServer(
-        service = VersionDetailsValidationService(
+        service = VersionDetailsService(
             repository = senderVersionDetailsRepository
         )
     ).registerOn(senderServer)

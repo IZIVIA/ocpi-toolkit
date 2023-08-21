@@ -3,8 +3,8 @@ package com.izivia.ocpi.toolkit.samples.locations
 import com.izivia.ocpi.toolkit.common.tokenFilter
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
+import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspService
-import com.izivia.ocpi.toolkit.modules.locations.validation.LocationsEmspValidationService
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.samples.common.validLocation
 
@@ -24,18 +24,18 @@ fun main() {
     )
 
     // We specify service for the validation service
-    val service = CacheLocationsEmspService()
+    val service = CacheLocationsEmspRepository()
 
     // We implement callbacks for the server using the built-in service and our repository implementation
     LocationsEmspServer(
-        service = LocationsEmspValidationService(service = service)
+        service = LocationsEmspService(service = service)
     ).registerOn(transportServer)
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()
 }
 
-class CacheLocationsEmspService : LocationsEmspService {
+class CacheLocationsEmspRepository : LocationsEmspRepository {
     override fun getLocation(countryCode: String, partyId: String, locationId: String): Location? {
         return validLocation
     }

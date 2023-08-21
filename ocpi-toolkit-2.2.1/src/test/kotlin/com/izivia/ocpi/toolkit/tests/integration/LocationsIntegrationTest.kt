@@ -4,11 +4,11 @@ import com.izivia.ocpi.toolkit.common.OcpiStatus
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspClient
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
-import com.izivia.ocpi.toolkit.modules.locations.validation.LocationsCpoValidationService
+import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.samples.common.*
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
-import com.izivia.ocpi.toolkit.tests.integration.mock.LocationsCpoMongoService
+import com.izivia.ocpi.toolkit.tests.integration.mock.LocationsCpoMongoRepository
 import com.mongodb.client.MongoDatabase
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.getCollection
@@ -29,8 +29,8 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         collection.insertMany(locations)
         val server = buildTransportServer(DummyPlatformCacheRepository(tokenC = tokenC))
         LocationsCpoServer(
-            LocationsCpoValidationService(
-                service = LocationsCpoMongoService(collection),
+            LocationsCpoService(
+                service = LocationsCpoMongoRepository(collection),
             )
         ).registerOn(server)
         return server

@@ -5,12 +5,11 @@ import com.izivia.ocpi.toolkit.modules.GET
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
+import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
-import com.izivia.ocpi.toolkit.modules.locations.validation.LocationsCpoValidationService
 import com.izivia.ocpi.toolkit.modules.toSearchResult
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.transport.TransportClient
-import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.every
@@ -29,7 +28,7 @@ class GetLocationsTest {
             var dateFrom = slot<Instant>()
             var dateTo = slot<Instant>()
         }
-        val srv = mockk<LocationsCpoService>() {
+        val srv = mockk<LocationsCpoRepository>() {
             every { getLocations(capture(slots.dateFrom), capture(slots.dateTo), any(), any()) } answers {
                 listOf(
                     Location(
@@ -141,10 +140,10 @@ class GetLocationsTest {
     }
 }
 
-private fun LocationsCpoService.buildServer(): TransportClient {
+private fun LocationsCpoRepository.buildServer(): TransportClient {
     val transportServer = Http4kTransportServer("http://localhost:1234", 1234)
     LocationsCpoServer(
-        service = LocationsCpoValidationService(this),
+        service = LocationsCpoService(this),
         basePath = "/locations"
     ).registerOn(transportServer)
 

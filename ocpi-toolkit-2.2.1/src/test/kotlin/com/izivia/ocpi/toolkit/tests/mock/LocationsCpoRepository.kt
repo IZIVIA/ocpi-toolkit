@@ -2,14 +2,14 @@ package com.izivia.ocpi.toolkit.tests.mock
 
 import com.izivia.ocpi.toolkit.common.toSearchResult
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
-import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
+import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import java.time.Instant
 import java.util.*
 
-fun locationsCpoService(locations: List<Location>): LocationsCpoService = mockk {
+fun locationsCpoService(locations: List<Location>): LocationsCpoRepository = mockk {
     val locationId = slot<String>()
     val evseUid = slot<String>()
     val connectorId = slot<String>()
