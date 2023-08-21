@@ -1,4 +1,4 @@
-package com.izivia.ocpi.toolkit.modules.locations.cpo
+package com.izivia.ocpi.toolkit.modules.locations.http.cpo
 
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.GET
@@ -20,7 +20,7 @@ import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import java.time.Instant
 
-class GetLocationsTest {
+class LocationsCpoHttpGetLocationsTest {
     @Test
     fun `should list locations`() {
         // given

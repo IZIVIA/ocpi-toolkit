@@ -1,4 +1,4 @@
-package com.izivia.ocpi.toolkit.tests.mock
+package com.izivia.ocpi.toolkit.modules.locations.mock
 
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
@@ -7,7 +7,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import java.util.*
 
-fun locationsEmspService(locations: List<Location>): LocationsEmspRepository = mockk {
+fun locationsEmspRepository(locations: List<Location>): LocationsEmspRepository = mockk {
     val countryCode = slot<String>()
     val partyId = slot<String>()
     val locationId = slot<String>()

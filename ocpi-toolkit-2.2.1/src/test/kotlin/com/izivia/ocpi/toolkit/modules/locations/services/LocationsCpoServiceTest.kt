@@ -1,10 +1,10 @@
-package com.izivia.ocpi.toolkit.tests.validation
+package com.izivia.ocpi.toolkit.modules.locations.services
 
 import com.izivia.ocpi.toolkit.common.OcpiStatus
 import com.izivia.ocpi.toolkit.common.SearchResult
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
-import com.izivia.ocpi.toolkit.tests.mock.locationsCpoService
+import com.izivia.ocpi.toolkit.modules.locations.mock.locationsCpoRepository
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -20,7 +20,7 @@ class LocationsCpoServiceTest {
 
     @Test
     fun getLocationsParamsValidationTest() {
-        service = LocationsCpoService(service = locationsCpoService(emptyList()))
+        service = LocationsCpoService(service = locationsCpoRepository(emptyList()))
 
         expectThat(service.getLocations(dateFrom = from, dateTo = from, offset = 0, limit = null)) {
             get { status_code }
@@ -145,7 +145,7 @@ class LocationsCpoServiceTest {
     @Test
     fun getLocationParamsValidationTest() {
         service =
-            LocationsCpoService(service = locationsCpoService(emptyList()))
+            LocationsCpoService(service = locationsCpoRepository(emptyList()))
 
         val str3chars = "abc"
         val str36chars = "abababababababababababababababababab"
@@ -169,7 +169,7 @@ class LocationsCpoServiceTest {
 
     @Test
     fun getEvseParamsValidationTest() {
-        service = LocationsCpoService(service = locationsCpoService(emptyList()))
+        service = LocationsCpoService(service = locationsCpoRepository(emptyList()))
 
         val str3chars = "abc"
         val str36chars = "abababababababababababababababababab"
@@ -214,7 +214,7 @@ class LocationsCpoServiceTest {
     @Test
     fun getConnectorParamsValidationTest() {
         service =
-            LocationsCpoService(service = locationsCpoService(emptyList()))
+            LocationsCpoService(service = locationsCpoRepository(emptyList()))
 
         val str3chars = "abc"
         val str36chars = "abababababababababababababababababab"

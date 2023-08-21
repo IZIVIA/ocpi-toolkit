@@ -1,7 +1,6 @@
-package com.izivia.ocpi.toolkit.tests.validation
+package com.izivia.ocpi.toolkit.modules.locations.services
 
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
-import com.izivia.ocpi.toolkit.modules.locations.services.validate
 import com.izivia.ocpi.toolkit.samples.common.*
 import org.junit.jupiter.api.Test
 import strikt.api.expectCatching

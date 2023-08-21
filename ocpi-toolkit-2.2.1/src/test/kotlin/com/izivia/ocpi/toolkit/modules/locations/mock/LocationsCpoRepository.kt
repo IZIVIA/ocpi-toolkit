@@ -1,4 +1,4 @@
-package com.izivia.ocpi.toolkit.tests.mock
+package com.izivia.ocpi.toolkit.modules.locations.mock
 
 import com.izivia.ocpi.toolkit.common.toSearchResult
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
@@ -9,7 +9,7 @@ import io.mockk.slot
 import java.time.Instant
 import java.util.*
 
-fun locationsCpoService(locations: List<Location>): LocationsCpoRepository = mockk {
+fun locationsCpoRepository(locations: List<Location>): LocationsCpoRepository = mockk {
     val locationId = slot<String>()
     val evseUid = slot<String>()
     val connectorId = slot<String>()
