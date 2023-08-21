@@ -1,9 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.credentials
 
-import com.izivia.ocpi.toolkit.common.getDebugHeaders
-import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.mapper
-import com.izivia.ocpi.toolkit.common.parseAuthorizationHeader
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
 import com.izivia.ocpi.toolkit.transport.TransportServer
@@ -11,16 +8,14 @@ import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 
 class CredentialsServer(
-    transportServer: TransportServer,
-    service: CredentialsServerService,
-    basePath: List<FixedPathSegment> = listOf(
-        FixedPathSegment("/2.2.1/credentials")
-    )
-) {
-    init {
+    private val service: CredentialsServerService,
+    basePath: String = "/2.2.1/credentials"
+) : OcpiModuleServer(basePath) {
+    override fun registerOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePath
+            path = basePathSegments,
+            secured = false
         ) { req ->
             req.httpResponse {
                 service.get(
@@ -31,7 +26,8 @@ class CredentialsServer(
 
         transportServer.handle(
             method = HttpMethod.POST,
-            path = basePath
+            path = basePathSegments,
+            secured = false
         ) { req ->
             req.httpResponse {
                 service.post(
@@ -44,7 +40,8 @@ class CredentialsServer(
 
         transportServer.handle(
             method = HttpMethod.PUT,
-            path = basePath
+            path = basePathSegments,
+            secured = false
         ) { req ->
             req.httpResponse {
                 service.put(
@@ -57,7 +54,8 @@ class CredentialsServer(
 
         transportServer.handle(
             method = HttpMethod.DELETE,
-            path = basePath
+            path = basePathSegments,
+            secured = false
         ) { req ->
             req.httpResponse {
                 service.delete(

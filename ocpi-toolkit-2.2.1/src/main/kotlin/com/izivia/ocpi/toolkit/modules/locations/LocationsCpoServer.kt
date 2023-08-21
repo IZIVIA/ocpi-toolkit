@@ -1,10 +1,9 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
+import com.izivia.ocpi.toolkit.common.OcpiModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.transport.TransportServer
-import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
-import com.izivia.ocpi.toolkit.transport.domain.PathSegment
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 import java.time.Instant
 
@@ -14,11 +13,10 @@ import java.time.Instant
  */
 class LocationsCpoServer(
     private val service: LocationsCpoInterface,
-    private val basePath: String = "/2.2.1/locations"
-) {
-    private val basePathSegments: List<PathSegment> get() = listOf(FixedPathSegment(basePath))
+    basePath: String = "/2.2.1/locations"
+) : OcpiModuleServer(basePath) {
 
-    fun registerOn(transportServer: TransportServer) {
+    override fun registerOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments,

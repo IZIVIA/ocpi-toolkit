@@ -1,12 +1,10 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
+import com.izivia.ocpi.toolkit.common.OcpiModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
-import com.izivia.ocpi.toolkit.common.tokenFilter
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.transport.TransportServer
-import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 
@@ -15,22 +13,18 @@ import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
  * @property transportServer
  */
 class LocationsEmspServer(
-    private val transportServer: TransportServer,
-    private val platformRepository: PlatformRepository,
     private val service: LocationsEmspInterface,
-    basePath: List<FixedPathSegment> = listOf(
-        FixedPathSegment("/2.2.1/locations")
-    )
-) {
-    init {
+    basePath: String = "/2.2.1/locations"
+) : OcpiModuleServer(basePath) {
+
+    override fun registerOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service
@@ -44,13 +38,12 @@ class LocationsEmspServer(
 
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service
@@ -65,14 +58,13 @@ class LocationsEmspServer(
 
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service
@@ -88,12 +80,11 @@ class LocationsEmspServer(
 
         transportServer.handle(
             method = HttpMethod.PUT,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service
@@ -108,13 +99,12 @@ class LocationsEmspServer(
 
         transportServer.handle(
             method = HttpMethod.PUT,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service
@@ -130,14 +120,13 @@ class LocationsEmspServer(
 
         transportServer.handle(
             method = HttpMethod.PUT,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service
@@ -154,12 +143,11 @@ class LocationsEmspServer(
 
         transportServer.handle(
             method = HttpMethod.PATCH,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service
@@ -174,13 +162,12 @@ class LocationsEmspServer(
 
         transportServer.handle(
             method = HttpMethod.PATCH,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service
@@ -196,14 +183,13 @@ class LocationsEmspServer(
 
         transportServer.handle(
             method = HttpMethod.PATCH,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service

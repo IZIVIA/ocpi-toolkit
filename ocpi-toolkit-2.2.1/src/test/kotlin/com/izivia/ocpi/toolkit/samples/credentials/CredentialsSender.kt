@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.samples.credentials
 
+import com.izivia.ocpi.toolkit.common.tokenFilter
 import com.izivia.ocpi.toolkit.modules.credentials.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Role
@@ -16,29 +17,29 @@ const val senderUrl = "http://localhost:$senderPort"
 const val senderVersionsUrl = "http://localhost:$senderPort/versions"
 
 fun main() {
-    // Server
-    val senderServer = Http4kTransportServer(baseUrl = senderUrl, port = senderPort)
-
     // Add token A associated with the sender
     val senderVersionsRepository = VersionsCacheRepository(baseUrl = senderUrl)
     val senderVersionDetailsRepository = VersionDetailsCacheRepository(baseUrl = senderUrl)
     val senderPlatformRepository = PlatformCacheRepository()
     senderPlatformRepository.platforms[senderVersionsUrl] = Platform(url = senderVersionsUrl, tokenA = tokenA)
 
+    // Server
+    val senderServer = Http4kTransportServer(
+        baseUrl = senderUrl,
+        port = senderPort,
+        secureFilter = senderPlatformRepository::tokenFilter
+    )
+
     VersionsServer(
-        transportServer = senderServer,
-        platformRepository = senderPlatformRepository,
-        validationService = VersionsValidationService(
+        service = VersionsValidationService(
             repository = senderVersionsRepository
         )
-    )
+    ).registerOn(senderServer)
     VersionDetailsServer(
-        transportServer = senderServer,
-        platformRepository = senderPlatformRepository,
-        validationService = VersionDetailsValidationService(
+        service = VersionDetailsValidationService(
             repository = senderVersionDetailsRepository
         )
-    )
+    ).registerOn(senderServer)
     senderServer.start()
 
     // Client
@@ -48,7 +49,7 @@ fun main() {
         clientVersionsEndpointUrl = senderVersionsUrl,
         clientPlatformRepository = senderPlatformRepository,
         clientVersionsRepository = senderVersionsRepository,
-        clientCredentialsRoleRepository = object: CredentialsRoleRepository {
+        clientCredentialsRoleRepository = object : CredentialsRoleRepository {
             override fun getCredentialsRoles(): List<CredentialRole> = listOf(
                 CredentialRole(
                     role = Role.CPO,

@@ -44,13 +44,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             .getCollection<Platform>("receiver-server-${UUID.randomUUID()}")
 
         // Setup receiver (only server)
-        val receiverServer = buildTransportServer()
-        val receiverServerVersionsUrl = "${receiverServer.baseUrl}/versions"
         val receiverPlatformRepo = PlatformMongoRepository(collection = receiverPlatformCollection)
+        val receiverServer = buildTransportServer(receiverPlatformRepo)
+        val receiverServerVersionsUrl = "${receiverServer.baseUrl}/versions"
         val receiverVersionsCacheRepository = VersionsCacheRepository(baseUrl = receiverServer.baseUrl)
         val receiverVersionDetailsCacheRepository = VersionDetailsCacheRepository(baseUrl = receiverServer.baseUrl)
         CredentialsServer(
-            transportServer = receiverServer,
             service = CredentialsServerService(
                 platformRepository = receiverPlatformRepo,
                 credentialsRoleRepository = object: CredentialsRoleRepository {
@@ -66,21 +65,17 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 transportClientBuilder = Http4kTransportClientBuilder(),
                 serverVersionsUrl = receiverServerVersionsUrl
             )
-        )
+        ).registerOn(receiverServer)
         VersionsServer(
-            transportServer = receiverServer,
-            platformRepository = receiverPlatformRepo,
-            validationService = VersionsValidationService(
+            service = VersionsValidationService(
                 repository = receiverVersionsCacheRepository
             )
-        )
+        ).registerOn(receiverServer)
         VersionDetailsServer(
-            transportServer = receiverServer,
-            platformRepository = receiverPlatformRepo,
-            validationService = VersionDetailsValidationService(
+            service = VersionDetailsValidationService(
                 repository = receiverVersionDetailsCacheRepository
             )
-        )
+        ).registerOn(receiverServer)
 
         return ServerSetupResult(
             transport = receiverServer,
@@ -95,23 +90,19 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             .getCollection<Platform>("sender-server-${UUID.randomUUID()}")
 
         // Setup sender (server)
-        val senderServer = buildTransportServer()
+        val senderServer = buildTransportServer(PlatformMongoRepository(collection = senderPlatformCollection))
         val senderServerVersionsUrl = "${senderServer.baseUrl}/versions"
 
         VersionsServer(
-            transportServer = senderServer,
-            platformRepository = PlatformMongoRepository(collection = senderPlatformCollection),
-            validationService = VersionsValidationService(
+            service = VersionsValidationService(
                 repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl)
             )
-        )
+        ).registerOn(senderServer)
         VersionDetailsServer(
-            transportServer = senderServer,
-            platformRepository = PlatformMongoRepository(collection = senderPlatformCollection),
-            validationService = VersionDetailsValidationService(
+            service = VersionDetailsValidationService(
                 repository = VersionDetailsCacheRepository(baseUrl = senderServer.baseUrl)
             )
-        )
+        ).registerOn(senderServer)
 
         return ServerSetupResult(
             transport = senderServer,

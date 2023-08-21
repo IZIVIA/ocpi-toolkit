@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.samples.locations
 
+import com.izivia.ocpi.toolkit.common.tokenFilter
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspService
@@ -16,17 +17,19 @@ val emspServerPort = 8081
  */
 fun main() {
     // We specify the transport to serve the eMSP server
-    val transportServer = Http4kTransportServer(baseUrl = emspServerUrl, port = emspServerPort)
+    val transportServer = Http4kTransportServer(
+        baseUrl = emspServerUrl,
+        port = emspServerPort,
+        secureFilter = DUMMY_PLATFORM_REPOSITORY::tokenFilter
+    )
 
     // We specify service for the validation service
     val service = CacheLocationsEmspService()
 
     // We implement callbacks for the server using the built-in service and our repository implementation
     LocationsEmspServer(
-        transportServer = transportServer,
-        platformRepository = DUMMY_PLATFORM_REPOSITORY,
         service = LocationsEmspValidationService(service = service)
-    )
+    ).registerOn(transportServer)
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()

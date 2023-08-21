@@ -1,30 +1,23 @@
 package com.izivia.ocpi.toolkit.modules.versions
 
+import com.izivia.ocpi.toolkit.common.OcpiModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.tokenFilter
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.validation.VersionsValidationService
 import com.izivia.ocpi.toolkit.transport.TransportServer
-import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 
 class VersionsServer(
-    transportServer: TransportServer,
-    platformRepository: PlatformRepository,
-    validationService: VersionsValidationService,
-    basePath: List<FixedPathSegment> = listOf(
-        FixedPathSegment("/versions")
-    )
-) {
+    private val service: VersionsValidationService,
+    basePath: String = "/versions"
+) : OcpiModuleServer(basePath) {
 
-    init {
+    override fun registerOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePath,
-            filters = listOf(platformRepository::tokenFilter)
+            path = basePathSegments
         ) { req ->
             req.httpResponse {
-                validationService.getVersions()
+                service.getVersions()
             }
         }
     }
