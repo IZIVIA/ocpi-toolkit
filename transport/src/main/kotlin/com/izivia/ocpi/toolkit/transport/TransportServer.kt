@@ -5,8 +5,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.PathSegment
 
-
-abstract class TransportServer {
+interface TransportServer {
     /**
      * Creates a route and specifies how to respond. The callback may throw HttpExceptions.
      *
@@ -15,10 +14,11 @@ abstract class TransportServer {
      * @param queryParams expected queryParams
      * @param callback
      */
-    abstract fun handle(
+    fun handle(
         method: HttpMethod,
         path: List<PathSegment>,
         queryParams: List<String> = emptyList(),
+        secured: Boolean = true,
         filters: List<(request: HttpRequest) -> Unit> = emptyList(),
         callback: (request: HttpRequest) -> HttpResponse
     )
@@ -26,10 +26,10 @@ abstract class TransportServer {
     /**
      * Starts the server
      */
-    abstract fun start()
+    fun start()
 
     /**
      * Stops the server
      */
-    abstract fun stop()
+    fun stop()
 }

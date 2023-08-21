@@ -37,7 +37,7 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/$countryCode/$partyId/$locationId",
+                    path = "/$countryCode/$partyId/$locationId"
                 )
                     .withDebugHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)

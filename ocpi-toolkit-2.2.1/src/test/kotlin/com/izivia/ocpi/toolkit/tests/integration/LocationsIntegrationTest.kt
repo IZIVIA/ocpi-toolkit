@@ -27,10 +27,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-1-1-tests")
         val collection = database!!.getCollection<Location>("cpo-server-locations-${UUID.randomUUID()}")
         collection.insertMany(locations)
-        val server = buildTransportServer()
+        val server = buildTransportServer(DummyPlatformCacheRepository(tokenC = tokenC))
         LocationsCpoServer(
             server,
-            platformRepository = DummyPlatformCacheRepository(tokenC = tokenC),
             LocationsCpoValidationService(
                 service = LocationsCpoMongoService(collection),
             )

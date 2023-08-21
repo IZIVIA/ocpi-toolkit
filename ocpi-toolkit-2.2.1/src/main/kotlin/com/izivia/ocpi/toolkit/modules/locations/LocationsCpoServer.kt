@@ -1,8 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
 import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.tokenFilter
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -15,7 +13,6 @@ import java.time.Instant
  */
 class LocationsCpoServer(
     private val transportServer: TransportServer,
-    private val platformRepository: PlatformRepository,
     private val service: LocationsCpoInterface,
     basePath: List<FixedPathSegment> = listOf(
         FixedPathSegment("/2.2.1/locations")
@@ -26,8 +23,7 @@ class LocationsCpoServer(
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePath,
-            queryParams = listOf("date_from", "date_to", "offset", "limit"),
-            filters = listOf(platformRepository::tokenFilter)
+            queryParams = listOf("date_from", "date_to", "offset", "limit")
         ) { req ->
             req.httpResponse {
                 val dateFrom = req.queryParams["date_from"]
@@ -47,8 +43,7 @@ class LocationsCpoServer(
             method = HttpMethod.GET,
             path = basePath + listOf(
                 VariablePathSegment("locationId")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service
@@ -63,8 +58,7 @@ class LocationsCpoServer(
             path = basePath + listOf(
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service
@@ -81,8 +75,7 @@ class LocationsCpoServer(
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
+            )
         ) { req ->
             req.httpResponse {
                 service

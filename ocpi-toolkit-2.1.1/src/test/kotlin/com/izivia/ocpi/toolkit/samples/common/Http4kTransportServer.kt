@@ -17,7 +17,7 @@ import org.http4k.server.asServer
 class Http4kTransportServer(
     val baseUrl: String,
     val port: Int
-) : TransportServer() {
+) : TransportServer {
 
     private val serverRoutes: MutableList<RoutingHttpHandler> = mutableListOf()
     private lateinit var server: Http4kServer
@@ -26,8 +26,9 @@ class Http4kTransportServer(
         method: HttpMethod,
         path: List<PathSegment>,
         queryParams: List<String>,
+        secured: Boolean,
         filters: List<(request: HttpRequest) -> Unit>,
-        callback: (request: HttpRequest) -> HttpResponse,
+        callback: (request: HttpRequest) -> HttpResponse
     ) {
         val pathParams = path
             .filterIsInstance(VariablePathSegment::class.java)

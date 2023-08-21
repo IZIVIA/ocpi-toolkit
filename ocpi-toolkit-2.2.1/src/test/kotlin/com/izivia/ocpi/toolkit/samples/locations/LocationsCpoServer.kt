@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.samples.locations
 
 import com.izivia.ocpi.toolkit.common.SearchResult
+import com.izivia.ocpi.toolkit.common.tokenFilter
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.Connector
 import com.izivia.ocpi.toolkit.modules.locations.domain.Evse
@@ -19,7 +20,11 @@ val cpoServerPort = 8080
  */
 fun main() {
     // We specify the transport to serve the cpo server
-    val transportServer = Http4kTransportServer(baseUrl = cpoServerUrl, port = cpoServerPort)
+    val transportServer = Http4kTransportServer(
+        baseUrl = cpoServerUrl,
+        port = cpoServerPort,
+        secureFilter = DUMMY_PLATFORM_REPOSITORY::tokenFilter
+    )
 
     // We specify service for the validation service
     val service = CacheLocationsCpoService()
@@ -27,7 +32,6 @@ fun main() {
     // We implement callbacks for the server using the built-in service and our service implementation
     LocationsCpoServer(
         transportServer = transportServer,
-        platformRepository = DUMMY_PLATFORM_REPOSITORY,
         service = LocationsCpoValidationService(service = service)
     )
 

@@ -22,7 +22,7 @@ class VersionDetailsClient(
     override fun getVersionDetails(): OcpiResponseBody<VersionDetails> =
         transportClientBuilder
             .build(
-                url = platformRepository
+                baseUrl = platformRepository
                     .getVersion(platformUrl = serverVersionsEndpointUrl)
                     ?.url
                     ?: throw OcpiToolkitUnknownEndpointException("version details")

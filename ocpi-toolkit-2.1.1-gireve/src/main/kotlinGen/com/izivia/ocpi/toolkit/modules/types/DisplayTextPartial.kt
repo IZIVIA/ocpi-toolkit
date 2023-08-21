@@ -5,6 +5,9 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.types
 
+import kotlin.String
+import kotlin.collections.List
+
 /**
  * Partial representation of [com.izivia.ocpi.toolkit.modules.types.DisplayText]
  */

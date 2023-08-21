@@ -8,6 +8,9 @@ package com.izivia.ocpi.toolkit.modules.locations.domain
 import com.izivia.ocpi.toolkit.modules.types.DisplayTextPartial
 import com.izivia.ocpi.toolkit.modules.types.toPartial
 import java.time.Instant
+import kotlin.Boolean
+import kotlin.String
+import kotlin.collections.List
 
 /**
  * Partial representation of [com.izivia.ocpi.toolkit.modules.locations.domain.Location]
@@ -20,19 +23,19 @@ public data class LocationPartial(
   public val city: String?,
   public val postal_code: String?,
   public val country: String?,
-  public val coordinates: GeoLocation?,
+  public val coordinates: GeoLocationPartial?,
   public val related_locations: List<AdditionalGeoLocationPartial>?,
   public val evses: List<EvsePartial>?,
   public val directions: List<DisplayTextPartial>?,
-  public val `operator`: BusinessDetails?,
-  public val suboperator: BusinessDetails?,
-  public val owner: BusinessDetails?,
+  public val `operator`: BusinessDetailsPartial?,
+  public val suboperator: BusinessDetailsPartial?,
+  public val owner: BusinessDetailsPartial?,
   public val facilities: List<Facility>?,
   public val time_zone: String?,
-  public val opening_times: Hours?,
+  public val opening_times: HoursPartial?,
   public val charging_when_closed: Boolean?,
-  public val images: List<Image>?,
-  public val energy_mix: EnergyMix?,
+  public val images: List<ImagePartial>?,
+  public val energy_mix: EnergyMixPartial?,
   public val last_updated: Instant?,
 )
 
@@ -45,19 +48,19 @@ public fun Location.toPartial(): LocationPartial {
     city = city,
     postal_code = postal_code,
     country = country,
-    coordinates = coordinates,
+    coordinates = coordinates.toPartial(),
     related_locations = related_locations?.toPartial(),
     evses = evses?.toPartial(),
     directions = directions?.toPartial(),
-    operator = operator,
-    suboperator = suboperator,
-    owner = owner,
+    operator = operator?.toPartial(),
+    suboperator = suboperator?.toPartial(),
+    owner = owner?.toPartial(),
     facilities = facilities,
     time_zone = time_zone,
-    opening_times = opening_times,
+    opening_times = opening_times?.toPartial(),
     charging_when_closed = charging_when_closed,
-    images = images,
-    energy_mix = energy_mix,
+    images = images?.toPartial(),
+    energy_mix = energy_mix?.toPartial(),
     last_updated = last_updated
    )
 }

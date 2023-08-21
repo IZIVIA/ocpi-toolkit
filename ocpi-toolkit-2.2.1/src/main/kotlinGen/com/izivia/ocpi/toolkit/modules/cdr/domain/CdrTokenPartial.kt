@@ -5,8 +5,8 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
-import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import kotlin.collections.List
 
 /**

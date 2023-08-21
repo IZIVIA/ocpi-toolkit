@@ -2,6 +2,7 @@ package com.izivia.ocpi.toolkit.samples.common
 
 import com.izivia.ocpi.toolkit.common.OcpiException
 import com.izivia.ocpi.toolkit.common.toHttpResponse
+import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.*
 import org.http4k.core.*
@@ -16,18 +17,21 @@ import org.http4k.server.asServer
 
 class Http4kTransportServer(
     val baseUrl: String,
-    val port: Int
-) : TransportServer() {
+    val port: Int,
+    val secureFilter: (request: HttpRequest) -> Unit = { }
+) : TransportServer {
 
     private val serverRoutes: MutableList<RoutingHttpHandler> = mutableListOf()
+    private lateinit var router: RoutingHttpHandler
     private lateinit var server: Http4kServer
 
     override fun handle(
         method: HttpMethod,
         path: List<PathSegment>,
         queryParams: List<String>,
+        secured: Boolean,
         filters: List<(request: HttpRequest) -> Unit>,
-        callback: (request: HttpRequest) -> HttpResponse,
+        callback: (request: HttpRequest) -> HttpResponse
     ) {
         val pathParams = path
             .filterIsInstance(VariablePathSegment::class.java)
@@ -54,6 +58,7 @@ class Http4kTransportServer(
                             .associate { (key, value) -> key to value!! },
                         body = req.bodyString()
                     )
+                        .also { httpRequest -> if (secured) secureFilter(httpRequest) }
                         .also { httpRequest -> filters.forEach { filter -> filter(httpRequest) } }
                         .let { httpRequest -> callback(httpRequest) }
                         .let { httpResponse ->
@@ -66,6 +71,7 @@ class Http4kTransportServer(
                 } catch (httpException: HttpException) {
                     Response(Status(httpException.status.code, httpException.reason))
                 } catch (exception: Exception) {
+                    exception.printStackTrace()
                     Response(Status.INTERNAL_SERVER_ERROR)
                 }
             }
@@ -78,15 +84,20 @@ class Http4kTransportServer(
             .headers(headers.toList())
 
     override fun start() {
-        server = DebuggingFilters.PrintRequestAndResponse()
-            .then(
-                serverRoutes.reduce { a, b -> routes(a, b) }
-            )
+        router = buildRouter()
+        server = router
             .asServer(Netty(port))
             .start()
     }
 
+    private fun buildRouter() = DebuggingFilters.PrintRequestAndResponse()
+        .then(
+            serverRoutes.reduce { a, b -> routes(a, b) }
+        )
+
     override fun stop() {
         server.stop()
     }
+
+    fun initRouterAndBuildClient() = Http4kTransportClient(buildRouter())
 }

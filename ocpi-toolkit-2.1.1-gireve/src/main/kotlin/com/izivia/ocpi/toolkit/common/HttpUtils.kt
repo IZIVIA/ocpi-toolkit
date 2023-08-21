@@ -147,5 +147,5 @@ fun TransportClientBuilder.buildFor(module: ModuleID, platform: String, platform
     platformRepository
         .getEndpoints(platformUrl = platform)
         .find { it.identifier == module }
-        ?.let { build(url = it.url) }
+        ?.let { build(baseUrl = it.url) }
         ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)

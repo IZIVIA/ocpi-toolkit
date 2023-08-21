@@ -88,7 +88,7 @@ fun HttpRequest.authenticate(
     baseUrl: String,
     allowTokenAOrTokenB: Boolean = false
 ): AuthenticatedHttpRequest =
-    copy(
+    withHeaders(
         headers = headers.plus(
             platformRepository.buildAuthorizationHeader(
                 baseUrl = baseUrl,
@@ -104,7 +104,7 @@ fun HttpRequest.authenticate(
  * @param token the token to use to authenticate
  */
 fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
-    copy(headers = headers.plus(authorizationHeader(token = token)))
+    withHeaders(headers = headers.plus(authorizationHeader(token = token)))
 
 
 /**
@@ -122,7 +122,7 @@ fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
  * X-Request-ID. So don't call this method in that case.
  */
 fun HttpRequest.withDebugHeaders(): HttpRequest =
-    copy(
+    withHeaders(
         headers = headers
             .plus("X-Request-ID" to generateUUIDv4Token())
             .plus("X-Correlation-ID" to generateUUIDv4Token())
@@ -144,7 +144,7 @@ fun HttpRequest.withDebugHeaders(): HttpRequest =
  * @param headers Headers of the caller. It will re-use the X-Correlation-ID header and regenerate X-Request-ID
  */
 fun HttpRequest.withUpdatedDebugHeaders(headers: Map<String, String>): HttpRequest =
-    copy(
+    withHeaders(
         headers = headers
             .plus("X-Request-ID" to generateUUIDv4Token())
             .plus(
@@ -214,5 +214,5 @@ fun TransportClientBuilder.buildFor(module: ModuleID, platform: String, platform
     platformRepository
         .getEndpoints(platformUrl = platform)
         .find { it.identifier == module }
-        ?.let { build(url = it.url) }
+        ?.let { build(baseUrl = it.url) }
         ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)
