@@ -29,11 +29,10 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         collection.insertMany(locations)
         val server = buildTransportServer(DummyPlatformCacheRepository(tokenC = tokenC))
         LocationsCpoServer(
-            server,
             LocationsCpoValidationService(
                 service = LocationsCpoMongoService(collection),
             )
-        )
+        ).registerOn(server)
         return server
     }
 

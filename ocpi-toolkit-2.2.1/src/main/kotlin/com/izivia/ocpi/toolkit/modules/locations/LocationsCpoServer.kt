@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.domain.PathSegment
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 import java.time.Instant
 
@@ -12,17 +13,15 @@ import java.time.Instant
  * @property transportServer
  */
 class LocationsCpoServer(
-    private val transportServer: TransportServer,
     private val service: LocationsCpoInterface,
-    basePath: List<FixedPathSegment> = listOf(
-        FixedPathSegment("/2.2.1/locations")
-    )
+    private val basePath: String = "/2.2.1/locations"
 ) {
+    private val basePathSegments: List<PathSegment> get() = listOf(FixedPathSegment(basePath))
 
-    init {
+    fun registerOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePath,
+            path = basePathSegments,
             queryParams = listOf("date_from", "date_to", "offset", "limit")
         ) { req ->
             req.httpResponse {
@@ -41,7 +40,7 @@ class LocationsCpoServer(
 
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("locationId")
             )
         ) { req ->
@@ -55,7 +54,7 @@ class LocationsCpoServer(
 
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid")
             )
@@ -71,7 +70,7 @@ class LocationsCpoServer(
 
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePath + listOf(
+            path = basePathSegments + listOf(
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseUid"),
                 VariablePathSegment("connectorId")

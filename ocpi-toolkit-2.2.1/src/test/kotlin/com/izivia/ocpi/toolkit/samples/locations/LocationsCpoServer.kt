@@ -31,9 +31,8 @@ fun main() {
 
     // We implement callbacks for the server using the built-in service and our service implementation
     LocationsCpoServer(
-        transportServer = transportServer,
         service = LocationsCpoValidationService(service = service)
-    )
+    ).registerOn(transportServer)
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()

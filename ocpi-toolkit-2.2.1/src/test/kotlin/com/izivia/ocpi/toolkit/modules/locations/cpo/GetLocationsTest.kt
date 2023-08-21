@@ -144,10 +144,9 @@ class GetLocationsTest {
 private fun LocationsCpoService.buildServer(): TransportClient {
     val transportServer = Http4kTransportServer("http://localhost:1234", 1234)
     LocationsCpoServer(
-        transportServer = transportServer,
         service = LocationsCpoValidationService(this),
-        basePath = listOf(FixedPathSegment("/locations"))
-    )
+        basePath = "/locations"
+    ).registerOn(transportServer)
 
     return transportServer.initRouterAndBuildClient()
 }
