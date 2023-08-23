@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.tokens.domain
 
+import com.izivia.ocpi.toolkit.annotations.Partial
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ProfileType
 import java.time.Instant
@@ -53,7 +54,8 @@ import java.time.Instant
  *
  * @constructor
  */
-class Token(
+@Partial
+data class Token(
     val country_code: CiString,
     val party_id: CiString,
     val uid: CiString,
