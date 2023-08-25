@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.cpo
 
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
-import com.izivia.ocpi.toolkit.modules.GET
+import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
@@ -10,6 +10,7 @@ import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
 import com.izivia.ocpi.toolkit.modules.toSearchResult
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.transport.TransportClient
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.every
@@ -73,7 +74,7 @@ class LocationsCpoHttpGetLocationsTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            GET("/locations/?date_from=2019-01-28T12:00:00Z&date_to=2019-01-29T12:00:00Z")
+            buildHttpRequest(HttpMethod.GET, "/locations/?date_from=2019-01-28T12:00:00Z&date_to=2019-01-29T12:00:00Z")
         )
 
         // then
