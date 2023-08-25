@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.cpo
 
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
-import com.izivia.ocpi.toolkit.modules.GET
+import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
@@ -9,6 +9,7 @@ import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoReposi
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.transport.TransportClient
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.every
@@ -65,7 +66,7 @@ class LocationsCpoHttpGetEvseTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            GET("/locations/LOC1/3256")
+            buildHttpRequest(HttpMethod.GET, "/locations/LOC1/3256")
         )
 
         // then

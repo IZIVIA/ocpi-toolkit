@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.emsp
 
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
-import com.izivia.ocpi.toolkit.modules.GET
+import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.Connector
@@ -12,6 +12,7 @@ import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepos
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspService
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.transport.TransportClient
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.every
@@ -58,7 +59,7 @@ class LocationsEmspHttpGetConnectorTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            GET("/locations/BE/BEC/LOC1/3256/1")
+            buildHttpRequest(HttpMethod.GET, "/locations/BE/BEC/LOC1/3256/1")
         )
 
         // then
