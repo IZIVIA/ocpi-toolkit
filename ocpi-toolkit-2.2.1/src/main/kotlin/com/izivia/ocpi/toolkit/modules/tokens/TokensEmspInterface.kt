@@ -74,6 +74,6 @@ interface TokensEmspInterface {
     fun postToken(
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-        locationReferences: LocationReferences?
+        locationReferences: LocationReferences? = null
     ): OcpiResponseBody<AuthorizationInfo>
 }

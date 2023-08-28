@@ -89,6 +89,6 @@ interface TokensCpoInterface {
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
-        type: TokenType?
+        type: TokenType? = TokenType.RFID
     ): OcpiResponseBody<Token?>
 }

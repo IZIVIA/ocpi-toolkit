@@ -61,13 +61,13 @@ data class Token(
     val uid: CiString,
     val type: TokenType,
     val contract_id: CiString,
-    val visual_number: String?,
+    val visual_number: String? = null,
     val issuer: String,
-    val group_id: CiString?,
+    val group_id: CiString? = null,
     val valid: Boolean,
     val whitelist: WhitelistType,
-    val language: String?,
-    val default_profile_type: ProfileType?,
-    val energy_contract: EnergyContract?,
+    val language: String? = null,
+    val default_profile_type: ProfileType? = null,
+    val energy_contract: EnergyContract? = null,
     val last_updated: Instant
 )

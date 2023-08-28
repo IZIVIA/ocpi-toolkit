@@ -21,7 +21,7 @@ import com.izivia.ocpi.toolkit.modules.types.DisplayText
 data class AuthorizationInfo(
     val allowed: AllowedType,
     val token: Token,
-    val location: LocationReferences?,
-    val authorization_reference: CiString?,
-    val info: DisplayText?
+    val location: LocationReferences? = null,
+    val authorization_reference: CiString? = null,
+    val info: DisplayText? = null
 )

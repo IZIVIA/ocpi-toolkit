@@ -73,6 +73,6 @@ interface TokensEmspRepository {
     fun postToken(
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-        locationReferences: LocationReferences?
+        locationReferences: LocationReferences? = null
     ): AuthorizationInfo
 }
