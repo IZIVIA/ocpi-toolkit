@@ -12,9 +12,9 @@ import java.time.Instant
  * maximum length of string(20), case insensitive. As long as EV-driver can be expected to charge at an OCPP
  * 1.5/1.6 Charge Point, it is adviced to not used a group_id longer then 20.
  *
- * @property country_code ISO-3166 alpha-2 country code of the MSP that 'owns' this Token.
- * @property party_id ID of the eMSP that 'owns' this Token (following the ISO-15118 standard).
- * @property uid Unique ID by which this Token, combined with the Token type, can be identified.
+ * @property country_code (max-length 2) ISO-3166 alpha-2 country code of the MSP that 'owns' this Token.
+ * @property party_id (max-length 3) ID of the eMSP that 'owns' this Token (following the ISO-15118 standard).
+ * @property uid (max-length 36) Unique ID by which this Token, combined with the Token type, can be identified.
  * This is the field used by CPO system (RFID reader on the Charge Point) to
  * identify this token.
  * Currently, in most cases: type=RFID, this is the RFID hidden ID as read by the
@@ -23,22 +23,22 @@ import java.time.Instant
  * generated ID.
  * This field is named uid instead of id to prevent confusion with: contract_id.
  * @property type Type of the token
- * @property contract_id Uniquely identifies the EV Driver contract token within the eMSP’s platform (and
+ * @property contract_id (max-length 36) Uniquely identifies the EV Driver contract token within the eMSP’s platform (and
  * suboperator platforms). Recommended to follow the specification for eMA ID
  * from "eMI3 standard version V1.0" (http://emi3group.com/documents-links/)
  * "Part 2: business objects."
- * @property visual_number Visual readable number/identification as printed on the Token (RFID card), might
+ * @property visual_number (max-length 64) Visual readable number/identification as printed on the Token (RFID card), might
  * be equal to the contract_id.
- * @property issuer Issuing company, most of the times the name of the company printed on the
+ * @property issuer (max-length 64) Issuing company, most of the times the name of the company printed on the
  * token (RFID card), not necessarily the eMSP.
- * @property group_id This ID groups a couple of tokens. This can be used to make two or more
+ * @property group_id (max-length 36) This ID groups a couple of tokens. This can be used to make two or more
  * tokens work as one, so that a session can be started with one token and
  * stopped with another, handy when a card and key-fob are given to the EV-driver.
  * Beware that OCPP 1.5/1.6 only support group_ids (it is called parentId in OCPP
  * 1.5/1.6) with a maximum length of 20.
  * @property valid Is this Token valid
  * @property whitelist Indicates what type of white-listing is allowed.
- * @property language Language Code ISO 639-1. This optional field indicates the Token owner’s
+ * @property language (max-length 2) Language Code ISO 639-1. This optional field indicates the Token owner’s
  * preferred interface language. If the language is not provided or not supported
  * then the CPO is free to choose its own language.
  * @property default_profile_type The default Charging Preference. When this is provided, and a charging session
