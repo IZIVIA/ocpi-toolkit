@@ -16,6 +16,7 @@ class PrintableAsciiConstraint : Constraint
 class PrintableUtf8Constraint : Constraint
 class MaxLengthContraint(val length: Int) : Constraint
 class CountryCodeConstraint : Constraint
+class CurrencyCodeConstraint : Constraint
 class UrlConstraint : Constraint
 class TimeZoneConstraint : Constraint
 class LatitudeConstraint : Constraint
@@ -68,6 +69,16 @@ fun <E> Validator<E>.Property<String?>.isCountryCode(caseSensitive: Boolean, alp
                 if (caseSensitive) it else it.uppercase(Locale.ENGLISH)
             )
     }
+
+/**
+ * Valid if the string correspond is a ISO 4217 code
+ */
+fun <E> Validator<E>.Property<String?>.isCurrencyCode(caseSensitive: Boolean) =
+    this.validate(CurrencyCodeConstraint()) {
+        it == null || Currency.getAvailableCurrencies()
+            .contains(if (caseSensitive) Currency.getInstance(it) else Currency.getInstance(it.uppercase(Locale.ENGLISH)))
+    }
+
 
 /**
  * Valid if the string is an URL following the w3.org spec
