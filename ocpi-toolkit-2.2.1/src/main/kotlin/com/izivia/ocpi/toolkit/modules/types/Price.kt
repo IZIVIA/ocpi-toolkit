@@ -10,6 +10,6 @@ import java.math.BigDecimal
 
 @Partial
 data class Price(
-    val excl_vat: BigDecimal,
-    val incl_vat: BigDecimal? = null
+    val excl_vat: Int,
+    val incl_vat: Int? = null
 )

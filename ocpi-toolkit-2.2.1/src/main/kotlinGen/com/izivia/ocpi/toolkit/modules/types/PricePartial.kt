@@ -5,15 +5,15 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.types
 
-import java.math.BigDecimal
+import kotlin.Int
 import kotlin.collections.List
 
 /**
  * Partial representation of [com.izivia.ocpi.toolkit.modules.types.Price]
  */
 public data class PricePartial(
-  public val excl_vat: BigDecimal?,
-  public val incl_vat: BigDecimal?,
+  public val excl_vat: Int?,
+  public val incl_vat: Int?,
 )
 
 public fun Price.toPartial(): PricePartial {
