@@ -10,8 +10,13 @@ import org.http4k.core.queries
 import strikt.api.DescribeableBuilder
 import strikt.assertions.isNotNull
 
-fun GET(path: String): HttpRequest = Uri.of(path).let {
-    HttpRequest(HttpMethod.GET, it.path, queryParams = it.queries().toMap())
+fun buildHttpRequest(httpMethod: HttpMethod, path: String, body: String? = null): HttpRequest = Uri.of(path).let {
+    HttpRequest(
+        method = httpMethod,
+        path = it.path,
+        queryParams = it.queries().toMap(),
+        body = body
+    )
 }
 
 fun DescribeableBuilder<String?>.isJsonEqualTo(str: String) {
