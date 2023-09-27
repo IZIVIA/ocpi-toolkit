@@ -41,8 +41,6 @@ fun ChargingPreferencesPartial.validate(): ChargingPreferencesPartial = validate
 }
 
 fun CdrTokenPartial.validate(): CdrTokenPartial = validate(this) {
-    validate(CdrTokenPartial::country_code).isCountryCode(caseSensitive = false, alpha2 = true)
-    validate(CdrTokenPartial::party_id).isPrintableAscii().hasMaxLengthOf(3)
     validate(CdrTokenPartial::uid).isPrintableAscii().hasMaxLengthOf(36)
     //tokenType : nothing to validate
     validate(CdrTokenPartial::contract_id).isPrintableAscii().hasMaxLengthOf(36)
