@@ -5,7 +5,7 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
-import kotlin.Int
+import java.math.BigDecimal
 import kotlin.collections.List
 
 /**
@@ -13,7 +13,7 @@ import kotlin.collections.List
  */
 public data class CdrDimensionPartial(
   public val type: CdrDimensionType?,
-  public val volume: Int?,
+  public val volume: BigDecimal?,
 )
 
 public fun CdrDimension.toPartial(): CdrDimensionPartial {

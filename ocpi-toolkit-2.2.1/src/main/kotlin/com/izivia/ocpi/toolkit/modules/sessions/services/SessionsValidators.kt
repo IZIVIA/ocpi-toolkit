@@ -9,6 +9,7 @@ import com.izivia.ocpi.toolkit.modules.types.toPartial
 import org.valiktor.functions.isGreaterThan
 import org.valiktor.functions.isGreaterThanOrEqualTo
 import org.valiktor.validate
+import java.math.BigDecimal
 import java.time.Instant
 
 fun SessionPartial.validate(): SessionPartial = validate(this) {
@@ -55,12 +56,12 @@ fun ChargingPeriodPartial.validate(): ChargingPeriodPartial = validate(this) {
 
 fun CdrDimensionPartial.validate(): CdrDimensionPartial = validate(this) {
     //cdrDimensionType : nothing to validate
-    validate(CdrDimensionPartial::volume).isGreaterThanOrEqualTo(0)
+    validate(CdrDimensionPartial::volume).isGreaterThanOrEqualTo(BigDecimal.ZERO)
 }
 
 fun PricePartial.validate(): PricePartial = validate(this) {
-    validate(PricePartial::excl_vat).isGreaterThanOrEqualTo(0)
-    validate(PricePartial::incl_vat).isGreaterThanOrEqualTo(0)
+    validate(PricePartial::excl_vat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
+    validate(PricePartial::incl_vat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
 }
 
 fun Session.validate(): Session = validate(this) {

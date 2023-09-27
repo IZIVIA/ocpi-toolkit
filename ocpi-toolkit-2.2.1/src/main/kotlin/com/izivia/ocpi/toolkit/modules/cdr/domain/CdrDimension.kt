@@ -10,5 +10,5 @@ import java.math.BigDecimal
 @Partial
 data class CdrDimension(
     val type: CdrDimensionType,
-    val volume: Int
+    val volume: BigDecimal
 )
