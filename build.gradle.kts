@@ -29,8 +29,8 @@ subprojects {
         kotlinOptions {
             jvmTarget = "17"
             freeCompilerArgs = listOf("-Xjsr305=strict", "-Xopt-in=kotlin.RequiresOptIn")
-            languageVersion = "1.6"
-            apiVersion = "1.6"
+            languageVersion = "1.8"
+            apiVersion = "1.8"
         }
     }
 

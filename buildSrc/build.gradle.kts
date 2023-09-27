@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath(kotlin("gradle-plugin", version = "1.6.10"))
+        classpath(kotlin("gradle-plugin", version = "1.8.20"))
     }
 }
 
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("gradle-plugin", version = "1.6.10"))
+    implementation(kotlin("gradle-plugin", version = "1.8.20"))
 }
 
 gradlePlugin {
