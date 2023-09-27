@@ -23,14 +23,14 @@ class SessionsEmspClient(
     private val serverVersionsEndpointUrl: String,
     private val platformRepository: PlatformRepository
 ) : SessionsCpoInterface {
-    private fun buildTransport(): TransportClient = transportClientBuilder
+    private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.sessions,
             platform = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 
-    override fun getSessions(
+    override suspend fun getSessions(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
@@ -51,7 +51,7 @@ class SessionsEmspClient(
             )
             .parsePaginatedBody(offset)
 
-    override fun putChargingPreferences(
+    override suspend fun putChargingPreferences(
         sessionId: CiString,
         chargingPreferences: ChargingPreferences
     ): OcpiResponseBody<ChargingPreferencesResponseType> =

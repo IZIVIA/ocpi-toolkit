@@ -7,6 +7,7 @@ import com.izivia.ocpi.toolkit.modules.versions.validation.VersionsValidationSer
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import kotlinx.coroutines.runBlocking
 
 class VersionsServer(
     transportServer: TransportServer,
@@ -18,13 +19,15 @@ class VersionsServer(
 ) {
 
     init {
-        transportServer.handle(
-            method = HttpMethod.GET,
-            path = basePath,
-            filters = listOf(platformRepository::tokenFilter)
-        ) { req ->
-            req.httpResponse {
-                validationService.getVersions()
+        runBlocking {
+            transportServer.handle(
+                method = HttpMethod.GET,
+                path = basePath,
+                filters = listOf(platformRepository::tokenFilter)
+            ) { req ->
+                req.httpResponse {
+                    validationService.getVersions()
+                }
             }
         }
     }

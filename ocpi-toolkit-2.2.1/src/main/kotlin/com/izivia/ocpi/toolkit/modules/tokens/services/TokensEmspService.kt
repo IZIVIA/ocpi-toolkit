@@ -18,7 +18,7 @@ import java.time.Instant
 class TokensEmspService(
     private val service: TokensEmspRepository
 ) : TokensEmspInterface {
-    override fun getTokens(
+    override suspend fun getTokens(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
@@ -37,7 +37,7 @@ class TokensEmspService(
     }
 
 
-    override fun postToken(
+    override suspend fun postToken(
         tokenUid: CiString,
         type: TokenType?,
         locationReferences: LocationReferences?

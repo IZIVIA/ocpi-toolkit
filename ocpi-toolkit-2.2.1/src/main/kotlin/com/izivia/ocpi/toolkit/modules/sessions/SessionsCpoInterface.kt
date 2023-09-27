@@ -34,7 +34,7 @@ interface SessionsCpoInterface {
      * @return List<Session> The response contains a list of Session objects that match the given parameters in the request, the header will contain the
      * pagination related headers.
      */
-    fun getSessions(
+    suspend fun getSessions(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int = 0,
@@ -51,7 +51,7 @@ interface SessionsCpoInterface {
      * @param chargingPreferences Updated Charging Preferences of the driver for this Session.
      * @return ChargingPreferencesResponseType The response contains a ChargingPreferencesResponse value.
      */
-    fun putChargingPreferences(
+    suspend fun putChargingPreferences(
         sessionId: CiString,
         chargingPreferences: ChargingPreferences
     ): OcpiResponseBody<ChargingPreferencesResponseType>

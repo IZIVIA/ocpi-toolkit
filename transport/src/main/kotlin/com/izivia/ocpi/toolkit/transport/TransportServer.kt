@@ -14,13 +14,13 @@ interface TransportServer {
      * @param queryParams expected queryParams
      * @param callback
      */
-    fun handle(
+    suspend fun handle(
         method: HttpMethod,
         path: List<PathSegment>,
         queryParams: List<String> = emptyList(),
         secured: Boolean = true,
         filters: List<(request: HttpRequest) -> Unit> = emptyList(),
-        callback: (request: HttpRequest) -> HttpResponse
+        callback: suspend (request: HttpRequest) -> HttpResponse
     )
 
     /**

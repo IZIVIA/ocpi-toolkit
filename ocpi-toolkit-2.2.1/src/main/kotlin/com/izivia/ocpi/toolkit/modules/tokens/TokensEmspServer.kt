@@ -19,7 +19,7 @@ class TokensEmspServer(
     private val service: TokensEmspInterface,
     basePath: String = "/2.2.1/tokens"
 ) : OcpiModuleServer(basePath) {
-    override fun registerOn(transportServer: TransportServer) {
+    override suspend fun registerOn(transportServer: TransportServer) {
 
         //GET Token
         transportServer.handle(

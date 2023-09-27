@@ -13,7 +13,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensCpoRepository
 class TokensCpoService(
     private val service: TokensCpoRepository
 ) : TokensCpoInterface {
-    override fun getToken(
+    override suspend fun getToken(
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
@@ -28,7 +28,7 @@ class TokensCpoService(
         service.getToken(countryCode, partyId, tokenUid, type).validate()
     }
 
-    override fun putToken(
+    override suspend fun putToken(
         token: Token,
         countryCode: CiString,
         partyId: CiString,
@@ -45,7 +45,7 @@ class TokensCpoService(
         service.putToken(token, countryCode, partyId, tokenUid, type).validate()
     }
 
-    override fun patchToken(
+    override suspend fun patchToken(
         token: TokenPartial,
         countryCode: CiString,
         partyId: CiString,

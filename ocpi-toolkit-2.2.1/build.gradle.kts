@@ -15,6 +15,8 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${Versions.jackson}")
     implementation("org.valiktor:valiktor-core:${Versions.valiktor}")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
+
     testImplementation(http4k("core"))
     testImplementation(http4k("contract"))
     testImplementation(http4k("client-jetty"))

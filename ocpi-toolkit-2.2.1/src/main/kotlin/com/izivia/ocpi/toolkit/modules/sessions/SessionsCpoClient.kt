@@ -20,14 +20,14 @@ class SessionsCpoClient(
     private val serverVersionsEndpointUrl: String,
     private val platformRepository: PlatformRepository
 ) : SessionsEmspInterface {
-    private fun buildTransport(): TransportClient = transportClientBuilder
+    private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.sessions,
             platform = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 
-    override fun getSession(countryCode: CiString, partyId: CiString, sessionId: CiString): OcpiResponseBody<Session> =
+    override suspend fun getSession(countryCode: CiString, partyId: CiString, sessionId: CiString): OcpiResponseBody<Session> =
         buildTransport()
             .send(
                 HttpRequest(
@@ -38,7 +38,7 @@ class SessionsCpoClient(
             )
             .parseBody()
 
-    override fun putSession(
+    override suspend fun putSession(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
@@ -55,7 +55,7 @@ class SessionsCpoClient(
             )
             .parseBody()
 
-    override fun patchSession(
+    override suspend fun patchSession(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,

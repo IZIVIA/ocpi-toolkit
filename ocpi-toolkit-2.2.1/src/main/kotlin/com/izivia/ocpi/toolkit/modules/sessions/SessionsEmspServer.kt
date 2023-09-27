@@ -16,7 +16,7 @@ class SessionsEmspServer(
     private val service: SessionsEmspInterface,
     basePath: String = "/2.2.1/sessions"
 ) : OcpiModuleServer(basePath) {
-    override fun registerOn(transportServer: TransportServer) {
+    override suspend fun registerOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments + listOf(

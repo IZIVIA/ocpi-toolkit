@@ -8,6 +8,7 @@ import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerSer
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import kotlinx.coroutines.runBlocking
 
 class CredentialsServer(
     transportServer: TransportServer,
@@ -17,49 +18,51 @@ class CredentialsServer(
     )
 ) {
     init {
-        transportServer.handle(
-            method = HttpMethod.GET,
-            path = basePath
-        ) { req ->
-            req.httpResponse {
-                service.get(
-                    tokenC = req.parseAuthorizationHeader()
-                )
+        runBlocking {
+            transportServer.handle(
+                method = HttpMethod.GET,
+                path = basePath
+            ) { req ->
+                req.httpResponse {
+                    service.get(
+                        tokenC = req.parseAuthorizationHeader()
+                    )
+                }
             }
-        }
 
-        transportServer.handle(
-            method = HttpMethod.POST,
-            path = basePath
-        ) { req ->
-            req.httpResponse {
-                service.post(
-                    tokenA = req.parseAuthorizationHeader(),
-                    credentials = mapper.readValue(req.body!!, Credentials::class.java)
-                )
+            transportServer.handle(
+                method = HttpMethod.POST,
+                path = basePath
+            ) { req ->
+                req.httpResponse {
+                    service.post(
+                        tokenA = req.parseAuthorizationHeader(),
+                        credentials = mapper.readValue(req.body!!, Credentials::class.java)
+                    )
+                }
             }
-        }
 
-        transportServer.handle(
-            method = HttpMethod.PUT,
-            path = basePath
-        ) { req ->
-            req.httpResponse {
-                service.put(
-                    tokenC = req.parseAuthorizationHeader(),
-                    credentials = mapper.readValue(req.body!!, Credentials::class.java)
-                )
+            transportServer.handle(
+                method = HttpMethod.PUT,
+                path = basePath
+            ) { req ->
+                req.httpResponse {
+                    service.put(
+                        tokenC = req.parseAuthorizationHeader(),
+                        credentials = mapper.readValue(req.body!!, Credentials::class.java)
+                    )
+                }
             }
-        }
 
-        transportServer.handle(
-            method = HttpMethod.DELETE,
-            path = basePath
-        ) { req ->
-            req.httpResponse {
-                service.delete(
-                    tokenC = req.parseAuthorizationHeader()
-                )
+            transportServer.handle(
+                method = HttpMethod.DELETE,
+                path = basePath
+            ) { req ->
+                req.httpResponse {
+                    service.delete(
+                        tokenC = req.parseAuthorizationHeader()
+                    )
+                }
             }
         }
     }

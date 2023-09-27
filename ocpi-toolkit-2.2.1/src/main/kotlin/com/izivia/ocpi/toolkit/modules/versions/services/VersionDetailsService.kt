@@ -9,7 +9,7 @@ import com.izivia.ocpi.toolkit.modules.versions.repositories.VersionDetailsRepos
 class VersionDetailsService(
     private val repository: VersionDetailsRepository
 ) {
-    fun getVersionDetails(
+    suspend fun getVersionDetails(
         versionNumber: String
     ): OcpiResponseBody<VersionDetails> = OcpiResponseBody.of {
         parseVersionNumber(versionNumber)

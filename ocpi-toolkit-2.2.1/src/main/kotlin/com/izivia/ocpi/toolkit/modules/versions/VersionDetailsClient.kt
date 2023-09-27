@@ -19,7 +19,7 @@ class VersionDetailsClient(
     private val platformRepository: PlatformRepository
 ) : VersionDetailsInterface {
 
-    override fun getVersionDetails(): OcpiResponseBody<VersionDetails> =
+    override suspend fun getVersionDetails(): OcpiResponseBody<VersionDetails> =
         transportClientBuilder
             .build(
                 baseUrl = platformRepository

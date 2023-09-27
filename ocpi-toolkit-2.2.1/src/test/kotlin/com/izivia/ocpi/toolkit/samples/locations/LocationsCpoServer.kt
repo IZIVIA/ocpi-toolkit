@@ -9,6 +9,7 @@ import com.izivia.ocpi.toolkit.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
+import kotlinx.coroutines.runBlocking
 import java.time.Instant
 
 val cpoServerUrl = "http://localhost:8080"
@@ -30,9 +31,11 @@ fun main() {
     val service = CacheLocationsCpoRepository()
 
     // We implement callbacks for the server using the built-in service and our service implementation
-    LocationsCpoServer(
-        service = LocationsCpoService(service = service)
-    ).registerOn(transportServer)
+    runBlocking {
+        LocationsCpoServer(
+            service = LocationsCpoService(service = service)
+        ).registerOn(transportServer)
+    }
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()

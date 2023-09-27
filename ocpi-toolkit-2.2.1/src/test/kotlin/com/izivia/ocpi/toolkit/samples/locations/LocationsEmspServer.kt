@@ -7,6 +7,7 @@ import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepos
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspService
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.samples.common.validLocation
+import kotlinx.coroutines.runBlocking
 
 val emspServerUrl = "http://localhost:8081"
 val emspServerVersionsUrl = "http://localhost:8081/versions"
@@ -27,9 +28,11 @@ fun main() {
     val service = CacheLocationsEmspRepository()
 
     // We implement callbacks for the server using the built-in service and our repository implementation
-    LocationsEmspServer(
-        service = LocationsEmspService(service = service)
-    ).registerOn(transportServer)
+    runBlocking {
+        LocationsEmspServer(
+            service = LocationsEmspService(service = service)
+        ).registerOn(transportServer)
+    }
 
     // It is recommended to start the server after setting up the routes to handle
     transportServer.start()

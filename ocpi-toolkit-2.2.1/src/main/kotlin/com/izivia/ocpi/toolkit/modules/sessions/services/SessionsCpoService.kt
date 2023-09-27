@@ -17,7 +17,7 @@ import java.time.Instant
 class SessionsCpoService(
     private val service: SessionsCpoRepository
 ) : SessionsCpoInterface {
-    override fun getSessions(
+    override suspend fun getSessions(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
@@ -32,7 +32,7 @@ class SessionsCpoService(
             .also { searchResult -> searchResult.list.forEach() { session -> session.validate() } }
     }
 
-    override fun putChargingPreferences(
+    override suspend fun putChargingPreferences(
         sessionId: CiString,
         chargingPreferences: ChargingPreferences
     ): OcpiResponseBody<ChargingPreferencesResponseType> = OcpiResponseBody.of {

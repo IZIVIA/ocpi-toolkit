@@ -11,7 +11,7 @@ class CredentialsServer(
     private val service: CredentialsServerService,
     basePath: String = "/2.2.1/credentials"
 ) : OcpiModuleServer(basePath) {
-    override fun registerOn(transportServer: TransportServer) {
+    override suspend fun registerOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments,

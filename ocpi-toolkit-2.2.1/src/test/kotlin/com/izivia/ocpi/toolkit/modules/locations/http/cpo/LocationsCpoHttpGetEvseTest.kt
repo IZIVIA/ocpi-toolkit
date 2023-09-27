@@ -15,6 +15,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -124,10 +125,14 @@ class LocationsCpoHttpGetEvseTest {
 
 private fun LocationsCpoRepository.buildServer(): TransportClient {
     val transportServer = Http4kTransportServer("http://localhost:1234", 1234)
-    LocationsCpoServer(
-        service = LocationsCpoService(this),
-        basePath = "/locations"
-    ).registerOn(transportServer)
+
+    val repo = this
+    runBlocking {
+        LocationsCpoServer(
+            service = LocationsCpoService(repo),
+            basePath = "/locations"
+        ).registerOn(transportServer)
+    }
 
     return transportServer.initRouterAndBuildClient()
 }

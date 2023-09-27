@@ -8,7 +8,7 @@ class VersionsCacheRepository(
     private val baseUrl: String
 ): VersionsRepository {
 
-    override fun getVersions(): List<Version> = listOf(
+    override suspend fun getVersions(): List<Version> = listOf(
         Version(
             version = VersionNumber.V2_2_1.value,
             url = "$baseUrl/${VersionNumber.V2_2_1.value}"
