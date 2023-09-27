@@ -8,9 +8,10 @@ package com.izivia.ocpi.toolkit.modules.sessions.domain
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.cdr.domain.AuthMethod
 import com.izivia.ocpi.toolkit.modules.cdr.domain.CdrTokenPartial
-import com.izivia.ocpi.toolkit.modules.cdr.domain.ChargingPeriod
+import com.izivia.ocpi.toolkit.modules.cdr.domain.ChargingPeriodPartial
 import com.izivia.ocpi.toolkit.modules.cdr.domain.toPartial
-import com.izivia.ocpi.toolkit.modules.types.Price
+import com.izivia.ocpi.toolkit.modules.types.PricePartial
+import com.izivia.ocpi.toolkit.modules.types.toPartial
 import java.time.Instant
 import kotlin.Int
 import kotlin.String
@@ -34,8 +35,8 @@ public data class SessionPartial(
   public val connector_id: CiString?,
   public val meter_id: String?,
   public val currency: CiString?,
-  public val charging_periods: List<ChargingPeriod>?,
-  public val total_cost: Price?,
+  public val charging_periods: List<ChargingPeriodPartial>?,
+  public val total_cost: PricePartial?,
   public val status: SessionStatusType?,
   public val last_updated: Instant?,
 )
@@ -56,8 +57,8 @@ public fun Session.toPartial(): SessionPartial {
     connector_id = connector_id,
     meter_id = meter_id,
     currency = currency,
-    charging_periods = charging_periods,
-    total_cost = total_cost,
+    charging_periods = charging_periods?.toPartial(),
+    total_cost = total_cost?.toPartial(),
     status = status,
     last_updated = last_updated
    )

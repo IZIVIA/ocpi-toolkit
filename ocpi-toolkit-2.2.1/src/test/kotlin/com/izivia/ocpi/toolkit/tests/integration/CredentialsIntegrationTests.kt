@@ -65,7 +65,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                         )
                     },
                     transportClientBuilder = Http4kTransportClientBuilder(),
-                    serverVersionsUrl = receiverServerVersionsUrl
+                    serverVersionsUrlProvider = { receiverServerVersionsUrl }
                 )
             ).registerOn(receiverServer)
             VersionsServer(

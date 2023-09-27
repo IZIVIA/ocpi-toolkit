@@ -45,7 +45,7 @@ fun main() {
                     )
                 },
                 transportClientBuilder = Http4kTransportClientBuilder(),
-                serverVersionsUrl = receiverVersionsUrl
+                serverVersionsUrlProvider = { receiverVersionsUrl }
             )
         ).registerOn(receiverServer)
         VersionsServer(

@@ -16,7 +16,7 @@ class CredentialsServerService(
     private val platformRepository: PlatformRepository,
     private val credentialsRoleRepository: CredentialsRoleRepository,
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsUrl: String
+    private val serverVersionsUrlProvider: suspend () -> String
 ) : CredentialsInterface {
 
     override suspend fun get(
@@ -140,7 +140,7 @@ class CredentialsServerService(
 
     private suspend fun getCredentials(token: String): Credentials = Credentials(
         token = token,
-        url = serverVersionsUrl,
+        url = serverVersionsUrlProvider(),
         roles = credentialsRoleRepository.getCredentialsRoles()
     )
 }
