@@ -11,4 +11,5 @@ object Versions {
     const val log4j = "2.17.2"
     const val testcontainers = "1.16.3"
     const val kmongo = "4.5.1"
+    const val coroutines = "1.7.3"
 }

@@ -5,6 +5,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.domain.toPartial
 import com.izivia.ocpi.toolkit.modules.tokens.mock.tokensCpoRepositoryTest
 import com.izivia.ocpi.toolkit.modules.tokens.mock.validTokenFullRfid
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -25,28 +26,58 @@ class TokensCpoServiceTest {
     fun getTokenParamsValidationTest() {
         service = TokensCpoService(service = tokensCpoRepositoryTest(validTokenFullRfid))
 
-        expectThat(service.getToken(countryCode = str2chars, partyId = str3chars, tokenUid = str36chars)) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
-        }
-
         expectThat(
-            service.getToken(countryCode = str2chars, partyId = str3chars, tokenUid = str36chars, type = TokenType.RFID)
+            runBlocking { service.getToken(countryCode = str2chars, partyId = str3chars, tokenUid = str36chars) }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
-            service.getToken(countryCode = str2chars, partyId = str3chars, tokenUid = str37chars, type = TokenType.RFID)
+            runBlocking {
+                service.getToken(
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    tokenUid = str36chars,
+                    type = TokenType.RFID
+                )
+            }
+        ) {
+            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+        }
+
+        expectThat(
+            runBlocking {
+                service.getToken(
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    tokenUid = str37chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
         expectThat(
-            service.getToken(countryCode = str3chars, partyId = str3chars, tokenUid = str36chars, type = TokenType.RFID)
+            runBlocking {
+                service.getToken(
+                    countryCode = str3chars,
+                    partyId = str3chars,
+                    tokenUid = str36chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
         expectThat(
-            service.getToken(countryCode = str2chars, partyId = str4chars, tokenUid = str36chars, type = TokenType.RFID)
+            runBlocking {
+                service.getToken(
+                    countryCode = str2chars,
+                    partyId = str4chars,
+                    tokenUid = str36chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -57,60 +88,70 @@ class TokensCpoServiceTest {
         service = TokensCpoService(service = tokensCpoRepositoryTest(validTokenFullRfid))
 
         expectThat(
-            service.putToken(
-                token = validTokenFullRfid,
-                countryCode = str2chars,
-                partyId = str3chars,
-                tokenUid = str4chars,
-            )
+            runBlocking {
+                service.putToken(
+                    token = validTokenFullRfid,
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    tokenUid = str4chars,
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
-            service.putToken(
-                token = validTokenFullRfid,
-                countryCode = str2chars,
-                partyId = str3chars,
-                tokenUid = str36chars,
-                type = TokenType.RFID
-            )
+            runBlocking {
+                service.putToken(
+                    token = validTokenFullRfid,
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    tokenUid = str36chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
-            service.putToken(
-                token = validTokenFullRfid,
-                countryCode = str3chars,
-                partyId = str3chars,
-                tokenUid = str36chars,
-                type = TokenType.RFID
-            )
+            runBlocking {
+                service.putToken(
+                    token = validTokenFullRfid,
+                    countryCode = str3chars,
+                    partyId = str3chars,
+                    tokenUid = str36chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
-            service.putToken(
-                token = validTokenFullRfid,
-                countryCode = str2chars,
-                partyId = str4chars,
-                tokenUid = str36chars,
-                type = TokenType.RFID
-            )
+            runBlocking {
+                service.putToken(
+                    token = validTokenFullRfid,
+                    countryCode = str2chars,
+                    partyId = str4chars,
+                    tokenUid = str36chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
-            service.putToken(
-                token = validTokenFullRfid,
-                countryCode = str2chars,
-                partyId = str3chars,
-                tokenUid = str40chars,
-                type = TokenType.RFID
-            )
+            runBlocking {
+                service.putToken(
+                    token = validTokenFullRfid,
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    tokenUid = str40chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -121,60 +162,70 @@ class TokensCpoServiceTest {
         service = TokensCpoService(service = tokensCpoRepositoryTest(validTokenFullRfid))
 
         expectThat(
-            service.patchToken(
-                token = validTokenFullRfid.toPartial(),
-                countryCode = str2chars,
-                partyId = str3chars,
-                tokenUid = str4chars,
-            )
+            runBlocking {
+                service.patchToken(
+                    token = validTokenFullRfid.toPartial(),
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    tokenUid = str4chars,
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
-            service.patchToken(
-                token = validTokenFullRfid.toPartial(),
-                countryCode = str2chars,
-                partyId = str3chars,
-                tokenUid = str36chars,
-                type = TokenType.RFID
-            )
+            runBlocking {
+                service.patchToken(
+                    token = validTokenFullRfid.toPartial(),
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    tokenUid = str36chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
-            service.patchToken(
-                token = validTokenFullRfid.toPartial(),
-                countryCode = str3chars,
-                partyId = str3chars,
-                tokenUid = str36chars,
-                type = TokenType.RFID
-            )
+            runBlocking {
+                service.patchToken(
+                    token = validTokenFullRfid.toPartial(),
+                    countryCode = str3chars,
+                    partyId = str3chars,
+                    tokenUid = str36chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
-            service.patchToken(
-                token = validTokenFullRfid.toPartial(),
-                countryCode = str2chars,
-                partyId = str4chars,
-                tokenUid = str36chars,
-                type = TokenType.RFID
-            )
+            runBlocking {
+                service.patchToken(
+                    token = validTokenFullRfid.toPartial(),
+                    countryCode = str2chars,
+                    partyId = str4chars,
+                    tokenUid = str36chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
-            service.patchToken(
-                token = validTokenFullRfid.toPartial(),
-                countryCode = str2chars,
-                partyId = str3chars,
-                tokenUid = str40chars,
-                type = TokenType.RFID
-            )
+            runBlocking {
+                service.patchToken(
+                    token = validTokenFullRfid.toPartial(),
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    tokenUid = str40chars,
+                    type = TokenType.RFID
+                )
+            }
         ) {
             get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }

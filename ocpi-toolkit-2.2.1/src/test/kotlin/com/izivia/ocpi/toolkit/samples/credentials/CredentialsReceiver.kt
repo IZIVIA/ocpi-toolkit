@@ -12,6 +12,7 @@ import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
+import kotlinx.coroutines.runBlocking
 
 const val receiverPort = 8080
 const val receiverUrl = "http://localhost:$receiverPort"
@@ -29,33 +30,35 @@ fun main() {
         secureFilter = receiverPlatformRepository::tokenFilter
     )
 
-    CredentialsServer(
-        service = CredentialsServerService(
-            platformRepository = receiverPlatformRepository,
-            credentialsRoleRepository = object : CredentialsRoleRepository {
-                override fun getCredentialsRoles(): List<CredentialRole> = listOf(
-                    CredentialRole(
-                        role = Role.EMSP,
-                        business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
-                        party_id = "DEF",
-                        country_code = "FR"
+    runBlocking {
+        CredentialsServer(
+            service = CredentialsServerService(
+                platformRepository = receiverPlatformRepository,
+                credentialsRoleRepository = object : CredentialsRoleRepository {
+                    override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
+                        CredentialRole(
+                            role = Role.EMSP,
+                            business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
+                            party_id = "DEF",
+                            country_code = "FR"
+                        )
                     )
-                )
-            },
-            transportClientBuilder = Http4kTransportClientBuilder(),
-            serverVersionsUrl = receiverVersionsUrl
-        )
-    ).registerOn(receiverServer)
-    VersionsServer(
-        service = VersionsService(
-            repository = VersionsCacheRepository(baseUrl = receiverUrl)
-        )
-    ).registerOn(receiverServer)
+                },
+                transportClientBuilder = Http4kTransportClientBuilder(),
+                serverVersionsUrlProvider = { receiverVersionsUrl }
+            )
+        ).registerOn(receiverServer)
+        VersionsServer(
+            service = VersionsService(
+                repository = VersionsCacheRepository(baseUrl = receiverUrl)
+            )
+        ).registerOn(receiverServer)
 
-    VersionDetailsServer(
-        service = VersionDetailsService(
-            repository = VersionDetailsCacheRepository(baseUrl = receiverUrl)
-        )
-    ).registerOn(receiverServer)
+        VersionDetailsServer(
+            service = VersionDetailsService(
+                repository = VersionDetailsCacheRepository(baseUrl = receiverUrl)
+            )
+        ).registerOn(receiverServer)
+    }
     receiverServer.start()
 }

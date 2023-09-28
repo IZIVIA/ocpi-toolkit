@@ -10,6 +10,7 @@ import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
+import kotlinx.coroutines.runBlocking
 
 class TokensCpoServer(
     private val transportServer: TransportServer,
@@ -20,62 +21,64 @@ class TokensCpoServer(
     )
 ) {
     init {
-        transportServer.handle(
-            method = HttpMethod.GET,
-            path = basePath + listOf(
-                VariablePathSegment("countryCode"),
-                VariablePathSegment("partyId"),
-                VariablePathSegment("tokenUid")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
-        ) { req ->
-            req.httpResponse {
-                service
-                    .getToken(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        tokenUid = req.pathParams["tokenUid"]!!
-                    )
+        runBlocking {
+            transportServer.handle(
+                method = HttpMethod.GET,
+                path = basePath + listOf(
+                    VariablePathSegment("countryCode"),
+                    VariablePathSegment("partyId"),
+                    VariablePathSegment("tokenUid")
+                ),
+                filters = listOf(platformRepository::tokenFilter)
+            ) { req ->
+                req.httpResponse {
+                    service
+                        .getToken(
+                            countryCode = req.pathParams["countryCode"]!!,
+                            partyId = req.pathParams["partyId"]!!,
+                            tokenUid = req.pathParams["tokenUid"]!!
+                        )
+                }
             }
-        }
 
-        transportServer.handle(
-            method = HttpMethod.PUT,
-            path = basePath + listOf(
-                VariablePathSegment("countryCode"),
-                VariablePathSegment("partyId"),
-                VariablePathSegment("tokenUid")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
-        ) { req ->
-            req.httpResponse {
-                service
-                    .putToken(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        tokenUid = req.pathParams["tokenUid"]!!,
-                        token = mapper.readValue(req.body, Token::class.java)
-                    )
+            transportServer.handle(
+                method = HttpMethod.PUT,
+                path = basePath + listOf(
+                    VariablePathSegment("countryCode"),
+                    VariablePathSegment("partyId"),
+                    VariablePathSegment("tokenUid")
+                ),
+                filters = listOf(platformRepository::tokenFilter)
+            ) { req ->
+                req.httpResponse {
+                    service
+                        .putToken(
+                            countryCode = req.pathParams["countryCode"]!!,
+                            partyId = req.pathParams["partyId"]!!,
+                            tokenUid = req.pathParams["tokenUid"]!!,
+                            token = mapper.readValue(req.body, Token::class.java)
+                        )
+                }
             }
-        }
 
-        transportServer.handle(
-            method = HttpMethod.PATCH,
-            path = basePath + listOf(
-                VariablePathSegment("countryCode"),
-                VariablePathSegment("partyId"),
-                VariablePathSegment("tokenUid")
-            ),
-            filters = listOf(platformRepository::tokenFilter)
-        ) { req ->
-            req.httpResponse {
-                service
-                    .patchToken(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        tokenUid = req.pathParams["tokenUid"]!!,
-                        token = mapper.readValue(req.body!!, TokenPartial::class.java)
-                    )
+            transportServer.handle(
+                method = HttpMethod.PATCH,
+                path = basePath + listOf(
+                    VariablePathSegment("countryCode"),
+                    VariablePathSegment("partyId"),
+                    VariablePathSegment("tokenUid")
+                ),
+                filters = listOf(platformRepository::tokenFilter)
+            ) { req ->
+                req.httpResponse {
+                    service
+                        .patchToken(
+                            countryCode = req.pathParams["countryCode"]!!,
+                            partyId = req.pathParams["partyId"]!!,
+                            tokenUid = req.pathParams["tokenUid"]!!,
+                            token = mapper.readValue(req.body!!, TokenPartial::class.java)
+                        )
+                }
             }
         }
     }

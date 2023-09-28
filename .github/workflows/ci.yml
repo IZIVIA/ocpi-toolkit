@@ -26,8 +26,16 @@ jobs:
             -   name: Checkout IZIVIA OCPI toolkit library code from GH
                 uses: actions/checkout@v3
 
-            -   name: Build OCPI toolkit with Gradle
-                uses: gradle/gradle-build-action@v2.2.1
+            -   name: Publish annotation processor to maven local
+                uses: gradle/gradle-build-action@v2.8.1
                 with:
-                    gradle-version: 7.4.2
+                    gradle-version: wrapper
+                    arguments: :annotation-processor:publishToMavenLocal
+                    cache-read-only: ${{ github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/main' }}
+
+            -   name: Build OCPI toolkit
+                uses: gradle/gradle-build-action@v2.8.1
+                with:
+                    gradle-version: wrapper
                     arguments: build
+                    cache-read-only: ${{ github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/main' }}

@@ -2,6 +2,7 @@ package com.izivia.ocpi.toolkit.samples.locations
 
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoClient
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportClientBuilder
+import kotlinx.coroutines.runBlocking
 
 /**
  * Example on how to use the CPO client
@@ -16,6 +17,8 @@ fun main() {
 
     // We can use it
     println(
-        locationsCpoClient.getLocation(countryCode = "fr", partyId = "abc", locationId = "location1")
+        runBlocking {
+            locationsCpoClient.getLocation(countryCode = "fr", partyId = "abc", locationId = "location1")
+        }
     )
 }

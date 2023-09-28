@@ -9,7 +9,7 @@ class VersionsService(
     private val repository: VersionsRepository
 ) : VersionsInterface {
 
-    override fun getVersions(): OcpiResponseBody<List<Version>> = OcpiResponseBody.of {
+    override suspend fun getVersions(): OcpiResponseBody<List<Version>> = OcpiResponseBody.of {
         repository.getVersions()
     }
 }

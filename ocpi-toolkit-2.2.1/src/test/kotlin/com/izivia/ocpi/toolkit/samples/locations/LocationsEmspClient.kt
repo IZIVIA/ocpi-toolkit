@@ -2,6 +2,7 @@ package com.izivia.ocpi.toolkit.samples.locations
 
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspClient
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportClientBuilder
+import kotlinx.coroutines.runBlocking
 
 /**
  * Example on how to use the eMSP client
@@ -16,6 +17,8 @@ fun main() {
 
     // We can use it
     println(
-        locationsEmspClient.getConnector(locationId = "location1", evseUid = "evse1", connectorId = "connector1")
+        runBlocking {
+            locationsEmspClient.getConnector(locationId = "location1", evseUid = "evse1", connectorId = "connector1")
+        }
     )
 }

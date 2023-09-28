@@ -19,7 +19,7 @@ class TokensCpoServer(
     private val service: TokensCpoInterface,
     basePath: String = "/2.2.1/tokens"
 ) : OcpiModuleServer(basePath) {
-    override fun registerOn(transportServer: TransportServer) {
+    override suspend fun registerOn(transportServer: TransportServer) {
 
         //Get Method
         transportServer.handle(

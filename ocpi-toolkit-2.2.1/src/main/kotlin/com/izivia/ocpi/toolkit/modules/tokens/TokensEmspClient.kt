@@ -23,14 +23,14 @@ class TokensEmspClient(
     private val platformRepository: PlatformRepository
 ) : TokensCpoInterface {
 
-    private fun buildTransport(): TransportClient = transportClientBuilder
+    private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.tokens,
             platform = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 
-    override fun getToken(
+    override suspend fun getToken(
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
@@ -47,7 +47,7 @@ class TokensEmspClient(
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             ).parseBody()
 
-    override fun putToken(
+    override suspend fun putToken(
         token: Token,
         countryCode: CiString,
         partyId: CiString,
@@ -70,7 +70,7 @@ class TokensEmspClient(
             ).parseBody()
 
 
-    override fun patchToken(
+    override suspend fun patchToken(
         token: TokenPartial,
         countryCode: CiString,
         partyId: CiString,

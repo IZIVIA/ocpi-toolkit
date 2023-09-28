@@ -11,7 +11,7 @@ class VersionsServer(
     basePath: String = "/versions"
 ) : OcpiModuleServer(basePath) {
 
-    override fun registerOn(transportServer: TransportServer) {
+    override suspend fun registerOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments

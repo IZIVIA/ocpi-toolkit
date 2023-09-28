@@ -19,6 +19,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -113,10 +114,14 @@ class TokensCpoHttpGetTokenTest {
 
 private fun TokensCpoRepository.buildServer(): TransportClient {
     val transportServer = Http4kTransportServer("http://localhost:1234", 1234)
-    TokensCpoServer(
-        service = TokensCpoService(this),
-        basePath = "/tokens"
-    ).registerOn(transportServer)
+
+    val repo = this
+    runBlocking {
+        TokensCpoServer(
+            service = TokensCpoService(repo),
+            basePath = "/tokens"
+        ).registerOn(transportServer)
+    }
 
     return transportServer.initRouterAndBuildClient()
 }

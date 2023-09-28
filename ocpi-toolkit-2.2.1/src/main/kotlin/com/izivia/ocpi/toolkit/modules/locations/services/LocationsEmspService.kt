@@ -12,7 +12,7 @@ class LocationsEmspService(
     private val service: LocationsEmspRepository
 ) : LocationsEmspInterface {
 
-    override fun getLocation(
+    override suspend fun getLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString
@@ -29,7 +29,7 @@ class LocationsEmspService(
     }
 
 
-    override fun getEvse(
+    override suspend fun getEvse(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -47,7 +47,7 @@ class LocationsEmspService(
             ?.validate()
     }
 
-    override fun getConnector(
+    override suspend fun getConnector(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -73,7 +73,7 @@ class LocationsEmspService(
             ?.validate()
     }
 
-    override fun putLocation(
+    override suspend fun putLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -91,7 +91,7 @@ class LocationsEmspService(
             .validate()
     }
 
-    override fun putEvse(
+    override suspend fun putEvse(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -117,7 +117,7 @@ class LocationsEmspService(
             .validate()
     }
 
-    override fun putConnector(
+    override suspend fun putConnector(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -146,7 +146,7 @@ class LocationsEmspService(
             .validate()
     }
 
-    override fun patchLocation(
+    override suspend fun patchLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -169,7 +169,7 @@ class LocationsEmspService(
             ?.validate()
     }
 
-    override fun patchEvse(
+    override suspend fun patchEvse(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -195,7 +195,7 @@ class LocationsEmspService(
             ?.validate()
     }
 
-    override fun patchConnector(
+    override suspend fun patchConnector(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,

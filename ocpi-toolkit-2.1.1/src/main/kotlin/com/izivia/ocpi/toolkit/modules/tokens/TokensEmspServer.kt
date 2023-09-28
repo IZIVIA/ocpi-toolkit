@@ -10,6 +10,7 @@ import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
+import kotlinx.coroutines.runBlocking
 import java.time.Instant
 
 class TokensEmspServer(
@@ -21,42 +22,49 @@ class TokensEmspServer(
     )
 ) {
     init {
-        transportServer.handle(
-            method = HttpMethod.GET,
-            path = basePath,
-            queryParams = listOf("date_from", "date_to", "offset", "limit"),
-            filters = listOf(platformRepository::tokenFilter)
-        ) { req ->
-            req.httpResponse {
-                val dateFrom = req.queryParams["date_from"]
-                val dateTo = req.queryParams["date_to"]
+        runBlocking {
+            transportServer.handle(
+                method = HttpMethod.GET,
+                path = basePath,
+                queryParams = listOf("date_from", "date_to", "offset", "limit"),
+                filters = listOf(platformRepository::tokenFilter)
+            ) { req ->
+                req.httpResponse {
+                    val dateFrom = req.queryParams["date_from"]
+                    val dateTo = req.queryParams["date_to"]
 
-                service
-                    .getTokens(
-                        dateFrom = dateFrom?.let { Instant.parse(it) },
-                        dateTo = dateTo?.let { Instant.parse(it) },
-                        offset = req.queryParams["offset"]?.toInt() ?: 0,
-                        limit = req.queryParams["limit"]?.toInt()
-                    )
+                    service
+                        .getTokens(
+                            dateFrom = dateFrom?.let { Instant.parse(it) },
+                            dateTo = dateTo?.let { Instant.parse(it) },
+                            offset = req.queryParams["offset"]?.toInt() ?: 0,
+                            limit = req.queryParams["limit"]?.toInt()
+                        )
+                }
             }
-        }
 
-        transportServer.handle(
-            method = HttpMethod.POST,
-            path = basePath + listOf(
-                VariablePathSegment("tokenUid"),
-                FixedPathSegment("authorize")
-            ),
-            queryParams = listOf("type"),
-            filters = listOf(platformRepository::tokenFilter)
-        ) { req ->
-            req.httpResponse {
-                service
-                    .postToken(
-                        tokenUid = req.pathParams["tokenUid"]!!,
-                        tokenType = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
-                        locationReferences = req.body?.run { mapper.readValue(this, LocationReferences::class.java) }
-                    )
+            transportServer.handle(
+                method = HttpMethod.POST,
+                path = basePath + listOf(
+                    VariablePathSegment("tokenUid"),
+                    FixedPathSegment("authorize")
+                ),
+                queryParams = listOf("type"),
+                filters = listOf(platformRepository::tokenFilter)
+            ) { req ->
+                req.httpResponse {
+                    service
+                        .postToken(
+                            tokenUid = req.pathParams["tokenUid"]!!,
+                            tokenType = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
+                            locationReferences = req.body?.run {
+                                mapper.readValue(
+                                    this,
+                                    LocationReferences::class.java
+                                )
+                            }
+                        )
+                }
             }
         }
     }

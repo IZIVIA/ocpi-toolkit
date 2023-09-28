@@ -4,5 +4,5 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 
 interface VersionDetailsRepository {
-    fun getVersionDetails(versionNumber: VersionNumber): VersionDetails?
+    suspend fun getVersionDetails(versionNumber: VersionNumber): VersionDetails?
 }

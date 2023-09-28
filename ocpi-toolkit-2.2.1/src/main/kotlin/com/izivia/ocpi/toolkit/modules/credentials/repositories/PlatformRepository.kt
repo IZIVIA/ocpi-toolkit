@@ -9,22 +9,22 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.Version
  * - CREDENTIALS_TOKEN_C: used by the client to communicate with the server (once registered).
  */
 interface PlatformRepository {
-    fun getCredentialsTokenA(platformUrl: String): String?
-    fun getCredentialsTokenB(platformUrl: String): String?
-    fun getCredentialsTokenC(platformUrl: String): String?
-    fun getPlatformByTokenA(token: String): String?
-    fun getPlatformByTokenB(token: String): String?
-    fun getPlatformByTokenC(token: String): String?
-    fun getEndpoints(platformUrl: String): List<Endpoint>
-    fun getVersion(platformUrl: String): Version?
-    fun saveVersion(platformUrl: String, version: Version): Version
-    fun saveEndpoints(platformUrl: String, endpoints: List<Endpoint>): List<Endpoint>
-    fun saveCredentialsTokenA(platformUrl: String, credentialsTokenA: String): String
-    fun saveCredentialsTokenB(platformUrl: String, credentialsTokenB: String): String
-    fun saveCredentialsTokenC(platformUrl: String, credentialsTokenC: String): String
-    fun removeCredentialsTokenA(platformUrl: String)
-    fun removeCredentialsTokenB(platformUrl: String)
-    fun removeCredentialsTokenC(platformUrl: String)
-    fun removeVersion(platformUrl: String)
-    fun removeEndpoints(platformUrl: String)
+    suspend fun getCredentialsTokenA(platformUrl: String): String?
+    suspend fun getCredentialsTokenB(platformUrl: String): String?
+    suspend fun getCredentialsTokenC(platformUrl: String): String?
+    suspend fun getPlatformByTokenA(token: String): String?
+    suspend fun getPlatformByTokenB(token: String): String?
+    suspend fun getPlatformByTokenC(token: String): String?
+    suspend fun getEndpoints(platformUrl: String): List<Endpoint>
+    suspend fun getVersion(platformUrl: String): Version?
+    suspend fun saveVersion(platformUrl: String, version: Version): Version
+    suspend fun saveEndpoints(platformUrl: String, endpoints: List<Endpoint>): List<Endpoint>
+    suspend fun saveCredentialsTokenA(platformUrl: String, credentialsTokenA: String): String
+    suspend fun saveCredentialsTokenB(platformUrl: String, credentialsTokenB: String): String
+    suspend fun saveCredentialsTokenC(platformUrl: String, credentialsTokenC: String): String
+    suspend fun removeCredentialsTokenA(platformUrl: String)
+    suspend fun removeCredentialsTokenB(platformUrl: String)
+    suspend fun removeCredentialsTokenC(platformUrl: String)
+    suspend fun removeVersion(platformUrl: String)
+    suspend fun removeEndpoints(platformUrl: String)
 }

@@ -16,10 +16,10 @@ class CredentialsServerService(
     private val platformRepository: PlatformRepository,
     private val credentialsRoleRepository: CredentialsRoleRepository,
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsUrl: String
+    private val serverVersionsUrlProvider: suspend () -> String
 ) : CredentialsInterface {
 
-    override fun get(
+    override suspend fun get(
         tokenC: String
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
         platformRepository
@@ -35,7 +35,7 @@ class CredentialsServerService(
             ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
     }
 
-    override fun post(
+    override suspend fun post(
         tokenA: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>
@@ -58,7 +58,7 @@ class CredentialsServerService(
         )
     }
 
-    override fun put(
+    override suspend fun put(
         tokenC: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>
@@ -81,7 +81,7 @@ class CredentialsServerService(
         )
     }
 
-    override fun delete(
+    override suspend fun delete(
         tokenC: String
     ): OcpiResponseBody<Credentials?> = OcpiResponseBody.of {
         platformRepository
@@ -96,7 +96,7 @@ class CredentialsServerService(
         null
     }
 
-    private fun findLatestMutualVersionAndStoreInformation(
+    private suspend fun findLatestMutualVersionAndStoreInformation(
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ) {
@@ -138,9 +138,9 @@ class CredentialsServerService(
         platformRepository.saveEndpoints(platformUrl = credentials.url, endpoints = versionDetail.endpoints)
     }
 
-    private fun getCredentials(token: String): Credentials = Credentials(
+    private suspend fun getCredentials(token: String): Credentials = Credentials(
         token = token,
-        url = serverVersionsUrl,
+        url = serverVersionsUrlProvider(),
         roles = credentialsRoleRepository.getCredentialsRoles()
     )
 }

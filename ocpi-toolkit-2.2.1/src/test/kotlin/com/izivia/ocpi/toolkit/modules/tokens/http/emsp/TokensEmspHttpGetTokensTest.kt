@@ -1,9 +1,9 @@
 package com.izivia.ocpi.toolkit.modules.tokens.http.emsp
 
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
+import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ProfileType
-import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.toSearchResult
 import com.izivia.ocpi.toolkit.modules.tokens.TokensEmspServer
 import com.izivia.ocpi.toolkit.modules.tokens.domain.EnergyContract
@@ -20,6 +20,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -109,10 +110,14 @@ class TokensEmspHttpGetTokensTest {
 
 private fun TokensEmspRepository.buildServer(): TransportClient {
     val transportServer = Http4kTransportServer("http://localhost:1234", 1234)
-    TokensEmspServer(
-        service = TokensEmspService(this),
-        basePath = "/tokens"
-    ).registerOn(transportServer)
+
+    val repo = this
+    runBlocking {
+        TokensEmspServer(
+            service = TokensEmspService(repo),
+            basePath = "/tokens"
+        ).registerOn(transportServer)
+    }
 
     return transportServer.initRouterAndBuildClient()
 }

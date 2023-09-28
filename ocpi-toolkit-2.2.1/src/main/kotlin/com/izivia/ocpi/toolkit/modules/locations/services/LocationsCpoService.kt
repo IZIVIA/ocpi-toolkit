@@ -18,7 +18,7 @@ class LocationsCpoService(
     private val service: LocationsCpoRepository
 ) : LocationsCpoInterface {
 
-    override fun getLocations(
+    override suspend fun getLocations(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
@@ -37,7 +37,7 @@ class LocationsCpoService(
             }
     }
 
-    override fun getLocation(
+    override suspend fun getLocation(
         locationId: CiString
     ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
         validate {
@@ -49,7 +49,7 @@ class LocationsCpoService(
             ?.validate()
     }
 
-    override fun getEvse(
+    override suspend fun getEvse(
         locationId: CiString,
         evseUid: CiString
     ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
@@ -63,7 +63,7 @@ class LocationsCpoService(
             ?.validate()
     }
 
-    override fun getConnector(
+    override suspend fun getConnector(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString

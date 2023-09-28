@@ -24,14 +24,14 @@ class TokensCpoClient(
     private val serverVersionsEndpointUrl: String,
     private val platformRepository: PlatformRepository
 ) : TokensEmspInterface {
-    private fun buildTransport(): TransportClient = transportClientBuilder
+    private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.tokens,
             platform = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 
-    override fun getTokens(
+    override suspend fun getTokens(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
@@ -54,7 +54,7 @@ class TokensCpoClient(
             .parsePaginatedBody(offset)
 
 
-    override fun postToken(
+    override suspend fun postToken(
         tokenUid: CiString,
         type: TokenType?,
         locationReferences: LocationReferences?
