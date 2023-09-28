@@ -18,7 +18,7 @@ fun SessionPartial.validate(): SessionPartial = validate(this) {
     validate(SessionPartial::id).isPrintableAscii().hasMaxLengthOf(36)
     validate(SessionPartial::start_date_time).isGreaterThan(Instant.now())
     validate(SessionPartial::end_date_time).isGreaterThan(it.start_date_time ?: Instant.now())
-    validate(SessionPartial::kwh).isGreaterThanOrEqualTo(0)
+    validate(SessionPartial::kwh).isGreaterThanOrEqualTo(BigDecimal.ZERO)
     cdr_token?.validate()
     //auth_method: nothing to validate
     validate(SessionPartial::authorization_reference).isPrintableAscii().hasMaxLengthOf(36)
@@ -41,8 +41,6 @@ fun ChargingPreferencesPartial.validate(): ChargingPreferencesPartial = validate
 }
 
 fun CdrTokenPartial.validate(): CdrTokenPartial = validate(this) {
-    validate(CdrTokenPartial::country_code).isCountryCode(caseSensitive = false, alpha2 = true)
-    validate(CdrTokenPartial::party_id).isPrintableAscii().hasMaxLengthOf(3)
     validate(CdrTokenPartial::uid).isPrintableAscii().hasMaxLengthOf(36)
     //tokenType : nothing to validate
     validate(CdrTokenPartial::contract_id).isPrintableAscii().hasMaxLengthOf(36)
