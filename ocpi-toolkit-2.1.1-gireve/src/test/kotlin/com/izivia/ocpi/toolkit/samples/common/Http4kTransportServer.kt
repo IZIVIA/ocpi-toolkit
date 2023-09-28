@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.OcpiException
 import com.izivia.ocpi.toolkit.common.toHttpResponse
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.*
+import kotlinx.coroutines.runBlocking
 import org.http4k.core.*
 import org.http4k.filter.DebuggingFilters
 import org.http4k.routing.RoutingHttpHandler
@@ -17,17 +18,18 @@ import org.http4k.server.asServer
 class Http4kTransportServer(
     val baseUrl: String,
     val port: Int
-) : TransportServer() {
+) : TransportServer {
 
     private val serverRoutes: MutableList<RoutingHttpHandler> = mutableListOf()
     private lateinit var server: Http4kServer
 
-    override fun handle(
+    override suspend fun handle(
         method: HttpMethod,
         path: List<PathSegment>,
         queryParams: List<String>,
+        secured: Boolean,
         filters: List<(request: HttpRequest) -> Unit>,
-        callback: (request: HttpRequest) -> HttpResponse,
+        callback: suspend (request: HttpRequest) -> HttpResponse,
     ) {
         val pathParams = path
             .filterIsInstance(VariablePathSegment::class.java)
@@ -55,7 +57,9 @@ class Http4kTransportServer(
                         body = req.bodyString()
                     )
                         .also { httpRequest -> filters.forEach { filter -> filter(httpRequest) } }
-                        .let { httpRequest -> callback(httpRequest) }
+                        .let { httpRequest ->
+                            runBlocking { callback(httpRequest) }
+                        }
                         .let { httpResponse ->
                             Response(Status(httpResponse.status.code, null))
                                 .body(httpResponse.body ?: "")

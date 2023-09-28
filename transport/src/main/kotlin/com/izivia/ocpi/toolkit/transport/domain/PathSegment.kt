@@ -1,6 +1,5 @@
 package com.izivia.ocpi.toolkit.transport.domain
 
-
 sealed interface PathSegment {
     val path: String
 }

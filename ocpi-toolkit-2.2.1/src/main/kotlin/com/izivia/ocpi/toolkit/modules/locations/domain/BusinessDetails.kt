@@ -11,6 +11,6 @@ import com.izivia.ocpi.toolkit.annotations.Partial
 @Partial
 data class BusinessDetails(
     val name: String,
-    val website: String?,
-    val logo: Image?
+    val website: String? = null,
+    val logo: Image? = null
 )

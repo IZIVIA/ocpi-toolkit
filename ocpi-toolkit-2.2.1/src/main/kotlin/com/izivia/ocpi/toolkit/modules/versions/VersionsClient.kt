@@ -22,9 +22,9 @@ class VersionsClient(
     private val platformRepository: PlatformRepository
 ) : VersionsInterface {
 
-    override fun getVersions(): OcpiResponseBody<List<Version>> =
+    override suspend fun getVersions(): OcpiResponseBody<List<Version>> =
         transportClientBuilder
-            .build(url = serverVersionsEndpointUrl)
+            .build(baseUrl = serverVersionsEndpointUrl)
             .send(
                 HttpRequest(method = HttpMethod.GET)
                     .withDebugHeaders()

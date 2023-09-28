@@ -5,14 +5,16 @@
 //  ----------
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
-import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import kotlin.collections.List
 
 /**
  * Partial representation of [com.izivia.ocpi.toolkit.modules.cdr.domain.CdrToken]
  */
 public data class CdrTokenPartial(
+  public val country_code: CiString?,
+  public val party_id: CiString?,
   public val uid: CiString?,
   public val type: TokenType?,
   public val contract_id: CiString?,
@@ -20,7 +22,9 @@ public data class CdrTokenPartial(
 
 public fun CdrToken.toPartial(): CdrTokenPartial {
    return CdrTokenPartial(
-     uid = uid,
+     country_code = country_code,
+    party_id = party_id,
+    uid = uid,
     type = type,
     contract_id = contract_id
    )

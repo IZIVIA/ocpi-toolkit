@@ -211,7 +211,7 @@ class CredentialsClientService(
     private fun buildCredentialClient(): CredentialsClient = CredentialsClient(
         transportClient = transportClientBuilder
             .build(
-                url = getOrFindEndpoints()
+                baseUrl = getOrFindEndpoints()
                     .find { it.identifier == ModuleID.credentials }
                     ?.url
                     ?: throw OcpiServerUnsupportedVersionException("No credentials endpoint for $serverVersionsEndpointUrl")

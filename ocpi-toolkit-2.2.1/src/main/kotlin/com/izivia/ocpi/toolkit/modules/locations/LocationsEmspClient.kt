@@ -24,14 +24,14 @@ class LocationsEmspClient(
     private val platformRepository: PlatformRepository
 ) : LocationsCpoInterface {
 
-    private fun buildTransport(): TransportClient = transportClientBuilder
+    private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.locations,
             platform = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 
-    override fun getLocations(
+    override suspend fun getLocations(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
@@ -53,7 +53,7 @@ class LocationsEmspClient(
             )
             .parsePaginatedBody(offset)
 
-    override fun getLocation(locationId: CiString): OcpiResponseBody<Location?> =
+    override suspend fun getLocation(locationId: CiString): OcpiResponseBody<Location?> =
         buildTransport()
             .send(
                 HttpRequest(
@@ -65,7 +65,7 @@ class LocationsEmspClient(
             )
             .parseBody()
 
-    override fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?> =
+    override suspend fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?> =
         buildTransport()
             .send(
                 HttpRequest(
@@ -77,7 +77,7 @@ class LocationsEmspClient(
             )
             .parseBody()
 
-    override fun getConnector(
+    override suspend fun getConnector(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString

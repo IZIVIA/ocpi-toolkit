@@ -30,7 +30,7 @@ interface LocationsEmspInterface {
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=36) Location.id of the Location object to retrieve.
      */
-    fun getLocation(
+    suspend fun getLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString
@@ -47,7 +47,7 @@ interface LocationsEmspInterface {
      * @param locationId (max-length=36) Location.id of the Location object to retrieve.
      * @param evseUid (max-length=36) Evse.uid, required when requesting an EVSE or Connector object.
      */
-    fun getEvse(
+    suspend fun getEvse(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -66,7 +66,7 @@ interface LocationsEmspInterface {
      * @param evseUid (max-length=36) Evse.uid, required when requesting an EVSE or Connector object.
      * @param connectorId (max-length=36) Connector.id, required when requesting a Connector object.
      */
-    fun getConnector(
+    suspend fun getConnector(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -83,7 +83,7 @@ interface LocationsEmspInterface {
      * @param locationId (max-length=36) Location.id of the new Location object, or the Location of which an EVSE or
      * Location object is send
      */
-    fun putLocation(
+    suspend fun putLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -100,7 +100,7 @@ interface LocationsEmspInterface {
      * Location object is send
      * @param evseUid (max-length=36) Evse.uid, required when an EVSE or Connector object is send/replaced.
      */
-    fun putEvse(
+    suspend fun putEvse(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -119,7 +119,7 @@ interface LocationsEmspInterface {
      * @param evseUid (max-length=36) Evse.uid, required when an EVSE or Connector object is send/replaced.
      * @param connectorId (max-length=36) Connector.id, required when a Connector object is send/replaced.
      */
-    fun putConnector(
+    suspend fun putConnector(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -136,7 +136,7 @@ interface LocationsEmspInterface {
      * @param partyId (max-length=3) Party ID (Provider ID) of the CPO requesting this PUT to the eMSP system.
      * @param locationId (max-length=36) Location.id of the new Location object
      */
-    fun patchLocation(
+    suspend fun patchLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -152,7 +152,7 @@ interface LocationsEmspInterface {
      * @param locationId (max-length=36) Location.id of the Location of which an EVSE or Location object is send
      * @param evseUid (max-length=36) Evse.uid, required when an EVSE or Connector object is send/replaced.
      */
-    fun patchEvse(
+    suspend fun patchEvse(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -170,7 +170,7 @@ interface LocationsEmspInterface {
      * @param evseUid (max-length=36) Evse.uid, required when an EVSE or Connector object is send/replaced.
      * @param connectorId (max-length=36) Connector.id, required when a Connector object is send/replaced.
      */
-    fun patchConnector(
+    suspend fun patchConnector(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,

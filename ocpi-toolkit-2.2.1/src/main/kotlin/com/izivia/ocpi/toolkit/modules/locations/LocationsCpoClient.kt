@@ -21,14 +21,14 @@ class LocationsCpoClient(
     private val platformRepository: PlatformRepository
 ) : LocationsEmspInterface {
 
-    private fun buildTransport(): TransportClient = transportClientBuilder
+    private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.locations,
             platform = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 
-    override fun getLocation(
+    override suspend fun getLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString
@@ -37,14 +37,14 @@ class LocationsCpoClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/$countryCode/$partyId/$locationId",
+                    path = "/$countryCode/$partyId/$locationId"
                 )
                     .withDebugHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
 
-    override fun getEvse(
+    override suspend fun getEvse(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -61,7 +61,7 @@ class LocationsCpoClient(
             )
             .parseBody()
 
-    override fun getConnector(
+    override suspend fun getConnector(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -79,7 +79,7 @@ class LocationsCpoClient(
             )
             .parseBody()
 
-    override fun putLocation(
+    override suspend fun putLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -97,7 +97,7 @@ class LocationsCpoClient(
             )
             .parseBody()
 
-    override fun putEvse(
+    override suspend fun putEvse(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -116,7 +116,7 @@ class LocationsCpoClient(
             )
             .parseBody()
 
-    override fun putConnector(
+    override suspend fun putConnector(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -136,7 +136,7 @@ class LocationsCpoClient(
             )
             .parseBody()
 
-    override fun patchLocation(
+    override suspend fun patchLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -154,7 +154,7 @@ class LocationsCpoClient(
             )
             .parseBody()
 
-    override fun patchEvse(
+    override suspend fun patchEvse(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
@@ -173,7 +173,7 @@ class LocationsCpoClient(
             )
             .parseBody()
 
-    override fun patchConnector(
+    override suspend fun patchConnector(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,

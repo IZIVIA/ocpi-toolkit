@@ -61,7 +61,7 @@ fun authorizationHeader(token: String): Pair<String, String> = "Authorization" t
 /**
  * Creates the authorization header by taking the right token in the platform repository
  */
-fun PlatformRepository.buildAuthorizationHeader(baseUrl: String, allowTokenAOrTokenB: Boolean = false) =
+suspend fun PlatformRepository.buildAuthorizationHeader(baseUrl: String, allowTokenAOrTokenB: Boolean = false) =
     if (allowTokenAOrTokenB) {
         getCredentialsTokenC(platformUrl = baseUrl)
             ?: getCredentialsTokenB(platformUrl = baseUrl)
@@ -83,12 +83,12 @@ fun PlatformRepository.buildAuthorizationHeader(baseUrl: String, allowTokenAOrTo
  * @param baseUrl used to know what platform is being requested
  * @param allowTokenAOrTokenB true if we can authenticate using token A
  */
-fun HttpRequest.authenticate(
+suspend fun HttpRequest.authenticate(
     platformRepository: PlatformRepository,
     baseUrl: String,
     allowTokenAOrTokenB: Boolean = false
 ): AuthenticatedHttpRequest =
-    copy(
+    withHeaders(
         headers = headers.plus(
             platformRepository.buildAuthorizationHeader(
                 baseUrl = baseUrl,
@@ -104,7 +104,7 @@ fun HttpRequest.authenticate(
  * @param token the token to use to authenticate
  */
 fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
-    copy(headers = headers.plus(authorizationHeader(token = token)))
+    withHeaders(headers = headers.plus(authorizationHeader(token = token)))
 
 
 /**
@@ -122,7 +122,7 @@ fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
  * X-Request-ID. So don't call this method in that case.
  */
 fun HttpRequest.withDebugHeaders(): HttpRequest =
-    copy(
+    withHeaders(
         headers = headers
             .plus("X-Request-ID" to generateUUIDv4Token())
             .plus("X-Correlation-ID" to generateUUIDv4Token())
@@ -144,7 +144,7 @@ fun HttpRequest.withDebugHeaders(): HttpRequest =
  * @param headers Headers of the caller. It will re-use the X-Correlation-ID header and regenerate X-Request-ID
  */
 fun HttpRequest.withUpdatedDebugHeaders(headers: Map<String, String>): HttpRequest =
-    copy(
+    withHeaders(
         headers = headers
             .plus("X-Request-ID" to generateUUIDv4Token())
             .plus(
@@ -198,7 +198,7 @@ fun HttpRequest.parseAuthorizationHeader() = (headers["Authorization"] ?: header
  * @throws OcpiClientNotEnoughInformationException if the token is missing
  * @throws HttpException if the authorization header is missing
  */
-fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
+suspend fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
     val token = httpRequest.parseAuthorizationHeader()
 
     if (getPlatformByTokenA(token) == null &&
@@ -210,9 +210,9 @@ fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
     }
 }
 
-fun TransportClientBuilder.buildFor(module: ModuleID, platform: String, platformRepository: PlatformRepository) =
+suspend fun TransportClientBuilder.buildFor(module: ModuleID, platform: String, platformRepository: PlatformRepository) =
     platformRepository
         .getEndpoints(platformUrl = platform)
         .find { it.identifier == module }
-        ?.let { build(url = it.url) }
+        ?.let { build(baseUrl = it.url) }
         ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)

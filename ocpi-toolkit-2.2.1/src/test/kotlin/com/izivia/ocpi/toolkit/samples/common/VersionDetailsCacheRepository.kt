@@ -7,7 +7,7 @@ class VersionDetailsCacheRepository(
     private val baseUrl: String
 ): VersionDetailsRepository {
 
-    override fun getVersionDetails(versionNumber: VersionNumber): VersionDetails? =
+    override suspend fun getVersionDetails(versionNumber: VersionNumber): VersionDetails? =
         VersionDetails(
             version = VersionNumber.V2_2_1.value,
             endpoints = listOf(

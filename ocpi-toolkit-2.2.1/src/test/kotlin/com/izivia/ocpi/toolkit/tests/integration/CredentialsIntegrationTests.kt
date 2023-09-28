@@ -13,13 +13,14 @@ import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerSer
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsClient
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
-import com.izivia.ocpi.toolkit.modules.versions.validation.VersionDetailsValidationService
-import com.izivia.ocpi.toolkit.modules.versions.validation.VersionsValidationService
+import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
+import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
 import com.izivia.ocpi.toolkit.tests.integration.mock.PlatformMongoRepository
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
@@ -44,43 +45,40 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             .getCollection<Platform>("receiver-server-${UUID.randomUUID()}")
 
         // Setup receiver (only server)
-        val receiverServer = buildTransportServer()
-        val receiverServerVersionsUrl = "${receiverServer.baseUrl}/versions"
         val receiverPlatformRepo = PlatformMongoRepository(collection = receiverPlatformCollection)
+        val receiverServer = buildTransportServer(receiverPlatformRepo)
+        val receiverServerVersionsUrl = "${receiverServer.baseUrl}/versions"
         val receiverVersionsCacheRepository = VersionsCacheRepository(baseUrl = receiverServer.baseUrl)
         val receiverVersionDetailsCacheRepository = VersionDetailsCacheRepository(baseUrl = receiverServer.baseUrl)
-        CredentialsServer(
-            transportServer = receiverServer,
-            service = CredentialsServerService(
-                platformRepository = receiverPlatformRepo,
-                credentialsRoleRepository = object: CredentialsRoleRepository {
-                    override fun getCredentialsRoles(): List<CredentialRole> = listOf(
-                        CredentialRole(
-                            role = Role.EMSP,
-                            business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
-                            party_id = "DEF",
-                            country_code = "FR"
+        runBlocking {
+            CredentialsServer(
+                service = CredentialsServerService(
+                    platformRepository = receiverPlatformRepo,
+                    credentialsRoleRepository = object : CredentialsRoleRepository {
+                        override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
+                            CredentialRole(
+                                role = Role.EMSP,
+                                business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
+                                party_id = "DEF",
+                                country_code = "FR"
+                            )
                         )
-                    )
-                },
-                transportClientBuilder = Http4kTransportClientBuilder(),
-                serverVersionsUrl = receiverServerVersionsUrl
-            )
-        )
-        VersionsServer(
-            transportServer = receiverServer,
-            platformRepository = receiverPlatformRepo,
-            validationService = VersionsValidationService(
-                repository = receiverVersionsCacheRepository
-            )
-        )
-        VersionDetailsServer(
-            transportServer = receiverServer,
-            platformRepository = receiverPlatformRepo,
-            validationService = VersionDetailsValidationService(
-                repository = receiverVersionDetailsCacheRepository
-            )
-        )
+                    },
+                    transportClientBuilder = Http4kTransportClientBuilder(),
+                    serverVersionsUrlProvider = { receiverServerVersionsUrl }
+                )
+            ).registerOn(receiverServer)
+            VersionsServer(
+                service = VersionsService(
+                    repository = receiverVersionsCacheRepository
+                )
+            ).registerOn(receiverServer)
+            VersionDetailsServer(
+                service = VersionDetailsService(
+                    repository = receiverVersionDetailsCacheRepository
+                )
+            ).registerOn(receiverServer)
+        }
 
         return ServerSetupResult(
             transport = receiverServer,
@@ -95,23 +93,21 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             .getCollection<Platform>("sender-server-${UUID.randomUUID()}")
 
         // Setup sender (server)
-        val senderServer = buildTransportServer()
+        val senderServer = buildTransportServer(PlatformMongoRepository(collection = senderPlatformCollection))
         val senderServerVersionsUrl = "${senderServer.baseUrl}/versions"
 
-        VersionsServer(
-            transportServer = senderServer,
-            platformRepository = PlatformMongoRepository(collection = senderPlatformCollection),
-            validationService = VersionsValidationService(
-                repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl)
-            )
-        )
-        VersionDetailsServer(
-            transportServer = senderServer,
-            platformRepository = PlatformMongoRepository(collection = senderPlatformCollection),
-            validationService = VersionDetailsValidationService(
-                repository = VersionDetailsCacheRepository(baseUrl = senderServer.baseUrl)
-            )
-        )
+        runBlocking {
+            VersionsServer(
+                service = VersionsService(
+                    repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl)
+                )
+            ).registerOn(senderServer)
+            VersionDetailsServer(
+                service = VersionDetailsService(
+                    repository = VersionDetailsCacheRepository(baseUrl = senderServer.baseUrl)
+                )
+            ).registerOn(senderServer)
+        }
 
         return ServerSetupResult(
             transport = senderServer,
@@ -120,14 +116,17 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         )
     }
 
-    private fun setupCredentialsSenderClient(senderServerSetupResult: ServerSetupResult, receiverServerSetupResult: ServerSetupResult): CredentialsClientService {
+    private fun setupCredentialsSenderClient(
+        senderServerSetupResult: ServerSetupResult,
+        receiverServerSetupResult: ServerSetupResult
+    ): CredentialsClientService {
         // Setup sender (client)
         return CredentialsClientService(
             clientVersionsEndpointUrl = senderServerSetupResult.versionsEndpoint,
             clientPlatformRepository = PlatformMongoRepository(collection = senderServerSetupResult.platformCollection),
             clientVersionsRepository = VersionsCacheRepository(baseUrl = senderServerSetupResult.transport.baseUrl),
-            clientCredentialsRoleRepository = object: CredentialsRoleRepository {
-                override fun getCredentialsRoles(): List<CredentialRole> = listOf(
+            clientCredentialsRoleRepository = object : CredentialsRoleRepository {
+                override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                     CredentialRole(
                         role = Role.CPO,
                         business_details = BusinessDetails(name = "Sender", website = null, logo = null),
@@ -177,7 +176,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
         receiverServer.platformCollection.deleteOne(Platform::url eq senderServer.versionsEndpoint)
-        receiverServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = "!$tokenA"))
+        receiverServer.platformCollection.insertOne(
+            Platform(
+                url = receiverServer.versionsEndpoint,
+                tokenA = "!$tokenA"
+            )
+        )
 
         // Fails because the token sent by sender is not the same as the one in the receiver
         expectCatching {
@@ -210,11 +214,20 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         )
 
         expectThat(
-            versionsClient.getVersions()
+            runBlocking {
+                versionsClient.getVersions()
+            }
         ) {
             get { data }
                 .isNotNull()
-                .isEqualTo(VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl).getVersions())
+                .isEqualTo(
+                    runBlocking {
+                        VersionsCacheRepository(
+                            baseUrl =
+                            receiverServer.transport.baseUrl
+                        ).getVersions()
+                    }
+                )
 
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -241,15 +254,19 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentials = credentialsClientService.register()
+        val credentials = runBlocking {
+            credentialsClientService.register()
+        }
 
         expectThat(
-            credentialsClientService.get()
+            runBlocking {
+                credentialsClientService.get()
+            }
         ).isEqualTo(credentials)
     }
 
     @Test
-    fun `should properly run registration process then run update properly`() {
+    fun `should properly run registration process then run update properly`() = runBlocking {
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
@@ -284,8 +301,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isNotNull()
                 .isNotEmpty()
                 .isEqualTo(
-                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                        .getVersions()
+                    runBlocking {
+                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                            .getVersions()
+                    }
                 )
 
             get { status_code }
@@ -313,7 +332,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        credentialsClientService.register()
+        runBlocking {
+            credentialsClientService.register()
+        }
 
         val versionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
@@ -322,21 +343,27 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         )
 
         expectThat(
-            versionsClient.getVersions()
+            runBlocking {
+                versionsClient.getVersions()
+            }
         ) {
             get { data }
                 .isNotNull()
                 .isNotEmpty()
                 .isEqualTo(
-                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                        .getVersions()
+                    runBlocking {
+                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                            .getVersions()
+                    }
                 )
 
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        credentialsClientService.delete()
+        runBlocking {
+            credentialsClientService.delete()
+        }
 
         expectCatching {
             versionsClient.getVersions()
@@ -363,7 +390,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentialsAfterRegistration = credentialsClientService.register()
+        val credentialsAfterRegistration = runBlocking { credentialsClientService.register() }
 
         val versionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
@@ -372,14 +399,18 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         )
 
         expectThat(
-            versionsClient.getVersions()
+            runBlocking {
+                versionsClient.getVersions()
+            }
         ) {
             get { data }
                 .isNotNull()
                 .isNotEmpty()
                 .isEqualTo(
-                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                        .getVersions()
+                    runBlocking {
+                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                            .getVersions()
+                    }
                 )
 
             get { status_code }
@@ -387,30 +418,42 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
 
         expectThat(
-            credentialsClientService.get()
+            runBlocking {
+                credentialsClientService.get()
+            }
         ).isEqualTo(credentialsAfterRegistration)
 
-        credentialsClientService.update()
+        runBlocking {
+            credentialsClientService.update()
+        }
 
         expectThat(
-            versionsClient.getVersions()
+            runBlocking {
+                versionsClient.getVersions()
+            }
         ) {
             get { data }
                 .isNotNull()
                 .isNotEmpty()
                 .isEqualTo(
-                    VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                        .getVersions()
+                    runBlocking {
+                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                            .getVersions()
+                    }
                 )
 
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        credentialsClientService.delete()
+        runBlocking {
+            credentialsClientService.delete()
+        }
 
         expectThat(
-            versionsClient.getVersions()
+            runBlocking {
+                versionsClient.getVersions()
+            }
         ) {
             get { data }
                 .isNull()

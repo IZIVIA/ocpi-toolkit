@@ -35,7 +35,7 @@ interface LocationsCpoInterface {
      * @return List<Location> The endpoint returns a list of Location objects The header will
      * contain the pagination related headers.
      */
-    fun getLocations(
+    suspend fun getLocations(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int = 0,
@@ -45,20 +45,20 @@ interface LocationsCpoInterface {
     /**
      * @param locationId String max-length = 36
      */
-    fun getLocation(locationId: CiString): OcpiResponseBody<Location?>
+    suspend fun getLocation(locationId: CiString): OcpiResponseBody<Location?>
 
     /**
      * @param locationId String max-length = 36
      * @param evseUid String? max-length = 36
      */
-    fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?>
+    suspend fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?>
 
     /**
      * @param locationId String max-length = 36
      * @param evseUid max-length = 36
      * @param connectorId max-length = 36
      */
-    fun getConnector(
+    suspend fun getConnector(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString

@@ -7,17 +7,20 @@ import com.izivia.ocpi.toolkit.transport.domain.parseHttpStatus
 import org.http4k.client.JettyClient
 import org.http4k.core.Method
 import org.http4k.core.Request
+import org.http4k.core.Uri
+import org.http4k.core.then
+import org.http4k.filter.ClientFilters
 
 class Http4kTransportClient(
     baseUrl: String
-) : TransportClient(baseUrl) {
+) : TransportClient {
 
-    val client = JettyClient()
+    val client = ClientFilters.SetBaseUriFrom(Uri.of(baseUrl)).then(JettyClient())
 
     override fun send(request: HttpRequest): HttpResponse {
         val http4kRequest = Request(
             method = Method.valueOf(request.method.name),
-            uri = "$baseUrl${request.path}"
+            uri = request.path
         )
             .run {
                 request.queryParams.toList().foldRight(this) { queryParam, r ->

@@ -6,6 +6,9 @@
 package com.izivia.ocpi.toolkit.modules.tokens.domain
 
 import java.time.Instant
+import kotlin.Boolean
+import kotlin.String
+import kotlin.collections.List
 
 /**
  * Partial representation of [com.izivia.ocpi.toolkit.modules.tokens.domain.Token]
