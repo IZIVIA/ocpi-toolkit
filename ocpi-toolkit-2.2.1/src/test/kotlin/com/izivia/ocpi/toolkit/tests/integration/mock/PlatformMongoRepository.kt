@@ -5,6 +5,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 import com.izivia.ocpi.toolkit.samples.common.Platform
 import com.mongodb.client.MongoCollection
+import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.ReturnDocument
 import org.litote.kmongo.eq
 import org.litote.kmongo.findOne
 import org.litote.kmongo.set
@@ -13,6 +15,16 @@ import org.litote.kmongo.setTo
 class PlatformMongoRepository(
     private val collection: MongoCollection<Platform>
 ) : PlatformRepository {
+
+    override suspend fun savePlatformUrlForTokenA(tokenA: String, platformUrl: String): String? =
+        collection
+            .findOneAndUpdate(
+                Platform::tokenA eq tokenA,
+                set(Platform::url setTo platformUrl),
+                FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+            )
+            ?.url
+
     override suspend fun saveVersion(platformUrl: String, version: Version): Version = version.also {
         collection
             .updateOne(Platform::url eq platformUrl, set(Platform::version setTo it))

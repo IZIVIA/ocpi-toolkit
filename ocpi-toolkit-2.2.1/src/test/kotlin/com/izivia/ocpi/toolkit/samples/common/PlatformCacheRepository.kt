@@ -7,6 +7,14 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 open class PlatformCacheRepository: PlatformRepository {
     val platforms = mutableMapOf<String, Platform>()
 
+    override suspend fun savePlatformUrlForTokenA(tokenA: String, platformUrl: String): String? = platforms
+        .toList()
+        .firstOrNull { it.second.tokenA == tokenA }
+        ?.second
+        ?.copy(url = platformUrl)
+        ?.also { platforms[it.url] = it }
+        ?.url
+
     override suspend fun saveVersion(platformUrl: String, version: Version): Version = platforms
         .getOrDefault(platformUrl, Platform(platformUrl))
         .copy(version = version)

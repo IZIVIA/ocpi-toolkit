@@ -7,6 +7,7 @@ import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
 import com.izivia.ocpi.toolkit.modules.versions.validation.VersionDetailsValidationService
 import com.izivia.ocpi.toolkit.modules.versions.validation.VersionsValidationService
 import com.izivia.ocpi.toolkit.samples.common.*
+import java.util.*
 
 const val receiverPort = 8080
 const val receiverUrl = "http://localhost:$receiverPort"
@@ -18,7 +19,8 @@ fun main() {
 
     // Add token A associated with the sender
     val receiverPlatformRepository = PlatformCacheRepository()
-    receiverPlatformRepository.platforms[senderVersionsUrl] = Platform(url = senderVersionsUrl, tokenA = tokenA)
+    val tempUrl = UUID.randomUUID().toString()
+    receiverPlatformRepository.platforms[tempUrl] = Platform(url = tempUrl, tokenA = tokenA)
 
     com.izivia.ocpi.toolkit.modules.credentials.CredentialsServer(
         transportServer = receiverServer,

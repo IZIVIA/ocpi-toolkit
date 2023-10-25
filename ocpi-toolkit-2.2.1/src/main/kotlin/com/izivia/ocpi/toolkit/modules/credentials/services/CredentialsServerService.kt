@@ -40,8 +40,10 @@ class CredentialsServerService(
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
-        val platformUrl = platformRepository.getPlatformByTokenA(tokenA)
-            ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($tokenA)")
+        val platformUrl = platformRepository.savePlatformUrlForTokenA(
+            tokenA = tokenA,
+            platformUrl = credentials.url
+        ) ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($tokenA)")
 
         platformRepository.saveCredentialsTokenB(platformUrl = credentials.url, credentialsTokenB = credentials.token)
 

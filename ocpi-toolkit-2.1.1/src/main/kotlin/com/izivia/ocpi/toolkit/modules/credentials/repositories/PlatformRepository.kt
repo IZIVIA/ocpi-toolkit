@@ -17,6 +17,7 @@ interface PlatformRepository {
     fun getPlatformByTokenC(token: String): String?
     fun getEndpoints(platformUrl: String): List<Endpoint>
     fun getVersion(platformUrl: String): Version?
+    fun savePlatformUrlForTokenA(tokenA: String, platformUrl: String): String?
     fun saveVersion(platformUrl: String, version: Version): Version
     fun saveEndpoints(platformUrl: String, endpoints: List<Endpoint>): List<Endpoint>
     fun saveCredentialsTokenA(platformUrl: String, credentialsTokenA: String): String

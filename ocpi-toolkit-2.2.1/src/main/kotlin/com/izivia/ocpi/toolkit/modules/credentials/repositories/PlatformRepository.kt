@@ -17,6 +17,7 @@ interface PlatformRepository {
     suspend fun getPlatformByTokenC(token: String): String?
     suspend fun getEndpoints(platformUrl: String): List<Endpoint>
     suspend fun getVersion(platformUrl: String): Version?
+    suspend fun savePlatformUrlForTokenA(tokenA: String, platformUrl: String): String?
     suspend fun saveVersion(platformUrl: String, version: Version): Version
     suspend fun saveEndpoints(platformUrl: String, endpoints: List<Endpoint>): List<Endpoint>
     suspend fun saveCredentialsTokenA(platformUrl: String, credentialsTokenA: String): String
