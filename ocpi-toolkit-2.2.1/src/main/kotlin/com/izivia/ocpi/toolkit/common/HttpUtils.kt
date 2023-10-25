@@ -201,11 +201,10 @@ fun HttpRequest.parseAuthorizationHeader() = (headers["Authorization"] ?: header
 suspend fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
     val token = httpRequest.parseAuthorizationHeader()
 
-    if (getPlatformByTokenA(token) == null &&
-        getPlatformByTokenB(token) == null &&
+    if (!platformExistsWithTokenA(token) &&
+        !platformExistsWithTokenB(token) &&
         getPlatformByTokenC(token) == null
     ) {
-
         throw OcpiClientInvalidParametersException("Invalid token: $token")
     }
 }

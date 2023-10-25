@@ -13,7 +13,6 @@ import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
 import kotlinx.coroutines.runBlocking
-import java.util.*
 
 const val receiverPort = 8080
 const val receiverUrl = "http://localhost:$receiverPort"
@@ -23,8 +22,7 @@ const val tokenA = "06f7967e-65c3-4def-a966-701ffb362b3c"
 fun main() {
     // Add token A associated with the sender
     val receiverPlatformRepository = PlatformCacheRepository()
-    val tempUrl = UUID.randomUUID().toString()
-    receiverPlatformRepository.platforms[tempUrl] = Platform(url = tempUrl, tokenA = tokenA)
+    receiverPlatformRepository.platforms.add(Platform(tokenA = tokenA))
 
     val receiverServer = Http4kTransportServer(
         baseUrl = receiverUrl,

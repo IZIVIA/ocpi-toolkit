@@ -62,11 +62,11 @@ class PlatformMongoRepository(
     override suspend fun getCredentialsTokenC(platformUrl: String): String? = collection
         .findOne(Platform::url eq platformUrl)?.tokenC
 
-    override suspend fun getPlatformByTokenA(token: String): String? = collection
-        .findOne(Platform::tokenA eq token)?.url
+    override suspend fun platformExistsWithTokenA(token: String): Boolean = collection
+        .findOne(Platform::tokenA eq token) != null
 
-    override suspend fun getPlatformByTokenB(token: String): String? = collection
-        .findOne(Platform::tokenB eq token)?.url
+    override suspend fun platformExistsWithTokenB(token: String): Boolean = collection
+        .findOne(Platform::tokenB eq token) != null
 
     override suspend fun getPlatformByTokenC(token: String): String? = collection
         .findOne(Platform::tokenC eq token)?.url

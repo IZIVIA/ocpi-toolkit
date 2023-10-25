@@ -4,7 +4,7 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 
 data class Platform(
-    val url: String,
+    val url: String? = null,
     val version: Version? = null,
     val endpoints: List<Endpoint>? = null,
     val tokenA: String? = null,

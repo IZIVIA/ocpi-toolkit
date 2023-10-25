@@ -12,8 +12,8 @@ interface PlatformRepository {
     suspend fun getCredentialsTokenA(platformUrl: String): String?
     suspend fun getCredentialsTokenB(platformUrl: String): String?
     suspend fun getCredentialsTokenC(platformUrl: String): String?
-    suspend fun getPlatformByTokenA(token: String): String?
-    suspend fun getPlatformByTokenB(token: String): String?
+    suspend fun platformExistsWithTokenA(token: String): Boolean
+    suspend fun platformExistsWithTokenB(token: String): Boolean
     suspend fun getPlatformByTokenC(token: String): String?
     suspend fun getEndpoints(platformUrl: String): List<Endpoint>
     suspend fun getVersion(platformUrl: String): Version?

@@ -22,7 +22,7 @@ fun main() {
     val senderVersionsRepository = VersionsCacheRepository(baseUrl = senderUrl)
     val senderVersionDetailsRepository = VersionDetailsCacheRepository(baseUrl = senderUrl)
     val senderPlatformRepository = PlatformCacheRepository()
-    senderPlatformRepository.platforms[receiverVersionsUrl] = Platform(url = receiverVersionsUrl, tokenA = tokenA)
+    senderPlatformRepository.platforms.add(Platform(url = receiverVersionsUrl, tokenA = tokenA))
 
     // Server
     val senderServer = Http4kTransportServer(
