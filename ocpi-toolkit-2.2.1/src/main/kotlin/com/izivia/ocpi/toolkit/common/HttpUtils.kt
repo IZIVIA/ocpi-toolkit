@@ -203,7 +203,7 @@ suspend fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
 
     if (!platformExistsWithTokenA(token) &&
         !platformExistsWithTokenB(token) &&
-        getPlatformByTokenC(token) == null
+        getPlatformUrlByTokenC(token) == null
     ) {
         throw OcpiClientInvalidParametersException("Invalid token: $token")
     }

@@ -67,7 +67,7 @@ open class PlatformCacheRepository : PlatformRepository {
     override fun platformExistsWithTokenB(token: String): Boolean = platforms
         .any { it.tokenB == token }
 
-    override fun getPlatformByTokenC(token: String): String? = platforms
+    override fun getPlatformUrlByTokenC(token: String): String? = platforms
         .firstOrNull { it.tokenC == token }?.url
 
     override fun getEndpoints(platformUrl: String): List<Endpoint> = platforms

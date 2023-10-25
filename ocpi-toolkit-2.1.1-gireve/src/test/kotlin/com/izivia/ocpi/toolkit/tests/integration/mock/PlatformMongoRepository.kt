@@ -68,7 +68,7 @@ class PlatformMongoRepository(
     override fun platformExistsWithTokenB(token: String): Boolean = collection
         .findOne(Platform::tokenB eq token) != null
 
-    override fun getPlatformByTokenC(token: String): String? = collection
+    override fun getPlatformUrlByTokenC(token: String): String? = collection
         .findOne(Platform::tokenC eq token)?.url
 
     override fun getEndpoints(platformUrl: String): List<Endpoint> = collection

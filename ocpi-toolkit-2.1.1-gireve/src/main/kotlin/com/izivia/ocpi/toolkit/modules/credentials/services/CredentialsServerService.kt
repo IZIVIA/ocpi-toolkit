@@ -22,7 +22,7 @@ class CredentialsServerService(
         tokenC: String
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
         platformRepository
-            .getPlatformByTokenC(tokenC)
+            .getPlatformUrlByTokenC(tokenC)
             ?.let { platformUrl ->
                 getCredentials(
                     token = platformRepository.getCredentialsTokenC(platformUrl)
@@ -62,7 +62,7 @@ class CredentialsServerService(
         tokenC: String
     ): OcpiResponseBody<Credentials?> = OcpiResponseBody.of {
         platformRepository
-            .getPlatformByTokenC(tokenC)
+            .getPlatformUrlByTokenC(tokenC)
             ?.also { platformUrl ->
                 platformRepository.removeVersion(platformUrl = platformUrl)
                 platformRepository.removeEndpoints(platformUrl = platformUrl)
