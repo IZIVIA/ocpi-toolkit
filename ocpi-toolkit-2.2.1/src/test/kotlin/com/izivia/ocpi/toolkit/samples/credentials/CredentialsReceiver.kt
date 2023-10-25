@@ -22,7 +22,7 @@ const val tokenA = "06f7967e-65c3-4def-a966-701ffb362b3c"
 fun main() {
     // Add token A associated with the sender
     val receiverPlatformRepository = PlatformCacheRepository()
-    receiverPlatformRepository.platforms[receiverVersionsUrl] = Platform(url = receiverVersionsUrl, tokenA = tokenA)
+    receiverPlatformRepository.platforms.add(Platform(tokenA = tokenA))
 
     val receiverServer = Http4kTransportServer(
         baseUrl = receiverUrl,

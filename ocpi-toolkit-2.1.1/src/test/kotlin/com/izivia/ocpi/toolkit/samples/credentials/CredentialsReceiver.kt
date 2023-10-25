@@ -15,11 +15,14 @@ const val receiverVersionsUrl = "http://localhost:$receiverPort/versions"
 const val tokenA = "06f7967e-65c3-4def-a966-701ffb362b3c"
 
 fun main() {
-    val receiverServer = Http4kTransportServer(baseUrl = receiverUrl, port = receiverPort)
-
     // Add token A associated with the sender
     val receiverPlatformRepository = PlatformCacheRepository()
-    receiverPlatformRepository.platforms[senderVersionsUrl] = Platform(url = senderVersionsUrl, tokenA = tokenA)
+    receiverPlatformRepository.platforms.add(Platform(tokenA = tokenA))
+
+    val receiverServer = Http4kTransportServer(
+        baseUrl = receiverUrl,
+        port = receiverPort
+    )
 
     CredentialsServer(
         transportServer = receiverServer,

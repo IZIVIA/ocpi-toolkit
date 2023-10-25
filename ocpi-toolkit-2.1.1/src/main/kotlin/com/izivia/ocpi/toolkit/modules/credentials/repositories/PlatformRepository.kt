@@ -12,11 +12,12 @@ interface PlatformRepository {
     fun getCredentialsTokenA(platformUrl: String): String?
     fun getCredentialsTokenB(platformUrl: String): String?
     fun getCredentialsTokenC(platformUrl: String): String?
-    fun getPlatformByTokenA(token: String): String?
-    fun getPlatformByTokenB(token: String): String?
-    fun getPlatformByTokenC(token: String): String?
+    fun platformExistsWithTokenA(token: String): Boolean
+    fun platformExistsWithTokenB(token: String): Boolean
+    fun getPlatformUrlByTokenC(token: String): String?
     fun getEndpoints(platformUrl: String): List<Endpoint>
     fun getVersion(platformUrl: String): Version?
+    fun savePlatformUrlForTokenA(tokenA: String, platformUrl: String): String?
     fun saveVersion(platformUrl: String, version: Version): Version
     fun saveEndpoints(platformUrl: String, endpoints: List<Endpoint>): List<Endpoint>
     fun saveCredentialsTokenA(platformUrl: String, credentialsTokenA: String): String

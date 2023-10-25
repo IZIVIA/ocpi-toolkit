@@ -13,14 +13,17 @@ const val senderUrl = "http://localhost:$senderPort"
 const val senderVersionsUrl = "http://localhost:$senderPort/versions"
 
 fun main() {
-    // Server
-    val senderServer = Http4kTransportServer(baseUrl = senderUrl, port = senderPort)
-
     // Add token A associated with the sender
     val senderVersionsRepository = VersionsCacheRepository(baseUrl = senderUrl)
     val senderVersionDetailsRepository = VersionDetailsCacheRepository(baseUrl = senderUrl)
     val senderPlatformRepository = PlatformCacheRepository()
-    senderPlatformRepository.platforms[receiverVersionsUrl] = Platform(url = receiverVersionsUrl, tokenA = tokenA)
+    senderPlatformRepository.platforms.add(Platform(url = receiverVersionsUrl, tokenA = tokenA))
+
+    // Server
+    val senderServer = Http4kTransportServer(
+        baseUrl = senderUrl,
+        port = senderPort
+    )
 
     VersionsServer(
         transportServer = senderServer,

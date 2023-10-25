@@ -5,6 +5,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 import com.izivia.ocpi.toolkit.samples.common.Platform
 import com.mongodb.client.MongoCollection
+import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.ReturnDocument
 import org.litote.kmongo.eq
 import org.litote.kmongo.findOne
 import org.litote.kmongo.set
@@ -13,6 +15,16 @@ import org.litote.kmongo.setTo
 class PlatformMongoRepository(
     private val collection: MongoCollection<Platform>
 ) : PlatformRepository {
+
+    override fun savePlatformUrlForTokenA(tokenA: String, platformUrl: String): String? =
+        collection
+            .findOneAndUpdate(
+                Platform::tokenA eq tokenA,
+                set(Platform::url setTo platformUrl),
+                FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+            )
+            ?.url
+
     override fun saveVersion(platformUrl: String, version: Version): Version = version.also {
         collection
             .updateOne(Platform::url eq platformUrl, set(Platform::version setTo it))
@@ -50,13 +62,13 @@ class PlatformMongoRepository(
     override fun getCredentialsTokenC(platformUrl: String): String? = collection
         .findOne(Platform::url eq platformUrl)?.tokenC
 
-    override fun getPlatformByTokenA(token: String): String? = collection
-        .findOne(Platform::tokenA eq token)?.url
+    override fun platformExistsWithTokenA(token: String): Boolean = collection
+        .findOne(Platform::tokenA eq token) != null
 
-    override fun getPlatformByTokenB(token: String): String? = collection
-        .findOne(Platform::tokenB eq token)?.url
+    override fun platformExistsWithTokenB(token: String): Boolean = collection
+        .findOne(Platform::tokenB eq token) != null
 
-    override fun getPlatformByTokenC(token: String): String? = collection
+    override fun getPlatformUrlByTokenC(token: String): String? = collection
         .findOne(Platform::tokenC eq token)?.url
 
     override fun getEndpoints(platformUrl: String): List<Endpoint> = collection

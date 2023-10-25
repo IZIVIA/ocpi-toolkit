@@ -22,7 +22,7 @@ class CredentialsServerService(
         tokenC: String
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
         platformRepository
-            .getPlatformByTokenC(tokenC)
+            .getPlatformUrlByTokenC(tokenC)
             ?.let { platformUrl ->
                 getCredentials(
                     token = platformRepository.getCredentialsTokenC(platformUrl)
@@ -38,8 +38,10 @@ class CredentialsServerService(
         tokenA: String,
         credentials: Credentials
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
-        val platformUrl = platformRepository.getPlatformByTokenA(tokenA)
-            ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($tokenA)")
+        val platformUrl = platformRepository.savePlatformUrlForTokenA(
+            tokenA = tokenA,
+            platformUrl = credentials.url
+        ) ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($tokenA)")
 
         platformRepository.saveCredentialsTokenB(platformUrl = credentials.url, credentialsTokenB = credentials.token)
 
@@ -60,7 +62,7 @@ class CredentialsServerService(
         tokenC: String
     ): OcpiResponseBody<Credentials?> = OcpiResponseBody.of {
         platformRepository
-            .getPlatformByTokenC(tokenC)
+            .getPlatformUrlByTokenC(tokenC)
             ?.also { platformUrl ->
                 platformRepository.removeVersion(platformUrl = platformUrl)
                 platformRepository.removeEndpoints(platformUrl = platformUrl)
