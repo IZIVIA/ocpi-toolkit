@@ -179,7 +179,7 @@ fun HttpRequest.withUpdatedRequiredHeaders(headers: Map<String, String>): HttpRe
             .plus(Header.X_REQUEST_ID to generateUUIDv4Token())
             .plus(
                 Header.X_CORRELATION_ID to (
-                    getHeader(Header.X_CORRELATION_ID)
+                    headers.getByNormalizedKey(Header.X_CORRELATION_ID)
                         ?: "error - could not get ${Header.X_CORRELATION_ID} header"
                     )
             )
@@ -205,13 +205,19 @@ fun HttpRequest.getDebugHeaders() = listOfNotNull(
  * Returns the value of a header by its key. The key is not case-sensitive.
  */
 fun HttpRequest.getHeader(key: String): String? =
-    headers.mapKeys { it.key.lowercase() }[key.lowercase()]
+    headers.getByNormalizedKey(key)
 
 /**
  * Returns the value of a header by its key. The key is not case-sensitive.
  */
 fun HttpResponse.getHeader(key: String): String? =
-    headers.mapKeys { it.key.lowercase() }[key.lowercase()]
+    headers.getByNormalizedKey(key)
+
+/**
+ *  Returns the value of a map entry by its key. The key is not case-sensitive.
+ */
+fun Map<String, String>.getByNormalizedKey(key: String): String? =
+    mapKeys { it.key.lowercase() }[key.lowercase()]
 
 /**
  * Parses authorization header from the HttpRequest
