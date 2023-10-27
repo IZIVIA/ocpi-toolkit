@@ -39,7 +39,7 @@ class LocationsCpoClient(
                     method = HttpMethod.GET,
                     path = "/$countryCode/$partyId/$locationId"
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -56,7 +56,7 @@ class LocationsCpoClient(
                     method = HttpMethod.GET,
                     path = "/$countryCode/$partyId/$locationId/$evseUid"
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -74,7 +74,7 @@ class LocationsCpoClient(
                     method = HttpMethod.GET,
                     path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId"
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -92,7 +92,7 @@ class LocationsCpoClient(
                     path = "/$countryCode/$partyId/$locationId",
                     body = mapper.writeValueAsString(location)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -111,7 +111,7 @@ class LocationsCpoClient(
                     path = "/$countryCode/$partyId/$locationId/$evseUid",
                     body = mapper.writeValueAsString(evse)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -131,7 +131,7 @@ class LocationsCpoClient(
                     path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
                     body = mapper.writeValueAsString(connector)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -149,7 +149,7 @@ class LocationsCpoClient(
                     path = "/$countryCode/$partyId/$locationId",
                     body = mapper.writeValueAsString(location)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -168,7 +168,7 @@ class LocationsCpoClient(
                     path = "/$countryCode/$partyId/$locationId",
                     body = mapper.writeValueAsString(evse)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -188,7 +188,7 @@ class LocationsCpoClient(
                     path = "/$countryCode/$partyId/$locationId",
                     body = mapper.writeValueAsString(connector)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()

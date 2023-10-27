@@ -43,7 +43,7 @@ class TokensEmspClient(
                     path = "/$countryCode/$partyId/$tokenUid",
                     queryParams = listOfNotNull(type?.let { "type" to type.toString() }).toMap()
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             ).parseBody()
 
@@ -65,7 +65,7 @@ class TokensEmspClient(
                         "token_uid" to tokenUid,
                         type?.let { "type" to type.toString() }).toMap()
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             ).parseBody()
 
@@ -88,7 +88,7 @@ class TokensEmspClient(
                         "token_uid" to tokenUid,
                         type?.let { "type" to type.toString() }).toMap()
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             ).parseBody()
 }

@@ -106,7 +106,7 @@ class CredentialsServerService(
             .build(credentials.url)
             .send(
                 HttpRequest(method = HttpMethod.GET)
-                    .withUpdatedDebugHeaders(headers = debugHeaders)
+                    .withUpdatedRequiredHeaders(headers = debugHeaders)
                     .authenticate(token = credentials.token)
             )
             .parseBody<OcpiResponseBody<List<Version>>>()
@@ -126,7 +126,7 @@ class CredentialsServerService(
             .build(matchingVersion.url)
             .send(
                 HttpRequest(method = HttpMethod.GET)
-                    .withUpdatedDebugHeaders(headers = debugHeaders)
+                    .withUpdatedRequiredHeaders(headers = debugHeaders)
                     .authenticate(token = credentials.token)
             )
             .parseBody<OcpiResponseBody<VersionDetails>>()

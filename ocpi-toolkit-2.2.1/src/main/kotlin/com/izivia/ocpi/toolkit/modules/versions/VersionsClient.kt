@@ -3,7 +3,7 @@ package com.izivia.ocpi.toolkit.modules.versions
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.authenticate
 import com.izivia.ocpi.toolkit.common.parseBody
-import com.izivia.ocpi.toolkit.common.withDebugHeaders
+import com.izivia.ocpi.toolkit.common.withRequiredHeaders
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
@@ -27,7 +27,7 @@ class VersionsClient(
             .build(baseUrl = serverVersionsEndpointUrl)
             .send(
                 HttpRequest(method = HttpMethod.GET)
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(
                         platformRepository = platformRepository,
                         baseUrl = serverVersionsEndpointUrl,

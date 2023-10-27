@@ -48,7 +48,7 @@ class LocationsEmspClient(
                         limit?.let { "limit" to limit.toString() }
                     ).toMap()
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parsePaginatedBody(offset)
@@ -60,7 +60,7 @@ class LocationsEmspClient(
                     method = HttpMethod.GET,
                     path = "/$locationId",
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -72,7 +72,7 @@ class LocationsEmspClient(
                     method = HttpMethod.GET,
                     path = "/$locationId/$evseUid",
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -88,7 +88,7 @@ class LocationsEmspClient(
                     method = HttpMethod.GET,
                     path = "/$locationId/$evseUid/$connectorId",
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()

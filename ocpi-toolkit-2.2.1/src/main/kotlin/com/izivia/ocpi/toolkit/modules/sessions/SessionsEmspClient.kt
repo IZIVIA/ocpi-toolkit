@@ -46,7 +46,7 @@ class SessionsEmspClient(
                         "offset" to offset.toString(),
                         limit?.let { "limit" to limit.toString() }
                     ).toMap()
-                ).withDebugHeaders()
+                ).withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parsePaginatedBody(offset)
@@ -61,7 +61,7 @@ class SessionsEmspClient(
                     method = HttpMethod.PUT,
                     path = "/$sessionId/charging_preferences",
                     body = mapper.writeValueAsString(chargingPreferences)
-                ).withDebugHeaders()
+                ).withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()

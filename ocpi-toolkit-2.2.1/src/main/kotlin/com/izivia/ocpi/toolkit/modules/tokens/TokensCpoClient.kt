@@ -48,7 +48,7 @@ class TokensCpoClient(
                         limit?.let { "limit" to limit.toString() }
                     ).toMap()
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parsePaginatedBody(offset)
@@ -67,7 +67,7 @@ class TokensCpoClient(
                     queryParams = listOf("type" to type.toString()).toMap(),
                     body = locationReferences.run(mapper::writeValueAsString)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             ).parseBody()
 }

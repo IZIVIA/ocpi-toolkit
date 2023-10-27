@@ -29,7 +29,7 @@ class VersionDetailsClient(
             )
             .send(
                 HttpRequest(method = HttpMethod.GET)
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(
                         platformRepository = platformRepository,
                         baseUrl = serverVersionsEndpointUrl,

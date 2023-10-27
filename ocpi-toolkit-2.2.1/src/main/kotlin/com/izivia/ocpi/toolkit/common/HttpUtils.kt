@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
-import com.izivia.ocpi.toolkit.transport.domain.HttpException
-import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
-import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
-import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import com.izivia.ocpi.toolkit.transport.domain.*
 import java.util.*
 
 typealias AuthenticatedHttpRequest = HttpRequest
@@ -106,27 +103,42 @@ suspend fun HttpRequest.authenticate(
 fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
     withHeaders(headers = headers.plus(authorizationHeader(token = token)))
 
+/**
+ * It adds Content-Type header as "application/json" if the body is not null.
+ */
+private fun HttpRequest.withContentTypeHeaderIfNeeded(): HttpRequest =
+    withHeaders(
+        headers = if (body != null) {
+            headers.plus("Content-Type" to "application/json")
+        } else {
+            headers
+        }
+    )
 
 /**
  * For debugging issues, OCPI implementations are required to include unique IDs via HTTP headers in every
- * request/response
+ * request/response.
  *
  * - X-Request-ID: Every request SHALL contain a unique request ID, the response to this request SHALL contain the same
  * ID.
  * - X-Correlation-ID: Every request/response SHALL contain a unique correlation ID, every response to this request
  * SHALL contain the same ID.
+ *
+ * Moreover, for requests, Content-Type SHALL be set to application/json for any request that contains a
+ * message body: POST, PUT and PATCH. When no body is present, probably in a GET or DELETE, then the Content-Type
+ * header MAY be omitted.
  *
  * This method should be called when doing the first request from a client.
  *
  * Dev note: When the server does a request (not a response), it must keep the same X-Correlation-ID but generate a new
  * X-Request-ID. So don't call this method in that case.
  */
-fun HttpRequest.withDebugHeaders(): HttpRequest =
+fun HttpRequest.withRequiredHeaders(): HttpRequest =
     withHeaders(
         headers = headers
             .plus("X-Request-ID" to generateUUIDv4Token())
             .plus("X-Correlation-ID" to generateUUIDv4Token())
-    )
+    ).withContentTypeHeaderIfNeeded()
 
 /**
  * For debugging issues, OCPI implementations are required to include unique IDs via HTTP headers in every
@@ -136,6 +148,10 @@ fun HttpRequest.withDebugHeaders(): HttpRequest =
  * ID.
  * - X-Correlation-ID: Every request/response SHALL contain a unique correlation ID, every response to this request
  * SHALL contain the same ID.
+ *
+ * Moreover, for requests, Content-Type SHALL be set to application/json for any request that contains a
+ * message body: POST, PUT and PATCH. When no body is present, probably in a GET or DELETE, then the Content-Type
+ * header MAY be omitted.
  *
  * This method should be called when doing the a request from a server.
  *
@@ -143,7 +159,7 @@ fun HttpRequest.withDebugHeaders(): HttpRequest =
  *
  * @param headers Headers of the caller. It will re-use the X-Correlation-ID header and regenerate X-Request-ID
  */
-fun HttpRequest.withUpdatedDebugHeaders(headers: Map<String, String>): HttpRequest =
+fun HttpRequest.withUpdatedRequiredHeaders(headers: Map<String, String>): HttpRequest =
     withHeaders(
         headers = headers
             .plus("X-Request-ID" to generateUUIDv4Token())
@@ -153,6 +169,13 @@ fun HttpRequest.withUpdatedDebugHeaders(headers: Map<String, String>): HttpReque
                     "error - could not get X-Correlation-ID header"
                 )
             )
+            .run {
+                if (body != null) {
+                    plus("Content-Type" to "application/json")
+                } else {
+                    this
+                }
+            }
     )
 
 /**

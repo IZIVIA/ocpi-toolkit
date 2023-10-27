@@ -33,7 +33,7 @@ class SessionsCpoClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/$countryCode/$partyId/$sessionId"
-                ).withDebugHeaders()
+                ).withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -50,7 +50,7 @@ class SessionsCpoClient(
                     method = HttpMethod.PUT,
                     path = "/$countryCode/$partyId/$sessionId",
                     body = mapper.writeValueAsString(session)
-                ).withDebugHeaders()
+                ).withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()
@@ -67,7 +67,7 @@ class SessionsCpoClient(
                     method = HttpMethod.PATCH,
                     path = "/$countryCode/$partyId/$sessionId",
                     body = mapper.writeValueAsString(session)
-                ).withDebugHeaders()
+                ).withRequiredHeaders()
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
             .parseBody()

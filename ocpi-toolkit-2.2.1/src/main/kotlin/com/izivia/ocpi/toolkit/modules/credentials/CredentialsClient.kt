@@ -18,7 +18,7 @@ class CredentialsClient(
         transportClient
             .send(
                 HttpRequest(method = HttpMethod.GET)
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(token = tokenC)
             )
             .parseBody()
@@ -31,7 +31,7 @@ class CredentialsClient(
                     method = HttpMethod.POST,
                     body = mapper.writeValueAsString(credentials)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(token = tokenA)
             )
             .parseBody()
@@ -43,7 +43,7 @@ class CredentialsClient(
                     method = HttpMethod.PUT,
                     body = mapper.writeValueAsString(credentials)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(token = tokenC)
             )
             .parseBody()
@@ -52,7 +52,7 @@ class CredentialsClient(
         transportClient
             .send(
                 HttpRequest(method = HttpMethod.DELETE)
-                    .withDebugHeaders()
+                    .withRequiredHeaders()
                     .authenticate(token = tokenC)
             )
             .parseBody()
