@@ -138,7 +138,7 @@ suspend fun <T> HttpRequest.httpResponse(fn: suspend () -> OcpiResponseBody<T>):
                 }
             ),
             headers = getDebugHeaders()
-                .plus("Content-Type" to "application/json")
+                .plus(Header.CONTENT_TYPE to ContentType.APPLICATION_JSON)
         ).let {
             if (isPaginated) {
                 it.copy(

@@ -9,6 +9,20 @@ import java.util.*
 
 typealias AuthenticatedHttpRequest = HttpRequest
 
+object Header {
+    const val AUTHORIZATION = "Authorization"
+    const val X_REQUEST_ID = "X-Request-ID"
+    const val X_CORRELATION_ID = "X-Correlation-ID"
+    const val X_TOTAL_COUNT = "X-Total-Count"
+    const val X_LIMIT = "X-Limit"
+    const val LINK = "Link"
+    const val CONTENT_TYPE = "Content-Type"
+}
+
+object ContentType {
+    const val APPLICATION_JSON = "application/json"
+}
+
 /**
  * Parse body of a paginated request. The result will be stored in a SearchResult which contains all pagination
  * information.
@@ -19,10 +33,10 @@ inline fun <reified T> HttpResponse.parsePaginatedBody(offset: Int): OcpiRespons
         .let { parsedBody ->
             OcpiResponseBody(
                 data = parsedBody.data?.toSearchResult(
-                    totalCount = headers["X-Total-Count"]!!.toInt(),
-                    limit = headers["X-Limit"]!!.toInt(),
+                    totalCount = getHeader(Header.X_TOTAL_COUNT)!!.toInt(),
+                    limit = getHeader(Header.X_LIMIT)!!.toInt(),
                     offset = offset,
-                    nextPageUrl = headers["Link"]?.split("<")?.get(1)?.split(">")?.first()
+                    nextPageUrl = getHeader(Header.LINK)?.split("<")?.get(1)?.split(">")?.first()
                 ),
                 status_code = parsedBody.status_code,
                 status_message = parsedBody.status_message,
@@ -53,7 +67,7 @@ fun String.decodeBase64(): String = Base64.getDecoder().decode(this).decodeToStr
 /**
  * Creates the authorization header from the given token
  */
-fun authorizationHeader(token: String): Pair<String, String> = "Authorization" to "Token ${token.encodeBase64()}"
+fun authorizationHeader(token: String): Pair<String, String> = Header.AUTHORIZATION to "Token ${token.encodeBase64()}"
 
 /**
  * Creates the authorization header by taking the right token in the platform repository
@@ -109,7 +123,7 @@ fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
 private fun HttpRequest.withContentTypeHeaderIfNeeded(): HttpRequest =
     withHeaders(
         headers = if (body != null) {
-            headers.plus("Content-Type" to "application/json")
+            headers.plus(Header.CONTENT_TYPE to ContentType.APPLICATION_JSON)
         } else {
             headers
         }
@@ -136,8 +150,8 @@ private fun HttpRequest.withContentTypeHeaderIfNeeded(): HttpRequest =
 fun HttpRequest.withRequiredHeaders(): HttpRequest =
     withHeaders(
         headers = headers
-            .plus("X-Request-ID" to generateUUIDv4Token())
-            .plus("X-Correlation-ID" to generateUUIDv4Token())
+            .plus(Header.X_REQUEST_ID to generateUUIDv4Token())
+            .plus(Header.X_CORRELATION_ID to generateUUIDv4Token())
     ).withContentTypeHeaderIfNeeded()
 
 /**
@@ -162,21 +176,14 @@ fun HttpRequest.withRequiredHeaders(): HttpRequest =
 fun HttpRequest.withUpdatedRequiredHeaders(headers: Map<String, String>): HttpRequest =
     withHeaders(
         headers = headers
-            .plus("X-Request-ID" to generateUUIDv4Token())
+            .plus(Header.X_REQUEST_ID to generateUUIDv4Token())
             .plus(
-                "X-Correlation-ID" to headers.getOrDefault(
-                    "X-Correlation-ID",
-                    "error - could not get X-Correlation-ID header"
-                )
+                Header.X_CORRELATION_ID to (
+                    getHeader(Header.X_CORRELATION_ID)
+                        ?: "error - could not get ${Header.X_CORRELATION_ID} header"
+                    )
             )
-            .run {
-                if (body != null) {
-                    plus("Content-Type" to "application/json")
-                } else {
-                    this
-                }
-            }
-    )
+    ).withContentTypeHeaderIfNeeded()
 
 /**
  * For debugging issues, OCPI implementations are required to include unique IDs via HTTP headers in every
@@ -190,9 +197,21 @@ fun HttpRequest.withUpdatedRequiredHeaders(headers: Map<String, String>): HttpRe
  * This method should be called when responding to a request from a client.
  */
 fun HttpRequest.getDebugHeaders() = listOfNotNull(
-    headers["X-Request-ID"]?.let { "X-Request-ID" to it },
-    headers["X-Correlation-ID"]?.let { "X-Correlation-ID" to it }
+    getHeader(Header.X_REQUEST_ID)?.let { Header.X_REQUEST_ID to it },
+    getHeader(Header.X_CORRELATION_ID)?.let { Header.X_CORRELATION_ID to it }
 ).toMap()
+
+/**
+ * Returns the value of a header by its key. The key is not case-sensitive.
+ */
+fun HttpRequest.getHeader(key: String): String? =
+    headers.mapKeys { it.key.lowercase() }[key.lowercase()]
+
+/**
+ * Returns the value of a header by its key. The key is not case-sensitive.
+ */
+fun HttpResponse.getHeader(key: String): String? =
+    headers.mapKeys { it.key.lowercase() }[key.lowercase()]
 
 /**
  * Parses authorization header from the HttpRequest
@@ -200,14 +219,14 @@ fun HttpRequest.getDebugHeaders() = listOfNotNull(
  * @throws OcpiClientNotEnoughInformationException if the token is missing
  * @throws HttpException if the authorization header is missing
  */
-fun HttpRequest.parseAuthorizationHeader() = (headers["Authorization"] ?: headers["authorization"])
+fun HttpRequest.parseAuthorizationHeader() = getHeader(Header.AUTHORIZATION)
     ?.let {
         if (it.startsWith("Token ")) it
         else throw OcpiClientInvalidParametersException("Unkown token format: $it")
     }
     ?.removePrefix("Token ")
     ?.decodeBase64()
-    ?: throw HttpException(HttpStatus.UNAUTHORIZED, "Authorization header missing")
+    ?: throw HttpException(HttpStatus.UNAUTHORIZED, "${Header.AUTHORIZATION} header missing")
 
 /**
  * Throws an exception if the token is invalid. Does nothing otherwise.
