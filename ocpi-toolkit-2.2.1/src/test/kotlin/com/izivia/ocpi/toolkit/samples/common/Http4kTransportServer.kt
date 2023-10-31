@@ -26,6 +26,7 @@ class Http4kTransportServer(
     private val serverRoutes: MutableList<RoutingHttpHandler> = mutableListOf()
     private lateinit var router: RoutingHttpHandler
     private lateinit var server: Http4kServer
+    val requestHistory: MutableList<Pair<HttpRequest, HttpResponse>> = mutableListOf()
 
     override suspend fun handle(
         method: HttpMethod,
@@ -65,11 +66,13 @@ class Http4kTransportServer(
                         }
                         .also { httpRequest -> filters.forEach { filter -> filter(httpRequest) } }
                         .let { httpRequest ->
-                            runBlocking {
+                            httpRequest to runBlocking {
                                 callback(httpRequest)
                             }
                         }
-                        .let { httpResponse ->
+                        .let { (httpRequest, httpResponse) ->
+                            requestHistory.add(httpRequest to httpResponse)
+
                             Response(Status(httpResponse.status.code, null))
                                 .body(httpResponse.body ?: "")
                                 .headers(httpResponse.headers.toList())
