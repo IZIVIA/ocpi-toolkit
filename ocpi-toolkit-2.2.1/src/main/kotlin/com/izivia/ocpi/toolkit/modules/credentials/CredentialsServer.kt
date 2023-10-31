@@ -4,7 +4,6 @@ import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
 import com.izivia.ocpi.toolkit.transport.TransportServer
-import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 
 class CredentialsServer(
@@ -19,7 +18,7 @@ class CredentialsServer(
         ) { req ->
             req.httpResponse {
                 service.get(
-                    tokenC = req.parseAuthorizationHeader()
+                    token = req.parseAuthorizationHeader()
                 )
             }
         }
@@ -45,7 +44,7 @@ class CredentialsServer(
         ) { req ->
             req.httpResponse {
                 service.put(
-                    tokenC = req.parseAuthorizationHeader(),
+                    token = req.parseAuthorizationHeader(),
                     credentials = mapper.readValue(req.body!!, Credentials::class.java),
                     debugHeaders = req.getDebugHeaders()
                 )
@@ -59,7 +58,7 @@ class CredentialsServer(
         ) { req ->
             req.httpResponse {
                 service.delete(
-                    tokenC = req.parseAuthorizationHeader()
+                    token = req.parseAuthorizationHeader()
                 )
             }
         }

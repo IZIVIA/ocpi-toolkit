@@ -28,7 +28,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-1-1-tests")
         val collection = database!!.getCollection<Location>("cpo-server-locations-${UUID.randomUUID()}")
         collection.insertMany(locations)
-        val server = buildTransportServer(DummyPlatformCacheRepository(tokenC = tokenC))
+        val server = buildTransportServer(DummyPlatformCacheRepository())
         runBlocking {
             LocationsCpoServer(
                 LocationsCpoService(
@@ -59,7 +59,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         val cpoServerVersionsUrl = "${cpoServer.baseUrl}/versions"
 
-        val platformRepo = DummyPlatformCacheRepository(tokenC = tokenC).also {
+        val platformRepo = DummyPlatformCacheRepository().also {
             val versionDetailsCpo = VersionDetailsCacheRepository(baseUrl = cpoServer.baseUrl)
 
             runBlocking {

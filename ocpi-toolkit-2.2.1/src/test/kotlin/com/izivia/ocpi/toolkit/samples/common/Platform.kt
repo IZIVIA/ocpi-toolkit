@@ -8,6 +8,6 @@ data class Platform(
     val version: Version? = null,
     val endpoints: List<Endpoint>? = null,
     val tokenA: String? = null,
-    val tokenB: String? = null,
-    val tokenC: String? = null
+    val clientToken: String? = null,
+    val serverToken: String? = null
 )

@@ -14,7 +14,7 @@ class CredentialsClient(
     private val transportClient: TransportClient
 ) : CredentialsInterface {
 
-    override suspend fun get(tokenC: String): OcpiResponseBody<Credentials> =
+    override suspend fun get(token: String): OcpiResponseBody<Credentials> =
         transportClient
             .send(
                 HttpRequest(method = HttpMethod.GET)
@@ -22,7 +22,7 @@ class CredentialsClient(
                         requestId = transportClient.generateRequestId(),
                         correlationId = transportClient.generateCorrelationId()
                     )
-                    .authenticate(token = tokenC)
+                    .authenticate(token = token)
             )
             .parseBody()
 
@@ -46,7 +46,7 @@ class CredentialsClient(
             .parseBody()
 
     override suspend fun put(
-        tokenC: String,
+        token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials> =
@@ -60,11 +60,11 @@ class CredentialsClient(
                         requestId = transportClient.generateRequestId(),
                         correlationId = transportClient.generateCorrelationId()
                     )
-                    .authenticate(token = tokenC)
+                    .authenticate(token = token)
             )
             .parseBody()
 
-    override suspend fun delete(tokenC: String): OcpiResponseBody<Credentials?> =
+    override suspend fun delete(token: String): OcpiResponseBody<Credentials?> =
         transportClient
             .send(
                 HttpRequest(method = HttpMethod.DELETE)
@@ -72,7 +72,7 @@ class CredentialsClient(
                         requestId = transportClient.generateRequestId(),
                         correlationId = transportClient.generateCorrelationId()
                     )
-                    .authenticate(token = tokenC)
+                    .authenticate(token = token)
             )
             .parseBody()
 }

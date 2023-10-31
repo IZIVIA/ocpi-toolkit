@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.common
 import com.fasterxml.jackson.core.type.TypeReference
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.*
 import java.util.*
@@ -52,7 +53,7 @@ inline fun <reified T> HttpResponse.parsePaginatedBody(offset: Int): OcpiRespons
  * @throws DatabindException – if the input JSON structure does not match structure expected for result type (or has
  * other mismatch issues)
  */
-inline fun <reified T> HttpResponse.parseBody(): T = mapper.readValue(body!!, object: TypeReference<T>() {})
+inline fun <reified T> HttpResponse.parseBody(): T = mapper.readValue(body!!, object : TypeReference<T>() {})
 
 /**
  * Encode a string in base64, also @see String#decodeBase64()
@@ -70,44 +71,52 @@ fun String.decodeBase64(): String = Base64.getDecoder().decode(this).decodeToStr
 fun authorizationHeader(token: String): Pair<String, String> = Header.AUTHORIZATION to "Token ${token.encodeBase64()}"
 
 /**
- * Creates the authorization header by taking the right token in the platform repository
+ * Creates the authorization header by taking the client token (or the token A if allowed) in the platform repository
+ *
+ * @receiver PlatformRepository used to retrieve tokens
+ * @param platformUrl partner /versions url
+ * @param allowTokenA only true when called on versions / credentials module
+ * @return Pair<String, String>
  */
-suspend fun PlatformRepository.buildAuthorizationHeader(baseUrl: String, allowTokenAOrTokenB: Boolean = false) =
-    if (allowTokenAOrTokenB) {
-        getCredentialsTokenC(platformUrl = baseUrl)
-            ?: getCredentialsTokenB(platformUrl = baseUrl)
-            ?: getCredentialsTokenA(platformUrl = baseUrl)
-            ?: throw throw OcpiClientGenericException(
-                "Could not find CREDENTIALS TOKEN A OR B OR C associated with platform $baseUrl"
+suspend fun PlatformRepository.buildAuthorizationHeader(
+    platformUrl: String,
+    allowTokenA: Boolean = false
+): Pair<String, String> =
+    if (allowTokenA) {
+        getCredentialsTokenA(platformUrl = platformUrl)
+            ?: getCredentialsClientToken(platformUrl = platformUrl)
+            ?: throw throw OcpiClientUnknownTokenException(
+                "Could not find token A or client token associated with platform $platformUrl"
             )
     } else {
-        getCredentialsTokenC(platformUrl = baseUrl)
-            ?: throw throw OcpiClientGenericException(
-                "Could not find CREDENTIALS TOKEN C associated with platform $baseUrl"
+        getCredentialsClientToken(platformUrl = platformUrl)
+            ?: throw throw OcpiClientUnknownTokenException(
+                "Could not find client token associated with platform $platformUrl"
             )
-    }.let { token -> authorizationHeader(token = token) }
+    }
+        .let { token -> authorizationHeader(token = token) }
 
 /**
- * Adds the authentification header to the request.
+ * Adds the authorization header to the request by taking the client token (or the token A if allowed) in the platform
+ * repository.
  *
  * @param platformRepository use to retrieve tokens
- * @param baseUrl used to know what platform is being requested
- * @param allowTokenAOrTokenB true if we can authenticate using token A
+ * @param platformUrl partner /versions url
+ * @param allowTokenA only true when called on versions / credentials module
  */
 suspend fun HttpRequest.authenticate(
     platformRepository: PlatformRepository,
-    baseUrl: String,
-    allowTokenAOrTokenB: Boolean = false
+    platformUrl: String,
+    allowTokenA: Boolean = false
 ): AuthenticatedHttpRequest =
     withHeaders(
         headers = headers.plus(
             platformRepository.buildAuthorizationHeader(
-                baseUrl = baseUrl,
-                allowTokenAOrTokenB = allowTokenAOrTokenB
+                platformUrl = platformUrl,
+                allowTokenA = allowTokenA
             )
         )
     )
-
 
 /**
  * Adds the authentification header to the request.
@@ -172,8 +181,6 @@ fun HttpRequest.withRequiredHeaders(
  *
  * This method should be called when doing the a request from a server.
  *
- * TODO: test debug headers with integration tests
- *
  * @param headers Headers of the caller. It will re-use the X-Correlation-ID header and regenerate X-Request-ID
  */
 fun HttpRequest.withUpdatedRequiredHeaders(
@@ -233,8 +240,11 @@ fun Map<String, String>.getByNormalizedKey(key: String): String? =
  */
 fun HttpRequest.parseAuthorizationHeader() = getHeader(Header.AUTHORIZATION)
     ?.let {
-        if (it.startsWith("Token ")) it
-        else throw OcpiClientInvalidParametersException("Unkown token format: $it")
+        if (it.startsWith("Token ")) {
+            it
+        } else {
+            throw OcpiClientInvalidParametersException("Unkown token format: $it")
+        }
     }
     ?.removePrefix("Token ")
     ?.decodeBase64()
@@ -243,27 +253,41 @@ fun HttpRequest.parseAuthorizationHeader() = getHeader(Header.AUTHORIZATION)
 /**
  * Throws an exception if the token is invalid. Does nothing otherwise.
  *
- * TODO: is it the good behaviour given:
- * - tokenA: Valid in receiver context, during sender registration (only for sender -> receiver calls)
- * - tokenB: Valid in sender context, during sender registration (only for receiver -> sender calls)
- * - tokenC: Valid when the sender is registered with the receiver (only for sender -> receiver)
- *
  * @throws OcpiClientInvalidParametersException if the token is invalid, otherwise does nothing
  * @throws OcpiClientNotEnoughInformationException if the token is missing
  * @throws HttpException if the authorization header is missing
+ *
  */
-suspend fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
+suspend fun PlatformRepository.tokenFilter(
+    httpRequest: HttpRequest
+) {
     val token = httpRequest.parseAuthorizationHeader()
 
-    if (!platformExistsWithTokenA(token) &&
-        !platformExistsWithTokenB(token) &&
-        getPlatformUrlByTokenC(token) == null
-    ) {
-        throw OcpiClientInvalidParametersException("Invalid token: $token")
+    /**
+     * From OCPI 2.2.1 doc:
+     * When a server receives a request with a valid CREDENTIALS_TOKEN_A, on another module than: credentials or
+     * versions, the server SHALL respond with an HTTP 401 - Unauthorized status code.
+     *
+     * So, we allow token A only if we are in this case.
+     */
+
+    val allowTokenA = httpRequest.path.contains("versions") ||
+        httpRequest.path.contains("/{versionNumber}") ||
+        httpRequest.path.contains("credentials")
+
+    val validToken = (allowTokenA && isCredentialsTokenAValid(token)) ||
+        isCredentialsServerTokenValid(token)
+
+    if (!validToken) {
+        throw OcpiClientInvalidParametersException("Invalid server token (token A allowed: $allowTokenA): $token")
     }
 }
 
-suspend fun TransportClientBuilder.buildFor(module: ModuleID, platform: String, platformRepository: PlatformRepository) =
+suspend fun TransportClientBuilder.buildFor(
+    module: ModuleID,
+    platform: String,
+    platformRepository: PlatformRepository
+): TransportClient =
     platformRepository
         .getEndpoints(platformUrl = platform)
         .find { it.identifier == module }

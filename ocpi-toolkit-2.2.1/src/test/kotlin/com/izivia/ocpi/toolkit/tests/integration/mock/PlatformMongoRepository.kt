@@ -7,10 +7,7 @@ import com.izivia.ocpi.toolkit.samples.common.Platform
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
-import org.litote.kmongo.eq
-import org.litote.kmongo.findOne
-import org.litote.kmongo.set
-import org.litote.kmongo.setTo
+import org.litote.kmongo.*
 
 class PlatformMongoRepository(
     private val collection: MongoCollection<Platform>
@@ -35,41 +32,32 @@ class PlatformMongoRepository(
             .updateOne(Platform::url eq platformUrl, set(Platform::endpoints setTo it))
     }
 
-    override suspend fun saveCredentialsTokenA(platformUrl: String, credentialsTokenA: String): String =
-        credentialsTokenA.also {
+    override suspend fun saveCredentialsClientToken(platformUrl: String, credentialsClientToken: String): String =
+        credentialsClientToken.also {
             collection
-                .updateOne(Platform::url eq platformUrl, set(Platform::tokenA setTo it))
+                .updateOne(Platform::url eq platformUrl, set(Platform::clientToken setTo it))
         }
 
-    override suspend fun saveCredentialsTokenB(platformUrl: String, credentialsTokenB: String): String =
-        credentialsTokenB.also {
+    override suspend fun saveCredentialsServerToken(platformUrl: String, credentialsServerToken: String): String =
+        credentialsServerToken.also {
             collection
-                .updateOne(Platform::url eq platformUrl, set(Platform::tokenB setTo it))
-        }
-
-    override suspend fun saveCredentialsTokenC(platformUrl: String, credentialsTokenC: String): String =
-        credentialsTokenC.also {
-            collection
-                .updateOne(Platform::url eq platformUrl, set(Platform::tokenC setTo it))
+                .updateOne(Platform::url eq platformUrl, set(Platform::serverToken setTo it))
         }
 
     override suspend fun getCredentialsTokenA(platformUrl: String): String? = collection
         .findOne(Platform::url eq platformUrl)?.tokenA
 
-    override suspend fun getCredentialsTokenB(platformUrl: String): String? = collection
-        .findOne(Platform::url eq platformUrl)?.tokenB
+    override suspend fun getCredentialsClientToken(platformUrl: String): String? = collection
+        .findOne(Platform::url eq platformUrl)?.clientToken
 
-    override suspend fun getCredentialsTokenC(platformUrl: String): String? = collection
-        .findOne(Platform::url eq platformUrl)?.tokenC
+    override suspend fun isCredentialsTokenAValid(credentialsTokenA: String): Boolean = collection
+        .findOne(Platform::tokenA eq credentialsTokenA) != null
 
-    override suspend fun platformExistsWithTokenA(token: String): Boolean = collection
-        .findOne(Platform::tokenA eq token) != null
+    override suspend fun isCredentialsServerTokenValid(credentialsServerToken: String): Boolean = collection
+        .findOne(Platform::serverToken eq credentialsServerToken) != null
 
-    override suspend fun platformExistsWithTokenB(token: String): Boolean = collection
-        .findOne(Platform::tokenB eq token) != null
-
-    override suspend fun getPlatformUrlByTokenC(token: String): String? = collection
-        .findOne(Platform::tokenC eq token)?.url
+    override suspend fun getPlatformUrlByCredentialsServerToken(credentialsServerToken: String): String? = collection
+        .findOne(Platform::serverToken eq credentialsServerToken)?.url
 
     override suspend fun getEndpoints(platformUrl: String): List<Endpoint> = collection
         .findOne(Platform::url eq platformUrl)?.endpoints ?: emptyList()
@@ -77,23 +65,22 @@ class PlatformMongoRepository(
     override suspend fun getVersion(platformUrl: String): Version? = collection
         .findOne(Platform::url eq platformUrl)?.version
 
-    override suspend fun removeCredentialsTokenA(platformUrl: String) {
-        collection.updateOne(Platform::url eq platformUrl, set(Platform::tokenA setTo null))
-    }
+    override suspend fun invalidateCredentialsTokenA(platformUrl: String): Boolean =
+        collection
+            .updateOne(Platform::url eq platformUrl, set(Platform::tokenA setTo null))
+            .matchedCount == 1L
 
-    override suspend fun removeCredentialsTokenB(platformUrl: String) {
-        collection.updateOne(Platform::url eq platformUrl, set(Platform::tokenB setTo null))
-    }
-
-    override suspend fun removeCredentialsTokenC(platformUrl: String) {
-        collection.updateOne(Platform::url eq platformUrl, set(Platform::tokenC setTo null))
-    }
-
-    override suspend fun removeVersion(platformUrl: String) {
-        collection.updateOne(Platform::url eq platformUrl, set(Platform::version setTo null))
-    }
-
-    override suspend fun removeEndpoints(platformUrl: String) {
-        collection.updateOne(Platform::url eq platformUrl, set(Platform::endpoints setTo null))
-    }
+    override suspend fun unregisterPlatform(platformUrl: String): Boolean =
+        collection
+            .updateOne(
+                Platform::url eq platformUrl,
+                combine(
+                    set(Platform::tokenA setTo null),
+                    set(Platform::clientToken setTo null),
+                    set(Platform::serverToken setTo null),
+                    set(Platform::version setTo null),
+                    set(Platform::endpoints setTo null)
+                )
+            )
+            .matchedCount == 1L
 }

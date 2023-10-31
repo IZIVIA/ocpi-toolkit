@@ -6,17 +6,20 @@ import com.izivia.ocpi.toolkit.samples.common.Http4kTransportClient
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import java.net.ServerSocket
 
-abstract class BaseServerIntegrationTest: BaseDBIntegrationTest() {
+abstract class BaseServerIntegrationTest : BaseDBIntegrationTest() {
 
     private fun getFreeNetworkPort() = ServerSocket(0).use { it.localPort }
 
-    protected fun buildTransportServer(platformRepository: PlatformRepository? = null): Http4kTransportServer {
+    protected fun buildTransportServer(
+        platformRepository: PlatformRepository? = null
+    ): Http4kTransportServer {
         val port = getFreeNetworkPort()
         return Http4kTransportServer(
             baseUrl = "http://localhost:$port",
-            port = port,
-            secureFilter = platformRepository?.let { it::tokenFilter } ?: { }
-        )
+            port = port
+        ) {
+            platformRepository?.tokenFilter(it)
+        }
     }
 
     protected fun Http4kTransportServer.getClient() =

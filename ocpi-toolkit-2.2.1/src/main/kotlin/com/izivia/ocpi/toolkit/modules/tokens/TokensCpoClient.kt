@@ -52,7 +52,7 @@ class TokensCpoClient(
                         requestId = generateRequestId(),
                         correlationId = generateCorrelationId()
                     )
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                    .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
             )
                 .parsePaginatedBody(offset)
         }
@@ -74,7 +74,7 @@ class TokensCpoClient(
                         requestId = generateRequestId(),
                         correlationId = generateCorrelationId()
                     )
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                    .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
             ).parseBody()
         }
 }

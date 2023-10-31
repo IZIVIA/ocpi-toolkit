@@ -50,7 +50,7 @@ class SessionsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                    .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
             )
                 .parsePaginatedBody(offset)
         }
@@ -69,7 +69,7 @@ class SessionsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                    .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
             )
                 .parseBody()
         }
