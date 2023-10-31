@@ -36,16 +36,20 @@ class TokensEmspClient(
         tokenUid: CiString,
         type: TokenType?
     ): OcpiResponseBody<Token> =
-        buildTransport()
-            .send(
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/$countryCode/$partyId/$tokenUid",
                     queryParams = listOfNotNull(type?.let { "type" to type.toString() }).toMap()
                 )
-                    .withRequiredHeaders()
+                    .withRequiredHeaders(
+                        requestId = generateRequestId(),
+                        correlationId = generateCorrelationId()
+                    )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             ).parseBody()
+        }
 
     override suspend fun putToken(
         token: Token,
@@ -54,8 +58,8 @@ class TokensEmspClient(
         tokenUid: CiString,
         type: TokenType?
     ): OcpiResponseBody<Token> =
-        buildTransport()
-            .send(
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     body = mapper.writeValueAsString(token),
@@ -63,12 +67,16 @@ class TokensEmspClient(
                         "country_code" to countryCode,
                         "party_id" to partyId,
                         "token_uid" to tokenUid,
-                        type?.let { "type" to type.toString() }).toMap()
+                        type?.let { "type" to type.toString() }
+                    ).toMap()
                 )
-                    .withRequiredHeaders()
+                    .withRequiredHeaders(
+                        requestId = generateRequestId(),
+                        correlationId = generateCorrelationId()
+                    )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             ).parseBody()
-
+        }
 
     override suspend fun patchToken(
         token: TokenPartial,
@@ -77,8 +85,8 @@ class TokensEmspClient(
         tokenUid: CiString,
         type: TokenType?
     ): OcpiResponseBody<Token?> =
-        buildTransport()
-            .send(
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.PATCH,
                     body = mapper.writeValueAsString(token),
@@ -86,9 +94,14 @@ class TokensEmspClient(
                         "country_code" to countryCode,
                         "party_id" to partyId,
                         "token_uid" to tokenUid,
-                        type?.let { "type" to type.toString() }).toMap()
+                        type?.let { "type" to type.toString() }
+                    ).toMap()
                 )
-                    .withRequiredHeaders()
+                    .withRequiredHeaders(
+                        requestId = generateRequestId(),
+                        correlationId = generateCorrelationId()
+                    )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             ).parseBody()
+        }
 }

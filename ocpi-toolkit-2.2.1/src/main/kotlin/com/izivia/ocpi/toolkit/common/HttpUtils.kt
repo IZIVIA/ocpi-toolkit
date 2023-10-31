@@ -147,11 +147,14 @@ private fun HttpRequest.withContentTypeHeaderIfNeeded(): HttpRequest =
  * Dev note: When the server does a request (not a response), it must keep the same X-Correlation-ID but generate a new
  * X-Request-ID. So don't call this method in that case.
  */
-fun HttpRequest.withRequiredHeaders(): HttpRequest =
+fun HttpRequest.withRequiredHeaders(
+    requestId: String,
+    correlationId: String
+): HttpRequest =
     withHeaders(
         headers = headers
-            .plus(Header.X_REQUEST_ID to generateUUIDv4Token())
-            .plus(Header.X_CORRELATION_ID to generateUUIDv4Token())
+            .plus(Header.X_REQUEST_ID to requestId)
+            .plus(Header.X_CORRELATION_ID to correlationId)
     ).withContentTypeHeaderIfNeeded()
 
 /**
@@ -173,10 +176,13 @@ fun HttpRequest.withRequiredHeaders(): HttpRequest =
  *
  * @param headers Headers of the caller. It will re-use the X-Correlation-ID header and regenerate X-Request-ID
  */
-fun HttpRequest.withUpdatedRequiredHeaders(headers: Map<String, String>): HttpRequest =
+fun HttpRequest.withUpdatedRequiredHeaders(
+    headers: Map<String, String>,
+    generatedRequestId: String
+): HttpRequest =
     withHeaders(
         headers = headers
-            .plus(Header.X_REQUEST_ID to generateUUIDv4Token())
+            .plus(Header.X_REQUEST_ID to generatedRequestId) // it replaces existing X_REQUEST_ID header
             .plus(
                 Header.X_CORRELATION_ID to (
                     headers.getByNormalizedKey(Header.X_CORRELATION_ID)

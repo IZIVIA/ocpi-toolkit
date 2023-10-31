@@ -23,16 +23,22 @@ class VersionsClient(
 ) : VersionsInterface {
 
     override suspend fun getVersions(): OcpiResponseBody<List<Version>> =
-        transportClientBuilder
-            .build(baseUrl = serverVersionsEndpointUrl)
-            .send(
+        with(
+            transportClientBuilder
+                .build(baseUrl = serverVersionsEndpointUrl)
+        ) {
+            send(
                 HttpRequest(method = HttpMethod.GET)
-                    .withRequiredHeaders()
+                    .withRequiredHeaders(
+                        requestId = generateRequestId(),
+                        correlationId = generateCorrelationId()
+                    )
                     .authenticate(
                         platformRepository = platformRepository,
                         baseUrl = serverVersionsEndpointUrl,
                         allowTokenAOrTokenB = true
                     )
             )
-            .parseBody()
+                .parseBody()
+        }
 }

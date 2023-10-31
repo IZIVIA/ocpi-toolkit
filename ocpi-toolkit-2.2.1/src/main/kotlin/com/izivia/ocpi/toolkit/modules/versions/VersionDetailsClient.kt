@@ -20,21 +20,27 @@ class VersionDetailsClient(
 ) : VersionDetailsInterface {
 
     override suspend fun getVersionDetails(): OcpiResponseBody<VersionDetails> =
-        transportClientBuilder
-            .build(
-                baseUrl = platformRepository
-                    .getVersion(platformUrl = serverVersionsEndpointUrl)
-                    ?.url
-                    ?: throw OcpiToolkitUnknownEndpointException("version details")
-            )
-            .send(
+        with(
+            transportClientBuilder
+                .build(
+                    baseUrl = platformRepository
+                        .getVersion(platformUrl = serverVersionsEndpointUrl)
+                        ?.url
+                        ?: throw OcpiToolkitUnknownEndpointException("version details")
+                )
+        ) {
+            send(
                 HttpRequest(method = HttpMethod.GET)
-                    .withRequiredHeaders()
+                    .withRequiredHeaders(
+                        requestId = generateRequestId(),
+                        correlationId = generateCorrelationId()
+                    )
                     .authenticate(
                         platformRepository = platformRepository,
                         baseUrl = serverVersionsEndpointUrl,
                         allowTokenAOrTokenB = true
                     )
             )
-            .parseBody()
+                .parseBody()
+        }
 }

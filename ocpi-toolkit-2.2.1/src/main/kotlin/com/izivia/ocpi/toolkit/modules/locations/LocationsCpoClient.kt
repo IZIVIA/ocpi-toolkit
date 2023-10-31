@@ -32,34 +32,40 @@ class LocationsCpoClient(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString
-    ): OcpiResponseBody<Location?> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = "/$countryCode/$partyId/$locationId"
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<Location?> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.GET,
+                path = "/$countryCode/$partyId/$locationId"
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 
     override suspend fun getEvse(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
         evseUid: CiString
-    ): OcpiResponseBody<Evse?> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = "/$countryCode/$partyId/$locationId/$evseUid"
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<Evse?> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.GET,
+                path = "/$countryCode/$partyId/$locationId/$evseUid"
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 
     override suspend fun getConnector(
         countryCode: CiString,
@@ -67,35 +73,41 @@ class LocationsCpoClient(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString
-    ): OcpiResponseBody<Connector?> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId"
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<Connector?> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.GET,
+                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId"
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 
     override suspend fun putLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
         location: Location
-    ): OcpiResponseBody<Location> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.PUT,
-                    path = "/$countryCode/$partyId/$locationId",
-                    body = mapper.writeValueAsString(location)
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<Location> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.PUT,
+                path = "/$countryCode/$partyId/$locationId",
+                body = mapper.writeValueAsString(location)
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 
     override suspend fun putEvse(
         countryCode: CiString,
@@ -103,18 +115,21 @@ class LocationsCpoClient(
         locationId: CiString,
         evseUid: CiString,
         evse: Evse
-    ): OcpiResponseBody<Evse> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.PUT,
-                    path = "/$countryCode/$partyId/$locationId/$evseUid",
-                    body = mapper.writeValueAsString(evse)
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<Evse> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.PUT,
+                path = "/$countryCode/$partyId/$locationId/$evseUid",
+                body = mapper.writeValueAsString(evse)
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 
     override suspend fun putConnector(
         countryCode: CiString,
@@ -123,36 +138,42 @@ class LocationsCpoClient(
         evseUid: CiString,
         connectorId: CiString,
         connector: Connector
-    ): OcpiResponseBody<Connector> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.PUT,
-                    path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
-                    body = mapper.writeValueAsString(connector)
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<Connector> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.PUT,
+                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                body = mapper.writeValueAsString(connector)
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 
     override suspend fun patchLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
         location: LocationPartial
-    ): OcpiResponseBody<Location?> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.PATCH,
-                    path = "/$countryCode/$partyId/$locationId",
-                    body = mapper.writeValueAsString(location)
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<Location?> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.PATCH,
+                path = "/$countryCode/$partyId/$locationId",
+                body = mapper.writeValueAsString(location)
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 
     override suspend fun patchEvse(
         countryCode: CiString,
@@ -160,18 +181,21 @@ class LocationsCpoClient(
         locationId: CiString,
         evseUid: CiString,
         evse: EvsePartial
-    ): OcpiResponseBody<Evse?> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.PATCH,
-                    path = "/$countryCode/$partyId/$locationId",
-                    body = mapper.writeValueAsString(evse)
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<Evse?> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.PATCH,
+                path = "/$countryCode/$partyId/$locationId",
+                body = mapper.writeValueAsString(evse)
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 
     override suspend fun patchConnector(
         countryCode: CiString,
@@ -180,16 +204,19 @@ class LocationsCpoClient(
         evseUid: CiString,
         connectorId: CiString,
         connector: ConnectorPartial
-    ): OcpiResponseBody<Connector?> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.PATCH,
-                    path = "/$countryCode/$partyId/$locationId",
-                    body = mapper.writeValueAsString(connector)
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<Connector?> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.PATCH,
+                path = "/$countryCode/$partyId/$locationId",
+                body = mapper.writeValueAsString(connector)
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 }

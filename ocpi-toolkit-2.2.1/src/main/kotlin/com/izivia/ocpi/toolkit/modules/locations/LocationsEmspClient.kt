@@ -36,60 +36,73 @@ class LocationsEmspClient(
         dateTo: Instant?,
         offset: Int,
         limit: Int?
-    ): OcpiResponseBody<SearchResult<Location>> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    queryParams = listOfNotNull(
-                        dateFrom?.let { "date_from" to dateFrom.toString() },
-                        dateTo?.let { "date_to" to dateTo.toString() },
-                        "offset" to offset.toString(),
-                        limit?.let { "limit" to limit.toString() }
-                    ).toMap()
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<SearchResult<Location>> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.GET,
+                queryParams = listOfNotNull(
+                    dateFrom?.let { "date_from" to dateFrom.toString() },
+                    dateTo?.let { "date_to" to dateTo.toString() },
+                    "offset" to offset.toString(),
+                    limit?.let { "limit" to limit.toString() }
+                ).toMap()
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parsePaginatedBody(offset)
+    }
 
-    override suspend fun getLocation(locationId: CiString): OcpiResponseBody<Location?> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = "/$locationId",
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    override suspend fun getLocation(locationId: CiString): OcpiResponseBody<Location?> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.GET,
+                path = "/$locationId"
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 
     override suspend fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?> =
-        buildTransport()
-            .send(
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/$locationId/$evseUid",
+                    path = "/$locationId/$evseUid"
                 )
-                    .withRequiredHeaders()
+                    .withRequiredHeaders(
+                        requestId = generateRequestId(),
+                        correlationId = generateCorrelationId()
+                    )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
-            .parseBody()
+                .parseBody()
+        }
 
     override suspend fun getConnector(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString
-    ): OcpiResponseBody<Connector?> =
-        buildTransport()
-            .send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = "/$locationId/$evseUid/$connectorId",
-                )
-                    .withRequiredHeaders()
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+    ): OcpiResponseBody<Connector?> = with(buildTransport()) {
+        send(
+            HttpRequest(
+                method = HttpMethod.GET,
+                path = "/$locationId/$evseUid/$connectorId"
             )
+                .withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
+                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+        )
             .parseBody()
+    }
 }

@@ -27,16 +27,24 @@ class SessionsCpoClient(
             platformRepository = platformRepository
         )
 
-    override suspend fun getSession(countryCode: CiString, partyId: CiString, sessionId: CiString): OcpiResponseBody<Session> =
-        buildTransport()
-            .send(
+    override suspend fun getSession(
+        countryCode: CiString,
+        partyId: CiString,
+        sessionId: CiString
+    ): OcpiResponseBody<Session> =
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/$countryCode/$partyId/$sessionId"
-                ).withRequiredHeaders()
+                ).withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
-            .parseBody()
+                .parseBody()
+        }
 
     override suspend fun putSession(
         countryCode: CiString,
@@ -44,16 +52,20 @@ class SessionsCpoClient(
         sessionId: CiString,
         session: Session
     ): OcpiResponseBody<Session?> =
-        buildTransport()
-            .send(
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/$countryCode/$partyId/$sessionId",
                     body = mapper.writeValueAsString(session)
-                ).withRequiredHeaders()
+                ).withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
-            .parseBody()
+                .parseBody()
+        }
 
     override suspend fun patchSession(
         countryCode: CiString,
@@ -61,14 +73,18 @@ class SessionsCpoClient(
         sessionId: CiString,
         session: Session
     ): OcpiResponseBody<Session?> =
-        buildTransport()
-            .send(
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.PATCH,
                     path = "/$countryCode/$partyId/$sessionId",
                     body = mapper.writeValueAsString(session)
-                ).withRequiredHeaders()
+                ).withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
-            .parseBody()
+                .parseBody()
+        }
 }
