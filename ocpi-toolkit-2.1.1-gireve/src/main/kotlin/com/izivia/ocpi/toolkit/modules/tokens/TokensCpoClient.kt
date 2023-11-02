@@ -22,7 +22,7 @@ class TokensCpoClient(
     private fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.tokens,
-            platform = serverVersionsEndpointUrl,
+            platformUrl = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 

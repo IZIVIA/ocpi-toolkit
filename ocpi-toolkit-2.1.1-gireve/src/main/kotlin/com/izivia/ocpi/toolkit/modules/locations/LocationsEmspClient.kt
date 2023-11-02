@@ -27,7 +27,7 @@ class LocationsEmspClient(
     private fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.locations,
-            platform = serverVersionsEndpointUrl,
+            platformUrl = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 

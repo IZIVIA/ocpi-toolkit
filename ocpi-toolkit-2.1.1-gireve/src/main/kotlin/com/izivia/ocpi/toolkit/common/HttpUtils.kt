@@ -143,9 +143,9 @@ fun PlatformRepository.checkToken(httpRequest: HttpRequest) {
     }
 }
 
-fun TransportClientBuilder.buildFor(module: ModuleID, platform: String, platformRepository: PlatformRepository) =
+fun TransportClientBuilder.buildFor(module: ModuleID, platformUrl: String, platformRepository: PlatformRepository) =
     platformRepository
-        .getEndpoints(platformUrl = platform)
+        .getEndpoints(platformUrl = platformUrl)
         .find { it.identifier == module }
         ?.let { build(baseUrl = it.url) }
         ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)

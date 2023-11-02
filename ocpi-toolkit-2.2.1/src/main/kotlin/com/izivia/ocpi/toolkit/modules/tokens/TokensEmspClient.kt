@@ -26,7 +26,7 @@ class TokensEmspClient(
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.tokens,
-            platform = serverVersionsEndpointUrl,
+            platformUrl = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 

@@ -26,7 +26,7 @@ class SessionsEmspClient(
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.sessions,
-            platform = serverVersionsEndpointUrl,
+            platformUrl = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 

@@ -285,11 +285,11 @@ suspend fun PlatformRepository.checkToken(
 
 suspend fun TransportClientBuilder.buildFor(
     module: ModuleID,
-    platform: String,
+    platformUrl: String,
     platformRepository: PlatformRepository
 ): TransportClient =
     platformRepository
-        .getEndpoints(platformUrl = platform)
+        .getEndpoints(platformUrl = platformUrl)
         .find { it.identifier == module }
         ?.let { build(baseUrl = it.url) }
         ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)
