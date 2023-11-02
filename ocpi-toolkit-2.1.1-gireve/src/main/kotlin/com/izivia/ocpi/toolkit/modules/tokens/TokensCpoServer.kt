@@ -2,7 +2,7 @@ package com.izivia.ocpi.toolkit.modules.tokens
 
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
-import com.izivia.ocpi.toolkit.common.tokenFilter
+import com.izivia.ocpi.toolkit.common.checkToken
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenPartial
@@ -29,7 +29,7 @@ class TokensCpoServer(
                     VariablePathSegment("partyId"),
                     VariablePathSegment("tokenUid")
                 ),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     service
@@ -48,7 +48,7 @@ class TokensCpoServer(
                     VariablePathSegment("partyId"),
                     VariablePathSegment("tokenUid")
                 ),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     service
@@ -68,7 +68,7 @@ class TokensCpoServer(
                     VariablePathSegment("partyId"),
                     VariablePathSegment("tokenUid")
                 ),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     service

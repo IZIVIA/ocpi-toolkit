@@ -26,7 +26,7 @@ class TokensEmspClient(
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.tokens,
-            platform = serverVersionsEndpointUrl,
+            platformUrl = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 
@@ -47,7 +47,7 @@ class TokensEmspClient(
                         requestId = generateRequestId(),
                         correlationId = generateCorrelationId()
                     )
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                    .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
             ).parseBody()
         }
 
@@ -74,7 +74,7 @@ class TokensEmspClient(
                         requestId = generateRequestId(),
                         correlationId = generateCorrelationId()
                     )
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                    .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
             ).parseBody()
         }
 
@@ -101,7 +101,7 @@ class TokensEmspClient(
                         requestId = generateRequestId(),
                         correlationId = generateCorrelationId()
                     )
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                    .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
             ).parseBody()
         }
 }

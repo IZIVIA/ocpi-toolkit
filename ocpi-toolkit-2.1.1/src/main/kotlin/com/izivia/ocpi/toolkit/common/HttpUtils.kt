@@ -132,7 +132,7 @@ fun HttpRequest.parseAuthorizationHeader() = (headers["Authorization"] ?: header
  * @throws OcpiClientNotEnoughInformationException if the token is missing
  * @throws HttpException if the authorization header is missing
  */
-fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
+fun PlatformRepository.checkToken(httpRequest: HttpRequest) {
     val token = httpRequest.parseAuthorizationHeader()
 
     if (!platformExistsWithTokenA(token) &&
@@ -143,9 +143,9 @@ fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
     }
 }
 
-fun TransportClientBuilder.buildFor(module: ModuleID, platform: String, platformRepository: PlatformRepository) =
+fun TransportClientBuilder.buildFor(module: ModuleID, platformUrl: String, platformRepository: PlatformRepository) =
     platformRepository
-        .getEndpoints(platformUrl = platform)
+        .getEndpoints(platformUrl = platformUrl)
         .find { it.identifier == module }
         ?.let { build(baseUrl = it.url) }
         ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)

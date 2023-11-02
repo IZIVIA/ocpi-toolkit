@@ -6,7 +6,7 @@ import com.izivia.ocpi.toolkit.samples.common.VersionDetailsCacheRepository
 import kotlinx.coroutines.runBlocking
 
 const val CREDENTIALS_TOKEN_C = "e0748bbe-d535-4a6b-8f80-94f2457d5b9d"
-val DUMMY_PLATFORM_REPOSITORY = DummyPlatformCacheRepository(tokenC = CREDENTIALS_TOKEN_C).also {
+val DUMMY_PLATFORM_REPOSITORY = DummyPlatformCacheRepository().also {
     val versionDetailsEmsp = VersionDetailsCacheRepository(baseUrl = emspServerUrl)
     val versionDetailsCpo = VersionDetailsCacheRepository(baseUrl = cpoServerUrl)
 

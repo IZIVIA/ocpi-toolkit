@@ -20,19 +20,11 @@ class CredentialsServerService(
 ) : CredentialsInterface {
 
     override suspend fun get(
-        tokenC: String
+        token: String
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
-        platformRepository
-            .getPlatformUrlByTokenC(tokenC)
-            ?.let { platformUrl ->
-                getCredentials(
-                    token = platformRepository.getCredentialsTokenC(platformUrl)
-                        ?: throw OcpiClientInvalidParametersException(
-                            "Could not find CREDENTIALS_TOKEN_C associated with platform $platformUrl"
-                        )
-                )
-            }
-            ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
+        getCredentials(
+            serverToken = token
+        )
     }
 
     override suspend fun post(
@@ -43,57 +35,65 @@ class CredentialsServerService(
         val platformUrl = platformRepository.savePlatformUrlForTokenA(
             tokenA = tokenA,
             platformUrl = credentials.url
-        ) ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_A ($tokenA)")
+        ) ?: throw OcpiClientInvalidParametersException("Invalid token A ($tokenA)")
 
-        platformRepository.saveCredentialsTokenB(platformUrl = credentials.url, credentialsTokenB = credentials.token)
+        // Save token B, which is in our case the client token, because it's the one that we will use to communicate
+        // with the sender
+        platformRepository.saveCredentialsClientToken(
+            platformUrl = credentials.url,
+            credentialsClientToken = credentials.token
+        )
 
         findLatestMutualVersionAndStoreInformation(credentials = credentials, debugHeaders = debugHeaders)
 
-        platformRepository.removeCredentialsTokenA(platformUrl = platformUrl)
-        platformRepository.removeCredentialsTokenB(platformUrl = platformUrl)
+        // Remove token A because it is useless from now on
+        platformRepository.invalidateCredentialsTokenA(platformUrl = platformUrl)
 
+        // Return Credentials objet to sender with the token C inside (which is for us the server token)
         getCredentials(
-            token = platformRepository.saveCredentialsTokenC(
+            serverToken = platformRepository.saveCredentialsServerToken(
                 platformUrl = platformUrl,
-                credentialsTokenC = generateUUIDv4Token()
+                credentialsServerToken = generateUUIDv4Token()
             )
         )
     }
 
     override suspend fun put(
-        tokenC: String,
+        token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
-        val platformUrl = platformRepository.getPlatformUrlByTokenC(tokenC)
-            ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
+        val platformUrl = platformRepository.getPlatformUrlByCredentialsServerToken(token)
+            ?: throw OcpiClientInvalidParametersException("Invalid server token ($token)")
 
-        platformRepository.saveCredentialsTokenB(platformUrl = credentials.url, credentialsTokenB = credentials.token)
+        // In the payload, there is the new token B (the client token for us) to use to communicate with the receiver,
+        // so we save it
+        platformRepository.saveCredentialsClientToken(
+            platformUrl = credentials.url,
+            credentialsClientToken = credentials.token
+        )
 
+        // Update versions
         findLatestMutualVersionAndStoreInformation(credentials = credentials, debugHeaders = debugHeaders)
 
-        platformRepository.removeCredentialsTokenA(platformUrl = platformUrl)
-        platformRepository.removeCredentialsTokenB(platformUrl = platformUrl)
-
+        // Return Credentials objet to sender with the updated token C inside (which is for us the server token)
         getCredentials(
-            token = platformRepository.saveCredentialsTokenC(
+            serverToken = platformRepository.saveCredentialsServerToken(
                 platformUrl = platformUrl,
-                credentialsTokenC = generateUUIDv4Token()
+                credentialsServerToken = generateUUIDv4Token()
             )
         )
     }
 
     override suspend fun delete(
-        tokenC: String
+        token: String
     ): OcpiResponseBody<Credentials?> = OcpiResponseBody.of {
         platformRepository
-            .getPlatformUrlByTokenC(tokenC)
+            .getPlatformUrlByCredentialsServerToken(token)
             ?.also { platformUrl ->
-                platformRepository.removeVersion(platformUrl = platformUrl)
-                platformRepository.removeEndpoints(platformUrl = platformUrl)
-                platformRepository.removeCredentialsTokenC(platformUrl = platformUrl)
+                platformRepository.unregisterPlatform(platformUrl = platformUrl)
             }
-            ?: throw OcpiClientInvalidParametersException("Invalid CREDENTIALS_TOKEN_C ($tokenC)")
+            ?: throw OcpiClientInvalidParametersException("Invalid server token ($token)")
 
         null
     }
@@ -150,8 +150,8 @@ class CredentialsServerService(
         platformRepository.saveEndpoints(platformUrl = credentials.url, endpoints = versionDetail.endpoints)
     }
 
-    private suspend fun getCredentials(token: String): Credentials = Credentials(
-        token = token,
+    private suspend fun getCredentials(serverToken: String): Credentials = Credentials(
+        token = serverToken,
         url = serverVersionsUrlProvider(),
         roles = credentialsRoleRepository.getCredentialsRoles()
     )

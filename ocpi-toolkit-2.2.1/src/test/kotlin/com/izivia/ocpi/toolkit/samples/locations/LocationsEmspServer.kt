@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit.samples.locations
 
-import com.izivia.ocpi.toolkit.common.tokenFilter
+import com.izivia.ocpi.toolkit.common.checkToken
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
@@ -21,7 +21,7 @@ fun main() {
     val transportServer = Http4kTransportServer(
         baseUrl = emspServerUrl,
         port = emspServerPort,
-        secureFilter = DUMMY_PLATFORM_REPOSITORY::tokenFilter
+        secureFilter = DUMMY_PLATFORM_REPOSITORY::checkToken
     )
 
     // We specify service for the validation service

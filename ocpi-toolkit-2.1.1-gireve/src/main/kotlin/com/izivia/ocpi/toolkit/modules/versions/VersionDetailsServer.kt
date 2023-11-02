@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.versions
 
 import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.tokenFilter
+import com.izivia.ocpi.toolkit.common.checkToken
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.validation.VersionDetailsValidationService
 import com.izivia.ocpi.toolkit.transport.TransportServer
@@ -23,7 +23,7 @@ class VersionDetailsServer(
                 path = basePath + listOf(
                     VariablePathSegment("versionNumber")
                 ),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     validationService.getVersionDetails(

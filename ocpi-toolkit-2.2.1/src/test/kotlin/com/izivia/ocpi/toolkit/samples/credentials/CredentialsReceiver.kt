@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit.samples.credentials
 
-import com.izivia.ocpi.toolkit.common.tokenFilter
+import com.izivia.ocpi.toolkit.common.checkToken
 import com.izivia.ocpi.toolkit.modules.credentials.CredentialsServer
 import com.izivia.ocpi.toolkit.modules.credentials.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
@@ -27,7 +27,7 @@ fun main() {
     val receiverServer = Http4kTransportServer(
         baseUrl = receiverUrl,
         port = receiverPort,
-        secureFilter = receiverPlatformRepository::tokenFilter
+        secureFilter = receiverPlatformRepository::checkToken
     )
 
     runBlocking {

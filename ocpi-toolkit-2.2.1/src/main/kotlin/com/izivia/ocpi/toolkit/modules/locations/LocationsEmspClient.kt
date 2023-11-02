@@ -27,7 +27,7 @@ class LocationsEmspClient(
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.locations,
-            platform = serverVersionsEndpointUrl,
+            platformUrl = serverVersionsEndpointUrl,
             platformRepository = platformRepository
         )
 
@@ -51,7 +51,7 @@ class LocationsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
         )
             .parsePaginatedBody(offset)
     }
@@ -66,7 +66,7 @@ class LocationsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }
@@ -82,7 +82,7 @@ class LocationsEmspClient(
                         requestId = generateRequestId(),
                         correlationId = generateCorrelationId()
                     )
-                    .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                    .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
             )
                 .parseBody()
         }
@@ -101,7 +101,7 @@ class LocationsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
+                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }

@@ -26,6 +26,7 @@ import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 import strikt.api.expectCatching
 import strikt.api.expectThat
+import strikt.api.expectThrows
 import strikt.assertions.*
 import java.util.*
 
@@ -561,16 +562,11 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             credentialsClientService.delete()
         }
 
-        expectThat(
+        expectThrows<OcpiClientUnknownTokenException> {
+            // no token to use, so we should have an OCPI client error
             runBlocking {
                 versionsClient.getVersions()
             }
-        ) {
-            get { data }
-                .isNull()
-
-            get { status_code }
-                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 }

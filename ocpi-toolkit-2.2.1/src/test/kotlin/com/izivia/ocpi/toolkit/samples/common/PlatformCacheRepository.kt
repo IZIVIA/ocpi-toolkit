@@ -37,38 +37,32 @@ open class PlatformCacheRepository : PlatformRepository {
         .also { platforms[it.url!!] = it }
         .let { it.endpoints!! }
 
-    override suspend fun saveCredentialsTokenA(platformUrl: String, credentialsTokenA: String): String = platforms
-        .getOrDefault(platformUrl, Platform(platformUrl))
-        .copy(tokenA = credentialsTokenA)
-        .also { platforms[it.url!!] = it }
-        .let { it.tokenA!! }
+    override suspend fun saveCredentialsClientToken(platformUrl: String, credentialsClientToken: String): String =
+        platforms
+            .getOrDefault(platformUrl, Platform(platformUrl))
+            .copy(clientToken = credentialsClientToken)
+            .also { platforms[it.url!!] = it }
+            .let { it.clientToken!! }
 
-    override suspend fun saveCredentialsTokenB(platformUrl: String, credentialsTokenB: String): String = platforms
-        .getOrDefault(platformUrl, Platform(platformUrl))
-        .copy(tokenB = credentialsTokenB)
-        .also { platforms[it.url!!] = it }
-        .let { it.tokenB!! }
+    override suspend fun saveCredentialsServerToken(platformUrl: String, credentialsServerToken: String): String =
+        platforms
+            .getOrDefault(platformUrl, Platform(platformUrl))
+            .copy(serverToken = credentialsServerToken)
+            .also { platforms[it.url!!] = it }
+            .let { it.serverToken!! }
 
-    override suspend fun saveCredentialsTokenC(platformUrl: String, credentialsTokenC: String): String = platforms
-        .getOrDefault(platformUrl, Platform(platformUrl))
-        .copy(tokenC = credentialsTokenC)
-        .also { platforms[it.url!!] = it }
-        .let { it.tokenC!! }
-
-    override suspend fun getCredentialsTokenC(platformUrl: String): String? = platforms[platformUrl]?.tokenC
-
-    override suspend fun getCredentialsTokenB(platformUrl: String): String? = platforms[platformUrl]?.tokenB
+    override suspend fun getCredentialsClientToken(platformUrl: String): String? = platforms[platformUrl]?.clientToken
 
     override suspend fun getCredentialsTokenA(platformUrl: String): String? = platforms[platformUrl]?.tokenA
 
-    override suspend fun platformExistsWithTokenA(token: String): Boolean = platforms
-        .any { it.tokenA == token }
+    override suspend fun isCredentialsTokenAValid(credentialsTokenA: String): Boolean = platforms
+        .any { it.tokenA == credentialsTokenA }
 
-    override suspend fun platformExistsWithTokenB(token: String): Boolean = platforms
-        .any { it.tokenB == token }
+    override suspend fun isCredentialsServerTokenValid(credentialsServerToken: String): Boolean = platforms
+        .any { it.serverToken == credentialsServerToken }
 
-    override suspend fun getPlatformUrlByTokenC(token: String): String? = platforms
-        .firstOrNull { it.tokenC == token }?.url
+    override suspend fun getPlatformUrlByCredentialsServerToken(credentialsServerToken: String): String? = platforms
+        .firstOrNull { it.serverToken == credentialsServerToken }?.url
 
     override suspend fun getEndpoints(platformUrl: String): List<Endpoint> = platforms
         .firstOrNull { it.url == platformUrl }?.endpoints ?: emptyList()
@@ -76,38 +70,15 @@ open class PlatformCacheRepository : PlatformRepository {
     override suspend fun getVersion(platformUrl: String): Version? = platforms
         .firstOrNull { it.url == platformUrl }?.version
 
-    override suspend fun removeCredentialsTokenA(platformUrl: String) {
+    override suspend fun invalidateCredentialsTokenA(platformUrl: String): Boolean =
         platforms
             .getOrDefault(platformUrl, Platform(platformUrl))
             .copy(tokenA = null)
             .also { platforms[it.url!!] = it }
-    }
+            .let { true }
 
-    override suspend fun removeCredentialsTokenB(platformUrl: String) {
-        platforms
-            .getOrDefault(platformUrl, Platform(platformUrl))
-            .copy(tokenB = null)
-            .also { platforms[it.url!!] = it }
-    }
-
-    override suspend fun removeCredentialsTokenC(platformUrl: String) {
-        platforms
-            .getOrDefault(platformUrl, Platform(platformUrl))
-            .copy(tokenC = null)
-            .also { platforms[it.url!!] = it }
-    }
-
-    override suspend fun removeVersion(platformUrl: String) {
-        platforms
-            .getOrDefault(platformUrl, Platform(platformUrl))
-            .copy(version = null)
-            .also { platforms[it.url!!] = it }
-    }
-
-    override suspend fun removeEndpoints(platformUrl: String) {
-        platforms
-            .getOrDefault(platformUrl, Platform(platformUrl))
-            .copy(endpoints = null)
-            .also { platforms[it.url!!] = it }
+    override suspend fun unregisterPlatform(platformUrl: String): Boolean {
+        platforms[platformUrl] = Platform(platformUrl)
+        return true
     }
 }

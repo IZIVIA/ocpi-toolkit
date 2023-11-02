@@ -37,8 +37,8 @@ class VersionDetailsClient(
                     )
                     .authenticate(
                         platformRepository = platformRepository,
-                        baseUrl = serverVersionsEndpointUrl,
-                        allowTokenAOrTokenB = true
+                        platformUrl = serverVersionsEndpointUrl,
+                        allowTokenA = true
                     )
             )
                 .parseBody()

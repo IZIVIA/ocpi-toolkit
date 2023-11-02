@@ -2,7 +2,7 @@ package com.izivia.ocpi.toolkit.modules.tokens
 
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
-import com.izivia.ocpi.toolkit.common.tokenFilter
+import com.izivia.ocpi.toolkit.common.checkToken
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
@@ -34,7 +34,7 @@ class TokensEmspServer(
                     "ocpi-to-country-code",
                     "ocpi-to-party-id"
                 ),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     val dateFrom = req.queryParams["date_from"]
@@ -58,7 +58,7 @@ class TokensEmspServer(
                     VariablePathSegment("tokenUid")
                 ),
                 queryParams = listOf("type"),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     service
@@ -76,7 +76,7 @@ class TokensEmspServer(
                     FixedPathSegment("authorize")
                 ),
                 queryParams = listOf("type"),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     service
