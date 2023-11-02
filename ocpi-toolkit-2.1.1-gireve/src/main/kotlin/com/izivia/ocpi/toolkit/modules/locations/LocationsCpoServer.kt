@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
 import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.tokenFilter
+import com.izivia.ocpi.toolkit.common.checkToken
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
@@ -28,7 +28,7 @@ class LocationsCpoServer(
                 method = HttpMethod.GET,
                 path = basePath,
                 queryParams = listOf("date_from", "date_to", "offset", "limit"),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     val dateFrom = req.queryParams["date_from"]
@@ -47,7 +47,7 @@ class LocationsCpoServer(
             transportServer.handle(
                 method = HttpMethod.GET,
                 path = basePath + VariablePathSegment("locationId"),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     service
@@ -63,7 +63,7 @@ class LocationsCpoServer(
                     VariablePathSegment("locationId"),
                     VariablePathSegment("evseUid")
                 ),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     service
@@ -81,7 +81,7 @@ class LocationsCpoServer(
                     VariablePathSegment("evseUid"),
                     VariablePathSegment("connectorId")
                 ),
-                filters = listOf(platformRepository::tokenFilter)
+                filters = listOf(platformRepository::checkToken)
             ) { req ->
                 req.httpResponse {
                     service

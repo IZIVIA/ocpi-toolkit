@@ -132,7 +132,7 @@ fun HttpRequest.parseAuthorizationHeader() = (headers["Authorization"] ?: header
  * @throws OcpiClientNotEnoughInformationException if the token is missing
  * @throws HttpException if the authorization header is missing
  */
-fun PlatformRepository.tokenFilter(httpRequest: HttpRequest) {
+fun PlatformRepository.checkToken(httpRequest: HttpRequest) {
     val token = httpRequest.parseAuthorizationHeader()
 
     if (!platformExistsWithTokenA(token) &&

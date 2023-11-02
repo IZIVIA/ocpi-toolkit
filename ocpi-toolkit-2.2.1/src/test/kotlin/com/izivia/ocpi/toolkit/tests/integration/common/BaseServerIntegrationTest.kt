@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit.tests.integration.common
 
-import com.izivia.ocpi.toolkit.common.tokenFilter
+import com.izivia.ocpi.toolkit.common.checkToken
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportClient
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
@@ -18,7 +18,7 @@ abstract class BaseServerIntegrationTest : BaseDBIntegrationTest() {
             baseUrl = "http://localhost:$port",
             port = port
         ) {
-            platformRepository?.tokenFilter(it)
+            platformRepository?.checkToken(it)
         }
     }
 

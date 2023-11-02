@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.samples.locations
 
 import com.izivia.ocpi.toolkit.common.SearchResult
-import com.izivia.ocpi.toolkit.common.tokenFilter
+import com.izivia.ocpi.toolkit.common.checkToken
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.Connector
 import com.izivia.ocpi.toolkit.modules.locations.domain.Evse
@@ -24,7 +24,7 @@ fun main() {
     val transportServer = Http4kTransportServer(
         baseUrl = cpoServerUrl,
         port = cpoServerPort,
-        secureFilter = DUMMY_PLATFORM_REPOSITORY::tokenFilter
+        secureFilter = DUMMY_PLATFORM_REPOSITORY::checkToken
     )
 
     // We specify service for the validation service

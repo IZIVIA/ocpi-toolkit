@@ -258,7 +258,7 @@ fun HttpRequest.parseAuthorizationHeader() = getHeader(Header.AUTHORIZATION)
  * @throws HttpException if the authorization header is missing
  *
  */
-suspend fun PlatformRepository.tokenFilter(
+suspend fun PlatformRepository.checkToken(
     httpRequest: HttpRequest
 ) {
     val token = httpRequest.parseAuthorizationHeader()
