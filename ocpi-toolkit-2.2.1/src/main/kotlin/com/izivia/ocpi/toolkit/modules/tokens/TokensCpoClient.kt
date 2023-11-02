@@ -37,8 +37,8 @@ class TokensCpoClient(
         offset: Int,
         limit: Int?
     ): OcpiResponseBody<SearchResult<Token>> =
-        buildTransport()
-            .send(
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.GET,
                     queryParams = listOfNotNull(
@@ -48,26 +48,33 @@ class TokensCpoClient(
                         limit?.let { "limit" to limit.toString() }
                     ).toMap()
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders(
+                        requestId = generateRequestId(),
+                        correlationId = generateCorrelationId()
+                    )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
-            .parsePaginatedBody(offset)
-
+                .parsePaginatedBody(offset)
+        }
 
     override suspend fun postToken(
         tokenUid: CiString,
         type: TokenType?,
         locationReferences: LocationReferences?
     ): OcpiResponseBody<AuthorizationInfo> =
-        buildTransport()
-            .send(
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.POST,
                     path = "/$tokenUid/authorize",
                     queryParams = listOf("type" to type.toString()).toMap(),
                     body = locationReferences.run(mapper::writeValueAsString)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders(
+                        requestId = generateRequestId(),
+                        correlationId = generateCorrelationId()
+                    )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             ).parseBody()
+        }
 }

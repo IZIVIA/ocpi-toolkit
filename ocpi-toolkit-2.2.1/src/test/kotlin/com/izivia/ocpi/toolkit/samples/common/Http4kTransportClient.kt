@@ -8,6 +8,10 @@ import org.http4k.client.JettyClient
 import org.http4k.core.*
 import org.http4k.filter.ClientFilters
 
+// These values are used for testing, it's not useful for your transport implementation
+var requestCounter = 1
+var correlationCounter = 1
+
 class Http4kTransportClient(
     val client: HttpHandler
 ) : TransportClient {
@@ -22,6 +26,12 @@ class Http4kTransportClient(
             )
         }
     }
+
+    override suspend fun generateCorrelationId(): String = "corr-id-$correlationCounter"
+        .also { correlationCounter += 1 }
+
+    override suspend fun generateRequestId(): String = "req-id-$requestCounter"
+        .also { requestCounter += 1 }
 
     companion object {
         operator fun invoke(baseUrl: String) =

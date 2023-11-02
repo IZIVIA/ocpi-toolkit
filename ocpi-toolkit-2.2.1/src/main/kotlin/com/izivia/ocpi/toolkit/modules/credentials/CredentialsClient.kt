@@ -12,38 +12,54 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
  */
 class CredentialsClient(
     private val transportClient: TransportClient
-): CredentialsInterface {
+) : CredentialsInterface {
 
     override suspend fun get(tokenC: String): OcpiResponseBody<Credentials> =
         transportClient
             .send(
                 HttpRequest(method = HttpMethod.GET)
-                    .withDebugHeaders()
+                    .withRequiredHeaders(
+                        requestId = transportClient.generateRequestId(),
+                        correlationId = transportClient.generateCorrelationId()
+                    )
                     .authenticate(token = tokenC)
             )
             .parseBody()
 
-
-    override suspend fun post(tokenA: String, credentials: Credentials, debugHeaders: Map<String, String>): OcpiResponseBody<Credentials> =
+    override suspend fun post(
+        tokenA: String,
+        credentials: Credentials,
+        debugHeaders: Map<String, String>
+    ): OcpiResponseBody<Credentials> =
         transportClient
             .send(
                 HttpRequest(
                     method = HttpMethod.POST,
                     body = mapper.writeValueAsString(credentials)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders(
+                        requestId = transportClient.generateRequestId(),
+                        correlationId = transportClient.generateCorrelationId()
+                    )
                     .authenticate(token = tokenA)
             )
             .parseBody()
 
-    override suspend fun put(tokenC: String, credentials: Credentials, debugHeaders: Map<String, String>): OcpiResponseBody<Credentials> =
+    override suspend fun put(
+        tokenC: String,
+        credentials: Credentials,
+        debugHeaders: Map<String, String>
+    ): OcpiResponseBody<Credentials> =
         transportClient
             .send(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     body = mapper.writeValueAsString(credentials)
                 )
-                    .withDebugHeaders()
+                    .withRequiredHeaders(
+                        requestId = transportClient.generateRequestId(),
+                        correlationId = transportClient.generateCorrelationId()
+                    )
                     .authenticate(token = tokenC)
             )
             .parseBody()
@@ -52,7 +68,10 @@ class CredentialsClient(
         transportClient
             .send(
                 HttpRequest(method = HttpMethod.DELETE)
-                    .withDebugHeaders()
+                    .withRequiredHeaders(
+                        requestId = transportClient.generateRequestId(),
+                        correlationId = transportClient.generateCorrelationId()
+                    )
                     .authenticate(token = tokenC)
             )
             .parseBody()

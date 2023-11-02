@@ -36,8 +36,8 @@ class SessionsEmspClient(
         offset: Int,
         limit: Int?
     ): OcpiResponseBody<SearchResult<Session>> =
-        buildTransport()
-            .send(
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.GET,
                     queryParams = listOfNotNull(
@@ -46,23 +46,31 @@ class SessionsEmspClient(
                         "offset" to offset.toString(),
                         limit?.let { "limit" to limit.toString() }
                     ).toMap()
-                ).withDebugHeaders()
+                ).withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
-            .parsePaginatedBody(offset)
+                .parsePaginatedBody(offset)
+        }
 
     override suspend fun putChargingPreferences(
         sessionId: CiString,
         chargingPreferences: ChargingPreferences
     ): OcpiResponseBody<ChargingPreferencesResponseType> =
-        buildTransport()
-            .send(
+        with(buildTransport()) {
+            send(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/$sessionId/charging_preferences",
                     body = mapper.writeValueAsString(chargingPreferences)
-                ).withDebugHeaders()
+                ).withRequiredHeaders(
+                    requestId = generateRequestId(),
+                    correlationId = generateCorrelationId()
+                )
                     .authenticate(platformRepository = platformRepository, baseUrl = serverVersionsEndpointUrl)
             )
-            .parseBody()
+                .parseBody()
+        }
 }

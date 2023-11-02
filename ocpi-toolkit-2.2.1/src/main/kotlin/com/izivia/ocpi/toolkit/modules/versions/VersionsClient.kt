@@ -3,7 +3,7 @@ package com.izivia.ocpi.toolkit.modules.versions
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.authenticate
 import com.izivia.ocpi.toolkit.common.parseBody
-import com.izivia.ocpi.toolkit.common.withDebugHeaders
+import com.izivia.ocpi.toolkit.common.withRequiredHeaders
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
@@ -23,16 +23,22 @@ class VersionsClient(
 ) : VersionsInterface {
 
     override suspend fun getVersions(): OcpiResponseBody<List<Version>> =
-        transportClientBuilder
-            .build(baseUrl = serverVersionsEndpointUrl)
-            .send(
+        with(
+            transportClientBuilder
+                .build(baseUrl = serverVersionsEndpointUrl)
+        ) {
+            send(
                 HttpRequest(method = HttpMethod.GET)
-                    .withDebugHeaders()
+                    .withRequiredHeaders(
+                        requestId = generateRequestId(),
+                        correlationId = generateCorrelationId()
+                    )
                     .authenticate(
                         platformRepository = platformRepository,
                         baseUrl = serverVersionsEndpointUrl,
                         allowTokenAOrTokenB = true
                     )
             )
-            .parseBody()
+                .parseBody()
+        }
 }

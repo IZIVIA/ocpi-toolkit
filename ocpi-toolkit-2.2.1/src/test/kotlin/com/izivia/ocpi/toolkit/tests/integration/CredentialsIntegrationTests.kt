@@ -1,8 +1,6 @@
 package com.izivia.ocpi.toolkit.tests.integration
 
-import com.izivia.ocpi.toolkit.common.OcpiClientInvalidParametersException
-import com.izivia.ocpi.toolkit.common.OcpiResponseException
-import com.izivia.ocpi.toolkit.common.OcpiStatus
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.CredentialsServer
 import com.izivia.ocpi.toolkit.modules.credentials.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
@@ -18,6 +16,8 @@ import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
 import com.izivia.ocpi.toolkit.tests.integration.mock.PlatformMongoRepository
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
@@ -43,6 +43,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
         val receiverPlatformCollection = database!!
             .getCollection<Platform>("receiver-server-${UUID.randomUUID()}")
+
+        // Reset spy variables
+        requestCounter = 1
+        correlationCounter = 1
 
         // Setup receiver (only server)
         val receiverPlatformRepo = PlatformMongoRepository(collection = receiverPlatformCollection)
@@ -91,6 +95,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
         val senderPlatformCollection = database!!
             .getCollection<Platform>("sender-server-${UUID.randomUUID()}")
+
+        // Reset spy variables
+        requestCounter = 1
+        correlationCounter = 1
 
         // Setup sender (server)
         val senderServer = buildTransportServer(PlatformMongoRepository(collection = senderPlatformCollection))
@@ -161,7 +169,6 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         expectCatching {
             credentialsClientService.register()
         }.isFailure().isA<OcpiClientInvalidParametersException>()
-
 
         receiverServer.platformCollection.deleteOne(Platform::url eq senderServer.versionsEndpoint)
         senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
@@ -256,6 +263,110 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         val credentials = runBlocking {
             credentialsClientService.register()
+        }
+
+        expectThat(
+            receiverServer.transport.requestHistory
+        ).hasSize(3).and {
+            get(0).and {
+                get { first }.and { // request
+                    get { method }.isEqualTo(HttpMethod.GET)
+                    get { path }.isEqualTo("/versions")
+                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-1")
+                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-1")
+                    get { headers[Header.AUTHORIZATION] }.isNotNull().isEqualTo("Token ${tokenA.encodeBase64()}")
+                }
+
+                get { second }.and { // response
+                    get { status }.isEqualTo(HttpStatus.OK)
+                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-1")
+                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-1")
+                    get { headers[Header.CONTENT_TYPE] }.isNotNull().isEqualTo("application/json")
+                    get { body }.isNotNull().contains("\"status_code\":1000")
+                }
+            }
+
+            get(1).and {
+                get { first }.and { // request
+                    get { method }.isEqualTo(HttpMethod.GET)
+                    get { path }.isEqualTo("/{versionNumber}")
+                    get { pathParams["versionNumber"] }.isNotNull().isEqualTo("2.2.1")
+                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-2")
+                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-2")
+                    get { headers[Header.AUTHORIZATION] }.isNotNull().isEqualTo("Token ${tokenA.encodeBase64()}")
+                }
+
+                get { second }.and { // response
+                    get { status }.isEqualTo(HttpStatus.OK)
+                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-2")
+                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-2")
+                    get { headers[Header.CONTENT_TYPE] }.isNotNull().isEqualTo("application/json")
+                    get { body }.isNotNull().contains("\"status_code\":1000")
+                }
+            }
+
+            get(2).and {
+                get { first }.and { // request
+                    get { method }.isEqualTo(HttpMethod.POST)
+                    get { path }.isEqualTo("/2.2.1/credentials")
+                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-3")
+                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-3")
+                    get { headers[Header.AUTHORIZATION] }.isNotNull().isEqualTo("Token ${tokenA.encodeBase64()}")
+                    get { headers[Header.CONTENT_TYPE] }.isNotNull().isEqualTo("application/json")
+                }
+
+                get { second }.and { // response
+                    get { status }.isEqualTo(HttpStatus.OK)
+                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-3")
+                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-3")
+                    get { headers[Header.CONTENT_TYPE] }.isNotNull().isEqualTo("application/json")
+                    get { body }.isNotNull().contains("\"status_code\":1000")
+                }
+            }
+        }
+
+        val tokenB = receiverServer.transport.requestHistory[2].first.body!!
+            .substringAfterLast("\"token\":\"").split("\"").first()
+
+        expectThat(
+            senderServer.transport.requestHistory
+        ).hasSize(2).and {
+            get(0).and {
+                get { first }.and { // request
+                    get { method }.isEqualTo(HttpMethod.GET)
+                    get { path }.isEqualTo("/versions")
+                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-4")
+                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-3")
+                    get { headers[Header.AUTHORIZATION] }.isNotNull().isEqualTo("Token ${tokenB.encodeBase64()}")
+                }
+
+                get { second }.and { // response
+                    get { status }.isEqualTo(HttpStatus.OK)
+                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-4")
+                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-3")
+                    get { headers[Header.CONTENT_TYPE] }.isNotNull().isEqualTo("application/json")
+                    get { body }.isNotNull().contains("\"status_code\":1000")
+                }
+            }
+
+            get(1).and {
+                get { first }.and { // request
+                    get { method }.isEqualTo(HttpMethod.GET)
+                    get { path }.isEqualTo("/{versionNumber}")
+                    get { pathParams["versionNumber"] }.isNotNull().isEqualTo("2.2.1")
+                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-5")
+                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-3")
+                    get { headers[Header.AUTHORIZATION] }.isNotNull().isEqualTo("Token ${tokenB.encodeBase64()}")
+                }
+
+                get { second }.and { // response
+                    get { status }.isEqualTo(HttpStatus.OK)
+                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-5")
+                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-3")
+                    get { headers[Header.CONTENT_TYPE] }.isNotNull().isEqualTo("application/json")
+                    get { body }.isNotNull().contains("\"status_code\":1000")
+                }
+            }
         }
 
         expectThat(

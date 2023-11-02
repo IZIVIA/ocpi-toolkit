@@ -104,11 +104,16 @@ class CredentialsServerService(
     ) {
         val versions = transportClientBuilder
             .build(credentials.url)
-            .send(
-                HttpRequest(method = HttpMethod.GET)
-                    .withUpdatedDebugHeaders(headers = debugHeaders)
-                    .authenticate(token = credentials.token)
-            )
+            .run {
+                send(
+                    HttpRequest(method = HttpMethod.GET)
+                        .withUpdatedRequiredHeaders(
+                            headers = debugHeaders,
+                            generatedRequestId = generateRequestId()
+                        )
+                        .authenticate(token = credentials.token)
+                )
+            }
             .parseBody<OcpiResponseBody<List<Version>>>()
             .let {
                 it.data
@@ -124,11 +129,16 @@ class CredentialsServerService(
 
         val versionDetail = transportClientBuilder
             .build(matchingVersion.url)
-            .send(
-                HttpRequest(method = HttpMethod.GET)
-                    .withUpdatedDebugHeaders(headers = debugHeaders)
-                    .authenticate(token = credentials.token)
-            )
+            .run {
+                send(
+                    HttpRequest(method = HttpMethod.GET)
+                        .withUpdatedRequiredHeaders(
+                            headers = debugHeaders,
+                            generatedRequestId = generateRequestId()
+                        )
+                        .authenticate(token = credentials.token)
+                )
+            }
             .parseBody<OcpiResponseBody<VersionDetails>>()
             .let {
                 it.data

@@ -4,6 +4,20 @@
 
 Open Charge Point Interface (OCPI) java / kotlin library
 
+## Setup
+
+In your `build.gradle.kts`, add:
+```kts
+dependencies {
+    implementation("com.izivia:ocpi-2-2-1:0.0.13")
+    implementation("com.izivia:ocpi-transport:0.0.13")
+
+    // ... other dependencies
+}
+```
+
+To see all available artifacts, go to: https://central.sonatype.com/search?namespace=com.izivia&q=ocpi
+
 ## Usage
 
 ### Server (CPO or eMSP)
