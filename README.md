@@ -9,8 +9,8 @@ Open Charge Point Interface (OCPI) java / kotlin library
 In your `build.gradle.kts`, add:
 ```kts
 dependencies {
-    implementation("com.izivia:ocpi-2-2-1:0.0.13")
-    implementation("com.izivia:ocpi-transport:0.0.13")
+    implementation("com.izivia:ocpi-2-2-1:0.0.15")
+    implementation("com.izivia:ocpi-transport:0.0.15")
 
     // ... other dependencies
 }
