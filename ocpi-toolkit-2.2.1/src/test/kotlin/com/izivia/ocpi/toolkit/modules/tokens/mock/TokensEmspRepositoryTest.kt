@@ -6,6 +6,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensEmspRepository
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -18,14 +19,14 @@ fun getTokensEmspRepositoryTest(tokens: List<Token>): TokensEmspRepository = moc
     val offset = slot<Int>()
     val limit = mutableListOf<Int?>()
 
-    every {
+    coEvery {
         getTokens(
             captureNullable(dateFrom),
             captureNullable(dateTo),
             capture(offset),
             captureNullable(limit)
         )
-    } answers {
+    } coAnswers {
         val capturedOffset = offset.captured
         val capturedLimit = limit.captured() ?: 10
 
@@ -50,7 +51,7 @@ fun postTokenEmspRepositoryTest(authorizationInfo: AuthorizationInfo): TokensEms
     val type = mutableListOf<TokenType?>()
     val locationReferences = mutableListOf<LocationReferences?>()
 
-    every {
+    coEvery {
         postToken(capture(tokenUid), captureNullable(type), captureNullable(locationReferences))
-    } answers { authorizationInfo }
+    } coAnswers { authorizationInfo }
 }

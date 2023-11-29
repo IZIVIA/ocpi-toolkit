@@ -30,23 +30,23 @@ interface LocationsCpoRepository {
      * @return List<Location> The endpoint returns a list of Location objects The header will
      * contain the pagination related headers.
      */
-    fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int = 0, limit: Int?): SearchResult<Location>
+    suspend fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int = 0, limit: Int?): SearchResult<Location>
 
     /**
      * @param locationId String max-length = 39
      */
-    fun getLocation(locationId: String): Location?
+    suspend fun getLocation(locationId: String): Location?
 
     /**
      * @param locationId String max-length = 39
      * @param evseUid String? max-length = 39
      */
-    fun getEvse(locationId: String, evseUid: String): Evse?
+    suspend fun getEvse(locationId: String, evseUid: String): Evse?
 
     /**
      * @param locationId String max-length = 39
      * @param evseUid max-length = 39
      * @param connectorId max-length = 39
      */
-    fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector?
+    suspend fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector?
 }

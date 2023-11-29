@@ -17,6 +17,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -56,7 +57,7 @@ class TokensCpoHttpPutTokenTest {
             var type = slot<TokenType>()
         }
         val srv = mockk<TokensCpoRepository>() {
-            every {
+            coEvery {
                 putToken(
                     capture(slots.token),
                     capture(slots.countryCode),
@@ -64,7 +65,7 @@ class TokensCpoHttpPutTokenTest {
                     capture(slots.tokenUID),
                     capture(slots.type)
                 )
-            } answers { token }
+            } coAnswers { token }
         }.buildServer()
         OcpiResponseBody.now = { Instant.parse("2015-06-30T21:59:59Z") }
 

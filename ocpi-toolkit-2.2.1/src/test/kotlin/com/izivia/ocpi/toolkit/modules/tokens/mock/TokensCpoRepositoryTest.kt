@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenPartial
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensCpoRepository
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -17,16 +18,16 @@ fun tokensCpoRepositoryTest(responseToken: Token): TokensCpoRepository = mockk {
     val requestToken = slot<Token>()
     val tokenPartial = slot<TokenPartial>()
 
-    every {
+    coEvery {
         getToken(
             capture(country_code),
             capture(party_id),
             capture(token_uid),
             captureNullable(type)
         )
-    } answers { responseToken }
+    } coAnswers { responseToken }
 
-    every {
+    coEvery {
         putToken(
             token = capture(requestToken),
             countryCode = capture(country_code),
@@ -34,9 +35,9 @@ fun tokensCpoRepositoryTest(responseToken: Token): TokensCpoRepository = mockk {
             tokenUid = capture(token_uid),
             type = captureNullable(type)
         )
-    } answers { responseToken }
+    } coAnswers { responseToken }
 
-    every {
+    coEvery {
         patchToken(
             token = capture(tokenPartial),
             countryCode = capture(country_code),
@@ -44,6 +45,6 @@ fun tokensCpoRepositoryTest(responseToken: Token): TokensCpoRepository = mockk {
             tokenUid = capture(token_uid),
             type = captureNullable(type)
         )
-    } answers { responseToken }
+    } coAnswers { responseToken }
 }
 

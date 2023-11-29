@@ -13,6 +13,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -31,7 +32,7 @@ class LocationsCpoHttpGetLocationsTest {
             var dateTo = slot<Instant>()
         }
         val srv = mockk<LocationsCpoRepository>() {
-            every { getLocations(capture(slots.dateFrom), capture(slots.dateTo), any(), any()) } answers {
+            coEvery { getLocations(capture(slots.dateFrom), capture(slots.dateTo), any(), any()) } coAnswers {
                 listOf(
                     Location(
                         country_code = "NL",

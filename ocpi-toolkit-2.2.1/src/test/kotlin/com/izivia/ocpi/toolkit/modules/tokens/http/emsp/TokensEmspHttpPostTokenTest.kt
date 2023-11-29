@@ -14,6 +14,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -31,9 +32,9 @@ class TokensEmspHttpPostTokenTest {
             var type = slot<TokenType>()
         }
         val srv = mockk<TokensEmspRepository>() {
-            every {
+            coEvery {
                 postToken(capture(slots.tokenUID), capture(slots.type), null)
-            } answers {
+            } coAnswers {
                 AuthorizationInfo(
                     allowed = AllowedType.ALLOWED,
                     token = Token(
@@ -117,9 +118,9 @@ class TokensEmspHttpPostTokenTest {
             var locationReferences = slot<LocationReferences>()
         }
         val srv = mockk<TokensEmspRepository>() {
-            every {
+            coEvery {
                 postToken(capture(slots.tokenUID), capture(slots.type), capture(slots.locationReferences))
-            } answers {
+            } coAnswers {
                 AuthorizationInfo(
                     allowed = AllowedType.ALLOWED,
                     token = Token(

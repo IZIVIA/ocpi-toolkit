@@ -16,7 +16,7 @@ class LocationsCpoMongoRepository(
     private val collection: MongoCollection<Location>
 ) : LocationsCpoRepository {
 
-    override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int, limit: Int?): SearchResult<Location> =
+    override suspend fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int, limit: Int?): SearchResult<Location> =
         collection
             .run {
                 find(
@@ -37,15 +37,15 @@ class LocationsCpoMongoRepository(
                     .toSearchResult(totalCount = size, limit = actualLimit, offset = offset)
             }
 
-    override fun getLocation(locationId: String): Location? {
+    override suspend fun getLocation(locationId: String): Location? {
         TODO("Not yet implemented")
     }
 
-    override fun getEvse(locationId: String, evseUid: String): Evse? {
+    override suspend fun getEvse(locationId: String, evseUid: String): Evse? {
         TODO("Not yet implemented")
     }
 
-    override fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector? {
+    override suspend fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector? {
         TODO("Not yet implemented")
     }
 }

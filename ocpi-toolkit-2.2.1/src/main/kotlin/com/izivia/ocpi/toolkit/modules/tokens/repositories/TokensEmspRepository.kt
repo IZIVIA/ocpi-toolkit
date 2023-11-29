@@ -40,8 +40,7 @@ interface TokensEmspRepository {
      * Any older information that is not specified in the response is considered as no longer valid. Each object must contain all required
      * fields. Fields that are not specified may be considered as null values.
      */
-    fun getTokens(dateFrom: Instant?, dateTo: Instant?, offset: Int = 0, limit: Int?): SearchResult<Token>
-
+    suspend fun getTokens(dateFrom: Instant?, dateTo: Instant?, offset: Int = 0, limit: Int?): SearchResult<Token>
 
     /**
      * POST Method
@@ -70,7 +69,7 @@ interface TokensEmspRepository {
      * optionally which EVSEs are allowed to be used.
      */
 
-    fun postToken(
+    suspend fun postToken(
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
         locationReferences: LocationReferences? = null

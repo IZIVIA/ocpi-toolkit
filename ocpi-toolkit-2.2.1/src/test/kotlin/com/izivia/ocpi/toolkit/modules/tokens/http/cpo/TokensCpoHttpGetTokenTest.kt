@@ -16,6 +16,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -35,14 +36,14 @@ class TokensCpoHttpGetTokenTest {
             var type = slot<TokenType>()
         }
         val srv = mockk<TokensCpoRepository>() {
-            every {
+            coEvery {
                 getToken(
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.tokenUID),
                     capture(slots.type)
                 )
-            } answers {
+            } coAnswers {
                 Token(
                     country_code = "DE",
                     party_id = "TNM",

@@ -42,19 +42,24 @@ fun main() {
 }
 
 class CacheLocationsCpoRepository : LocationsCpoRepository {
-    override fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int, limit: Int?): SearchResult<Location> {
+    override suspend fun getLocations(
+        dateFrom: Instant?,
+        dateTo: Instant?,
+        offset: Int,
+        limit: Int?
+    ): SearchResult<Location> {
         TODO("Not yet implemented")
     }
 
-    override fun getLocation(locationId: String): Location? {
+    override suspend fun getLocation(locationId: String): Location? {
         TODO("Not yet implemented")
     }
 
-    override fun getEvse(locationId: String, evseUid: String): Evse? {
+    override suspend fun getEvse(locationId: String, evseUid: String): Evse? {
         TODO("Not yet implemented")
     }
 
-    override fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector? {
+    override suspend fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector? {
         TODO("Not yet implemented")
     }
 }

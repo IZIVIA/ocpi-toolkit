@@ -12,6 +12,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -29,7 +30,7 @@ class LocationsCpoHttpGetEvseTest {
             var evseUid = slot<String>()
         }
         val srv = mockk<LocationsCpoRepository>() {
-            every { getEvse(capture(slots.locationId), capture(slots.evseUid)) } answers {
+            coEvery { getEvse(capture(slots.locationId), capture(slots.evseUid)) } coAnswers {
                 Evse(
                     uid = "3256",
                     evse_id = "BE*BEC*E041503001",

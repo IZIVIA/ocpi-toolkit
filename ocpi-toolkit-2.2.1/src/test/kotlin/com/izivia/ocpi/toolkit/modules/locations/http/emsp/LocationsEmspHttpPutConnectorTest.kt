@@ -16,6 +16,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -47,7 +48,7 @@ class LocationsEmspHttpPutConnectorTest {
             last_updated = Instant.parse("2015-03-16T10:10:02Z")
         )
         val srv = mockk<LocationsEmspRepository>() {
-            every {
+            coEvery {
                 putConnector(
                     capture(slots.countryCode),
                     capture(slots.partyId),
@@ -56,7 +57,7 @@ class LocationsEmspHttpPutConnectorTest {
                     capture(slots.connectorId),
                     capture(slots.connector)
                 )
-            } answers {
+            } coAnswers {
                 connector
 
             }

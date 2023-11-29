@@ -15,6 +15,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -33,13 +34,13 @@ class LocationsCpoHttpGetConnectorTest {
             var connectorId = slot<String>()
         }
         val srv = mockk<LocationsCpoRepository>() {
-            every {
+            coEvery {
                 getConnector(
                     capture(slots.locationId),
                     capture(slots.evseUid),
                     capture(slots.connectorId)
                 )
-            } answers {
+            } coAnswers {
                 Connector(
                     id = "1",
                     standard = ConnectorType.IEC_62196_T2,

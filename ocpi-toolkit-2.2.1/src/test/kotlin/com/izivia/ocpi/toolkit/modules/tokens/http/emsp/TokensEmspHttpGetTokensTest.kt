@@ -17,6 +17,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -34,9 +35,9 @@ class TokensEmspHttpGetTokensTest {
             var dateTo = slot<Instant>()
         }
         val srv = mockk<TokensEmspRepository>() {
-            every {
+            coEvery {
                 getTokens(capture(slots.dateFrom), capture(slots.dateTo), any(), any())
-            } answers {
+            } coAnswers {
                 listOf(
                     Token(
                         country_code = "DE",

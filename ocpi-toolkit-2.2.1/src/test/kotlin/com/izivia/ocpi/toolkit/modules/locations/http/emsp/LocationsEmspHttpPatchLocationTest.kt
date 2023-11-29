@@ -13,6 +13,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -32,14 +33,14 @@ class LocationsEmspHttpPatchLocationTest {
             var location = slot<LocationPartial>()
         }
         val srv = mockk<LocationsEmspRepository>() {
-            every {
+            coEvery {
                 patchLocation(
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.locationId),
                     capture(slots.location)
                 )
-            } answers {
+            } coAnswers {
                 Location(
                     country_code = "BE",
                     party_id = "BEC",
