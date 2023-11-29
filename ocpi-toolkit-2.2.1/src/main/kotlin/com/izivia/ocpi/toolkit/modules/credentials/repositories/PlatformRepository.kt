@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.credentials.repositories
 
+import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 
@@ -96,6 +97,15 @@ interface PlatformRepository {
      * @return the platformUrl if a platform was found for given token A and the update was a success, null otherwise
      */
     suspend fun savePlatformUrlForTokenA(tokenA: String, platformUrl: String): String?
+
+    /**
+     * Used to save credentials roles given by a partner during registration.
+     *
+     * @param platformUrl the partner, identified by its /versions url
+     * @param credentialsRoles
+     * @return the updated credentials roles
+     */
+    suspend fun saveCredentialsRoles(platformUrl: String, credentialsRoles: List<CredentialRole>): List<CredentialRole>
 
     /**
      * Used to save available version for a given partner identified by its url (platformUrl)

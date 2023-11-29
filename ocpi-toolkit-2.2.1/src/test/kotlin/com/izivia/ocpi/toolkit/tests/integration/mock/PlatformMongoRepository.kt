@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.tests.integration.mock
 
+import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
@@ -21,6 +22,15 @@ class PlatformMongoRepository(
                 FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
             )
             ?.url
+
+    override suspend fun saveCredentialsRoles(
+        platformUrl: String,
+        credentialsRoles: List<CredentialRole>
+    ): List<CredentialRole> =
+        credentialsRoles.also {
+            collection
+                .updateOne(Platform::url eq platformUrl, set(Platform::credentialsRoles setTo it))
+        }
 
     override suspend fun saveVersion(platformUrl: String, version: Version): Version = version.also {
         collection

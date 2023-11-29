@@ -37,6 +37,12 @@ class CredentialsServerService(
             platformUrl = credentials.url
         ) ?: throw OcpiClientInvalidParametersException("Invalid token A ($tokenA)")
 
+        // Save credentials roles of partner
+        platformRepository.saveCredentialsRoles(
+            platformUrl = credentials.url,
+            credentialsRoles = credentials.roles
+        )
+
         // Save token B, which is in our case the client token, because it's the one that we will use to communicate
         // with the sender
         platformRepository.saveCredentialsClientToken(
@@ -65,6 +71,12 @@ class CredentialsServerService(
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
         val platformUrl = platformRepository.getPlatformUrlByCredentialsServerToken(token)
             ?: throw OcpiClientInvalidParametersException("Invalid server token ($token)")
+
+        // Save credentials roles of partner
+        platformRepository.saveCredentialsRoles(
+            platformUrl = credentials.url,
+            credentialsRoles = credentials.roles
+        )
 
         // In the payload, there is the new token B (the client token for us) to use to communicate with the receiver,
         // so we save it

@@ -102,6 +102,12 @@ class CredentialsClientService(
             it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
         }
 
+        // Save credentials roles of partner
+        clientPlatformRepository.saveCredentialsRoles(
+            platformUrl = credentials.url,
+            credentialsRoles = credentials.roles
+        )
+
         // Store token C, which is the client token in this case because we are the sender. It's this one that
         // we will use to communicate with the receiver
         clientPlatformRepository.saveCredentialsClientToken(
@@ -144,6 +150,12 @@ class CredentialsClientService(
         ).let {
             it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
         }
+
+        // Save credentials roles of partner
+        clientPlatformRepository.saveCredentialsRoles(
+            platformUrl = credentials.url,
+            credentialsRoles = credentials.roles
+        )
 
         // Store token C, which is the client token in this case because we are the sender. It's this one that
         // we will use to communicate with the receiver

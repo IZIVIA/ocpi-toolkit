@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.samples.common
 
+import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
@@ -24,6 +25,15 @@ open class PlatformCacheRepository : PlatformRepository {
         ?.copy(url = platformUrl)
         ?.also { platforms[it.url!!] = it }
         ?.url
+
+    override suspend fun saveCredentialsRoles(
+        platformUrl: String,
+        credentialsRoles: List<CredentialRole>
+    ): List<CredentialRole> = platforms
+        .getOrDefault(platformUrl, Platform(platformUrl))
+        .copy(credentialsRoles = credentialsRoles)
+        .also { platforms[it.url!!] = it }
+        .credentialsRoles
 
     override suspend fun saveVersion(platformUrl: String, version: Version): Version = platforms
         .getOrDefault(platformUrl, Platform(platformUrl))
