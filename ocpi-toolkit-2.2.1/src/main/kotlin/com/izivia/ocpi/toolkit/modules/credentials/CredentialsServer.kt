@@ -30,7 +30,7 @@ class CredentialsServer(
         ) { req ->
             req.httpResponse {
                 service.post(
-                    tokenA = req.parseAuthorizationHeader(),
+                    token = req.parseAuthorizationHeader(),
                     credentials = mapper.readValue(req.body!!, Credentials::class.java),
                     debugHeaders = req.getDebugHeaders()
                 )

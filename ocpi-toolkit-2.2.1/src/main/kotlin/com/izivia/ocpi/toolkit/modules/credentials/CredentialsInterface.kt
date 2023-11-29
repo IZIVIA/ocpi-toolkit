@@ -29,7 +29,7 @@ interface CredentialsInterface {
      * before.
      */
     suspend fun post(
-        tokenA: String,
+        token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials>

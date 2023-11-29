@@ -24,6 +24,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
+import strikt.api.expect
 import strikt.api.expectCatching
 import strikt.api.expectThat
 import strikt.api.expectThrows
@@ -425,11 +426,11 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     }
 
     @Test
-    fun `should properly run registration process then delete credentials properly`() {
+    fun `should properly run registration process then delete credentials properly then re-register`() {
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
-        val credentialsClientService = setupCredentialsSenderClient(
+        val senderCredentialsClientService = setupCredentialsSenderClient(
             senderServerSetupResult = senderServer,
             receiverServerSetupResult = receiverServer
         )
@@ -445,18 +446,23 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         senderServer.transport.start()
 
         runBlocking {
-            credentialsClientService.register()
+            senderCredentialsClientService.register()
         }
 
-        val versionsClient = VersionsClient(
+        val senderVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
             platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
         )
+        val receiverVersionsClient = VersionsClient(
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverVersionsEndpointUrl = senderServer.versionsEndpoint,
+            platformRepository = PlatformMongoRepository(collection = receiverServer.platformCollection)
+        )
 
         expectThat(
             runBlocking {
-                versionsClient.getVersions()
+                senderVersionsClient.getVersions()
             }
         ) {
             get { data }
@@ -473,13 +479,64 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
+        // Sender unregisters, so ...
         runBlocking {
-            credentialsClientService.delete()
+            senderCredentialsClientService.delete()
         }
 
-        expectCatching {
-            versionsClient.getVersions()
-        }.isFailure()
+        // ... receiver should not be able to call sender ...
+        expectThrows<OcpiClientUnknownTokenException> {
+            // no token to use, so we should have an OCPI client error
+            runBlocking {
+                receiverVersionsClient.getVersions()
+            }
+        }
+
+        // ... and sender should still be able to call receiver, and even register!
+        runBlocking {
+            senderCredentialsClientService.register()
+        }
+
+        // ... and then, the receiver can send new requests ...
+        expectThat(
+            runBlocking {
+                receiverVersionsClient.getVersions()
+            }
+        ) {
+            get { data }
+                .isNotNull()
+                .isNotEmpty()
+                .isEqualTo(
+                    runBlocking {
+                        VersionsCacheRepository(baseUrl = senderServer.transport.baseUrl)
+                            .getVersions()
+                    }
+                )
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
+        }
+
+        // ... and sender can obviously still send requests
+        expectThat(
+            runBlocking {
+                senderVersionsClient.getVersions()
+            }
+        ) {
+            get { data }
+                .isNotNull()
+                .isNotEmpty()
+                .isEqualTo(
+                    runBlocking {
+                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                            .getVersions()
+                    }
+                )
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
+        }
+
     }
 
     @Test
@@ -487,7 +544,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
-        val credentialsClientService = setupCredentialsSenderClient(
+        val senderCredentialsClientService = setupCredentialsSenderClient(
             senderServerSetupResult = senderServer,
             receiverServerSetupResult = receiverServer
         )
@@ -502,17 +559,22 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentialsAfterRegistration = runBlocking { credentialsClientService.register() }
+        val credentialsAfterRegistration = runBlocking { senderCredentialsClientService.register() }
 
-        val versionsClient = VersionsClient(
+        val senderVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
             platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
         )
+        val receiverVersionsClient = VersionsClient(
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverVersionsEndpointUrl = senderServer.versionsEndpoint,
+            platformRepository = PlatformMongoRepository(collection = receiverServer.platformCollection)
+        )
 
         expectThat(
             runBlocking {
-                versionsClient.getVersions()
+                senderVersionsClient.getVersions()
             }
         ) {
             get { data }
@@ -531,17 +593,17 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         expectThat(
             runBlocking {
-                credentialsClientService.get()
+                senderCredentialsClientService.get()
             }
         ).isEqualTo(credentialsAfterRegistration)
 
         runBlocking {
-            credentialsClientService.update()
+            senderCredentialsClientService.update()
         }
 
         expectThat(
             runBlocking {
-                versionsClient.getVersions()
+                senderVersionsClient.getVersions()
             }
         ) {
             get { data }
@@ -558,15 +620,27 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
+        // Sender unregisters, so ...
         runBlocking {
-            credentialsClientService.delete()
+            senderCredentialsClientService.delete()
         }
 
+        // ... receiver should not be able to call sender ...
         expectThrows<OcpiClientUnknownTokenException> {
             // no token to use, so we should have an OCPI client error
             runBlocking {
-                versionsClient.getVersions()
+                receiverVersionsClient.getVersions()
             }
+        }
+
+        // ... and sender should still be able to call receiver
+        expectThat(
+            runBlocking {
+                senderVersionsClient.getVersions()
+            }
+        ) {
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
     }
 }

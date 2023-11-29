@@ -28,14 +28,20 @@ class CredentialsServerService(
     }
 
     override suspend fun post(
-        tokenA: String,
+        token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
-        val platformUrl = platformRepository.savePlatformUrlForTokenA(
-            tokenA = tokenA,
-            platformUrl = credentials.url
-        ) ?: throw OcpiClientInvalidParametersException("Invalid token A ($tokenA)")
+        // A partner can use a valid serverToken on registration.
+        // It can happen when a partner unregister, then registers with its clientToken (which is the serverToken
+        // for us)
+        val platformUrl = platformRepository
+            .getPlatformUrlByCredentialsServerToken(token)
+            // If we could not find a partner with this serverToken, then, it means that it's probably a tokenA
+            ?: platformRepository.savePlatformUrlForTokenA(tokenA = token, platformUrl = credentials.url)
+            ?: throw OcpiClientInvalidParametersException(
+                "Invalid token ($token) - should be either a TokenA or a ServerToken"
+            )
 
         // Save credentials roles of partner
         platformRepository.saveCredentialsRoles(
