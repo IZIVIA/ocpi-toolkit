@@ -173,7 +173,9 @@ class CredentialsClientService(
             buildCredentialClient()
                 .delete(token = clientToken)
                 .also {
-                    clientPlatformRepository.unregisterPlatform(platformUrl = serverVersionsEndpointUrl)
+                    // Only server token is invalidated. It means that the system can still send authenticated requests
+                    // to the partner
+                    clientPlatformRepository.invalidateCredentialsServerToken(platformUrl = serverVersionsEndpointUrl)
                 }
                 .also {
                     if (it.status_code != OcpiStatus.SUCCESS.code) {

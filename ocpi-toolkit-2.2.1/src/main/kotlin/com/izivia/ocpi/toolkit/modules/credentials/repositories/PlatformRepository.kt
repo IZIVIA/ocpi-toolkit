@@ -166,12 +166,23 @@ interface PlatformRepository {
     suspend fun invalidateCredentialsTokenA(platformUrl: String): Boolean
 
     /**
-     * Called on unregistration for a given partner identified by its url (platformUrl).
+     * Called when a partner asks to unregister itself.
      *
-     * It has to at least invalidate all the tokens. So that future requests with those token fail.
+     * It has to invalidate **ONLY clientToken**. ServerToken must stay valid because the partner can still use it.
      *
      * @param platformUrl the partner, identified by its /versions url
      * @return true if it was a success, false otherwise
      */
-    suspend fun unregisterPlatform(platformUrl: String): Boolean
+    suspend fun invalidateCredentialsClientToken(platformUrl: String): Boolean
+
+    /**
+     * Called when your system unregisters from a partner.
+     *
+     * It has to invalidate **ONLY serverToken**. ClientToken must stay valid because your system can still use it
+     * to communicate with the partner.
+     *
+     * @param platformUrl the partner, identified by its /versions url
+     * @return true if it was a success, false otherwise
+     */
+    suspend fun invalidateCredentialsServerToken(platformUrl: String): Boolean
 }

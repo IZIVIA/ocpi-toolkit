@@ -87,8 +87,17 @@ open class PlatformCacheRepository : PlatformRepository {
             .also { platforms[it.url!!] = it }
             .let { true }
 
-    override suspend fun unregisterPlatform(platformUrl: String): Boolean {
-        platforms[platformUrl] = Platform(platformUrl)
-        return true
-    }
+    override suspend fun invalidateCredentialsClientToken(platformUrl: String): Boolean =
+        platforms
+            .getOrDefault(platformUrl, Platform(platformUrl))
+            .copy(clientToken = null)
+            .also { platforms[it.url!!] = it }
+            .let { true }
+
+    override suspend fun invalidateCredentialsServerToken(platformUrl: String): Boolean =
+        platforms
+            .getOrDefault(platformUrl, Platform(platformUrl))
+            .copy(serverToken = null)
+            .also { platforms[it.url!!] = it }
+            .let { true }
 }

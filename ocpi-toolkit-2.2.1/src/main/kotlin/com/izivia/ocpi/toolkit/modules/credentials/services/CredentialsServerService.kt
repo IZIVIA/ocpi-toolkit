@@ -103,7 +103,9 @@ class CredentialsServerService(
         platformRepository
             .getPlatformUrlByCredentialsServerToken(token)
             ?.also { platformUrl ->
-                platformRepository.unregisterPlatform(platformUrl = platformUrl)
+                // Only client token is invalidated. It means that the partner can still send authenticated requests
+                // to the system.
+                platformRepository.invalidateCredentialsClientToken(platformUrl = platformUrl)
             }
             ?: throw OcpiClientInvalidParametersException("Invalid server token ($token)")
 

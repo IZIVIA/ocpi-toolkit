@@ -80,16 +80,22 @@ class PlatformMongoRepository(
             .updateOne(Platform::url eq platformUrl, set(Platform::tokenA setTo null))
             .matchedCount == 1L
 
-    override suspend fun unregisterPlatform(platformUrl: String): Boolean =
+    override suspend fun invalidateCredentialsClientToken(platformUrl: String): Boolean =
         collection
             .updateOne(
                 Platform::url eq platformUrl,
                 combine(
-                    set(Platform::tokenA setTo null),
-                    set(Platform::clientToken setTo null),
-                    set(Platform::serverToken setTo null),
-                    set(Platform::version setTo null),
-                    set(Platform::endpoints setTo null)
+                    set(Platform::clientToken setTo null)
+                )
+            )
+            .matchedCount == 1L
+
+    override suspend fun invalidateCredentialsServerToken(platformUrl: String): Boolean =
+        collection
+            .updateOne(
+                Platform::url eq platformUrl,
+                combine(
+                    set(Platform::serverToken setTo null)
                 )
             )
             .matchedCount == 1L
