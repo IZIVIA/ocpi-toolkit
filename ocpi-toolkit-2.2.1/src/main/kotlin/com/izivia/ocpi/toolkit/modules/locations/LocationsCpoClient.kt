@@ -185,7 +185,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/$countryCode/$partyId/$locationId",
+                path = "/$countryCode/$partyId/$locationId/$evseUid",
                 body = mapper.writeValueAsString(evse)
             )
                 .withRequiredHeaders(
@@ -208,7 +208,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/$countryCode/$partyId/$locationId",
+                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
                 body = mapper.writeValueAsString(connector)
             )
                 .withRequiredHeaders(
