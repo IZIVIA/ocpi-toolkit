@@ -1,11 +1,12 @@
 plugins {
-    id("com.izivia.ocpi.toolkit.processor")
     id("java-library")
     id("maven-publish")
+    id("com.google.devtools.ksp")
 }
 
 dependencies {
     implementation(project(":common"))
+    ksp(project(":annotation-processor"))
     api(project(":transport"))
 
     api("org.apache.logging.log4j:log4j-api:${Versions.log4j}")
@@ -43,7 +44,8 @@ tasks.test {
 }
 
 sourceSets.main {
-    java.srcDirs("src/main/kotlinGen")
+    // new way to use buildDir: https://docs.gradle.org/current/userguide/upgrading_version_8.html#deprecations_3
+    kotlin.srcDirs("${layout.buildDirectory.get().asFile.absolutePath}/generated/ksp")
 }
 
 java {
@@ -67,4 +69,3 @@ publishing {
         }
     }
 }
-
