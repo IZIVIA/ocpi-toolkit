@@ -1,5 +1,11 @@
 rootProject.name = "ocpi-toolkit"
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+
 include(
     "common",
     "annotation-processor",
