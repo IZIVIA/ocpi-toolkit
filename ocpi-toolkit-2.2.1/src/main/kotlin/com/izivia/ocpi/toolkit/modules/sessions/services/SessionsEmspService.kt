@@ -6,6 +6,7 @@ import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateLength
 import com.izivia.ocpi.toolkit.modules.sessions.SessionsEmspInterface
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
+import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 import com.izivia.ocpi.toolkit.modules.sessions.repositories.SessionsEmspRepository
 
 class SessionsEmspService(
@@ -45,7 +46,7 @@ class SessionsEmspService(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-        session: Session
+        session: SessionPartial
     ): OcpiResponseBody<Session?> = OcpiResponseBody.of {
         validate {
             session.validate()
