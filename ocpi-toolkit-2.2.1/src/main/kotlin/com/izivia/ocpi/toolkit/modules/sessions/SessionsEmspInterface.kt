@@ -27,7 +27,7 @@ interface SessionsEmspInterface {
      * @param sessionId (max-length 36) id of the Session object to get from the eMSP’s system.
      * @return Session Requested Session object.
      */
-    suspend fun getSession(countryCode: CiString, partyId: CiString, sessionId: CiString): OcpiResponseBody<Session>
+    suspend fun getSession(countryCode: CiString, partyId: CiString, sessionId: CiString): OcpiResponseBody<Session?>
 
     /**
      * PUT Method
