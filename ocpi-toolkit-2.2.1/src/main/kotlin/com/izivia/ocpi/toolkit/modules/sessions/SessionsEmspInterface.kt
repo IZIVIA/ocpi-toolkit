@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.sessions
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
+import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 
 /**
  * Typically implemented by market roles like: eMSP and SCSP.
@@ -73,6 +74,6 @@ interface SessionsEmspInterface {
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-        session: Session
+        session: SessionPartial
     ): OcpiResponseBody<Session?>
 }

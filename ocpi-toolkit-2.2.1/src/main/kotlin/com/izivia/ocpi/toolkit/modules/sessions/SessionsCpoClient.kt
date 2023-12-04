@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.sessions
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
+import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
@@ -71,7 +72,7 @@ class SessionsCpoClient(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-        session: Session
+        session: SessionPartial
     ): OcpiResponseBody<Session?> =
         with(buildTransport()) {
             send(

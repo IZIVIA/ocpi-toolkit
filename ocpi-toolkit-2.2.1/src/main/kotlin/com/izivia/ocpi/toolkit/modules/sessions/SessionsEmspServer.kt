@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.OcpiModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
+import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
@@ -68,7 +69,7 @@ class SessionsEmspServer(
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         sessionId = req.pathParams["sessionId"]!!,
-                        session = mapper.readValue(req.body, Session::class.java)
+                        session = mapper.readValue(req.body, SessionPartial::class.java)
                     )
             }
         }
