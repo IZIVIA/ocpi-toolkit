@@ -11,14 +11,19 @@ import com.izivia.ocpi.toolkit.modules.sessions.repositories.SessionsEmspReposit
 class SessionsEmspService(
     private val service: SessionsEmspRepository
 ) : SessionsEmspInterface {
-    override suspend fun getSession(countryCode: CiString, partyId: CiString, sessionId: CiString): OcpiResponseBody<Session> =
-        OcpiResponseBody.of {
+    override suspend fun getSession(
+        countryCode: CiString,
+        partyId: CiString,
+        sessionId: CiString
+    ): OcpiResponseBody<Session?> =OcpiResponseBody.of {
             validate {
                 validateLength("countryCode", countryCode, 2)
                 validateLength("partyId", partyId, 3)
                 validateLength("sessionId", sessionId, 36)
             }
-            service.getSession(countryCode, partyId, sessionId).validate()
+            service
+                .getSession(countryCode, partyId, sessionId)
+                ?.validate()
         }
 
     override suspend fun putSession(

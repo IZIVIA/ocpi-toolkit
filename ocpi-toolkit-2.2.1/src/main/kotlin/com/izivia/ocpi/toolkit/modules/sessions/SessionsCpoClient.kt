@@ -31,7 +31,7 @@ class SessionsCpoClient(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString
-    ): OcpiResponseBody<Session> =
+    ): OcpiResponseBody<Session?> =
         with(buildTransport()) {
             send(
                 HttpRequest(
