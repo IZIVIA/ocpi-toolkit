@@ -11,7 +11,7 @@ object Versions {
     const val testcontainers = "1.16.3"
     const val kmongo = "4.5.1"
     const val coroutines = "1.7.3"
-    const val ksp = "1.9.20-1.0.14"
+    const val ksp = "1.9.10-1.0.13"
     const val nexus = "1.1.0"
-    const val kotlin = "1.9.20"
+    const val kotlin = "1.9.10"
 }
