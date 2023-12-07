@@ -32,8 +32,8 @@ fun getTokensEmspRepositoryTest(tokens: List<Token>): TokensEmspRepository = moc
 
         tokens
             .filter { token ->
-                val dateFromFilterOk = dateFrom.captured()?.let { token.last_updated.isAfter(it) } ?: true
-                val dateToFilterOk = dateTo.captured()?.let { token.last_updated.isBefore(it) } ?: true
+                val dateFromFilterOk = dateFrom.captured()?.let { token.lastUpdated.isAfter(it) } ?: true
+                val dateToFilterOk = dateTo.captured()?.let { token.lastUpdated.isBefore(it) } ?: true
 
                 dateFromFilterOk && dateToFilterOk
             }

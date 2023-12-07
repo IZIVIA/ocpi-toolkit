@@ -38,9 +38,9 @@ fun main() {
                     override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                         CredentialRole(
                             role = Role.EMSP,
-                            business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
-                            party_id = "DEF",
-                            country_code = "FR"
+                            businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
+                            partyId = "DEF",
+                            countryCode = "FR"
                         )
                     )
                 },

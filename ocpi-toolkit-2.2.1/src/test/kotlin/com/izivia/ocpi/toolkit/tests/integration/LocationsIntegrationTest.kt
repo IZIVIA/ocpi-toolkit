@@ -51,7 +51,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             locations = (0 until numberOfLocations).map { index ->
                 validLocation.copy(
                     evses = listOf(validEvse.copy(connectors = listOf(validConnector))),
-                    last_updated = referenceDate.plusSeconds(3600L * index)
+                    lastUpdated = referenceDate.plusSeconds(3600L * index)
                 )
             }
         )

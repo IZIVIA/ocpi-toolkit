@@ -45,11 +45,11 @@ class LocationsCpoHttpGetConnectorTest {
                     id = "1",
                     standard = ConnectorType.IEC_62196_T2,
                     format = ConnectorFormat.CABLE,
-                    power_type = PowerType.AC_3_PHASE,
-                    max_voltage = 220,
-                    max_amperage = 16,
-                    tariff_ids = listOf("11"),
-                    last_updated = Instant.parse("2015-03-16T10:10:02Z")
+                    powerType = PowerType.AC_3_PHASE,
+                    maxVoltage = 220,
+                    maxAmperage = 16,
+                    tariffIds = listOf("11"),
+                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
                 )
             }
         }.buildServer()

@@ -64,9 +64,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                         override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                             CredentialRole(
                                 role = Role.EMSP,
-                                business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
-                                party_id = "DEF",
-                                country_code = "FR"
+                                businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
+                                partyId = "DEF",
+                                countryCode = "FR"
                             )
                         )
                     },
@@ -139,9 +139,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                     CredentialRole(
                         role = Role.CPO,
-                        business_details = BusinessDetails(name = "Sender", website = null, logo = null),
-                        party_id = "ABC",
-                        country_code = "FR"
+                        businessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
+                        partyId = "ABC",
+                        countryCode = "FR"
                     )
                 )
             },

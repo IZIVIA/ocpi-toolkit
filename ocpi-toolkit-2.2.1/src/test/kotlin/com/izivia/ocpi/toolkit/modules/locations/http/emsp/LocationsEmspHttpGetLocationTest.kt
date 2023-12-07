@@ -39,20 +39,20 @@ class LocationsEmspHttpGetLocationTest {
                 )
             } coAnswers {
                 Location(
-                    country_code = "BE",
-                    party_id = "BEC",
+                    countryCode = "BE",
+                    partyId = "BEC",
                     id = "LOC1",
                     name = "Gent Zuid",
                     address = "F.Rooseveltlaan 3A",
                     city = "Gent",
-                    postal_code = "9000",
+                    postalCode = "9000",
                     country = "BEL",
                     coordinates = GeoLocation("51.047599", "3.729944"),
-                    parking_type = ParkingType.ON_STREET,
+                    parkingType = ParkingType.ON_STREET,
                     evses = listOf(
                         Evse(
                             uid = "3256",
-                            evse_id = "BE*BEC*E041503001",
+                            evseId = "BE*BEC*E041503001",
                             status = Status.AVAILABLE,
                             capabilities = listOf(Capability.RESERVABLE),
                             connectors = listOf(
@@ -60,30 +60,30 @@ class LocationsEmspHttpGetLocationTest {
                                     id = "1",
                                     standard = ConnectorType.IEC_62196_T2,
                                     format = ConnectorFormat.CABLE,
-                                    power_type = PowerType.AC_3_PHASE,
-                                    max_voltage = 220,
-                                    max_amperage = 16,
-                                    tariff_ids = listOf("11"),
-                                    last_updated = Instant.parse("2015-03-16T10:10:02Z")
+                                    powerType = PowerType.AC_3_PHASE,
+                                    maxVoltage = 220,
+                                    maxAmperage = 16,
+                                    tariffIds = listOf("11"),
+                                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
                                 ),
                                 Connector(
                                     id = "2",
                                     standard = ConnectorType.IEC_62196_T2,
                                     format = ConnectorFormat.SOCKET,
-                                    power_type = PowerType.AC_3_PHASE,
-                                    max_voltage = 220,
-                                    max_amperage = 16,
-                                    tariff_ids = listOf("13"),
-                                    last_updated = Instant.parse("2015-03-18T08:12:01Z")
+                                    powerType = PowerType.AC_3_PHASE,
+                                    maxVoltage = 220,
+                                    maxAmperage = 16,
+                                    tariffIds = listOf("13"),
+                                    lastUpdated = Instant.parse("2015-03-18T08:12:01Z")
                                 ),
                             ),
-                            floor_level = "-1",
-                            physical_reference = "1",
-                            last_updated = Instant.parse("2015-06-28T08:12:01Z")
+                            floorLevel = "-1",
+                            physicalReference = "1",
+                            lastUpdated = Instant.parse("2015-06-28T08:12:01Z")
                         ),
                         Evse(
                             uid = "3257",
-                            evse_id = "BE*BEC*E041503002",
+                            evseId = "BE*BEC*E041503002",
                             status = Status.RESERVED,
                             capabilities = listOf(Capability.RESERVABLE),
                             connectors = listOf(
@@ -91,24 +91,24 @@ class LocationsEmspHttpGetLocationTest {
                                     id = "1",
                                     standard = ConnectorType.IEC_62196_T2,
                                     format = ConnectorFormat.SOCKET,
-                                    power_type = PowerType.AC_3_PHASE,
-                                    max_voltage = 220,
-                                    max_amperage = 16,
-                                    tariff_ids = listOf("12"),
-                                    last_updated = Instant.parse("2015-06-29T20:39:09Z")
+                                    powerType = PowerType.AC_3_PHASE,
+                                    maxVoltage = 220,
+                                    maxAmperage = 16,
+                                    tariffIds = listOf("12"),
+                                    lastUpdated = Instant.parse("2015-06-29T20:39:09Z")
                                 )
                             ),
-                            floor_level = "-2",
-                            physical_reference = "2",
-                            last_updated = Instant.parse("2015-06-29T20:39:09Z")
+                            floorLevel = "-2",
+                            physicalReference = "2",
+                            lastUpdated = Instant.parse("2015-06-29T20:39:09Z")
                         )
                     ),
                     operator = BusinessDetails(
                         name = "BeCharged"
                     ),
                     publish = true,
-                    time_zone = "Europe/Brussels",
-                    last_updated = Instant.parse("2015-06-29T20:39:09Z")
+                    timeZone = "Europe/Brussels",
+                    lastUpdated = Instant.parse("2015-06-29T20:39:09Z")
                 )
             }
         }.buildServer()

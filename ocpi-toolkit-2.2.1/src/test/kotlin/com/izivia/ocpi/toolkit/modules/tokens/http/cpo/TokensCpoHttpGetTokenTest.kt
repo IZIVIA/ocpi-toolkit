@@ -45,23 +45,23 @@ class TokensCpoHttpGetTokenTest {
                 )
             } coAnswers {
                 Token(
-                    country_code = "DE",
-                    party_id = "TNM",
+                    countryCode = "DE",
+                    partyId = "TNM",
                     uid = "12345678905880",
                     type = TokenType.RFID,
-                    contract_id = "DE8ACC12E46L89",
-                    visual_number = "DF000-2001-8999-1",
+                    contractId = "DE8ACC12E46L89",
+                    visualNumber = "DF000-2001-8999-1",
                     issuer = "TheNewMotion",
-                    group_id = "DF000-2001-8999",
+                    groupId = "DF000-2001-8999",
                     valid = true,
                     whitelist = WhitelistType.ALLOWED,
                     language = "it",
-                    default_profile_type = ProfileType.GREEN,
-                    energy_contract = EnergyContract(
-                        supplier_name = "Greenpeace Energy eG",
-                        contract_id = "0123456789"
+                    defaultProfileType = ProfileType.GREEN,
+                    energyContract = EnergyContract(
+                        supplierName = "Greenpeace Energy eG",
+                        contractId = "0123456789"
                     ),
-                    last_updated = Instant.parse("2018-12-10T17:25:10Z")
+                    lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
                 )
             }
         }.buildServer()

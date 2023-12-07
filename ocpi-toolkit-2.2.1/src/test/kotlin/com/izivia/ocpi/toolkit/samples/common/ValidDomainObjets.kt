@@ -11,8 +11,8 @@ val validLatitude = "-15.234567"
 val validLongitude = "23.234567"
 
 val validStatusSchedule = StatusSchedule(
-    period_begin = Instant.parse("2022-04-28T08:00:00.000Z"),
-    period_end = Instant.parse("2022-04-28T09:00:00.000Z"),
+    periodBegin = Instant.parse("2022-04-28T08:00:00.000Z"),
+    periodEnd = Instant.parse("2022-04-28T09:00:00.000Z"),
     status = Status.AVAILABLE
 )
 
@@ -49,20 +49,20 @@ val validBusinessDetails = BusinessDetails(
 
 val validRegularHours = RegularHours(
     weekday = 1,
-    period_begin = "00:00",
-    period_end = "23:59",
+    periodBegin = "00:00",
+    periodEnd = "23:59"
 )
 
 val validExceptionalPeriod = ExceptionalPeriod(
-    period_begin = Instant.parse("2022-04-28T08:00:00.000Z"),
-    period_end = Instant.parse("2022-04-28T09:00:00.000Z")
+    periodBegin = Instant.parse("2022-04-28T08:00:00.000Z"),
+    periodEnd = Instant.parse("2022-04-28T09:00:00.000Z")
 )
 
 val validHours = Hours(
-    regular_hours = listOf(validRegularHours),
-    twenty_four_seven = false,
-    exceptional_openings = listOf(validExceptionalPeriod),
-    exceptional_closings = emptyList()
+    regularHours = listOf(validRegularHours),
+    twentyFourSeven = false,
+    exceptionalOpenings = listOf(validExceptionalPeriod),
+    exceptionalClosings = emptyList()
 )
 
 val validEnergySource = EnergySource(
@@ -76,75 +76,75 @@ val validEnvironmentalImpact = EnvironmentalImpact(
 )
 
 val validEnergyMix = EnergyMix(
-    is_green_energy = true,
-    energy_sources = listOf(validEnergySource),
-    environ_impact = listOf(validEnvironmentalImpact),
-    supplier_name = "supplier_name",
-    energy_product_name = "energy_product_name"
+    isGreenEnergy = true,
+    energySources = listOf(validEnergySource),
+    environImpact = listOf(validEnvironmentalImpact),
+    supplierName = "supplier_name",
+    energyProductName = "energy_product_name"
 )
 
 val validPublishTokenType = PublishTokenType(
     uid = "uid",
     type = TokenType.AD_HOC_USER,
-    visual_number = "visual_number",
+    visualNumber = "visual_number",
     issuer = "issuer",
-    group_id = "group_id"
+    groupId = "group_id"
 )
 
 val validLocation = Location(
-    country_code = "fr",
-    party_id = "abc",
+    countryCode = "fr",
+    partyId = "abc",
     id = "location1",
     publish = true,
-    publish_allowed_to = listOf(validPublishTokenType),
+    publishAllowedTo = listOf(validPublishTokenType),
     name = "name",
     address = "address",
     city = "city",
-    postal_code = "33520",
+    postalCode = "33520",
     state = null,
     country = "FRA",
     coordinates = validGeoLocation,
-    related_locations = listOf(validAdditionalGeoLocation),
-    parking_type = ParkingType.ON_STREET,
+    relatedLocations = listOf(validAdditionalGeoLocation),
+    parkingType = ParkingType.ON_STREET,
     evses = emptyList(),
     directions = listOf(validDisplayText),
     operator = validBusinessDetails,
     suboperator = null,
     owner = null,
     facilities = listOf(Facility.CARPOOL_PARKING),
-    time_zone = "Europe/Oslo",
-    opening_times = validHours,
-    charging_when_closed = false,
+    timeZone = "Europe/Oslo",
+    openingTimes = validHours,
+    chargingWhenClosed = false,
     images = listOf(validImage),
-    energy_mix = validEnergyMix,
-    last_updated = Instant.now()
+    energyMix = validEnergyMix,
+    lastUpdated = Instant.now()
 )
 
 val validConnector = Connector(
     id = "id",
     standard = ConnectorType.DOMESTIC_A,
     format = ConnectorFormat.CABLE,
-    power_type = PowerType.AC_1_PHASE,
-    max_voltage = 12,
-    max_amperage = 8,
-    max_electric_power = null,
-    tariff_ids = listOf("tariff_id"),
-    terms_and_conditions = "https://myspecs.com/me",
-    last_updated = Instant.now()
+    powerType = PowerType.AC_1_PHASE,
+    maxVoltage = 12,
+    maxAmperage = 8,
+    maxElectricPower = null,
+    tariffIds = listOf("tariff_id"),
+    termsAndConditions = "https://myspecs.com/me",
+    lastUpdated = Instant.now()
 )
 
 val validEvse = Evse(
     uid = "uid",
-    evse_id = "FR*A23*E45B*78C",
+    evseId = "FR*A23*E45B*78C",
     status = Status.AVAILABLE,
-    status_schedule = listOf(validStatusSchedule),
+    statusSchedule = listOf(validStatusSchedule),
     capabilities = listOf(Capability.CHARGING_PROFILE_CAPABLE),
     connectors = listOf(validConnector),
-    floor_level = "5",
+    floorLevel = "5",
     coordinates = validGeoLocation,
-    physical_reference = "visualid1",
+    physicalReference = "visualid1",
     directions = listOf(validDisplayText),
-    parking_restrictions = listOf(ParkingRestriction.CUSTOMERS),
+    parkingRestrictions = listOf(ParkingRestriction.CUSTOMERS),
     images = listOf(validImage),
-    last_updated = Instant.now()
+    lastUpdated = Instant.now()
 )

@@ -21,8 +21,8 @@ class LocationsCpoMongoRepository(
             .run {
                 find(
                     and(
-                        dateFrom?.let { Location::last_updated gte dateFrom },
-                        dateTo?.let { Location::last_updated lte dateTo }
+                        dateFrom?.let { Location::lastUpdated gte dateFrom },
+                        dateTo?.let { Location::lastUpdated lte dateTo }
                     )
                 )
             }

@@ -19,39 +19,39 @@ import java.time.Instant
  * example a database unique ID or the "EVSE ID". This field can never be changed, modified or renamed. This is the
  * 'technical' identification of the EVSE, not to be used as 'human readable' identification, use the field: evse_id for
  * that.
- * @property evse_id Compliant with the following specification for EVSE ID from "eMI3 standard version V1.0"
+ * @property evseId Compliant with the following specification for EVSE ID from "eMI3 standard version V1.0"
  * (http://emi3group.com/documents-links/) "Part 2: business objects." Optional for OCPI because: if an EVSE ID is to be
  * re-used the EVSE ID can be removed from an EVSE that is removed (status: REMOVED). BUT REQUIRED for gireve: required
  * by GIREVE to ensure seamless compatibility with operators connected via other protocols (eMIP, ...). In addition, the
  * eMI3 standard requires that the eMI3 Id of an EVSE begins by the eMI3 Id of the CPO.
  * @property status Indicates the current status of the EVSE.
- * @property status_schedule Indicates a planned status in the future of the EVSE.
+ * @property statusSchedule Indicates a planned status in the future of the EVSE.
  * @property capabilities List of functionalities that the EVSE is capable of.
  * @property connectors (at least one in the list) List of available connectors on the EVSE.
- * @property floor_level (max-length=4) Level on which the charging station is located (in garage buildings) in the
+ * @property floorLevel (max-length=4) Level on which the charging station is located (in garage buildings) in the
  * locally displayed numbering scheme.
  * @property coordinates Coordinates of the EVSE.
- * @property physical_reference (max-length=16) A number/string printed on the outside of the EVSE for visual
+ * @property physicalReference (max-length=16) A number/string printed on the outside of the EVSE for visual
  * identification.
  * @property directions Multi-language human-readable directions when more detailed information on how to reach the EVSE
  * from the Location is required.
- * @property parking_restrictions The restrictions that apply to the parking spot.
+ * @property parkingRestrictions The restrictions that apply to the parking spot.
  * @property images Links to images related to the EVSE such as photos or logos.
- * @property last_updated Instant Timestamp when this EVSE or one of its Connectors was last updated (or created).
+ * @property lastUpdated Instant Timestamp when this EVSE or one of its Connectors was last updated (or created).
  */
 @Partial
 data class Evse(
     val uid: CiString,
-    val evse_id: CiString,
+    val evseId: CiString,
     val status: Status,
-    val status_schedule: List<StatusSchedule>? = null,
+    val statusSchedule: List<StatusSchedule>? = null,
     val capabilities: List<Capability>? = null,
     val connectors: List<Connector>,
-    val floor_level: String? = null,
+    val floorLevel: String? = null,
     val coordinates: GeoLocation? = null,
-    val physical_reference: String? = null,
+    val physicalReference: String? = null,
     val directions: List<DisplayText>? = null,
-    val parking_restrictions: List<ParkingRestriction>? = null,
+    val parkingRestrictions: List<ParkingRestriction>? = null,
     val images: List<Image>? = null,
-    val last_updated: Instant
+    val lastUpdated: Instant
 )

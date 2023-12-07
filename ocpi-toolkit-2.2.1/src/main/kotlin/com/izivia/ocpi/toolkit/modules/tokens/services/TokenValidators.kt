@@ -12,42 +12,42 @@ fun AuthorizationInfoPartial.validate(): AuthorizationInfoPartial = validate(thi
     // allowed : nothing to validate
     token?.validate()
     location?.validate()
-    validate(AuthorizationInfoPartial::authorization_reference).isPrintableAscii().hasMaxLengthOf(36)
+    validate(AuthorizationInfoPartial::authorizationReference).isPrintableAscii().hasMaxLengthOf(36)
     info?.validate()
 }
 
 fun TokenPartial.validate(): TokenPartial = validate(this) {
-    validate(TokenPartial::country_code).isCountryCode(caseSensitive = false, alpha2 = true)
-    validate(TokenPartial::party_id).isPrintableAscii().hasMaxLengthOf(3)
+    validate(TokenPartial::countryCode).isCountryCode(caseSensitive = false, alpha2 = true)
+    validate(TokenPartial::partyId).isPrintableAscii().hasMaxLengthOf(3)
     validate(TokenPartial::uid).isPrintableAscii().hasMaxLengthOf(36)
-    //type : nothing to validate
-    validate(TokenPartial::contract_id).isPrintableAscii().hasMaxLengthOf(36)
-    validate(TokenPartial::visual_number).isPrintableAscii().hasMaxLengthOf(64)
+    // type : nothing to validate
+    validate(TokenPartial::contractId).isPrintableAscii().hasMaxLengthOf(36)
+    validate(TokenPartial::visualNumber).isPrintableAscii().hasMaxLengthOf(64)
     validate(TokenPartial::issuer).isPrintableAscii().hasMaxLengthOf(64)
-    validate(TokenPartial::group_id).isPrintableAscii().hasMaxLengthOf(36)
+    validate(TokenPartial::groupId).isPrintableAscii().hasMaxLengthOf(36)
     // valid : nothing to validate
     // whitelist : nothing to validate
     validate(TokenPartial::language).isPrintableAscii().hasMaxLengthOf(2)
-    // default_profile_type : nothing to validate
-    energy_contract?.validate()
-    // last_updated: nothing to validate
+    // defaultProfileType : nothing to validate
+    energyContract?.validate()
+    // lastUpdated: nothing to validate
 }
 
 fun LocationReferencesPartial.validate(): LocationReferencesPartial = validate(this) {
-    validate(LocationReferencesPartial::location_id).isPrintableAscii().hasMaxLengthOf(36)
-    evse_uids?.forEach { evse_uid ->
-        if (evse_uid.length > 36) {
+    validate(LocationReferencesPartial::locationId).isPrintableAscii().hasMaxLengthOf(36)
+    evseUids?.forEach { evseUid ->
+        if (evseUid.length > 36) {
             constraintViolations.add(
                 DefaultConstraintViolation(
-                    property = "evse_uids",
+                    property = "evseUids",
                     constraint = MaxLengthContraint(36)
                 )
             )
         }
-        if (!evse_uid.isPrintableAscii()) {
+        if (!evseUid.isPrintableAscii()) {
             constraintViolations.add(
                 DefaultConstraintViolation(
-                    property = "evse_uids",
+                    property = "evseUids",
                     constraint = PrintableAsciiConstraint()
                 )
             )
@@ -56,8 +56,8 @@ fun LocationReferencesPartial.validate(): LocationReferencesPartial = validate(t
 }
 
 fun EnergyContractPartial.validate(): EnergyContractPartial = validate(this) {
-    validate(EnergyContractPartial::supplier_name).isPrintableAscii().hasMaxLengthOf(64)
-    validate(EnergyContractPartial::contract_id).isPrintableAscii().hasMaxLengthOf(64)
+    validate(EnergyContractPartial::supplierName).isPrintableAscii().hasMaxLengthOf(64)
+    validate(EnergyContractPartial::contractId).isPrintableAscii().hasMaxLengthOf(64)
 }
 
 fun DisplayTextPartial.validate(): DisplayTextPartial = validate(this) {

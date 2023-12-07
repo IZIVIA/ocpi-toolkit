@@ -4,12 +4,12 @@ import com.izivia.ocpi.toolkit.annotations.Partial
 import java.math.BigDecimal
 
 /**
- * @property excl_vat Price/Cost excluding VAT.
- * @property incl_vat Price/Cost including VAT.
+ * @property exclVat Price/Cost excluding VAT.
+ * @property inclVat Price/Cost including VAT.
  */
 
 @Partial
 data class Price(
-    val excl_vat: BigDecimal,
-    val incl_vat: BigDecimal? = null
+    val exclVat: BigDecimal,
+    val inclVat: BigDecimal? = null
 )

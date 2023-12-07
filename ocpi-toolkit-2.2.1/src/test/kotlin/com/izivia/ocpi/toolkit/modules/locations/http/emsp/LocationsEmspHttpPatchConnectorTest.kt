@@ -49,11 +49,11 @@ class LocationsEmspHttpPatchConnectorTest {
                     id = "1",
                     standard = ConnectorType.IEC_62196_T2,
                     format = ConnectorFormat.CABLE,
-                    power_type = PowerType.AC_3_PHASE,
-                    max_voltage = 220,
-                    max_amperage = 16,
-                    tariff_ids = listOf("11"),
-                    last_updated = Instant.parse("2015-03-16T10:10:02Z")
+                    powerType = PowerType.AC_3_PHASE,
+                    maxVoltage = 220,
+                    maxAmperage = 16,
+                    tariffIds = listOf("11"),
+                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
                 )
             }
         }.buildServer()
@@ -64,13 +64,13 @@ class LocationsEmspHttpPatchConnectorTest {
             id = "1",
             standard = null,
             format = null,
-            power_type = null,
-            max_voltage = null,
-            max_amperage = null,
-            tariff_ids = null,
-            max_electric_power = null,
-            terms_and_conditions = null,
-            last_updated = null
+            powerType = null,
+            maxVoltage = null,
+            maxAmperage = null,
+            tariffIds = null,
+            maxElectricPower = null,
+            termsAndConditions = null,
+            lastUpdated = null
         )
         val resp: HttpResponse = srv.send(
             buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1/3256/1", mapper.writeValueAsString(connector))

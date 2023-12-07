@@ -45,7 +45,7 @@ class LocationsEmspHttpPatchEvseTest {
             } coAnswers {
                 Evse(
                     uid = "3256",
-                    evse_id = "BE*BEC*E041503001",
+                    evseId = "BE*BEC*E041503001",
                     status = Status.AVAILABLE,
                     capabilities = listOf(Capability.RESERVABLE),
                     connectors = listOf(
@@ -53,26 +53,26 @@ class LocationsEmspHttpPatchEvseTest {
                             id = "1",
                             standard = ConnectorType.IEC_62196_T2,
                             format = ConnectorFormat.CABLE,
-                            power_type = PowerType.AC_3_PHASE,
-                            max_voltage = 220,
-                            max_amperage = 16,
-                            tariff_ids = listOf("11"),
-                            last_updated = Instant.parse("2015-03-16T10:10:02Z")
+                            powerType = PowerType.AC_3_PHASE,
+                            maxVoltage = 220,
+                            maxAmperage = 16,
+                            tariffIds = listOf("11"),
+                            lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
                         ),
                         Connector(
                             id = "2",
                             standard = ConnectorType.IEC_62196_T2,
                             format = ConnectorFormat.SOCKET,
-                            power_type = PowerType.AC_3_PHASE,
-                            max_voltage = 220,
-                            max_amperage = 16,
-                            tariff_ids = listOf("13"),
-                            last_updated = Instant.parse("2015-03-18T08:12:01Z")
+                            powerType = PowerType.AC_3_PHASE,
+                            maxVoltage = 220,
+                            maxAmperage = 16,
+                            tariffIds = listOf("13"),
+                            lastUpdated = Instant.parse("2015-03-18T08:12:01Z")
                         ),
                     ),
-                    floor_level = "-1",
-                    physical_reference = "1",
-                    last_updated = Instant.parse("2015-06-28T08:12:01Z")
+                    floorLevel = "-1",
+                    physicalReference = "1",
+                    lastUpdated = Instant.parse("2015-06-28T08:12:01Z")
                 )
             }
         }.buildServer()
@@ -81,18 +81,18 @@ class LocationsEmspHttpPatchEvseTest {
         // when
         val evse = EvsePartial(
             uid = "1",
-            evse_id = null,
+            evseId = null,
             status = null,
-            status_schedule = null,
+            statusSchedule = null,
             capabilities = null,
             connectors = null,
-            floor_level = null,
+            floorLevel = null,
             coordinates = null,
-            physical_reference = null,
+            physicalReference = null,
             directions = null,
-            parking_restrictions = null,
+            parkingRestrictions = null,
             images = null,
-            last_updated = null,
+            lastUpdated = null,
         )
         val resp: HttpResponse = srv.send(
             buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1/3256", mapper.writeValueAsString(evse))

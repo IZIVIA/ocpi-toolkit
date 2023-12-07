@@ -13,55 +13,55 @@ import java.math.BigDecimal
 import java.time.Instant
 
 fun SessionPartial.validate(): SessionPartial = validate(this) {
-    validate(SessionPartial::country_code).isCountryCode(caseSensitive = false, alpha2 = true)
-    validate(SessionPartial::party_id).isPrintableAscii().hasMaxLengthOf(3)
+    validate(SessionPartial::countryCode).isCountryCode(caseSensitive = false, alpha2 = true)
+    validate(SessionPartial::partyId).isPrintableAscii().hasMaxLengthOf(3)
     validate(SessionPartial::id).isPrintableAscii().hasMaxLengthOf(36)
-    validate(SessionPartial::start_date_time).isGreaterThan(Instant.now())
-    validate(SessionPartial::end_date_time).isGreaterThan(it.start_date_time ?: Instant.now())
+    validate(SessionPartial::startDateTime).isGreaterThan(Instant.now())
+    validate(SessionPartial::endDateTime).isGreaterThan(it.startDateTime ?: Instant.now())
     validate(SessionPartial::kwh).isGreaterThanOrEqualTo(0)
-    cdr_token?.validate()
-    //auth_method: nothing to validate
-    validate(SessionPartial::authorization_reference).isPrintableAscii().hasMaxLengthOf(36)
-    validate(SessionPartial::location_id).isPrintableAscii().hasMaxLengthOf(36)
-    validate(SessionPartial::evse_uid).isEvseId()
-    validate(SessionPartial::connector_id).isPrintableAscii().hasMaxLengthOf(36)
-    validate(SessionPartial::meter_id).isPrintableAscii().hasMaxLengthOf(255)
+    cdrToken?.validate()
+    // authMethod: nothing to validate
+    validate(SessionPartial::authorizationReference).isPrintableAscii().hasMaxLengthOf(36)
+    validate(SessionPartial::locationId).isPrintableAscii().hasMaxLengthOf(36)
+    validate(SessionPartial::evseUid).isEvseId()
+    validate(SessionPartial::connectorId).isPrintableAscii().hasMaxLengthOf(36)
+    validate(SessionPartial::meterId).isPrintableAscii().hasMaxLengthOf(255)
     validate(SessionPartial::currency).isCurrencyCode(false)
-    charging_periods?.forEach() { charging_period -> charging_period.validate() }
-    total_cost?.validate()
-    //status: nothing to validate
-    //last_updated: nothing to validate
+    chargingPeriods?.forEach { chargingPeriod -> chargingPeriod.validate() }
+    totalCost?.validate()
+    // status: nothing to validate
+    // lastUpdated: nothing to validate
 }
 
 fun ChargingPreferencesPartial.validate(): ChargingPreferencesPartial = validate(this) {
-    //profile_type nothing to validate
-    validate(ChargingPreferencesPartial::departure_time).isGreaterThan(Instant.now())
-    validate(ChargingPreferencesPartial::energy_need).isGreaterThanOrEqualTo(0)
-    //discharge_allowed nothing to validate
+    // profileType nothing to validate
+    validate(ChargingPreferencesPartial::departureTime).isGreaterThan(Instant.now())
+    validate(ChargingPreferencesPartial::energyNeed).isGreaterThanOrEqualTo(0)
+    // dischargeAllowed nothing to validate
 }
 
 fun CdrTokenPartial.validate(): CdrTokenPartial = validate(this) {
-    validate(CdrTokenPartial::country_code).isCountryCode(caseSensitive = false, alpha2 = true)
-    validate(CdrTokenPartial::party_id).isPrintableAscii().hasMaxLengthOf(3)
+    validate(CdrTokenPartial::countryCode).isCountryCode(caseSensitive = false, alpha2 = true)
+    validate(CdrTokenPartial::partyId).isPrintableAscii().hasMaxLengthOf(3)
     validate(CdrTokenPartial::uid).isPrintableAscii().hasMaxLengthOf(36)
-    //tokenType : nothing to validate
-    validate(CdrTokenPartial::contract_id).isPrintableAscii().hasMaxLengthOf(36)
+    // tokenType : nothing to validate
+    validate(CdrTokenPartial::contractId).isPrintableAscii().hasMaxLengthOf(36)
 }
 
 fun ChargingPeriodPartial.validate(): ChargingPeriodPartial = validate(this) {
-    validate(ChargingPeriodPartial::start_date_time).isGreaterThan(Instant.now())
-    dimensions?.forEach() { dimension -> dimension.validate() }
-    validate(ChargingPeriodPartial::tariff_id).isPrintableAscii().hasMaxLengthOf(36)
+    validate(ChargingPeriodPartial::startDateTime).isGreaterThan(Instant.now())
+    dimensions?.forEach { dimension -> dimension.validate() }
+    validate(ChargingPeriodPartial::tariffId).isPrintableAscii().hasMaxLengthOf(36)
 }
 
 fun CdrDimensionPartial.validate(): CdrDimensionPartial = validate(this) {
-    //cdrDimensionType : nothing to validate
+    // cdrDimensionType : nothing to validate
     validate(CdrDimensionPartial::volume).isGreaterThanOrEqualTo(BigDecimal.ZERO)
 }
 
 fun PricePartial.validate(): PricePartial = validate(this) {
-    validate(PricePartial::excl_vat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
-    validate(PricePartial::incl_vat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
+    validate(PricePartial::exclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
+    validate(PricePartial::inclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
 }
 
 fun Session.validate(): Session = validate(this) {

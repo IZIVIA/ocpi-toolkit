@@ -25,8 +25,8 @@ fun locationsCpoRepository(locations: List<Location>): LocationsCpoRepository = 
 
         locations
             .filter { loc ->
-                val dateFromFilterOk = dateFrom.captured()?.let { loc.last_updated.isAfter(it) } ?: true
-                val dateToFilterOk = dateTo.captured()?.let { loc.last_updated.isBefore(it) } ?: true
+                val dateFromFilterOk = dateFrom.captured()?.let { loc.lastUpdated.isAfter(it) } ?: true
+                val dateToFilterOk = dateTo.captured()?.let { loc.lastUpdated.isBefore(it) } ?: true
 
                 dateFromFilterOk && dateToFilterOk
             }

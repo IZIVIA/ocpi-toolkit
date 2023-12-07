@@ -14,45 +14,45 @@ import java.time.Instant
  * @property id (max-length=36) Uniquely identifies the tariff within the CPO’s platform (and suboperator platforms).
  * @property type Defines the type of the tar iff. This allows for distinction in case of given Charging Preferences.
  * When omitted, this tariff is valid for all sessions
- * @property party_id (max-length=3) CPO ID of the CPO that owns this Tariff (following the ISO-15118 standard).
- * @property country_code (max-length=2) ISO-3166 alpha-2 country code of the CPO that owns this Tariff.
+ * @property partyId (max-length=3) CPO ID of the CPO that owns this Tariff (following the ISO-15118 standard).
+ * @property countryCode (max-length=2) ISO-3166 alpha-2 country code of the CPO that owns this Tariff.
  * @property currency (max-length=3) ISO-4217 code of the currency of this tariff.
- * @property tariff_alt_text List of multi-language alternative tariff info texts.
- * @property tariff_alt_url URL to a web page that contains an explanation of the tariff information in human readable
+ * @property tariffAltText List of multi-language alternative tariff info texts.
+ * @property tariffAltUrl URL to a web page that contains an explanation of the tariff information in human readable
  * form.
- * @property min_price When this field is set, a Charging Session with this tariff will at least cost this
+ * @property minPrice When this field is set, a Charging Session with this tariff will at least cost this
  * amount. This is different from a FLAT fee (Start Tariff, Transaction Fee), as a
  * FLAT fee is a fixed amount that has to be paid for any Charging Session. A
  * minimum price indicates that when the cost of a Charging Session is lower than
  * this amount, the cost of the Session will be equal to this amount. (Also see note
  * below)
- * @property max_price When this field is set, a Charging Session with this tariff will NOT cost more than
+ * @property maxPrice When this field is set, a Charging Session with this tariff will NOT cost more than
  * this amount. (See note below)
  * @property elements List of Tariff Elements.
- * @property start_date_time The time when this tariff becomes active, in UTC, time_zone field of the Location can be
+ * @property startDateTime The time when this tariff becomes active, in UTC, time_zone field of the Location can be
  * used to convert to local time. Typically used for a new tariff that is already given with the location, before it
  * becomes active. (See note below)
- * @property end_date_time The time after which this tariff is no longer valid, in UTC, time_zone field if the
+ * @property endDateTime The time after which this tariff is no longer valid, in UTC, time_zone field if the
  * Location can be used to convert to local time. Typically used when this tariff is
  * going to be replaced with a different tariff in the near future. (See note below)
- * @property energy_mix Details on the energy supplied with this tariff
- * @property last_updated Timestamp when this Tariff was last updated (or created).
+ * @property energyMix Details on the energy supplied with this tariff
+ * @property lastUpdated Timestamp when this Tariff was last updated (or created).
  */
 
 @Partial
 data class Tariff(
     val id: CiString,
     val type: TariffType? = null,
-    val party_id: CiString,
-    val country_code: CiString,
+    val partyId: CiString,
+    val countryCode: CiString,
     val currency: String,
-    val tariff_alt_text: List<DisplayText>? = null,
-    val tariff_alt_url: CiString? = null,
-    val min_price: Price? = null,
-    val max_price: Price? = null,
+    val tariffAltText: List<DisplayText>? = null,
+    val tariffAltUrl: CiString? = null,
+    val minPrice: Price? = null,
+    val maxPrice: Price? = null,
     val elements: List<TariffElement>,
-    val start_date_time: Instant? = null,
-    val end_date_time: Instant? = null,
-    val energy_mix: EnergyMix? = null,
-    val last_updated: Instant,
+    val startDateTime: Instant? = null,
+    val endDateTime: Instant? = null,
+    val energyMix: EnergyMix? = null,
+    val lastUpdated: Instant,
 )
