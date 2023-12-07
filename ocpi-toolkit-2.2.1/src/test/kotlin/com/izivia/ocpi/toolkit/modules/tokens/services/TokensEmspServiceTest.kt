@@ -16,7 +16,6 @@ import strikt.assertions.isNotNull
 import strikt.assertions.isNull
 import java.time.Instant
 
-
 class TokensEmspServiceTest {
 
     private lateinit var service: TokensEmspService

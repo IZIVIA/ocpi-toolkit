@@ -20,8 +20,7 @@ class TokensEmspServer(
     basePath: String = "/2.2.1/tokens"
 ) : OcpiModuleServer(basePath) {
     override suspend fun registerOn(transportServer: TransportServer) {
-
-        //GET Token
+        // GET Token
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments,
@@ -41,7 +40,7 @@ class TokensEmspServer(
             }
         }
 
-        //POST token
+        // POST token
         transportServer.handle(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
@@ -50,15 +49,15 @@ class TokensEmspServer(
             ),
             queryParams = listOf("type")
         ) { req ->
-                req.httpResponse {
-                    service.postToken(
-                        tokenUid = req.pathParams["tokenUid"]!!,
-                        type = req.queryParams["type"]?.let { enumValueOf<TokenType>(it) } ?: TokenType.RFID,
-                        locationReferences = req.body
-                            ?.takeIf { it.isNotBlank() } // During Test if client sent body = null, this reiceve body=""
-                            ?.let { mapper.readValue(it, LocationReferences::class.java) }
-                    )
-                }
+            req.httpResponse {
+                service.postToken(
+                    tokenUid = req.pathParams["tokenUid"]!!,
+                    type = req.queryParams["type"]?.let { enumValueOf<TokenType>(it) } ?: TokenType.RFID,
+                    locationReferences = req.body
+                        ?.takeIf { it.isNotBlank() } // During Test if client sent body = null, this reiceve body=""
+                        ?.let { mapper.readValue(it, LocationReferences::class.java) }
+                )
+            }
         }
     }
 }

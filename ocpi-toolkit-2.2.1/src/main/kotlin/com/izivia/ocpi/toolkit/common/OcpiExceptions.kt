@@ -6,12 +6,12 @@ sealed class OcpiException(
     message: String,
     open val httpStatus: HttpStatus,
     open val ocpiStatus: OcpiStatus
-): Exception(message)
+) : Exception(message)
 
 class OcpiResponseException(
     val statusCode: Int,
     val statusMessage: String
-): Exception("Ocpi error: ${statusCode.toOcpiStatus()} $statusCode ($statusMessage)")
+) : Exception("Ocpi error: ${statusCode.toOcpiStatus()} $statusCode ($statusMessage)")
 
 // 2xxx: Client errors
 class OcpiClientGenericException(

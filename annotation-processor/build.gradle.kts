@@ -23,7 +23,8 @@ publishing {
                 name.set("OCPI Annotation processor")
                 artifactId = "ocpi-annotation-processor"
                 description.set(
-                    "This module processes annotations during compilation time in order to generate some code (partial representation, etc ...)"
+                    "This module processes annotations during compilation time in order to generate some code " +
+                        "(partial representation, etc ...)"
                 )
             }
         }

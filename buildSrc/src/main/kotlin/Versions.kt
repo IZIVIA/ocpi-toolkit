@@ -10,6 +10,8 @@ object Versions {
     const val ksp = "1.9.10-1.0.13"
     const val kotlinPoet = "1.15.3"
     const val nexus = "1.3.0"
+    const val ktlintPlugin = "12.0.2"
+    const val ktlint = "0.50.0"
 
     // Used only for tests
     const val logback = "1.4.14"

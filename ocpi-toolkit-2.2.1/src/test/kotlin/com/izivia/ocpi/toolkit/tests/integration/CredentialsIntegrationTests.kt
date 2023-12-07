@@ -535,7 +535,6 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
-
     }
 
     @Test

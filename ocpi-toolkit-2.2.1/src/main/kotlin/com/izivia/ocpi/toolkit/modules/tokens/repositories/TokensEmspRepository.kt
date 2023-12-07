@@ -1,4 +1,4 @@
-package com.izivia.ocpi.toolkit.modules.tokens.repositories;
+package com.izivia.ocpi.toolkit.modules.tokens.repositories
 
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.SearchResult
@@ -6,7 +6,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.AuthorizationInfo
 import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
-import java.time.Instant;
+import java.time.Instant
 
 /**
  * Typically implemented by market roles like: eMSP.

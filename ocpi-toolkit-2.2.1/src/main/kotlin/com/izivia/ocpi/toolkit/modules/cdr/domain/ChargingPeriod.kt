@@ -20,4 +20,3 @@ data class ChargingPeriod(
     val dimensions: List<CdrDimension>,
     val tariffId: CiString? = null
 )
-

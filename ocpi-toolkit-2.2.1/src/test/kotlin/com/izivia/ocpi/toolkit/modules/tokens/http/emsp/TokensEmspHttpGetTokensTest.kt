@@ -18,7 +18,6 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.runBlocking
@@ -63,7 +62,7 @@ class TokensEmspHttpGetTokensTest {
         }.buildServer()
         OcpiResponseBody.now = { Instant.parse("2015-06-30T21:59:59Z") }
 
-        //when
+        // when
         val resp: HttpResponse = srv.send(
             buildHttpRequest(HttpMethod.GET, "/tokens/?date_from=2019-01-28T12:00:00Z&date_to=2019-01-29T12:00:00Z")
         )

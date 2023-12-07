@@ -15,7 +15,6 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.runBlocking
@@ -66,9 +65,9 @@ class TokensCpoHttpPatchTokenTest {
         }.buildServer()
         OcpiResponseBody.now = { Instant.parse("2015-06-30T21:59:59Z") }
 
-        //when
+        // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PATCH, "/tokens/DE/TNM/012345678/?type=RFID", mapper.writeValueAsString(token)),
+            buildHttpRequest(HttpMethod.PATCH, "/tokens/DE/TNM/012345678/?type=RFID", mapper.writeValueAsString(token))
         )
 
         // then
@@ -121,12 +120,12 @@ class TokensCpoHttpPatchTokenTest {
             type = TokenType.RFID,
             contractId = "DE8ACC12E46L89",
             visualNumber = "DF000-2001-8999-1",
-            //issuer = "TheNewMotion",
+            // issuer = "TheNewMotion",
             issuer = null,
             groupId = "DF000-2001-8999",
             valid = true,
             whitelist = WhitelistType.ALLOWED,
-            //language = "it",
+            // language = "it",
             language = null,
             defaultProfileType = ProfileType.GREEN,
             energyContract = EnergyContractPartial(
@@ -156,9 +155,13 @@ class TokensCpoHttpPatchTokenTest {
         }.buildServer()
         OcpiResponseBody.now = { Instant.parse("2015-06-30T21:59:59Z") }
 
-        //when
+        // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PATCH, "/tokens/DE/TNM/012345678/?type=RFID", mapper.writeValueAsString(partialToken)),
+            buildHttpRequest(
+                HttpMethod.PATCH,
+                "/tokens/DE/TNM/012345678/?type=RFID",
+                mapper.writeValueAsString(partialToken)
+            )
         )
 
         // then

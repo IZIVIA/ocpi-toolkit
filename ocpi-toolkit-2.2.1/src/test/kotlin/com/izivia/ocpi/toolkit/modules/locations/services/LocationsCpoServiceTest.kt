@@ -3,7 +3,6 @@ package com.izivia.ocpi.toolkit.modules.locations.services
 import com.izivia.ocpi.toolkit.common.OcpiStatus
 import com.izivia.ocpi.toolkit.common.SearchResult
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
-import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
 import com.izivia.ocpi.toolkit.modules.locations.mock.locationsCpoRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test

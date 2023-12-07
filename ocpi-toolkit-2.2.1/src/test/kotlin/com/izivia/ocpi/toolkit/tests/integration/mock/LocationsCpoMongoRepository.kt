@@ -16,7 +16,12 @@ class LocationsCpoMongoRepository(
     private val collection: MongoCollection<Location>
 ) : LocationsCpoRepository {
 
-    override suspend fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int, limit: Int?): SearchResult<Location> =
+    override suspend fun getLocations(
+        dateFrom: Instant?,
+        dateTo: Instant?,
+        offset: Int,
+        limit: Int?
+    ): SearchResult<Location> =
         collection
             .run {
                 find(

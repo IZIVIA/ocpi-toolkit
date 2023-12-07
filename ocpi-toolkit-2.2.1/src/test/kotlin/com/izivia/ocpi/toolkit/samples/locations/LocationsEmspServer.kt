@@ -57,11 +57,22 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun putLocation(countryCode: String, partyId: String, locationId: String, location: Location): Location {
+    override suspend fun putLocation(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        location: Location
+    ): Location {
         TODO("Not yet implemented")
     }
 
-    override suspend fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: Evse): Evse {
+    override suspend fun putEvse(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String,
+        evse: Evse
+    ): Evse {
         TODO("Not yet implemented")
     }
 

@@ -33,7 +33,12 @@ interface TokensCpoRepository {
      * @param type Token.type of the Token to retrieve. Default if omitted: RFID
      * @return The requested Token object.
      */
-    suspend fun getToken(countryCode: CiString, partyId: CiString, tokenUid: CiString, type: TokenType? = TokenType.RFID): Token
+    suspend fun getToken(
+        countryCode: CiString,
+        partyId: CiString,
+        tokenUid: CiString,
+        type: TokenType? = TokenType.RFID
+    ): Token
 
     /**
      * PUT Method

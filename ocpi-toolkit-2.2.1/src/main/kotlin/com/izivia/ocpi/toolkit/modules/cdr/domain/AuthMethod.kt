@@ -8,7 +8,7 @@ enum class AuthMethod {
 
     /**
      * Command like StartSession or ReserveNow used to start the Session, the Token provided in the
-    Command was used as authorization
+     Command was used as authorization
      */
     COMMAND,
 

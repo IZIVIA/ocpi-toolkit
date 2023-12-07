@@ -87,4 +87,3 @@ fun LocationReferences.validate(): LocationReferences = validate(this) {
 fun EnergyContract.validate(): EnergyContract = validate(this) {
     toPartial().validate()
 }
-

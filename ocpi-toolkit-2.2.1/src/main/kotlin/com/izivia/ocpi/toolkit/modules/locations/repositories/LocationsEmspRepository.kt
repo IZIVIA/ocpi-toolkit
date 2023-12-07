@@ -2,7 +2,6 @@ package com.izivia.ocpi.toolkit.modules.locations.repositories
 
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 
-
 /**
  * Locations is a client owned object, so the end-points need to contain the required extra fields: {party_id} and
  * {country_code}. Example endpoint structures:

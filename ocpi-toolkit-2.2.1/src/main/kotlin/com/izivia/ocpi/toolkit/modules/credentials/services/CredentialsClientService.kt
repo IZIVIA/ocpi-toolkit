@@ -75,11 +75,12 @@ class CredentialsClientService(
      */
     suspend fun register(): Credentials {
         // Get token provided by receiver outside the OCPI protocol (for example by an admin)
-        val credentialsTokenA = clientPartnerRepository.getCredentialsClientToken(partnerUrl = serverVersionsEndpointUrl)
-            ?: clientPartnerRepository.getCredentialsTokenA(partnerUrl = serverVersionsEndpointUrl)
-            ?: throw OcpiClientInvalidParametersException(
-                "Could not find the TokenA or the ClientToken associated with partner $serverVersionsEndpointUrl"
-            )
+        val credentialsTokenA =
+            clientPartnerRepository.getCredentialsClientToken(partnerUrl = serverVersionsEndpointUrl)
+                ?: clientPartnerRepository.getCredentialsTokenA(partnerUrl = serverVersionsEndpointUrl)
+                ?: throw OcpiClientInvalidParametersException(
+                    "Could not find the TokenA or the ClientToken associated with partner $serverVersionsEndpointUrl"
+                )
 
         findLatestMutualVersionAndSaveInformation()
 

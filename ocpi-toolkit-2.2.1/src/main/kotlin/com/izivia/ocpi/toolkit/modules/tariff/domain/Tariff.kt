@@ -2,8 +2,8 @@ package com.izivia.ocpi.toolkit.modules.tariff.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.modules.types.DisplayText
 import com.izivia.ocpi.toolkit.modules.locations.domain.EnergyMix
+import com.izivia.ocpi.toolkit.modules.types.DisplayText
 import com.izivia.ocpi.toolkit.modules.types.Price
 import java.time.Instant
 
@@ -54,5 +54,5 @@ data class Tariff(
     val startDateTime: Instant? = null,
     val endDateTime: Instant? = null,
     val energyMix: EnergyMix? = null,
-    val lastUpdated: Instant,
+    val lastUpdated: Instant
 )

@@ -16,16 +16,16 @@ class SessionsEmspService(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString
-    ): OcpiResponseBody<Session?> =OcpiResponseBody.of {
-            validate {
-                validateLength("countryCode", countryCode, 2)
-                validateLength("partyId", partyId, 3)
-                validateLength("sessionId", sessionId, 36)
-            }
-            service
-                .getSession(countryCode, partyId, sessionId)
-                ?.validate()
+    ): OcpiResponseBody<Session?> = OcpiResponseBody.of {
+        validate {
+            validateLength("countryCode", countryCode, 2)
+            validateLength("partyId", partyId, 3)
+            validateLength("sessionId", sessionId, 36)
         }
+        service
+            .getSession(countryCode, partyId, sessionId)
+            ?.validate()
+    }
 
     override suspend fun putSession(
         countryCode: CiString,

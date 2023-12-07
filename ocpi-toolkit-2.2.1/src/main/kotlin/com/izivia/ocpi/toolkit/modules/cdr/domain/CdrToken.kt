@@ -4,7 +4,6 @@ import com.izivia.ocpi.toolkit.annotations.Partial
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 
-
 /**
  * @property countryCode (max-length=2) ISO-3166 alpha-2 country code of the MSP that 'owns' this Token.
  * @property partyId (max-length=3) ID of the eMSP that 'owns' this Token (following the ISO-15118 standard).

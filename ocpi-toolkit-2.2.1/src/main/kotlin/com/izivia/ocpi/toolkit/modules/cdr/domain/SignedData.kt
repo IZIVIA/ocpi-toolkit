@@ -3,7 +3,6 @@ package com.izivia.ocpi.toolkit.modules.cdr.domain
 import com.izivia.ocpi.toolkit.annotations.Partial
 import com.izivia.ocpi.toolkit.common.CiString
 
-
 /**
  * This class contains all the information of the signed data. Which encoding method is used, if needed, the public key and a list of
 signed values.
@@ -22,5 +21,5 @@ data class SignedData(
     val encodingMethodVersion: Int,
     val publicKey: CiString? = null,
     val signedValues: List<SignedValue>,
-    val url: CiString? = null,
+    val url: CiString? = null
 )

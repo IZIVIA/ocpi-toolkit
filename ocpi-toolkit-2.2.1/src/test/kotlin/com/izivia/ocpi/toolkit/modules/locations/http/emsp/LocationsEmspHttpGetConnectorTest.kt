@@ -16,7 +16,6 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.runBlocking
@@ -91,7 +90,7 @@ class LocationsEmspHttpGetConnectorTest {
                       "status_message": "Success",
                       "timestamp": "2015-06-30T21:59:59Z"
                     }
-                 """.trimIndent()
+                """.trimIndent()
             )
         }
     }

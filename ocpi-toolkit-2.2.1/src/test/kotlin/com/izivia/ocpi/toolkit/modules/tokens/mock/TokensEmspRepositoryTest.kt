@@ -7,13 +7,11 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensEmspRepository
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import java.time.Instant
 
 fun getTokensEmspRepositoryTest(tokens: List<Token>): TokensEmspRepository = mockk {
-
     val dateFrom = mutableListOf<Instant?>()
     val dateTo = mutableListOf<Instant?>()
     val offset = slot<Int>()
@@ -46,7 +44,6 @@ fun getTokensEmspRepositoryTest(tokens: List<Token>): TokensEmspRepository = moc
 }
 
 fun postTokenEmspRepositoryTest(authorizationInfo: AuthorizationInfo): TokensEmspRepository = mockk {
-
     val tokenUid = slot<String>()
     val type = mutableListOf<TokenType?>()
     val locationReferences = mutableListOf<LocationReferences?>()

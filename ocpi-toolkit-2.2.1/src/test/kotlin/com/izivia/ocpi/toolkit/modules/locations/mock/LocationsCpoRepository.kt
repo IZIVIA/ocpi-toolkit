@@ -4,7 +4,6 @@ import com.izivia.ocpi.toolkit.common.toSearchResult
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import java.time.Instant
@@ -19,7 +18,9 @@ fun locationsCpoRepository(locations: List<Location>): LocationsCpoRepository = 
     val offset = slot<Int>()
     val limit = mutableListOf<Int?>()
 
-    coEvery { getLocations(captureNullable(dateFrom), captureNullable(dateTo), capture(offset), captureNullable(limit)) } coAnswers {
+    coEvery {
+        getLocations(captureNullable(dateFrom), captureNullable(dateTo), capture(offset), captureNullable(limit))
+    } coAnswers {
         val capturedOffset = offset.captured
         val capturedLimit = limit.captured() ?: 10
 
@@ -43,14 +44,14 @@ fun locationsCpoRepository(locations: List<Location>): LocationsCpoRepository = 
 
     coEvery { getEvse(capture(locationId), capture(evseUid)) } coAnswers {
         locations
-            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH)  }
+            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
             ?.evses
             ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
     }
 
     coEvery { getConnector(capture(locationId), capture(evseUid), capture(connectorId)) } coAnswers {
         locations
-            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH)  }
+            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
             ?.evses
             ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
             ?.connectors

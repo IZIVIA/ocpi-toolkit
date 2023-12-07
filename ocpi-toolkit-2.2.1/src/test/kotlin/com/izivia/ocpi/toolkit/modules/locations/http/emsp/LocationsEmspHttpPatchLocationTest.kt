@@ -14,7 +14,6 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.runBlocking
@@ -78,7 +77,7 @@ class LocationsEmspHttpPatchLocationTest {
                                     maxAmperage = 16,
                                     tariffIds = listOf("13"),
                                     lastUpdated = Instant.parse("2015-03-18T08:12:01Z")
-                                ),
+                                )
                             ),
                             floorLevel = "-1",
                             physicalReference = "1",
@@ -144,7 +143,7 @@ class LocationsEmspHttpPatchLocationTest {
             chargingWhenClosed = null,
             images = null,
             energyMix = null,
-            lastUpdated = null,
+            lastUpdated = null
         )
         val resp: HttpResponse = srv.send(
             buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1", mapper.writeValueAsString(location))
@@ -165,7 +164,7 @@ class LocationsEmspHttpPatchLocationTest {
                   "status_message": "Success",
                   "timestamp": "2015-06-30T21:59:59Z"
                 }
-                 """.trimIndent()
+                """.trimIndent()
             )
         }
     }

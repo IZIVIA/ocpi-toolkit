@@ -11,5 +11,3 @@ data class FixedPathSegment(
 data class VariablePathSegment(
     override val path: String
 ) : PathSegment
-
-

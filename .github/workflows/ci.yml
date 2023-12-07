@@ -33,5 +33,8 @@ jobs:
                     cache-read-only: ${{ github.ref != 'refs/heads/main' }}
                     gradle-home-cache-cleanup: true
 
+            -   name: Ktlint check OCPI toolkit
+                run: ./gradlew ktlintCheck
+
             -   name: Build OCPI toolkit
                 run: ./gradlew build

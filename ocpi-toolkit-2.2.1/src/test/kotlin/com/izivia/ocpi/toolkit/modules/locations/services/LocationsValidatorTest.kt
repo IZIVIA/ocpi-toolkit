@@ -551,7 +551,7 @@ class LocationsValidatorTest {
             validStatusSchedule.validate()
             validStatusSchedule.copy(
                 periodBegin = validStatusSchedule.periodBegin,
-                periodEnd = validStatusSchedule.periodBegin,
+                periodEnd = validStatusSchedule.periodBegin
             ).validate()
             validStatusSchedule.copy(periodEnd = null).validate()
         }.isSuccess()
@@ -559,7 +559,7 @@ class LocationsValidatorTest {
         expectCatching {
             validStatusSchedule.copy(
                 periodBegin = validStatusSchedule.periodEnd!!,
-                periodEnd = validStatusSchedule.periodBegin,
+                periodEnd = validStatusSchedule.periodBegin
             ).validate()
         }.isFailure()
     }

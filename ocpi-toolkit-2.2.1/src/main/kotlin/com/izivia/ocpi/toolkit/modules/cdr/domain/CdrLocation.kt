@@ -5,7 +5,6 @@ import com.izivia.ocpi.toolkit.modules.locations.domain.ConnectorFormat
 import com.izivia.ocpi.toolkit.modules.locations.domain.ConnectorType
 import com.izivia.ocpi.toolkit.modules.locations.domain.PowerType
 
-
 /**
  * The CdrLocation class contains only the relevant information from the Location object that is needed in a CDR.
  * @property id Uniquely identifies the location within the CPO’s platform (and suboperator
@@ -42,5 +41,5 @@ data class CdrLocation(
     val connectorId: CiString,
     val connectorStandard: ConnectorType,
     val connectorFormat: ConnectorFormat,
-    val connectorPowerType: PowerType,
+    val connectorPowerType: PowerType
 )

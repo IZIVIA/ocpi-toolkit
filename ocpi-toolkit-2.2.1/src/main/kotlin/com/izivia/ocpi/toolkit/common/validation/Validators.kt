@@ -76,18 +76,22 @@ fun <E> Validator<E>.Property<String?>.isCountryCode(caseSensitive: Boolean, alp
 fun <E> Validator<E>.Property<String?>.isCurrencyCode(caseSensitive: Boolean) =
     this.validate(CurrencyCodeConstraint()) {
         it == null || Currency.getAvailableCurrencies()
-            .contains(if (caseSensitive) Currency.getInstance(it) else Currency.getInstance(it.uppercase(Locale.ENGLISH)))
+            .contains(
+                if (caseSensitive) Currency.getInstance(it) else Currency.getInstance(it.uppercase(Locale.ENGLISH))
+            )
     }
-
 
 /**
  * Valid if the string is an URL following the w3.org spec
  */
 fun <E> Validator<E>.Property<String?>.isUrl() =
     this.validate(UrlConstraint()) {
-        it == null || try { URL(it).toURI().let { true } } catch (e: Exception) { false }
+        it == null || try {
+            URL(it).toURI().let { true }
+        } catch (e: Exception) {
+            false
+        }
     }.hasMaxLengthOf(255)
-
 
 /**
  * Valid if the string is one of IANA tzdata's TZ-values representing the time zone.

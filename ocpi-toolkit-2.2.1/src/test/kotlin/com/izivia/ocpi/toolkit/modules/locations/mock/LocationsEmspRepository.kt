@@ -3,7 +3,6 @@ package com.izivia.ocpi.toolkit.modules.locations.mock
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import java.util.*
@@ -32,22 +31,34 @@ fun locationsEmspRepository(locations: List<Location>): LocationsEmspRepository 
             ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
     }
 
-    coEvery { getConnector(capture(countryCode), capture(partyId), capture(locationId), capture(evseUid), capture(connectorId)) } coAnswers {
+    coEvery {
+        getConnector(
+            capture(countryCode),
+            capture(partyId),
+            capture(locationId),
+            capture(evseUid),
+            capture(connectorId)
+        )
+    } coAnswers {
         locations
-            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH)  }
+            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
             ?.evses
             ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
             ?.connectors
             ?.find { it.id.lowercase(Locale.ENGLISH) == connectorId.captured.lowercase(Locale.ENGLISH) }
     }
 
-    coEvery { patchLocation(capture(countryCode), capture(partyId), capture(locationId), capture(locationPartial)) } coAnswers {
+    coEvery {
+        patchLocation(capture(countryCode), capture(partyId), capture(locationId), capture(locationPartial))
+    } coAnswers {
         // Patch logic is not implemented
         locations
             .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
     }
 
-    coEvery { patchEvse(capture(countryCode), capture(partyId), capture(locationId), capture(evseUid), capture(evsePartial)) } coAnswers {
+    coEvery {
+        patchEvse(capture(countryCode), capture(partyId), capture(locationId), capture(evseUid), capture(evsePartial))
+    } coAnswers {
         // Patch logic is not implemented
         locations
             .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
@@ -55,10 +66,19 @@ fun locationsEmspRepository(locations: List<Location>): LocationsEmspRepository 
             ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
     }
 
-    coEvery { patchConnector(capture(countryCode), capture(partyId), capture(locationId), capture(evseUid), capture(connectorId), capture(connectorPartial)) } coAnswers {
+    coEvery {
+        patchConnector(
+            capture(countryCode),
+            capture(partyId),
+            capture(locationId),
+            capture(evseUid),
+            capture(connectorId),
+            capture(connectorPartial)
+        )
+    } coAnswers {
         // Patch logic is not implemented
         locations
-            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH)  }
+            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
             ?.evses
             ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
             ?.connectors
@@ -72,7 +92,9 @@ fun locationsEmspRepository(locations: List<Location>): LocationsEmspRepository 
             ?: location.captured
     }
 
-    coEvery { putEvse(capture(countryCode), capture(partyId), capture(locationId), capture(evseUid), capture(evse)) } coAnswers {
+    coEvery {
+        putEvse(capture(countryCode), capture(partyId), capture(locationId), capture(evseUid), capture(evse))
+    } coAnswers {
         // Put logic is not implemented
         locations
             .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
@@ -81,10 +103,19 @@ fun locationsEmspRepository(locations: List<Location>): LocationsEmspRepository 
             ?: evse.captured
     }
 
-    coEvery { putConnector(capture(countryCode), capture(partyId), capture(locationId), capture(evseUid), capture(connectorId), capture(connector)) } coAnswers {
+    coEvery {
+        putConnector(
+            capture(countryCode),
+            capture(partyId),
+            capture(locationId),
+            capture(evseUid),
+            capture(connectorId),
+            capture(connector)
+        )
+    } coAnswers {
         // Put logic is not implemented
         locations
-            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH)  }
+            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
             ?.evses
             ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
             ?.connectors

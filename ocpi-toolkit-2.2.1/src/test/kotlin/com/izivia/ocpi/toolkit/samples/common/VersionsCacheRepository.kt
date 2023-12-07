@@ -6,7 +6,7 @@ import com.izivia.ocpi.toolkit.modules.versions.repositories.VersionsRepository
 
 class VersionsCacheRepository(
     private val baseUrl: String
-): VersionsRepository {
+) : VersionsRepository {
 
     override suspend fun getVersions(): List<Version> = listOf(
         Version(

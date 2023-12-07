@@ -1,5 +1,4 @@
-package com.izivia.ocpi.toolkit.modules.sessions.domain;
-
+package com.izivia.ocpi.toolkit.modules.sessions.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
 import com.izivia.ocpi.toolkit.common.CiString
@@ -88,5 +87,5 @@ data class Session(
     val chargingPeriods: List<ChargingPeriod>? = emptyList(),
     val totalCost: Price? = null,
     val status: SessionStatusType,
-    val lastUpdated: Instant,
+    val lastUpdated: Instant
 )
