@@ -21,8 +21,8 @@ fun main() {
     // Add token A associated with the sender
     val senderVersionsRepository = VersionsCacheRepository(baseUrl = senderUrl)
     val senderVersionDetailsRepository = VersionDetailsCacheRepository(baseUrl = senderUrl)
-    val senderPlatformRepository = PlatformCacheRepository()
-    senderPlatformRepository.platforms.add(Platform(url = receiverVersionsUrl, tokenA = tokenA))
+    val senderPlatformRepository = PartnerCacheRepository()
+    senderPlatformRepository.partners.add(Partner(url = receiverVersionsUrl, tokenA = tokenA))
 
     // Server
     val senderServer = Http4kTransportServer(
@@ -48,7 +48,7 @@ fun main() {
     // Client
     val credentialsClientService = CredentialsClientService(
         clientVersionsEndpointUrl = senderVersionsUrl,
-        clientPlatformRepository = senderPlatformRepository,
+        clientPartnerRepository = senderPlatformRepository,
         clientVersionsRepository = senderVersionsRepository,
         clientCredentialsRoleRepository = object : CredentialsRoleRepository {
             override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(

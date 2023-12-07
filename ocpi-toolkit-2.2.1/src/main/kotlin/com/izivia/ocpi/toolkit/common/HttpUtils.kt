@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.common
 
 import com.fasterxml.jackson.core.type.TypeReference
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
+import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
@@ -71,48 +71,48 @@ fun String.decodeBase64(): String = Base64.getDecoder().decode(this).decodeToStr
 fun authorizationHeader(token: String): Pair<String, String> = Header.AUTHORIZATION to "Token ${token.encodeBase64()}"
 
 /**
- * Creates the authorization header by taking the client token (or the token A if allowed) in the platform repository
+ * Creates the authorization header by taking the client token (or the token A if allowed) in the partner repository
  *
  * @receiver PlatformRepository used to retrieve tokens
- * @param platformUrl partner /versions url
+ * @param partnerUrl partner /versions url
  * @param allowTokenA only true when called on versions / credentials module
  * @return Pair<String, String>
  */
-suspend fun PlatformRepository.buildAuthorizationHeader(
-    platformUrl: String,
+suspend fun PartnerRepository.buildAuthorizationHeader(
+    partnerUrl: String,
     allowTokenA: Boolean = false
 ): Pair<String, String> =
     if (allowTokenA) {
-        getCredentialsTokenA(platformUrl = platformUrl)
-            ?: getCredentialsClientToken(platformUrl = platformUrl)
+        getCredentialsTokenA(partnerUrl = partnerUrl)
+            ?: getCredentialsClientToken(partnerUrl = partnerUrl)
             ?: throw throw OcpiClientUnknownTokenException(
-                "Could not find token A or client token associated with platform $platformUrl"
+                "Could not find token A or client token associated with partner $partnerUrl"
             )
     } else {
-        getCredentialsClientToken(platformUrl = platformUrl)
+        getCredentialsClientToken(partnerUrl = partnerUrl)
             ?: throw throw OcpiClientUnknownTokenException(
-                "Could not find client token associated with platform $platformUrl"
+                "Could not find client token associated with partner $partnerUrl"
             )
     }
         .let { token -> authorizationHeader(token = token) }
 
 /**
- * Adds the authorization header to the request by taking the client token (or the token A if allowed) in the platform
+ * Adds the authorization header to the request by taking the client token (or the token A if allowed) in the partner
  * repository.
  *
- * @param platformRepository use to retrieve tokens
- * @param platformUrl partner /versions url
+ * @param partnerRepository use to retrieve tokens
+ * @param partnerUrl partner /versions url
  * @param allowTokenA only true when called on versions / credentials module
  */
 suspend fun HttpRequest.authenticate(
-    platformRepository: PlatformRepository,
-    platformUrl: String,
+    partnerRepository: PartnerRepository,
+    partnerUrl: String,
     allowTokenA: Boolean = false
 ): AuthenticatedHttpRequest =
     withHeaders(
         headers = headers.plus(
-            platformRepository.buildAuthorizationHeader(
-                platformUrl = platformUrl,
+            partnerRepository.buildAuthorizationHeader(
+                partnerUrl = partnerUrl,
                 allowTokenA = allowTokenA
             )
         )
@@ -258,7 +258,7 @@ fun HttpRequest.parseAuthorizationHeader() = getHeader(Header.AUTHORIZATION)
  * @throws HttpException if the authorization header is missing
  *
  */
-suspend fun PlatformRepository.checkToken(
+suspend fun PartnerRepository.checkToken(
     httpRequest: HttpRequest
 ) {
     val token = httpRequest.parseAuthorizationHeader()
@@ -285,11 +285,11 @@ suspend fun PlatformRepository.checkToken(
 
 suspend fun TransportClientBuilder.buildFor(
     module: ModuleID,
-    platformUrl: String,
-    platformRepository: PlatformRepository
+    partnerUrl: String,
+    partnerRepository: PartnerRepository
 ): TransportClient =
-    platformRepository
-        .getEndpoints(platformUrl = platformUrl)
+    partnerRepository
+        .getEndpoints(partnerUrl = partnerUrl)
         .find { it.identifier == module }
         ?.let { build(baseUrl = it.url) }
         ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)

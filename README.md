@@ -24,7 +24,7 @@ To see all available artifacts, go to: https://central.sonatype.com/search?names
 
 Examples:
 - [Http4kTransportServer](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/Http4kTransportServer.kt): `TransportServer` implementation example
-- [PlatformMongoRepository](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/tests/integration/mock/PlatformMongoRepository.kt): `PlatformRepository` implementation example
+- [PartnerMongoRepository](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/tests/integration/mock/PartnerMongoRepository.kt): `PartnerRepository` implementation example
 - [VersionsCacheRepository](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/VersionsCacheRepository.kt): `VersionsRepository` implementation example
 - [VersionDetailsCacheRepository](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/VersionDetailsCacheRepository.kt): `VersionsDetailsRepository` implementation example
 
@@ -40,11 +40,11 @@ val server = Http4kTransportServer(
 )
 
 // PlatformMongoRepository is an implementation of PlatformRepository using mongo
-// It will be used to store information about platforms with whom the server is communicating:
-// A platform has: Tokens (A, B, C), Endpoints, Versions
+// It will be used to store information about partners with whom the server is communicating:
+// A partner has: Tokens (A, B, C), Endpoints, Versions
 // You can see an  example in the list above
-val platformRepository = PlatformMongoRepository(
-    collection = mongoDatabase.getCollection<Location>(config.platformCollection)
+val partnerRepository = PlatformMongoRepository(
+    collection = mongoDatabase.getCollection<Location>(config.partnerCollection)
 )
 
 // VersionsCacheRepository is an implementation of VersionsRepository
@@ -60,7 +60,7 @@ val versionDetailsRepository = VersionDetailsCacheRepository()
 // Required: defines /versions endpoint
 VersionsServer(
     transportServer = server,
-    platformRepository = platformRepository,
+    partnerRepository = partnerRepository,
     validationService = VersionsValidationService(
         repository = versionsRepository
     )
@@ -69,7 +69,7 @@ VersionsServer(
 // Required: defines /2.1.1, /2.2.1, whatever version endpoint
 VersionDetailsServer(
     transportServer = server,
-    platformRepository = platformRepository,
+    partnerRepository = partnerRepository,
     validationService = VersionDetailsValidationService(
         repository = versionDetailsRepository
     )
@@ -79,7 +79,7 @@ VersionDetailsServer(
 CredentialsServer(
     transportServer = server,
     service = CredentialsServerService(
-        platformRepository = platformRepository,
+        partnerRepository = partnerRepository,
         serverBusinessDetails = cpoBusinessDetails,
         serverPartyId = cpoPartyId,
         serverCountryCode = cpoCountryCode,
@@ -102,7 +102,7 @@ LocationsCpoServer(
     service = LocationsCpoValidationService(
         service = locationsService
     ),
-    platformRepository = platformRepository
+    partnerRepository = partnerRepository
 )
 
 // Once that all the modules are defined, you need to start the server
@@ -125,7 +125,7 @@ LocationsEmspServer(
             channel = chargingInfrastructureChannel
         )
     ),
-    platformRepository = platformRepository
+    partnerRepository = partnerRepository
 )
 
 // Once that all the modules are defined, you need to start the server
@@ -140,7 +140,7 @@ It is possible to change the default path of a module using `basePath` argument:
 LocationsEmspServer(
     transportServer = server,
     service = service,
-    platformRepository = platformRepository,
+    partnerRepository = partnerRepository,
     basePath = "/2.1.1/cpo/locations"
 )
 ```
@@ -166,11 +166,11 @@ Examples:
 // receiver: the one that receives the registration request
 
 // PlatformMongoRepository is an implementation of PlatformRepository using mongo
-// It will be used to store information about platforms with whom the client is communicating:
-// A platform has: Tokens (A, B, C), Endpoints, Versions
+// It will be used to store information about partners with whom the client is communicating:
+// A partner has: Tokens (A, B, C), Endpoints, Versions
 // You can see an  example in the list above
 val senderPlatformRepository = PlatformMongoRepository(
-    collection = mongoDatabase.getCollection<Location>(config.platformCollection)
+    collection = mongoDatabase.getCollection<Location>(config.partnerCollection)
 )
 
 // VersionsCacheRepository is an implementation of VersionsRepository
@@ -208,12 +208,12 @@ credentialsClientService.register()
 
 ```kotlin
 // Now that the CPO is registered with the eMSP, all the information (tokens & endpoints) is stored in
-// platformRepository. It is now possible to access the locations module of the eMSP using LocationsCpoClient.
+// partnerRepository. It is now possible to access the locations module of the eMSP using LocationsCpoClient.
 
 val locationsCpoClient = LocationsCpoClient(
     transportClientBuilder = Http4kTransportClientBuilder(),
-    serverVersionsEndpointUrl = "https://emsp.com/versions", // Used as ID for the platform (to retrieve information)
-    platformRepository = platformRepository
+    serverVersionsEndpointUrl = "https://emsp.com/versions", // Used as ID for the partner (to retrieve information)
+    partnerRepository = partnerRepository
 )
 
 // Example on how to get a specific location
@@ -224,12 +224,12 @@ locationsCpoClient.getLocation(countryCode = "fr", partyId = "abc", locationId =
 
 ```kotlin
 // Now that the eMSP is registered with the CPO, all the information (tokens & endpoints) is stored in
-// platformRepository. It is now possible to access the locations module of the CPO using LocationsEmspClient.
+// partnerRepository. It is now possible to access the locations module of the CPO using LocationsEmspClient.
 
 val locationsEmspClient = LocationsEmspClient(
     transportClientBuilder = Http4kTransportClientBuilder(),
     serverVersionsEndpointUrl = "https://cpo.com/versions",
-    platformRepository = platformRepository
+    partnerRepository = partnerRepository
 )
 
 // Example on how to get a specific location
@@ -249,7 +249,7 @@ What actually changed in the lib:
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Common      | - Added hub exceptions<br/>- Added CiString type                                                                                                                                                                                                                                                                                                              |
 | Versions    | - Added V_2_2 and V_2_2_1 in VersionNumber enum<br/>- Added role in Endpoint                                                                                                                                                                                                                                                                                  |
-| Credentials | - Credentials object has a list of CredentialRoles instead of only business_details, party_id & country_code. Also added CredentialsRoleRepository for the user to specify the roles of the platform they are implementing. In 2.1.1, the user had to pass business_details, party_id, country_code to CredentialsClientService and CredentialsServerService. |
+| Credentials | - Credentials object has a list of CredentialRoles instead of only business_details, party_id & country_code. Also added CredentialsRoleRepository for the user to specify the roles of the partner they are implementing. In 2.1.1, the user had to pass business_details, party_id, country_code to CredentialsClientService and CredentialsServerService. |
 | Locations   | - Too many changements, see [this commit for details](https://github.com/4sh/ocpi-lib/commit/dfbbd8bf2741788582e087a5921b099c07129788)                                                                                                                                                                                                                        |                                                                                                                                                                                                                                                                                                                                                            |
 
 ### ocpi-lib-2.1.1 -> ocpi-lib-2.1.1-gireve

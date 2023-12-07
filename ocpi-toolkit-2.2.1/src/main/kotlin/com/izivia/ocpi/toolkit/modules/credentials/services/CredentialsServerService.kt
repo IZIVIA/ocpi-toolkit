@@ -4,7 +4,7 @@ import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.CredentialsInterface
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
+import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
@@ -13,7 +13,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
 class CredentialsServerService(
-    private val platformRepository: PlatformRepository,
+    private val partnerRepository: PartnerRepository,
     private val credentialsRoleRepository: CredentialsRoleRepository,
     private val transportClientBuilder: TransportClientBuilder,
     private val serverVersionsUrlProvider: suspend () -> String
@@ -35,36 +35,36 @@ class CredentialsServerService(
         // A partner can use a valid serverToken on registration.
         // It can happen when a partner unregister, then registers with its clientToken (which is the serverToken
         // for us)
-        val platformUrl = platformRepository
-            .getPlatformUrlByCredentialsServerToken(token)
+        val partnerUrl = partnerRepository
+            .getPartnerUrlByCredentialsServerToken(token)
             // If we could not find a partner with this serverToken, then, it means that it's probably a tokenA
-            ?: platformRepository.savePlatformUrlForTokenA(tokenA = token, platformUrl = credentials.url)
+            ?: partnerRepository.savePartnerUrlForTokenA(tokenA = token, partnerUrl = credentials.url)
             ?: throw OcpiClientInvalidParametersException(
                 "Invalid token ($token) - should be either a TokenA or a ServerToken"
             )
 
         // Save credentials roles of partner
-        platformRepository.saveCredentialsRoles(
-            platformUrl = credentials.url,
+        partnerRepository.saveCredentialsRoles(
+            partnerUrl = credentials.url,
             credentialsRoles = credentials.roles
         )
 
         // Save token B, which is in our case the client token, because it's the one that we will use to communicate
         // with the sender
-        platformRepository.saveCredentialsClientToken(
-            platformUrl = credentials.url,
+        partnerRepository.saveCredentialsClientToken(
+            partnerUrl = credentials.url,
             credentialsClientToken = credentials.token
         )
 
         findLatestMutualVersionAndStoreInformation(credentials = credentials, debugHeaders = debugHeaders)
 
         // Remove token A because it is useless from now on
-        platformRepository.invalidateCredentialsTokenA(platformUrl = platformUrl)
+        partnerRepository.invalidateCredentialsTokenA(partnerUrl = partnerUrl)
 
         // Return Credentials objet to sender with the token C inside (which is for us the server token)
         getCredentials(
-            serverToken = platformRepository.saveCredentialsServerToken(
-                platformUrl = platformUrl,
+            serverToken = partnerRepository.saveCredentialsServerToken(
+                partnerUrl = partnerUrl,
                 credentialsServerToken = generateUUIDv4Token()
             )
         )
@@ -75,19 +75,19 @@ class CredentialsServerService(
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
-        val platformUrl = platformRepository.getPlatformUrlByCredentialsServerToken(token)
+        val partnerUrl = partnerRepository.getPartnerUrlByCredentialsServerToken(token)
             ?: throw OcpiClientInvalidParametersException("Invalid server token ($token)")
 
         // Save credentials roles of partner
-        platformRepository.saveCredentialsRoles(
-            platformUrl = credentials.url,
+        partnerRepository.saveCredentialsRoles(
+            partnerUrl = credentials.url,
             credentialsRoles = credentials.roles
         )
 
         // In the payload, there is the new token B (the client token for us) to use to communicate with the receiver,
         // so we save it
-        platformRepository.saveCredentialsClientToken(
-            platformUrl = credentials.url,
+        partnerRepository.saveCredentialsClientToken(
+            partnerUrl = credentials.url,
             credentialsClientToken = credentials.token
         )
 
@@ -96,8 +96,8 @@ class CredentialsServerService(
 
         // Return Credentials objet to sender with the updated token C inside (which is for us the server token)
         getCredentials(
-            serverToken = platformRepository.saveCredentialsServerToken(
-                platformUrl = platformUrl,
+            serverToken = partnerRepository.saveCredentialsServerToken(
+                partnerUrl = partnerUrl,
                 credentialsServerToken = generateUUIDv4Token()
             )
         )
@@ -106,12 +106,12 @@ class CredentialsServerService(
     override suspend fun delete(
         token: String
     ): OcpiResponseBody<Credentials?> = OcpiResponseBody.of {
-        platformRepository
-            .getPlatformUrlByCredentialsServerToken(token)
-            ?.also { platformUrl ->
+        partnerRepository
+            .getPartnerUrlByCredentialsServerToken(token)
+            ?.also { partnerUrl ->
                 // Only client token is invalidated. It means that the partner can still send authenticated requests
                 // to the system.
-                platformRepository.invalidateCredentialsClientToken(platformUrl = platformUrl)
+                partnerRepository.invalidateCredentialsClientToken(partnerUrl = partnerUrl)
             }
             ?: throw OcpiClientInvalidParametersException("Invalid server token ($token)")
 
@@ -145,7 +145,7 @@ class CredentialsServerService(
         val matchingVersion = versions.firstOrNull { it.version == VersionNumber.V2_2_1.value }
             ?: throw OcpiServerNoMatchingEndpointsException("Expected version 2.2.1 from $versions")
 
-        platformRepository.saveVersion(platformUrl = credentials.url, version = matchingVersion)
+        partnerRepository.saveVersion(partnerUrl = credentials.url, version = matchingVersion)
 
         val versionDetail = transportClientBuilder
             .build(matchingVersion.url)
@@ -167,7 +167,7 @@ class CredentialsServerService(
                     )
             }
 
-        platformRepository.saveEndpoints(platformUrl = credentials.url, endpoints = versionDetail.endpoints)
+        partnerRepository.saveEndpoints(partnerUrl = credentials.url, endpoints = versionDetail.endpoints)
     }
 
     private suspend fun getCredentials(serverToken: String): Credentials = Credentials(

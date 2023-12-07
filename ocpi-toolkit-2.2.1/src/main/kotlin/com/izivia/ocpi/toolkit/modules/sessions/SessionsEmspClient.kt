@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.sessions
 
 import com.izivia.ocpi.toolkit.common.*
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
+import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferences
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferencesResponseType
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
@@ -15,19 +15,19 @@ import java.time.Instant
 /**
  * Sends calls to the CPO
  * @property transportClientBuilder used to build transport client
- * @property serverVersionsEndpointUrl used to know which platform to communicate with
- * @property platformRepository used to get information about the platform (endpoint, token)
+ * @property serverVersionsEndpointUrl used to know which partner to communicate with
+ * @property partnerRepository used to get information about the partner (endpoint, token)
  */
 class SessionsEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val serverVersionsEndpointUrl: String,
-    private val platformRepository: PlatformRepository
+    private val partnerRepository: PartnerRepository
 ) : SessionsCpoInterface {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.sessions,
-            platformUrl = serverVersionsEndpointUrl,
-            platformRepository = platformRepository
+            partnerUrl = serverVersionsEndpointUrl,
+            partnerRepository = partnerRepository
         )
 
     override suspend fun getSessions(
@@ -50,7 +50,7 @@ class SessionsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                    .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
             )
                 .parsePaginatedBody(offset)
         }
@@ -69,7 +69,7 @@ class SessionsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                    .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
             )
                 .parseBody()
         }

@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
 import com.izivia.ocpi.toolkit.common.*
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PlatformRepository
+import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
@@ -12,20 +12,20 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 /**
  * Sends calls to an eMSP server
  * @property transportClientBuilder used to build transport client
- * @property serverVersionsEndpointUrl used to know which platform to communicate with
- * @property platformRepository used to get information about the platform (endpoint, token)
+ * @property serverVersionsEndpointUrl used to know which partner to communicate with
+ * @property partnerRepository used to get information about the partner (endpoint, token)
  */
 class LocationsCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val serverVersionsEndpointUrl: String,
-    private val platformRepository: PlatformRepository
+    private val partnerRepository: PartnerRepository
 ) : LocationsEmspInterface {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.locations,
-            platformUrl = serverVersionsEndpointUrl,
-            platformRepository = platformRepository
+            partnerUrl = serverVersionsEndpointUrl,
+            partnerRepository = partnerRepository
         )
 
     override suspend fun getLocation(
@@ -42,7 +42,7 @@ class LocationsCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }
@@ -62,7 +62,7 @@ class LocationsCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }
@@ -83,7 +83,7 @@ class LocationsCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }
@@ -104,7 +104,7 @@ class LocationsCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }
@@ -126,7 +126,7 @@ class LocationsCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }
@@ -149,7 +149,7 @@ class LocationsCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }
@@ -170,7 +170,7 @@ class LocationsCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }
@@ -192,7 +192,7 @@ class LocationsCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }
@@ -215,7 +215,7 @@ class LocationsCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(platformRepository = platformRepository, platformUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
             .parseBody()
     }

@@ -21,8 +21,8 @@ const val tokenA = "06f7967e-65c3-4def-a966-701ffb362b3c"
 
 fun main() {
     // Add token A associated with the sender
-    val receiverPlatformRepository = PlatformCacheRepository()
-    receiverPlatformRepository.platforms.add(Platform(tokenA = tokenA))
+    val receiverPlatformRepository = PartnerCacheRepository()
+    receiverPlatformRepository.partners.add(Partner(tokenA = tokenA))
 
     val receiverServer = Http4kTransportServer(
         baseUrl = receiverUrl,
@@ -33,7 +33,7 @@ fun main() {
     runBlocking {
         CredentialsServer(
             service = CredentialsServerService(
-                platformRepository = receiverPlatformRepository,
+                partnerRepository = receiverPlatformRepository,
                 credentialsRoleRepository = object : CredentialsRoleRepository {
                     override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                         CredentialRole(
