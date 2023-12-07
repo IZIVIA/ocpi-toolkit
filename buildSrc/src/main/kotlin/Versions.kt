@@ -4,10 +4,10 @@ object Versions {
     const val log4j = "2.22.0"
     const val valiktor = "0.12.0"
     const val coroutines = "1.7.3"
-    const val kotlin = "1.9.10"
+    const val kotlin = "1.9.20"
 
     // Used to build / gradle
-    const val ksp = "1.9.10-1.0.13"
+    const val ksp = "1.9.20-1.0.14"
     const val kotlinPoet = "1.15.3"
     const val nexus = "1.3.0"
     const val ktlintPlugin = "12.0.2"

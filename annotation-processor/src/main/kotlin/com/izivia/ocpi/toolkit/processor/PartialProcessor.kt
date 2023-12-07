@@ -28,10 +28,10 @@ class PartialProcessor(
         if (partialClasses.isEmpty()) {
             partialClasses.addAll(resolver.getPartialAnnotatedClasses())
             genPartialClasses(partialClasses.toSet())
-                .forEach {
-                    it.writeTo(
+                .forEach { (input, output) ->
+                    output.writeTo(
                         codeGenerator,
-                        Dependencies(true)
+                        Dependencies(true, input.containingFile!!)
                     )
                 }
         }
@@ -45,7 +45,9 @@ class PartialProcessor(
             .filter(KSNode::validate)
             .toSet()
 
-    private fun genPartialClasses(partialAnnotatedClasses: Set<KSClassDeclaration>): List<FileSpec> =
+    private fun genPartialClasses(
+        partialAnnotatedClasses: Set<KSClassDeclaration>
+    ): List<Pair<KSClassDeclaration, FileSpec>> =
         partialAnnotatedClasses.map { classDeclaration ->
             val packageName = classDeclaration.packageName.asString()
             val className = classDeclaration.simpleName.asString()
@@ -57,7 +59,7 @@ class PartialProcessor(
 
             logger.info("Generate $packageName.$partialClassName")
 
-            FileSpec
+            classDeclaration to FileSpec
                 .builder(packageName, partialClassName)
                 .generateComments()
                 .addType(partialClassType)
