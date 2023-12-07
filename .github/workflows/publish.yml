@@ -32,11 +32,6 @@ jobs:
                     cache-read-only: ${{ github.ref != 'refs/heads/main' }}
                     gradle-home-cache-cleanup: true
 
-            -   name: Publish OCPI annotation processor to maven local
-                env:
-                    VERSION: ${{ github.ref }}
-                run: ./gradlew :annotation-processor:publishToMavenLocal
-
             -   name: Build OCPI toolkit
                 env:
                     VERSION: ${{ github.ref }}
