@@ -2,11 +2,9 @@ package com.izivia.ocpi.toolkit.samples.common
 
 import com.izivia.ocpi.toolkit.common.OcpiException
 import com.izivia.ocpi.toolkit.common.toHttpResponse
-import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.*
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.http4k.core.*
 import org.http4k.filter.DebuggingFilters
 import org.http4k.routing.RoutingHttpHandler

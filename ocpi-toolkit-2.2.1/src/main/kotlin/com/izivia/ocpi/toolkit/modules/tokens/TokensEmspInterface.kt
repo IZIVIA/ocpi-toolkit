@@ -1,4 +1,4 @@
-package com.izivia.ocpi.toolkit.modules.tokens;
+package com.izivia.ocpi.toolkit.modules.tokens
 
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
@@ -7,7 +7,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.AuthorizationInfo
 import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
-import java.time.Instant;
+import java.time.Instant
 
 /**
  * Typically implemented by market roles like: eMSP.
@@ -41,8 +41,12 @@ interface TokensEmspInterface {
      * Any older information that is not specified in the response is considered as no longer valid. Each object must contain all required
      * fields. Fields that are not specified may be considered as null values.
      */
-    suspend fun getTokens(dateFrom: Instant?, dateTo: Instant?, offset: Int = 0, limit: Int?): OcpiResponseBody<SearchResult<Token>>
-
+    suspend fun getTokens(
+        dateFrom: Instant?,
+        dateTo: Instant?,
+        offset: Int = 0,
+        limit: Int?
+    ): OcpiResponseBody<SearchResult<Token>>
 
     /**
      * POST Method

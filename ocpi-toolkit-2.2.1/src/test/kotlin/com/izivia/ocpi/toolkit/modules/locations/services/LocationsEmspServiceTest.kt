@@ -2,11 +2,10 @@ package com.izivia.ocpi.toolkit.modules.locations.services
 
 import com.izivia.ocpi.toolkit.common.OcpiStatus
 import com.izivia.ocpi.toolkit.modules.locations.domain.toPartial
-import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspService
+import com.izivia.ocpi.toolkit.modules.locations.mock.locationsEmspRepository
 import com.izivia.ocpi.toolkit.samples.common.validConnector
 import com.izivia.ocpi.toolkit.samples.common.validEvse
 import com.izivia.ocpi.toolkit.samples.common.validLocation
-import com.izivia.ocpi.toolkit.modules.locations.mock.locationsEmspRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
@@ -28,7 +27,8 @@ class LocationsEmspServiceTest {
         service = LocationsEmspService(service = locationsEmspRepository(emptyList()))
 
         expectThat(
-            runBlocking { service.getLocation(countryCode = str1char, partyId = str2chars, locationId = str4chars) }) {
+            runBlocking { service.getLocation(countryCode = str1char, partyId = str2chars, locationId = str4chars) }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
@@ -40,7 +40,8 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars
                 )
-            }) {
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
@@ -52,7 +53,8 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars
                 )
-            }) {
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -64,7 +66,8 @@ class LocationsEmspServiceTest {
                     partyId = str4chars,
                     locationId = str36chars
                 )
-            }) {
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -76,7 +79,8 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str40chars
                 )
-            }) {
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }

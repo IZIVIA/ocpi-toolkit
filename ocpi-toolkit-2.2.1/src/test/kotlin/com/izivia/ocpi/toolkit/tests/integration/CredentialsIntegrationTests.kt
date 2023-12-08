@@ -15,7 +15,7 @@ import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
-import com.izivia.ocpi.toolkit.tests.integration.mock.PlatformMongoRepository
+import com.izivia.ocpi.toolkit.tests.integration.mock.PartnerMongoRepository
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import com.mongodb.client.MongoCollection
@@ -34,7 +34,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     data class ServerSetupResult(
         val transport: Http4kTransportServer,
-        val platformCollection: MongoCollection<Platform>,
+        val partnerCollection: MongoCollection<Partner>,
         val versionsEndpoint: String
     )
 
@@ -42,15 +42,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     private fun setupReceiver(): ServerSetupResult {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
-        val receiverPlatformCollection = database!!
-            .getCollection<Platform>("receiver-server-${UUID.randomUUID()}")
+        val receiverPartnerCollection = database!!
+            .getCollection<Partner>("receiver-server-${UUID.randomUUID()}")
 
         // Reset spy variables
         requestCounter = 1
         correlationCounter = 1
 
         // Setup receiver (only server)
-        val receiverPlatformRepo = PlatformMongoRepository(collection = receiverPlatformCollection)
+        val receiverPlatformRepo = PartnerMongoRepository(collection = receiverPartnerCollection)
         val receiverServer = buildTransportServer(receiverPlatformRepo)
         val receiverServerVersionsUrl = "${receiverServer.baseUrl}/versions"
         val receiverVersionsCacheRepository = VersionsCacheRepository(baseUrl = receiverServer.baseUrl)
@@ -58,14 +58,14 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         runBlocking {
             CredentialsServer(
                 service = CredentialsServerService(
-                    platformRepository = receiverPlatformRepo,
+                    partnerRepository = receiverPlatformRepo,
                     credentialsRoleRepository = object : CredentialsRoleRepository {
                         override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                             CredentialRole(
                                 role = Role.EMSP,
-                                business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
-                                party_id = "DEF",
-                                country_code = "FR"
+                                businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
+                                partyId = "DEF",
+                                countryCode = "FR"
                             )
                         )
                     },
@@ -87,22 +87,22 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         return ServerSetupResult(
             transport = receiverServer,
-            platformCollection = receiverPlatformCollection,
+            partnerCollection = receiverPartnerCollection,
             versionsEndpoint = receiverServerVersionsUrl
         )
     }
 
     private fun setupSender(): ServerSetupResult {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
-        val senderPlatformCollection = database!!
-            .getCollection<Platform>("sender-server-${UUID.randomUUID()}")
+        val senderPartnerCollection = database!!
+            .getCollection<Partner>("sender-server-${UUID.randomUUID()}")
 
         // Reset spy variables
         requestCounter = 1
         correlationCounter = 1
 
         // Setup sender (server)
-        val senderServer = buildTransportServer(PlatformMongoRepository(collection = senderPlatformCollection))
+        val senderServer = buildTransportServer(PartnerMongoRepository(collection = senderPartnerCollection))
         val senderServerVersionsUrl = "${senderServer.baseUrl}/versions"
 
         runBlocking {
@@ -120,7 +120,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         return ServerSetupResult(
             transport = senderServer,
-            platformCollection = senderPlatformCollection,
+            partnerCollection = senderPartnerCollection,
             versionsEndpoint = senderServerVersionsUrl
         )
     }
@@ -132,15 +132,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Setup sender (client)
         return CredentialsClientService(
             clientVersionsEndpointUrl = senderServerSetupResult.versionsEndpoint,
-            clientPlatformRepository = PlatformMongoRepository(collection = senderServerSetupResult.platformCollection),
+            clientPartnerRepository = PartnerMongoRepository(collection = senderServerSetupResult.partnerCollection),
             clientVersionsRepository = VersionsCacheRepository(baseUrl = senderServerSetupResult.transport.baseUrl),
             clientCredentialsRoleRepository = object : CredentialsRoleRepository {
                 override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                     CredentialRole(
                         role = Role.CPO,
-                        business_details = BusinessDetails(name = "Sender", website = null, logo = null),
-                        party_id = "ABC",
-                        country_code = "FR"
+                        businessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
+                        partyId = "ABC",
+                        countryCode = "FR"
                     )
                 )
             },
@@ -160,7 +160,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         )
 
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        receiverServer.partnerCollection.insertOne(Partner(url = senderServer.versionsEndpoint, tokenA = tokenA))
 
         // Start the servers
         receiverServer.transport.start()
@@ -171,8 +171,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             credentialsClientService.register()
         }.isFailure().isA<OcpiClientInvalidParametersException>()
 
-        receiverServer.platformCollection.deleteOne(Platform::url eq senderServer.versionsEndpoint)
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
+        receiverServer.partnerCollection.deleteOne(Partner::url eq senderServer.versionsEndpoint)
+        senderServer.partnerCollection.insertOne(Partner(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         // Fails because the receiver does not know the TOKEN_A used by the sender
         expectCatching {
@@ -183,9 +183,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             .get { statusCode }
             .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
-        receiverServer.platformCollection.deleteOne(Platform::url eq senderServer.versionsEndpoint)
-        receiverServer.platformCollection.insertOne(
-            Platform(
+        receiverServer.partnerCollection.deleteOne(Partner::url eq senderServer.versionsEndpoint)
+        receiverServer.partnerCollection.insertOne(
+            Partner(
                 url = receiverServer.versionsEndpoint,
                 tokenA = "!$tokenA"
             )
@@ -207,8 +207,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val senderServer = setupSender()
 
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
+        receiverServer.partnerCollection.insertOne(Partner(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.partnerCollection.insertOne(Partner(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         receiverServer.transport.start()
         senderServer.transport.start()
@@ -218,7 +218,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val versionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
-            platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
+            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
         )
 
         expectThat(
@@ -255,8 +255,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
         // well in the client so that it knows what token to send
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
+        receiverServer.partnerCollection.insertOne(Partner(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.partnerCollection.insertOne(Partner(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         // Start the servers
         receiverServer.transport.start()
@@ -390,8 +390,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
         // well in the client so that it knows what token to send
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
+        receiverServer.partnerCollection.insertOne(Partner(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.partnerCollection.insertOne(Partner(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         // Start the servers
         receiverServer.transport.start()
@@ -403,7 +403,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val versionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
-            platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
+            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
         )
 
         expectThat(
@@ -425,11 +425,11 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     }
 
     @Test
-    fun `should properly run registration process then delete credentials properly`() {
+    fun `should properly run registration process then delete credentials properly then re-register`() {
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
-        val credentialsClientService = setupCredentialsSenderClient(
+        val senderCredentialsClientService = setupCredentialsSenderClient(
             senderServerSetupResult = senderServer,
             receiverServerSetupResult = receiverServer
         )
@@ -437,26 +437,31 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
         // well in the client so that it knows what token to send
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
+        receiverServer.partnerCollection.insertOne(Partner(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.partnerCollection.insertOne(Partner(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         // Start the servers
         receiverServer.transport.start()
         senderServer.transport.start()
 
         runBlocking {
-            credentialsClientService.register()
+            senderCredentialsClientService.register()
         }
 
-        val versionsClient = VersionsClient(
+        val senderVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
-            platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
+            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
+        )
+        val receiverVersionsClient = VersionsClient(
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverVersionsEndpointUrl = senderServer.versionsEndpoint,
+            partnerRepository = PartnerMongoRepository(collection = receiverServer.partnerCollection)
         )
 
         expectThat(
             runBlocking {
-                versionsClient.getVersions()
+                senderVersionsClient.getVersions()
             }
         ) {
             get { data }
@@ -473,13 +478,63 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
+        // Sender unregisters, so ...
         runBlocking {
-            credentialsClientService.delete()
+            senderCredentialsClientService.delete()
         }
 
-        expectCatching {
-            versionsClient.getVersions()
-        }.isFailure()
+        // ... receiver should not be able to call sender ...
+        expectThrows<OcpiClientUnknownTokenException> {
+            // no token to use, so we should have an OCPI client error
+            runBlocking {
+                receiverVersionsClient.getVersions()
+            }
+        }
+
+        // ... and sender should still be able to call receiver, and even register!
+        runBlocking {
+            senderCredentialsClientService.register()
+        }
+
+        // ... and then, the receiver can send new requests ...
+        expectThat(
+            runBlocking {
+                receiverVersionsClient.getVersions()
+            }
+        ) {
+            get { data }
+                .isNotNull()
+                .isNotEmpty()
+                .isEqualTo(
+                    runBlocking {
+                        VersionsCacheRepository(baseUrl = senderServer.transport.baseUrl)
+                            .getVersions()
+                    }
+                )
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
+        }
+
+        // ... and sender can obviously still send requests
+        expectThat(
+            runBlocking {
+                senderVersionsClient.getVersions()
+            }
+        ) {
+            get { data }
+                .isNotNull()
+                .isNotEmpty()
+                .isEqualTo(
+                    runBlocking {
+                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
+                            .getVersions()
+                    }
+                )
+
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
+        }
     }
 
     @Test
@@ -487,7 +542,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
-        val credentialsClientService = setupCredentialsSenderClient(
+        val senderCredentialsClientService = setupCredentialsSenderClient(
             senderServerSetupResult = senderServer,
             receiverServerSetupResult = receiverServer
         )
@@ -495,24 +550,29 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
         // well in the client so that it knows what token to send
         val tokenA = UUID.randomUUID().toString()
-        receiverServer.platformCollection.insertOne(Platform(url = senderServer.versionsEndpoint, tokenA = tokenA))
-        senderServer.platformCollection.insertOne(Platform(url = receiverServer.versionsEndpoint, tokenA = tokenA))
+        receiverServer.partnerCollection.insertOne(Partner(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.partnerCollection.insertOne(Partner(url = receiverServer.versionsEndpoint, tokenA = tokenA))
 
         // Start the servers
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        val credentialsAfterRegistration = runBlocking { credentialsClientService.register() }
+        val credentialsAfterRegistration = runBlocking { senderCredentialsClientService.register() }
 
-        val versionsClient = VersionsClient(
+        val senderVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
-            platformRepository = PlatformMongoRepository(collection = senderServer.platformCollection)
+            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
+        )
+        val receiverVersionsClient = VersionsClient(
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            serverVersionsEndpointUrl = senderServer.versionsEndpoint,
+            partnerRepository = PartnerMongoRepository(collection = receiverServer.partnerCollection)
         )
 
         expectThat(
             runBlocking {
-                versionsClient.getVersions()
+                senderVersionsClient.getVersions()
             }
         ) {
             get { data }
@@ -531,17 +591,17 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         expectThat(
             runBlocking {
-                credentialsClientService.get()
+                senderCredentialsClientService.get()
             }
         ).isEqualTo(credentialsAfterRegistration)
 
         runBlocking {
-            credentialsClientService.update()
+            senderCredentialsClientService.update()
         }
 
         expectThat(
             runBlocking {
-                versionsClient.getVersions()
+                senderVersionsClient.getVersions()
             }
         ) {
             get { data }
@@ -558,15 +618,27 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
+        // Sender unregisters, so ...
         runBlocking {
-            credentialsClientService.delete()
+            senderCredentialsClientService.delete()
         }
 
+        // ... receiver should not be able to call sender ...
         expectThrows<OcpiClientUnknownTokenException> {
             // no token to use, so we should have an OCPI client error
             runBlocking {
-                versionsClient.getVersions()
+                receiverVersionsClient.getVersions()
             }
+        }
+
+        // ... and sender should still be able to call receiver
+        expectThat(
+            runBlocking {
+                senderVersionsClient.getVersions()
+            }
+        ) {
+            get { status_code }
+                .isEqualTo(OcpiStatus.SUCCESS.code)
         }
     }
 }

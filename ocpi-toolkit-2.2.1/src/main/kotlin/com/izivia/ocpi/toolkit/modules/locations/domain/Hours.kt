@@ -6,18 +6,18 @@ import com.izivia.ocpi.toolkit.annotations.Partial
  * Opening and access hours of the location.
  * Note: regular_hours is required when twentyfourseven=false, this is much less confusing.
  *
- * @property regular_hours Regular hours, weekday based. Should not be set for representing 24/7 as this is the most
+ * @property regularHours Regular hours, weekday based. Should not be set for representing 24/7 as this is the most
  * common case.
- * @property twenty_four_seven True to represent 24 hours a day and 7 days a week, except the given exceptions.
- * @property exceptional_openings Exceptions for specified calendar dates, time-range based. Periods the station is
+ * @property twentyFourSeven True to represent 24 hours a day and 7 days a week, except the given exceptions.
+ * @property exceptionalOpenings Exceptions for specified calendar dates, time-range based. Periods the station is
  * operating/accessible. Additional to regular hours. May overlap regular rules.
- * @property exceptional_closings Exceptions for specified calendar dates, time-range based. Periods the station is not
+ * @property exceptionalClosings Exceptions for specified calendar dates, time-range based. Periods the station is not
  * operating/accessible. Overwriting regularHours and exceptionalOpenings. Should not overlap exceptionalOpenings.
  */
 @Partial
 data class Hours(
-    val regular_hours: List<RegularHours>?,
-    val twenty_four_seven: Boolean,
-    val exceptional_openings: List<ExceptionalPeriod>?,
-    val exceptional_closings: List<ExceptionalPeriod>?
+    val regularHours: List<RegularHours>?,
+    val twentyFourSeven: Boolean,
+    val exceptionalOpenings: List<ExceptionalPeriod>?,
+    val exceptionalClosings: List<ExceptionalPeriod>?
 )

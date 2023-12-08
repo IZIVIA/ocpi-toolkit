@@ -41,7 +41,7 @@ class LocationsValidatorTest {
         }.isFailure()
 
         expectCatching {
-            validLocation.copy(postal_code = generateRandomString(11)).validate()
+            validLocation.copy(postalCode = generateRandomString(11)).validate()
         }.isFailure()
 
         expectCatching {
@@ -53,11 +53,11 @@ class LocationsValidatorTest {
         }.isFailure()
 
         expectCatching {
-            validLocation.copy(time_zone = generateRandomString(256)).validate()
+            validLocation.copy(timeZone = generateRandomString(256)).validate()
         }.isFailure()
 
         expectCatching {
-            validLocation.copy(time_zone = "EuropeOslo").validate()
+            validLocation.copy(timeZone = "EuropeOslo").validate()
         }.isFailure()
     }
 
@@ -68,43 +68,43 @@ class LocationsValidatorTest {
         }.isSuccess()
 
         expectCatching {
-            validEvse.copy(evse_id = "FR*A23*E45B*78C").validate()
+            validEvse.copy(evseId = "FR*A23*E45B*78C").validate()
         }.isSuccess()
 
         expectCatching {
-            validEvse.copy(evse_id = "fr*a23*e45b*78c").validate()
+            validEvse.copy(evseId = "fr*a23*e45b*78c").validate()
         }.isSuccess()
 
         expectCatching {
-            validEvse.copy(evse_id = "FRA23E45B78C").validate()
+            validEvse.copy(evseId = "FRA23E45B78C").validate()
         }.isSuccess()
 
         expectCatching {
-            validEvse.copy(evse_id = "FRA23E45B*78C").validate()
+            validEvse.copy(evseId = "FRA23E45B*78C").validate()
         }.isSuccess()
 
         expectCatching {
-            validEvse.copy(evse_id = "FR*A23*E${generateRandomString(31)}").validate()
+            validEvse.copy(evseId = "FR*A23*E${generateRandomString(31)}").validate()
         }.isSuccess()
 
         expectCatching {
-            validEvse.copy(evse_id = "F*A23*E45B*78C").validate()
+            validEvse.copy(evseId = "F*A23*E45B*78C").validate()
         }.isFailure()
 
         expectCatching {
-            validEvse.copy(evse_id = "FR*A2*E45B*78C").validate()
+            validEvse.copy(evseId = "FR*A2*E45B*78C").validate()
         }.isFailure()
 
         expectCatching {
-            validEvse.copy(evse_id = "FR*A23*A45B*78C").validate()
+            validEvse.copy(evseId = "FR*A23*A45B*78C").validate()
         }.isFailure()
 
         expectCatching {
-            validEvse.copy(evse_id = "FR*A23*E").validate()
+            validEvse.copy(evseId = "FR*A23*E").validate()
         }.isFailure()
 
         expectCatching {
-            validEvse.copy(evse_id = "FR*A23*E${generateRandomString(32)}").validate()
+            validEvse.copy(evseId = "FR*A23*E${generateRandomString(32)}").validate()
         }.isFailure()
 
         expectCatching {
@@ -112,11 +112,11 @@ class LocationsValidatorTest {
         }.isFailure()
 
         expectCatching {
-            validEvse.copy(floor_level = generateRandomString(5)).validate()
+            validEvse.copy(floorLevel = generateRandomString(5)).validate()
         }.isFailure()
 
         expectCatching {
-            validEvse.copy(physical_reference = generateRandomString(17)).validate()
+            validEvse.copy(physicalReference = generateRandomString(17)).validate()
         }.isFailure()
     }
 
@@ -124,8 +124,8 @@ class LocationsValidatorTest {
     fun `Connector validator`() {
         expectCatching {
             validConnector.validate()
-            validConnector.copy(max_voltage = 0).validate()
-            validConnector.copy(max_amperage = 0).validate()
+            validConnector.copy(maxVoltage = 0).validate()
+            validConnector.copy(maxAmperage = 0).validate()
         }.isSuccess()
 
         expectCatching {
@@ -133,19 +133,19 @@ class LocationsValidatorTest {
         }.isFailure()
 
         expectCatching {
-            validConnector.copy(max_voltage = -1).validate()
+            validConnector.copy(maxVoltage = -1).validate()
         }.isFailure()
 
         expectCatching {
-            validConnector.copy(max_amperage = -1).validate()
+            validConnector.copy(maxAmperage = -1).validate()
         }.isFailure()
 
         expectCatching {
-            validConnector.copy(tariff_ids = listOf(generateRandomString(37))).validate()
+            validConnector.copy(tariffIds = listOf(generateRandomString(37))).validate()
         }.isFailure()
 
         expectCatching {
-            validConnector.copy(terms_and_conditions = "not an url").validate()
+            validConnector.copy(termsAndConditions = "not an url").validate()
         }.isFailure()
     }
 
@@ -341,11 +341,11 @@ class LocationsValidatorTest {
         }.isSuccess()
 
         expectCatching {
-            validEnergyMix.copy(supplier_name = generateRandomString(65)).validate()
+            validEnergyMix.copy(supplierName = generateRandomString(65)).validate()
         }.isFailure()
 
         expectCatching {
-            validEnergyMix.copy(energy_product_name = generateRandomString(65)).validate()
+            validEnergyMix.copy(energyProductName = generateRandomString(65)).validate()
         }.isFailure()
     }
 
@@ -355,15 +355,15 @@ class LocationsValidatorTest {
             validExceptionalPeriod.validate()
 
             validExceptionalPeriod.copy(
-                period_begin = validExceptionalPeriod.period_begin,
-                period_end = validExceptionalPeriod.period_begin
+                periodBegin = validExceptionalPeriod.periodBegin,
+                periodEnd = validExceptionalPeriod.periodBegin
             ).validate()
         }.isSuccess()
 
         expectCatching {
             validExceptionalPeriod.copy(
-                period_begin = validExceptionalPeriod.period_end,
-                period_end = validExceptionalPeriod.period_begin
+                periodBegin = validExceptionalPeriod.periodEnd,
+                periodEnd = validExceptionalPeriod.periodBegin
             ).validate()
         }.isFailure()
     }
@@ -374,15 +374,15 @@ class LocationsValidatorTest {
             validRegularHours.validate()
 
             validRegularHours.copy(
-                period_begin = validRegularHours.period_begin,
-                period_end = validRegularHours.period_begin
+                periodBegin = validRegularHours.periodBegin,
+                periodEnd = validRegularHours.periodBegin
             ).validate()
         }.isSuccess()
 
         expectCatching {
             validRegularHours.copy(
-                period_begin = validRegularHours.period_end,
-                period_end = validRegularHours.period_begin
+                periodBegin = validRegularHours.periodEnd,
+                periodEnd = validRegularHours.periodBegin
             ).validate()
         }.isFailure()
 
@@ -400,19 +400,19 @@ class LocationsValidatorTest {
 
         expectCatching {
             validRegularHours.copy(
-                period_begin = "1:00"
+                periodBegin = "1:00"
             ).validate()
         }.isFailure()
 
         expectCatching {
             validRegularHours.copy(
-                period_begin = "00:1"
+                periodBegin = "00:1"
             ).validate()
         }.isFailure()
 
         expectCatching {
             validRegularHours.copy(
-                period_begin = "0010"
+                periodBegin = "0010"
             ).validate()
         }.isFailure()
     }
@@ -423,34 +423,34 @@ class LocationsValidatorTest {
             validHours.validate()
 
             validHours.copy(
-                regular_hours = null,
-                twenty_four_seven = true
+                regularHours = null,
+                twentyFourSeven = true
             ).validate()
 
             validHours.copy(
-                exceptional_openings = emptyList(),
-                exceptional_closings = emptyList()
+                exceptionalOpenings = emptyList(),
+                exceptionalClosings = emptyList()
             ).validate()
         }.isSuccess()
 
         expectCatching {
             validHours.copy(
-                regular_hours = listOf(validRegularHours),
-                twenty_four_seven = true
+                regularHours = listOf(validRegularHours),
+                twentyFourSeven = true
             ).toPartial().validate()
         }.isFailure()
 
         expectCatching {
             validHours.copy(
-                regular_hours = listOf(validRegularHours),
-                twenty_four_seven = true
+                regularHours = listOf(validRegularHours),
+                twentyFourSeven = true
             ).validate()
         }.isFailure()
 
         expectCatching {
             validHours.copy(
-                regular_hours = null,
-                twenty_four_seven = false
+                regularHours = null,
+                twentyFourSeven = false
             ).validate()
         }.isFailure()
     }
@@ -550,16 +550,16 @@ class LocationsValidatorTest {
         expectCatching {
             validStatusSchedule.validate()
             validStatusSchedule.copy(
-                period_begin = validStatusSchedule.period_begin,
-                period_end = validStatusSchedule.period_begin,
+                periodBegin = validStatusSchedule.periodBegin,
+                periodEnd = validStatusSchedule.periodBegin
             ).validate()
-            validStatusSchedule.copy(period_end = null).validate()
+            validStatusSchedule.copy(periodEnd = null).validate()
         }.isSuccess()
 
         expectCatching {
             validStatusSchedule.copy(
-                period_begin = validStatusSchedule.period_end!!,
-                period_end = validStatusSchedule.period_begin,
+                periodBegin = validStatusSchedule.periodEnd!!,
+                periodEnd = validStatusSchedule.periodBegin
             ).validate()
         }.isFailure()
     }

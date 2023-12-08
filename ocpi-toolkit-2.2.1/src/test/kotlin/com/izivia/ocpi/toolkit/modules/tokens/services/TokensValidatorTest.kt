@@ -26,24 +26,23 @@ class TokensValidatorTest {
         }.isSuccess()
 
         expectCatching {
-            validTokenFullRfid.copy(country_code = "test").validate()
+            validTokenFullRfid.copy(countryCode = "test").validate()
         }.isFailure()
 
         expectCatching {
-            validTokenFullRfid.copy(party_id = generateRandomString(4)).validate()
+            validTokenFullRfid.copy(partyId = generateRandomString(4)).validate()
         }.isFailure()
 
         expectCatching {
             validTokenFullRfid.copy(uid = generateRandomString(37)).validate()
         }.isFailure()
 
-
         expectCatching {
-            validTokenFullRfid.copy(contract_id = generateRandomString(37)).validate()
+            validTokenFullRfid.copy(contractId = generateRandomString(37)).validate()
         }.isFailure()
 
         expectCatching {
-            validTokenFullRfid.copy(visual_number = generateRandomString(66)).validate()
+            validTokenFullRfid.copy(visualNumber = generateRandomString(66)).validate()
         }.isFailure()
 
         expectCatching {
@@ -51,7 +50,7 @@ class TokensValidatorTest {
         }.isFailure()
 
         expectCatching {
-            validTokenFullRfid.copy(group_id = generateRandomString(37)).validate()
+            validTokenFullRfid.copy(groupId = generateRandomString(37)).validate()
         }.isFailure()
 
         expectCatching {
@@ -66,7 +65,7 @@ class TokensValidatorTest {
         }.isSuccess()
 
         expectCatching {
-            validAuthorizationInfo.copy(authorization_reference = generateRandomString(37)).validate()
+            validAuthorizationInfo.copy(authorizationReference = generateRandomString(37)).validate()
         }.isFailure()
     }
 
@@ -77,11 +76,11 @@ class TokensValidatorTest {
         }.isSuccess()
 
         expectCatching {
-            validEnergyContract.copy(supplier_name = generateRandomString(65)).validate()
+            validEnergyContract.copy(supplierName = generateRandomString(65)).validate()
         }.isFailure()
 
         expectCatching {
-            validEnergyContract.copy(contract_id = generateRandomString(65)).validate()
+            validEnergyContract.copy(contractId = generateRandomString(65)).validate()
         }.isFailure()
     }
 
@@ -92,11 +91,11 @@ class TokensValidatorTest {
         }.isSuccess()
 
         expectCatching {
-            validLocationReference.copy(location_id = generateRandomString(37)).validate()
+            validLocationReference.copy(locationId = generateRandomString(37)).validate()
         }.isFailure()
 
         expectCatching {
-            validLocationReference.copy(evse_uids = listOf(generateRandomString(37))).validate()
+            validLocationReference.copy(evseUids = listOf(generateRandomString(37))).validate()
         }.isFailure()
     }
 

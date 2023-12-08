@@ -1,10 +1,10 @@
 plugins {
-    base
-    `java-library`
-    kotlin("kapt")
+    kotlin("jvm")
 }
 
-kotlinProject()
+repositories {
+    mavenCentral()
+}
 
 java {
     withJavadocJar()
@@ -22,7 +22,10 @@ publishing {
             pom {
                 name.set("OCPI Annotation processor")
                 artifactId = "ocpi-annotation-processor"
-                description.set("This module processes annotations during compilation time in order to generate some code (partial representation, etc ...)")
+                description.set(
+                    "This module processes annotations during compilation time in order to generate some code " +
+                        "(partial representation, etc ...)"
+                )
             }
         }
     }
@@ -30,8 +33,9 @@ publishing {
 
 dependencies {
     implementation("com.squareup:kotlinpoet:${Versions.kotlinPoet}")
-    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable")
-    implementation("de.jensklingenberg:mpapt-runtime:${Versions.mpapt}")
+    implementation("com.squareup:kotlinpoet-ksp:${Versions.kotlinPoet}")
+    implementation("com.google.devtools.ksp:symbol-processing-api:${Versions.ksp}")
+    implementation(project(":common"))
 }
 
 tasks.build {

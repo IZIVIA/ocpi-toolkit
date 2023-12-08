@@ -8,7 +8,6 @@ import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferencesRespon
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import java.time.Instant
 
-
 /**
  * Typically implemented by market roles like: CPO.
  *
@@ -55,5 +54,4 @@ interface SessionsCpoInterface {
         sessionId: CiString,
         chargingPreferences: ChargingPreferences
     ): OcpiResponseBody<ChargingPreferencesResponseType>
-
 }

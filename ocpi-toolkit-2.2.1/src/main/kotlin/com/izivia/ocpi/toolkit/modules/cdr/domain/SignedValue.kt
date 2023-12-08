@@ -12,14 +12,14 @@ Possible values at moment of writing:
 - End (signed value at the end of the Session)
 - Intermediate (signed values take during the Session, after Start, before End)
 Others might be added later.
- * @property plain_data The unencoded string of data. The format of the content depends on the
+ * @property plainData The unencoded string of data. The format of the content depends on the
 EncodingMethod field.
- * @property signed_data Blob of signed data, base64 encoded. The format of the content depends on the
+ * @property signedData Blob of signed data, base64 encoded. The format of the content depends on the
 EncodingMethod field.
  */
 @Partial
 data class SignedValue(
     val nature: CiString,
-    val plain_data: CiString,
-    val signed_data: CiString
+    val plainData: CiString,
+    val signedData: CiString
 )

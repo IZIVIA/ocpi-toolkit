@@ -1,6 +1,5 @@
 package com.izivia.ocpi.toolkit.modules.cdr.domain
 
-
 /**
  * This enumeration contains allowed values for CdrDimensions, which are used to define dimensions of ChargingPeriods in both
 CDRs and Sessions. Some of these values are not useful for CDRs, and SHALL therefor only be used in Sessions, these are
@@ -11,13 +10,13 @@ enum class CdrDimensionType {
     /**
      * Session Only.
      * Average charging current during this ChargingPeriod: defined in A (Ampere). When
-    negative, the current is flowing from the EV to the grid.
+     negative, the current is flowing from the EV to the grid.
      */
     CURRENT,
 
     /**
      *Total amount of energy (dis-)charged during this ChargingPeriod: defined in kWh. When
-    negative, more energy was feed into the grid then charged into the EV. Default step_size is 1.
+     negative, more energy was feed into the grid then charged into the EV. Default step_size is 1.
      */
     ENERGY,
 
@@ -35,13 +34,13 @@ enum class CdrDimensionType {
 
     /**
      * Sum of the maximum current over all phases, reached during this ChargingPeriod: defined
-    in A (Ampere).
+     in A (Ampere).
      */
     MAX_CURRENT,
 
     /**
      * Sum of the minimum current over all phases, reached during this ChargingPeriod, when
-    negative, current has flowed from the EV to the grid. Defined in A (Ampere).
+     negative, current has flowed from the EV to the grid. Defined in A (Ampere).
      */
     MIN_CURRENT,
 
@@ -52,26 +51,26 @@ enum class CdrDimensionType {
 
     /**
      * Minimum power reached during this ChargingPeriod: defined in kW (Kilowatt), when
-    negative, the power has flowed from the EV to the grid.
+     negative, the power has flowed from the EV to the grid.
      */
     MIN_POWER,
 
     /**
      * Time during this ChargingPeriod not charging: defined in hours, default step_size multiplier
-    is 1 second.
+     is 1 second.
      */
     PARKING_TIME,
 
     /**
      * Session Only.
      * Average power during this ChargingPeriod: defined in kW (Kilowatt). When negative, the
-    power is flowing from the EV to the grid.
+     power is flowing from the EV to the grid.
      */
     POWER,
 
     /**
      * Time during this ChargingPeriod Charge Point has been reserved and not yet been in use
-    for this customer: defined in hours, default step_size multiplier is 1 second.
+     for this customer: defined in hours, default step_size multiplier is 1 second.
      */
     RESERVATION_TIME,
 
@@ -83,7 +82,7 @@ enum class CdrDimensionType {
 
     /**
      * Time charging during this ChargingPeriod: defined in hours, default step_size multiplier is 1
-    second.
+     second.
      */
     TIME
 }

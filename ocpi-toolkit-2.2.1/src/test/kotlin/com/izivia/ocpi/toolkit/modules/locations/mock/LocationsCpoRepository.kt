@@ -3,7 +3,7 @@ package com.izivia.ocpi.toolkit.modules.locations.mock
 import com.izivia.ocpi.toolkit.common.toSearchResult
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
 import java.time.Instant
@@ -18,14 +18,16 @@ fun locationsCpoRepository(locations: List<Location>): LocationsCpoRepository = 
     val offset = slot<Int>()
     val limit = mutableListOf<Int?>()
 
-    every { getLocations(captureNullable(dateFrom), captureNullable(dateTo), capture(offset), captureNullable(limit)) } answers {
+    coEvery {
+        getLocations(captureNullable(dateFrom), captureNullable(dateTo), capture(offset), captureNullable(limit))
+    } coAnswers {
         val capturedOffset = offset.captured
         val capturedLimit = limit.captured() ?: 10
 
         locations
             .filter { loc ->
-                val dateFromFilterOk = dateFrom.captured()?.let { loc.last_updated.isAfter(it) } ?: true
-                val dateToFilterOk = dateTo.captured()?.let { loc.last_updated.isBefore(it) } ?: true
+                val dateFromFilterOk = dateFrom.captured()?.let { loc.lastUpdated.isAfter(it) } ?: true
+                val dateToFilterOk = dateTo.captured()?.let { loc.lastUpdated.isBefore(it) } ?: true
 
                 dateFromFilterOk && dateToFilterOk
             }
@@ -36,20 +38,20 @@ fun locationsCpoRepository(locations: List<Location>): LocationsCpoRepository = 
             .toSearchResult(totalCount = locations.size, limit = capturedLimit, offset = capturedOffset)
     }
 
-    every { getLocation(capture(locationId)) } answers {
+    coEvery { getLocation(capture(locationId)) } coAnswers {
         locations.find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
     }
 
-    every { getEvse(capture(locationId), capture(evseUid)) } answers {
+    coEvery { getEvse(capture(locationId), capture(evseUid)) } coAnswers {
         locations
-            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH)  }
+            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
             ?.evses
             ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
     }
 
-    every { getConnector(capture(locationId), capture(evseUid), capture(connectorId)) } answers {
+    coEvery { getConnector(capture(locationId), capture(evseUid), capture(connectorId)) } coAnswers {
         locations
-            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH)  }
+            .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
             ?.evses
             ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
             ?.connectors

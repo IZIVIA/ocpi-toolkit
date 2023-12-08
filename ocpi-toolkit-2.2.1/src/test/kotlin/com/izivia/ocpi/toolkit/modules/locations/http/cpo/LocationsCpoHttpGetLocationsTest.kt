@@ -13,7 +13,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.runBlocking
@@ -31,42 +31,42 @@ class LocationsCpoHttpGetLocationsTest {
             var dateTo = slot<Instant>()
         }
         val srv = mockk<LocationsCpoRepository>() {
-            every { getLocations(capture(slots.dateFrom), capture(slots.dateTo), any(), any()) } answers {
+            coEvery { getLocations(capture(slots.dateFrom), capture(slots.dateTo), any(), any()) } coAnswers {
                 listOf(
                     Location(
-                        country_code = "NL",
-                        party_id = "ALF",
+                        countryCode = "NL",
+                        partyId = "ALF",
                         id = "3e7b39c2-10d0-4138-a8b3-8509a25f9920",
                         name = "ihomer",
                         address = "Tamboerijn 7",
                         city = "Etten-Leur",
-                        postal_code = "4876 BS",
+                        postalCode = "4876 BS",
                         country = "NLD",
                         coordinates = GeoLocation("51.562787", "4.638975"),
-                        parking_type = ParkingType.PARKING_LOT,
+                        parkingType = ParkingType.PARKING_LOT,
                         evses = listOf(
                             Evse(
                                 uid = "fd855359-bc81-47bb-bb89-849ae3dac89e",
-                                evse_id = "NL*ALF*E000000001",
+                                evseId = "NL*ALF*E000000001",
                                 status = Status.AVAILABLE,
                                 connectors = listOf(
                                     Connector(
                                         id = "1",
                                         standard = ConnectorType.IEC_62196_T2,
                                         format = ConnectorFormat.SOCKET,
-                                        power_type = PowerType.AC_3_PHASE,
-                                        max_voltage = 220,
-                                        max_amperage = 16,
-                                        last_updated = Instant.parse("2019-07-01T12:12:11Z")
+                                        powerType = PowerType.AC_3_PHASE,
+                                        maxVoltage = 220,
+                                        maxAmperage = 16,
+                                        lastUpdated = Instant.parse("2019-07-01T12:12:11Z")
                                     )
                                 ),
-                                parking_restrictions = listOf(ParkingRestriction.CUSTOMERS),
-                                last_updated = Instant.parse("2019-07-01T12:12:11Z")
+                                parkingRestrictions = listOf(ParkingRestriction.CUSTOMERS),
+                                lastUpdated = Instant.parse("2019-07-01T12:12:11Z")
                             )
                         ),
                         publish = true,
-                        time_zone = "Europe/Amsterdam",
-                        last_updated = Instant.parse("2019-07-01T12:12:11Z")
+                        timeZone = "Europe/Amsterdam",
+                        lastUpdated = Instant.parse("2019-07-01T12:12:11Z")
                     )
                 ).toSearchResult()
             }

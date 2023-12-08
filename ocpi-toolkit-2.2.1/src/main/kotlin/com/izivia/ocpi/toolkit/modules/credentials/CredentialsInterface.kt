@@ -5,7 +5,7 @@ import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 
 /**
  * The Credentials module is different from all other OCPI modules. This module is symmetric, it has to be implemented
- * by all OCPI implementations, and all implementations need to be able call this module on any other platform, and have
+ * by all OCPI implementations, and all implementations need to be able call this module on any other partner, and have
  * to be able the handle receiving the request from another party.
  */
 interface CredentialsInterface {
@@ -29,7 +29,7 @@ interface CredentialsInterface {
      * before.
      */
     suspend fun post(
-        tokenA: String,
+        token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials>

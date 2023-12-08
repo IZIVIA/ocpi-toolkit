@@ -14,7 +14,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.runBlocking
@@ -27,23 +27,23 @@ class TokensCpoHttpPatchTokenTest {
     @Test
     fun `should patch token`() {
         val token = Token(
-            country_code = "DE",
-            party_id = "TNM",
+            countryCode = "DE",
+            partyId = "TNM",
             uid = "12345678905880",
             type = TokenType.RFID,
-            contract_id = "DE8ACC12E46L89",
-            visual_number = "DF000-2001-8999-1",
+            contractId = "DE8ACC12E46L89",
+            visualNumber = "DF000-2001-8999-1",
             issuer = "TheNewMotion",
-            group_id = "DF000-2001-8999",
+            groupId = "DF000-2001-8999",
             valid = true,
             whitelist = WhitelistType.ALLOWED,
             language = "it",
-            default_profile_type = ProfileType.GREEN,
-            energy_contract = EnergyContract(
-                supplier_name = "Greenpeace Energy eG",
-                contract_id = "0123456789"
+            defaultProfileType = ProfileType.GREEN,
+            energyContract = EnergyContract(
+                supplierName = "Greenpeace Energy eG",
+                contractId = "0123456789"
             ),
-            last_updated = Instant.parse("2018-12-10T17:25:10Z")
+            lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
         )
         val slots = object {
             var token = slot<TokenPartial>()
@@ -53,7 +53,7 @@ class TokensCpoHttpPatchTokenTest {
             var type = slot<TokenType>()
         }
         val srv = mockk<TokensCpoRepository>() {
-            every {
+            coEvery {
                 patchToken(
                     capture(slots.token),
                     capture(slots.countryCode),
@@ -61,13 +61,13 @@ class TokensCpoHttpPatchTokenTest {
                     capture(slots.tokenUID),
                     capture(slots.type)
                 )
-            } answers { token }
+            } coAnswers { token }
         }.buildServer()
         OcpiResponseBody.now = { Instant.parse("2015-06-30T21:59:59Z") }
 
-        //when
+        // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PATCH, "/tokens/DE/TNM/012345678/?type=RFID", mapper.writeValueAsString(token)),
+            buildHttpRequest(HttpMethod.PATCH, "/tokens/DE/TNM/012345678/?type=RFID", mapper.writeValueAsString(token))
         )
 
         // then
@@ -94,45 +94,45 @@ class TokensCpoHttpPatchTokenTest {
     @Test
     fun `should patch partial token`() {
         val token = Token(
-            country_code = "DE",
-            party_id = "TNM",
+            countryCode = "DE",
+            partyId = "TNM",
             uid = "12345678905880",
             type = TokenType.RFID,
-            contract_id = "DE8ACC12E46L89",
-            visual_number = "DF000-2001-8999-1",
+            contractId = "DE8ACC12E46L89",
+            visualNumber = "DF000-2001-8999-1",
             issuer = "TheNewMotion",
-            group_id = "DF000-2001-8999",
+            groupId = "DF000-2001-8999",
             valid = true,
             whitelist = WhitelistType.ALLOWED,
             language = "it",
-            default_profile_type = ProfileType.GREEN,
-            energy_contract = EnergyContract(
-                supplier_name = "Greenpeace Energy eG",
-                contract_id = "0123456789"
+            defaultProfileType = ProfileType.GREEN,
+            energyContract = EnergyContract(
+                supplierName = "Greenpeace Energy eG",
+                contractId = "0123456789"
             ),
-            last_updated = Instant.parse("2018-12-10T17:25:10Z")
+            lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
         )
 
         val partialToken = TokenPartial(
-            country_code = "DE",
-            party_id = "TNM",
+            countryCode = "DE",
+            partyId = "TNM",
             uid = "12345678905880",
             type = TokenType.RFID,
-            contract_id = "DE8ACC12E46L89",
-            visual_number = "DF000-2001-8999-1",
-            //issuer = "TheNewMotion",
+            contractId = "DE8ACC12E46L89",
+            visualNumber = "DF000-2001-8999-1",
+            // issuer = "TheNewMotion",
             issuer = null,
-            group_id = "DF000-2001-8999",
+            groupId = "DF000-2001-8999",
             valid = true,
             whitelist = WhitelistType.ALLOWED,
-            //language = "it",
+            // language = "it",
             language = null,
-            default_profile_type = ProfileType.GREEN,
-            energy_contract = EnergyContractPartial(
-                supplier_name = "Greenpeace Energy eG",
-                contract_id = "0123456789"
+            defaultProfileType = ProfileType.GREEN,
+            energyContract = EnergyContractPartial(
+                supplierName = "Greenpeace Energy eG",
+                contractId = "0123456789"
             ),
-            last_updated = Instant.parse("2018-12-10T17:25:10Z")
+            lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
         )
 
         val slots = object {
@@ -143,7 +143,7 @@ class TokensCpoHttpPatchTokenTest {
             var type = slot<TokenType>()
         }
         val srv = mockk<TokensCpoRepository>() {
-            every {
+            coEvery {
                 patchToken(
                     capture(slots.token),
                     capture(slots.countryCode),
@@ -151,13 +151,17 @@ class TokensCpoHttpPatchTokenTest {
                     capture(slots.tokenUID),
                     capture(slots.type)
                 )
-            } answers { token }
+            } coAnswers { token }
         }.buildServer()
         OcpiResponseBody.now = { Instant.parse("2015-06-30T21:59:59Z") }
 
-        //when
+        // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PATCH, "/tokens/DE/TNM/012345678/?type=RFID", mapper.writeValueAsString(partialToken)),
+            buildHttpRequest(
+                HttpMethod.PATCH,
+                "/tokens/DE/TNM/012345678/?type=RFID",
+                mapper.writeValueAsString(partialToken)
+            )
         )
 
         // then

@@ -1,15 +1,21 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 import java.util.Base64
 
-plugins {
-    base
-    java
-    kotlin("jvm") apply false
-    kotlin("kapt") apply false
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+buildscript {
+    dependencies {
+        classpath(kotlin("gradle-plugin", version = Versions.kotlin))
+    }
 }
 
-val versionNumber = System.getenv("VERSION")?.substringAfter("R-") ?: "0.0.6"
+plugins {
+    kotlin("jvm") version Versions.kotlin apply false
+    id("com.google.devtools.ksp") version Versions.ksp apply false
+    id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintPlugin apply false
+    id("io.github.gradle-nexus.publish-plugin") version Versions.nexus
+}
+
+val versionNumber = System.getenv("VERSION")?.substringAfter("R-") ?: "0.0.15"
 
 println("building current version: $versionNumber")
 
@@ -43,6 +49,19 @@ subprojects {
         plugin("org.jetbrains.kotlin.jvm")
         plugin("maven-publish")
         plugin("signing")
+        plugin("org.jlleitschuh.gradle.ktlint")
+    }
+
+    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+        version.set(Versions.ktlint)
+        verbose.set(true)
+        outputToConsole.set(true)
+        reporters {
+            reporter(ReporterType.JSON)
+        }
+        filter {
+            exclude { element -> element.file.path.contains("generated") }
+        }
     }
 
     extensions.getByType<PublishingExtension>().publications {

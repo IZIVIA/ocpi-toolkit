@@ -5,7 +5,7 @@ import com.izivia.ocpi.toolkit.modules.versions.repositories.VersionDetailsRepos
 
 class VersionDetailsCacheRepository(
     private val baseUrl: String
-): VersionDetailsRepository {
+) : VersionDetailsRepository {
 
     override suspend fun getVersionDetails(versionNumber: VersionNumber): VersionDetails? =
         VersionDetails(

@@ -1,7 +1,5 @@
 package com.izivia.ocpi.toolkit.modules.tariff.domain
 
-import com.izivia.ocpi.toolkit.annotations.Partial
-
 enum class TariffDimensionType {
     /**
      * Defined in kWh, step_size multiplier: 1 Wh

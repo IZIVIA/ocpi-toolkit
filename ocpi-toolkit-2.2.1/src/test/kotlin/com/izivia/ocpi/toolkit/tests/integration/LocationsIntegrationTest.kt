@@ -28,11 +28,11 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-1-1-tests")
         val collection = database!!.getCollection<Location>("cpo-server-locations-${UUID.randomUUID()}")
         collection.insertMany(locations)
-        val server = buildTransportServer(DummyPlatformCacheRepository())
+        val server = buildTransportServer(DummyPartnerCacheRepository())
         runBlocking {
             LocationsCpoServer(
                 LocationsCpoService(
-                    service = LocationsCpoMongoRepository(collection),
+                    service = LocationsCpoMongoRepository(collection)
                 )
             ).registerOn(server)
         }
@@ -41,7 +41,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
     @Test
     fun `getLocations test (paginated)`() {
-
         // Start CPO server with dummy data
         val numberOfLocations = 500
         val referenceDate = Instant.parse("2022-04-28T09:00:00.000Z")
@@ -51,7 +50,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             locations = (0 until numberOfLocations).map { index ->
                 validLocation.copy(
                     evses = listOf(validEvse.copy(connectors = listOf(validConnector))),
-                    last_updated = referenceDate.plusSeconds(3600L * index)
+                    lastUpdated = referenceDate.plusSeconds(3600L * index)
                 )
             }
         )
@@ -59,7 +58,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         val cpoServerVersionsUrl = "${cpoServer.baseUrl}/versions"
 
-        val platformRepo = DummyPlatformCacheRepository().also {
+        val partnerRepo = DummyPartnerCacheRepository().also {
             val versionDetailsCpo = VersionDetailsCacheRepository(baseUrl = cpoServer.baseUrl)
 
             runBlocking {
@@ -70,11 +69,10 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             }
         }
 
-
         val locationsEmspClient = LocationsEmspClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = cpoServerVersionsUrl,
-            platformRepository = platformRepo
+            partnerRepository = partnerRepo
         )
 
         // Tests
@@ -177,14 +175,15 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         dateFrom = null
         dateTo = null
 
-        expectThat(runBlocking {
-            locationsEmspClient.getLocations(
-                dateFrom = dateFrom,
-                dateTo = dateTo,
-                offset = offset,
-                limit = limit
-            )
-        }
+        expectThat(
+            runBlocking {
+                locationsEmspClient.getLocations(
+                    dateFrom = dateFrom,
+                    dateTo = dateTo,
+                    offset = offset,
+                    limit = limit
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -223,14 +222,15 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         dateFrom = referenceDate
         dateTo = lastDate
 
-        expectThat(runBlocking {
-            locationsEmspClient.getLocations(
-                dateFrom = dateFrom,
-                dateTo = dateTo,
-                offset = offset,
-                limit = limit
-            )
-        }
+        expectThat(
+            runBlocking {
+                locationsEmspClient.getLocations(
+                    dateFrom = dateFrom,
+                    dateTo = dateTo,
+                    offset = offset,
+                    limit = limit
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -269,14 +269,15 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         dateFrom = referenceDate
         dateTo = null
 
-        expectThat(runBlocking {
-            locationsEmspClient.getLocations(
-                dateFrom = dateFrom,
-                dateTo = dateTo,
-                offset = offset,
-                limit = limit
-            )
-        }
+        expectThat(
+            runBlocking {
+                locationsEmspClient.getLocations(
+                    dateFrom = dateFrom,
+                    dateTo = dateTo,
+                    offset = offset,
+                    limit = limit
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -315,14 +316,15 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         dateFrom = null
         dateTo = lastDate
 
-        expectThat(runBlocking {
-            locationsEmspClient.getLocations(
-                dateFrom = dateFrom,
-                dateTo = dateTo,
-                offset = offset,
-                limit = limit
-            )
-        }
+        expectThat(
+            runBlocking {
+                locationsEmspClient.getLocations(
+                    dateFrom = dateFrom,
+                    dateTo = dateTo,
+                    offset = offset,
+                    limit = limit
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -361,14 +363,15 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         dateFrom = lastDate
         dateTo = null
 
-        expectThat(runBlocking {
-            locationsEmspClient.getLocations(
-                dateFrom = dateFrom,
-                dateTo = dateTo,
-                offset = offset,
-                limit = limit
-            )
-        }
+        expectThat(
+            runBlocking {
+                locationsEmspClient.getLocations(
+                    dateFrom = dateFrom,
+                    dateTo = dateTo,
+                    offset = offset,
+                    limit = limit
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -407,14 +410,15 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         dateFrom = null
         dateTo = referenceDate
 
-        expectThat(runBlocking {
-            locationsEmspClient.getLocations(
-                dateFrom = dateFrom,
-                dateTo = dateTo,
-                offset = offset,
-                limit = limit
-            )
-        }
+        expectThat(
+            runBlocking {
+                locationsEmspClient.getLocations(
+                    dateFrom = dateFrom,
+                    dateTo = dateTo,
+                    offset = offset,
+                    limit = limit
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -495,14 +499,15 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         dateFrom = null
         dateTo = lastDate.minusSeconds(3600L)
 
-        expectThat(runBlocking {
-            locationsEmspClient.getLocations(
-                dateFrom = dateFrom,
-                dateTo = dateTo,
-                offset = offset,
-                limit = limit
-            )
-        }
+        expectThat(
+            runBlocking {
+                locationsEmspClient.getLocations(
+                    dateFrom = dateFrom,
+                    dateTo = dateTo,
+                    offset = offset,
+                    limit = limit
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -532,7 +537,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 }
                 .and {
                     get { nextPageUrl }
-                        .isEqualTo("${cpoServer.baseUrl}/2.2.1/locations?date_to=${dateTo}&limit=$limit&offset=${offset + limit}")
+                        .isEqualTo(
+                            "${cpoServer.baseUrl}/2.2.1/locations?date_to=$dateTo&limit=$limit&offset=${offset + limit}"
+                        )
                 }
         }
     }

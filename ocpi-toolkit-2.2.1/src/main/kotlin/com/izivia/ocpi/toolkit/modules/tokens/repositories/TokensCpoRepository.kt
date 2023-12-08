@@ -33,7 +33,12 @@ interface TokensCpoRepository {
      * @param type Token.type of the Token to retrieve. Default if omitted: RFID
      * @return The requested Token object.
      */
-    fun getToken(countryCode: CiString, partyId: CiString, tokenUid: CiString, type: TokenType? = TokenType.RFID): Token
+    suspend fun getToken(
+        countryCode: CiString,
+        partyId: CiString,
+        tokenUid: CiString,
+        type: TokenType? = TokenType.RFID
+    ): Token
 
     /**
      * PUT Method
@@ -51,7 +56,7 @@ interface TokensCpoRepository {
      * @param type (Request parameter) Token.type of the Token of the (new) Token object (to replace). Default if omitted:
      * RFID
      */
-    fun putToken(
+    suspend fun putToken(
         token: Token,
         countryCode: CiString,
         partyId: CiString,
@@ -78,7 +83,7 @@ interface TokensCpoRepository {
      * @param type (Request parameter) Token.type of the Token of the (new) Token object (to replace). Default if omitted:
      * RFID
      */
-    fun patchToken(
+    suspend fun patchToken(
         token: TokenPartial,
         countryCode: CiString,
         partyId: CiString,

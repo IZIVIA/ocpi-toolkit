@@ -12,7 +12,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.runBlocking
@@ -31,17 +31,17 @@ class LocationsEmspHttpGetEvseTest {
             var evseUid = slot<String>()
         }
         val srv = mockk<LocationsEmspRepository>() {
-            every {
+            coEvery {
                 getEvse(
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.locationId),
                     capture(slots.evseUid)
                 )
-            } answers {
+            } coAnswers {
                 Evse(
                     uid = "3256",
-                    evse_id = "BE*BEC*E041503001",
+                    evseId = "BE*BEC*E041503001",
                     status = Status.AVAILABLE,
                     capabilities = listOf(Capability.RESERVABLE),
                     connectors = listOf(
@@ -49,26 +49,26 @@ class LocationsEmspHttpGetEvseTest {
                             id = "1",
                             standard = ConnectorType.IEC_62196_T2,
                             format = ConnectorFormat.CABLE,
-                            power_type = PowerType.AC_3_PHASE,
-                            max_voltage = 220,
-                            max_amperage = 16,
-                            tariff_ids = listOf("11"),
-                            last_updated = Instant.parse("2015-03-16T10:10:02Z")
+                            powerType = PowerType.AC_3_PHASE,
+                            maxVoltage = 220,
+                            maxAmperage = 16,
+                            tariffIds = listOf("11"),
+                            lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
                         ),
                         Connector(
                             id = "2",
                             standard = ConnectorType.IEC_62196_T2,
                             format = ConnectorFormat.SOCKET,
-                            power_type = PowerType.AC_3_PHASE,
-                            max_voltage = 220,
-                            max_amperage = 16,
-                            tariff_ids = listOf("13"),
-                            last_updated = Instant.parse("2015-03-18T08:12:01Z")
-                        ),
+                            powerType = PowerType.AC_3_PHASE,
+                            maxVoltage = 220,
+                            maxAmperage = 16,
+                            tariffIds = listOf("13"),
+                            lastUpdated = Instant.parse("2015-03-18T08:12:01Z")
+                        )
                     ),
-                    floor_level = "-1",
-                    physical_reference = "1",
-                    last_updated = Instant.parse("2015-06-28T08:12:01Z")
+                    floorLevel = "-1",
+                    physicalReference = "1",
+                    lastUpdated = Instant.parse("2015-06-28T08:12:01Z")
                 )
             }
         }.buildServer()
@@ -128,7 +128,7 @@ class LocationsEmspHttpGetEvseTest {
                   "status_message": "Success",
                   "timestamp": "2015-06-30T21:59:59Z"
                 }
-                 """.trimIndent()
+                """.trimIndent()
             )
         }
     }

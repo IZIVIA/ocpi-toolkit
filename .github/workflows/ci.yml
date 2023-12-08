@@ -26,16 +26,15 @@ jobs:
             -   name: Checkout IZIVIA OCPI toolkit library code from GH
                 uses: actions/checkout@v3
 
-            -   name: Publish annotation processor to maven local
-                uses: gradle/gradle-build-action@v2.8.1
+            -   name: Setup gradle action
+                uses: gradle/gradle-build-action@v2.10.0
                 with:
                     gradle-version: wrapper
-                    arguments: :annotation-processor:publishToMavenLocal
-                    cache-read-only: ${{ github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/main' }}
+                    cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+                    gradle-home-cache-cleanup: true
+
+            -   name: Ktlint check OCPI toolkit
+                run: ./gradlew ktlintCheck
 
             -   name: Build OCPI toolkit
-                uses: gradle/gradle-build-action@v2.8.1
-                with:
-                    gradle-version: wrapper
-                    arguments: build
-                    cache-read-only: ${{ github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/main' }}
+                run: ./gradlew build

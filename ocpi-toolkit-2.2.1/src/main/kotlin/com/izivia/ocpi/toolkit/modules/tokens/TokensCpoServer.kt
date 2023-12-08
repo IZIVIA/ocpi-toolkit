@@ -9,7 +9,6 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
-import java.time.Instant
 
 /**
  * Receives calls from a CPO
@@ -20,8 +19,7 @@ class TokensCpoServer(
     basePath: String = "/2.2.1/tokens"
 ) : OcpiModuleServer(basePath) {
     override suspend fun registerOn(transportServer: TransportServer) {
-
-        //Get Method
+        // Get Method
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments + listOf(
@@ -37,12 +35,12 @@ class TokensCpoServer(
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         tokenUid = req.pathParams["tokenUid"]!!,
-                        type = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
+                        type = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID
                     )
             }
         }
 
-        //Put Method
+        // Put Method
         transportServer.handle(
             method = HttpMethod.PUT,
             path = basePathSegments + listOf(
@@ -63,7 +61,7 @@ class TokensCpoServer(
                     )
             }
         }
-        //Patch Method
+        // Patch Method
         transportServer.handle(
             method = HttpMethod.PATCH,
             path = basePathSegments + listOf(

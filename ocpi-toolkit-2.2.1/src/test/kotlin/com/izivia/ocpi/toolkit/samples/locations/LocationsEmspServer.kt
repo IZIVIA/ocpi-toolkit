@@ -39,15 +39,15 @@ fun main() {
 }
 
 class CacheLocationsEmspRepository : LocationsEmspRepository {
-    override fun getLocation(countryCode: String, partyId: String, locationId: String): Location? {
+    override suspend fun getLocation(countryCode: String, partyId: String, locationId: String): Location? {
         return validLocation
     }
 
-    override fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): Evse? {
+    override suspend fun getEvse(countryCode: String, partyId: String, locationId: String, evseUid: String): Evse? {
         TODO("Not yet implemented")
     }
 
-    override fun getConnector(
+    override suspend fun getConnector(
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -57,15 +57,26 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         TODO("Not yet implemented")
     }
 
-    override fun putLocation(countryCode: String, partyId: String, locationId: String, location: Location): Location {
+    override suspend fun putLocation(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        location: Location
+    ): Location {
         TODO("Not yet implemented")
     }
 
-    override fun putEvse(countryCode: String, partyId: String, locationId: String, evseUid: String, evse: Evse): Evse {
+    override suspend fun putEvse(
+        countryCode: String,
+        partyId: String,
+        locationId: String,
+        evseUid: String,
+        evse: Evse
+    ): Evse {
         TODO("Not yet implemented")
     }
 
-    override fun putConnector(
+    override suspend fun putConnector(
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -76,7 +87,7 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         TODO("Not yet implemented")
     }
 
-    override fun patchLocation(
+    override suspend fun patchLocation(
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -85,7 +96,7 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         TODO("Not yet implemented")
     }
 
-    override fun patchEvse(
+    override suspend fun patchEvse(
         countryCode: String,
         partyId: String,
         locationId: String,
@@ -95,7 +106,7 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         TODO("Not yet implemented")
     }
 
-    override fun patchConnector(
+    override suspend fun patchConnector(
         countryCode: String,
         partyId: String,
         locationId: String,

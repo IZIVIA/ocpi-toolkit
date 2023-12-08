@@ -1023,7 +1023,9 @@ ij_groovy_while_on_new_line = false
 ij_groovy_wrap_long_lines = false
 
 [{*.gradle.kts,*.kt,*.kts,*.main.kts}]
-ktlint_disabled_rules = no-wildcard-imports, package-name, filename
+ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_filename = disabled
+ktlint_standard_enum-entry-name-case = disabled
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
 ij_kotlin_align_multiline_extends_list = false

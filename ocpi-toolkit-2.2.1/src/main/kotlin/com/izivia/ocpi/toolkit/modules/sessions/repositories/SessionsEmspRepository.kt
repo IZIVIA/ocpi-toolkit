@@ -2,6 +2,7 @@ package com.izivia.ocpi.toolkit.modules.sessions.repositories
 
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
+import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 
 /**
  * Typically implemented by market roles like: eMSP and SCSP.
@@ -27,7 +28,7 @@ interface SessionsEmspRepository {
      * @param sessionId (max-length 36) id of the Session object to get from the eMSP’s system.
      * @return Session Requested Session object.
      */
-    fun getSession(countryCode: CiString, partyId: CiString, sessionId: CiString): Session
+    suspend fun getSession(countryCode: CiString, partyId: CiString, sessionId: CiString): Session?
 
     /**
      * PUT Method
@@ -45,7 +46,7 @@ interface SessionsEmspRepository {
      * @param session New or updated Session object.
      * @return Session New or updated Session object.
      */
-    fun putSession(countryCode: CiString, partyId: CiString, sessionId: CiString, session: Session): Session?
+    suspend fun putSession(countryCode: CiString, partyId: CiString, sessionId: CiString, session: Session): Session?
 
     /**
      * PATCH Method
@@ -64,5 +65,10 @@ interface SessionsEmspRepository {
      * @param session New or updated Session object.
      * @return Session New or updated Session object.
      */
-    fun patchSession(countryCode: CiString, partyId: CiString, sessionId: CiString, session: Session): Session?
+    suspend fun patchSession(
+        countryCode: CiString,
+        partyId: CiString,
+        sessionId: CiString,
+        session: SessionPartial
+    ): Session?
 }

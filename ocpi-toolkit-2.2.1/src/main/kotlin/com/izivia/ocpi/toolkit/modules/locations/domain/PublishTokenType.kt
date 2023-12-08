@@ -13,10 +13,10 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
  *
  * @property uid (max-length=36) Unique ID by which this Token can be identified.
  * @property type Type of the token.
- * @property visual_number (max-length=64) Visual readable number/identification as printed on the Token (RFID card).
+ * @property visualNumber (max-length=64) Visual readable number/identification as printed on the Token (RFID card).
  * @property issuer (max-length=64) Issuing company, most of the times the name of the company printed on the token
  * (RFID card), not necessarily the eMSP.
- * @property group_id (max-length=36) This ID groups a couple of tokens. This can be used to make two or more tokens
+ * @property groupId (max-length=36) This ID groups a couple of tokens. This can be used to make two or more tokens
  * work as one
  * @constructor
  */
@@ -24,7 +24,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 data class PublishTokenType(
     val uid: CiString?,
     val type: TokenType?,
-    val visual_number: String?,
+    val visualNumber: String?,
     val issuer: String?,
-    val group_id: CiString
+    val groupId: CiString
 )

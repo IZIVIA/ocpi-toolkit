@@ -3,7 +3,7 @@ package com.izivia.ocpi.toolkit.modules.credentials.domain
 /**
  * Every role needs a unique combination of: role, party_id and country_code.
  *
- * A platform can have the same role more than once, each with its own unique party_id and country_code, for example
+ * A partner can have the same role more than once, each with its own unique party_id and country_code, for example
  * when a CPO provides 'white-label' services for 'virtual' CPOs.
  *
  * One or more roles and thus party_id and country_code sets are provided here to inform a server about the party_id and
@@ -22,7 +22,7 @@ package com.izivia.ocpi.toolkit.modules.credentials.domain
  * from the OCPI party_id and/or the country_code.
  *
  * A Hub SHALL only reports itself as role: Hub. A Hub SHALL NOT report all the other connected parties as a role on the
- * platform. A Hub SHALL report connected parties via the HubClientInfo module.
+ * partner. A Hub SHALL report connected parties via the HubClientInfo module.
  *
  * @property token Case Sensitive, ASCII only. The credentials token for the other party to authenticate in your system.
  * Not encoded in Base64 or any other encoding.

@@ -28,7 +28,6 @@ class LocationsEmspService(
             ?.validate()
     }
 
-
     override suspend fun getEvse(
         countryCode: CiString,
         partyId: CiString,

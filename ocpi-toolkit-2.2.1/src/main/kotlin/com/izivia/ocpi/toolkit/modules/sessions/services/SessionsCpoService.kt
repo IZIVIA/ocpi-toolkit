@@ -40,6 +40,6 @@ class SessionsCpoService(
             validateLength("sessionId", sessionId, 36)
             chargingPreferences.validate()
         }
-        service.putChargingPreferences(sessionId, chargingPreferences) //nothing to validate
+        service.putChargingPreferences(sessionId, chargingPreferences) // nothing to validate
     }
 }

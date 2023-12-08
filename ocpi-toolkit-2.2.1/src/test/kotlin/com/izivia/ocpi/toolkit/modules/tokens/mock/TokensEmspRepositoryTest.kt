@@ -6,33 +6,32 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensEmspRepository
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
 import java.time.Instant
 
 fun getTokensEmspRepositoryTest(tokens: List<Token>): TokensEmspRepository = mockk {
-
     val dateFrom = mutableListOf<Instant?>()
     val dateTo = mutableListOf<Instant?>()
     val offset = slot<Int>()
     val limit = mutableListOf<Int?>()
 
-    every {
+    coEvery {
         getTokens(
             captureNullable(dateFrom),
             captureNullable(dateTo),
             capture(offset),
             captureNullable(limit)
         )
-    } answers {
+    } coAnswers {
         val capturedOffset = offset.captured
         val capturedLimit = limit.captured() ?: 10
 
         tokens
             .filter { token ->
-                val dateFromFilterOk = dateFrom.captured()?.let { token.last_updated.isAfter(it) } ?: true
-                val dateToFilterOk = dateTo.captured()?.let { token.last_updated.isBefore(it) } ?: true
+                val dateFromFilterOk = dateFrom.captured()?.let { token.lastUpdated.isAfter(it) } ?: true
+                val dateToFilterOk = dateTo.captured()?.let { token.lastUpdated.isBefore(it) } ?: true
 
                 dateFromFilterOk && dateToFilterOk
             }
@@ -45,12 +44,11 @@ fun getTokensEmspRepositoryTest(tokens: List<Token>): TokensEmspRepository = moc
 }
 
 fun postTokenEmspRepositoryTest(authorizationInfo: AuthorizationInfo): TokensEmspRepository = mockk {
-
     val tokenUid = slot<String>()
     val type = mutableListOf<TokenType?>()
     val locationReferences = mutableListOf<LocationReferences?>()
 
-    every {
+    coEvery {
         postToken(capture(tokenUid), captureNullable(type), captureNullable(locationReferences))
-    } answers { authorizationInfo }
+    } coAnswers { authorizationInfo }
 }

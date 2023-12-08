@@ -14,7 +14,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.runBlocking
@@ -31,39 +31,39 @@ class TokensEmspHttpPostTokenTest {
             var type = slot<TokenType>()
         }
         val srv = mockk<TokensEmspRepository>() {
-            every {
+            coEvery {
                 postToken(capture(slots.tokenUID), capture(slots.type), null)
-            } answers {
+            } coAnswers {
                 AuthorizationInfo(
                     allowed = AllowedType.ALLOWED,
                     token = Token(
-                        country_code = "DE",
-                        party_id = "TNM",
+                        countryCode = "DE",
+                        partyId = "TNM",
                         uid = "12345678905880",
                         type = TokenType.RFID,
-                        contract_id = "DE8ACC12E46L89",
-                        visual_number = "DF000-2001-8999-1",
+                        contractId = "DE8ACC12E46L89",
+                        visualNumber = "DF000-2001-8999-1",
                         issuer = "TheNewMotion",
-                        group_id = "DF000-2001-8999",
+                        groupId = "DF000-2001-8999",
                         valid = true,
                         whitelist = WhitelistType.ALLOWED,
                         language = "it",
-                        default_profile_type = ProfileType.GREEN,
-                        energy_contract = EnergyContract(
-                            supplier_name = "Greenpeace Energy eG",
-                            contract_id = "0123456789"
+                        defaultProfileType = ProfileType.GREEN,
+                        energyContract = EnergyContract(
+                            supplierName = "Greenpeace Energy eG",
+                            contractId = "0123456789"
                         ),
-                        last_updated = Instant.parse("2018-12-10T17:25:10Z")
+                        lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
                     ),
                     location = null,
-                    authorization_reference = null,
+                    authorizationReference = null,
                     info = null
                 )
             }
         }.buildServer()
         OcpiResponseBody.now = { Instant.parse("2015-06-30T21:59:59Z") }
 
-        //when
+        // when
         val resp: HttpResponse = srv.send(
             buildHttpRequest(HttpMethod.POST, "/tokens/012345678/authorize?type=RFID")
         )
@@ -117,42 +117,42 @@ class TokensEmspHttpPostTokenTest {
             var locationReferences = slot<LocationReferences>()
         }
         val srv = mockk<TokensEmspRepository>() {
-            every {
+            coEvery {
                 postToken(capture(slots.tokenUID), capture(slots.type), capture(slots.locationReferences))
-            } answers {
+            } coAnswers {
                 AuthorizationInfo(
                     allowed = AllowedType.ALLOWED,
                     token = Token(
-                        country_code = "DE",
-                        party_id = "TNM",
+                        countryCode = "DE",
+                        partyId = "TNM",
                         uid = "12345678905880",
                         type = TokenType.RFID,
-                        contract_id = "DE8ACC12E46L89",
-                        visual_number = "DF000-2001-8999-1",
+                        contractId = "DE8ACC12E46L89",
+                        visualNumber = "DF000-2001-8999-1",
                         issuer = "TheNewMotion",
-                        group_id = "DF000-2001-8999",
+                        groupId = "DF000-2001-8999",
                         valid = true,
                         whitelist = WhitelistType.ALLOWED,
                         language = "it",
-                        default_profile_type = ProfileType.GREEN,
-                        energy_contract = EnergyContract(
-                            supplier_name = "Greenpeace Energy eG",
-                            contract_id = "0123456789"
+                        defaultProfileType = ProfileType.GREEN,
+                        energyContract = EnergyContract(
+                            supplierName = "Greenpeace Energy eG",
+                            contractId = "0123456789"
                         ),
-                        last_updated = Instant.parse("2018-12-10T17:25:10Z")
+                        lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
                     ),
                     location = null,
-                    authorization_reference = null,
+                    authorizationReference = null,
                     info = null
                 )
             }
         }.buildServer()
         OcpiResponseBody.now = { Instant.parse("2015-06-30T21:59:59Z") }
 
-        //when
+        // when
         val locationReferences = LocationReferences(
-            location_id = "LOC1",
-            evse_uids = listOf("BE*BEC*E041503001", "BE*BEC*E041503002")
+            locationId = "LOC1",
+            evseUids = listOf("BE*BEC*E041503001", "BE*BEC*E041503002")
         )
         val resp: HttpResponse = srv.send(
             buildHttpRequest(
@@ -202,7 +202,6 @@ class TokensEmspHttpPostTokenTest {
             )
         }
     }
-
 }
 
 private fun TokensEmspRepository.buildServer(): TransportClient {

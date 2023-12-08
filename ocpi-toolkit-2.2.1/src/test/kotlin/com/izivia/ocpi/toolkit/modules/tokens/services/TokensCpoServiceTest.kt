@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 
-
 class TokensCpoServiceTest {
     private lateinit var service: TokensCpoService
 
@@ -93,7 +92,7 @@ class TokensCpoServiceTest {
                     token = validTokenFullRfid,
                     countryCode = str2chars,
                     partyId = str3chars,
-                    tokenUid = str4chars,
+                    tokenUid = str4chars
                 )
             }
         ) {
@@ -167,7 +166,7 @@ class TokensCpoServiceTest {
                     token = validTokenFullRfid.toPartial(),
                     countryCode = str2chars,
                     partyId = str3chars,
-                    tokenUid = str4chars,
+                    tokenUid = str4chars
                 )
             }
         ) {
