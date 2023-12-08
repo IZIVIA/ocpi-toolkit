@@ -1,24 +1,27 @@
 # Ocpi Toolkit
 
-[![OCPI CI](https://github.com/IZIVIA/ocpi-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/IZIVIA/ocpi-toolkit/actions/workflows/ci.yml)
+![CI](https://img.shields.io/github/actions/workflow/status/izivia/ocpi-toolkit/ci.yml?style=for-the-badge) ![Latest Release](https://img.shields.io/github/v/tag/izivia/ocpi-toolkit?style=for-the-badge&label=latest%20version)
 
-Open Charge Point Interface (OCPI) java / kotlin library
+Open Charge Point Interface (OCPI) kotlin library.
+
+> ⚠️ Currently in active development. Not ready for production yet. See https://github.com/IZIVIA/ocpi-toolkit/issues/33 for details.
 
 ## Setup
 
 In your `build.gradle.kts`, add:
+
 ```kts
 dependencies {
     implementation("com.izivia:ocpi-2-2-1:0.0.15")
     implementation("com.izivia:ocpi-transport:0.0.15")
-
-    // ... other dependencies
 }
 ```
 
 To see all available artifacts, go to: https://central.sonatype.com/search?namespace=com.izivia&q=ocpi
 
 ## Usage
+
+**You have the following updated code samples in [ocpi-toolkit-2.2.1/src/test](https://github.com/IZIVIA/ocpi-toolkit/tree/main/ocpi-toolkit-2.2.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples).**
 
 ### Server (CPO or eMSP)
 
@@ -31,20 +34,21 @@ Examples:
 **Common code (CPO / eMSP):**
 
 ```kotlin
+// PartnerMongoRepository is an implementation of PartnerRepository using mongo
+// It will be used to store information about partners with whom the server is communicating:
+// A partner has: Tokens (A, serverToken, clientToken), Endpoints, Versions, Roles
+// You can see an  example in the list above
+val partnerRepository = PartnerMongoRepository(
+    collection = mongoDatabase.getCollection<Location>(config.partnerCollection)
+)
+
 // Http4kTransportServer is an implementation of TransportServer using htt4k. You have to code your own implementation.
 // It defines the HTTP server, and how to handle requests.
 // You can see an  example in the list above
 val server = Http4kTransportServer(
     baseUrl = config.baseUrl, // Example: http://localhost:8080, only used for pagination
-    port = config.port // Example: 8080, used to know on which port the server will run
-)
-
-// PlatformMongoRepository is an implementation of PlatformRepository using mongo
-// It will be used to store information about partners with whom the server is communicating:
-// A partner has: Tokens (A, B, C), Endpoints, Versions
-// You can see an  example in the list above
-val partnerRepository = PlatformMongoRepository(
-    collection = mongoDatabase.getCollection<Location>(config.partnerCollection)
+    port = config.port, // Example: 8080, used to know on which port the server will run
+    secureFilter = senderPartnerRepository::checkToken // The filter called on secured routes
 )
 
 // VersionsCacheRepository is an implementation of VersionsRepository
@@ -59,34 +63,27 @@ val versionDetailsRepository = VersionDetailsCacheRepository()
 
 // Required: defines /versions endpoint
 VersionsServer(
-    transportServer = server,
-    partnerRepository = partnerRepository,
     validationService = VersionsValidationService(
         repository = versionsRepository
     )
-)
+).registerOn(server)
 
 // Required: defines /2.1.1, /2.2.1, whatever version endpoint
 VersionDetailsServer(
-    transportServer = server,
-    partnerRepository = partnerRepository,
     validationService = VersionDetailsValidationService(
         repository = versionDetailsRepository
     )
-)
+).registerOn(server)
 
 // Required: defines /{version}/credentials endpoint for any client to register following OCPI protocol
 CredentialsServer(
-    transportServer = server,
     service = CredentialsServerService(
         partnerRepository = partnerRepository,
-        serverBusinessDetails = cpoBusinessDetails,
-        serverPartyId = cpoPartyId,
-        serverCountryCode = cpoCountryCode,
+        credentialsRoleRepository = object : CredentialsRoleRepository { ... },
         transportClientBuilder = Http4kTransportClientBuilder(),
-        serverVersionsUrl = versionsUrl
+        serverVersionsUrl = { versionsUrl }
     )
-)
+).registerOn(server)
 ```
 
 **CPO code:**
@@ -103,7 +100,7 @@ LocationsCpoServer(
         service = locationsService
     ),
     partnerRepository = partnerRepository
-)
+).registerOn(server)
 
 // Once that all the modules are defined, you need to start the server
 server.start()
@@ -119,14 +116,12 @@ val locationsService = LocationsEmspMongoService()
 // Defines /{version}/locations endpoint for any registered client to retrieve locations (and also create / update /
 // delete)
 LocationsEmspServer(
-    transportServer = server,
     service = LocationsEmspValidationService(
         service = LocationsApiClient(
             channel = chargingInfrastructureChannel
         )
-    ),
-    partnerRepository = partnerRepository
-)
+    )
+).registerOn(server)
 
 // Once that all the modules are defined, you need to start the server
 server.start()
@@ -138,11 +133,9 @@ It is possible to change the default path of a module using `basePath` argument:
 
 ```kotlin
 LocationsEmspServer(
-    transportServer = server,
     service = service,
-    partnerRepository = partnerRepository,
     basePath = "/2.1.1/cpo/locations"
-)
+).registerOn(server)
 ```
 
 Make sure that `VersionDetailsRepository` points to the right endpoint (in that case `/2.1.1/cpo/locations`)
@@ -165,11 +158,11 @@ Examples:
 // sender: the one that wants to register
 // receiver: the one that receives the registration request
 
-// PlatformMongoRepository is an implementation of PlatformRepository using mongo
+// PartnerMongoRepository is an implementation of PartnerRepository using mongo
 // It will be used to store information about partners with whom the client is communicating:
 // A partner has: Tokens (A, B, C), Endpoints, Versions
 // You can see an  example in the list above
-val senderPlatformRepository = PlatformMongoRepository(
+val senderPartnerRepository = PartnerMongoRepository(
     collection = mongoDatabase.getCollection<Location>(config.partnerCollection)
 )
 
@@ -192,12 +185,10 @@ val receiverVersionsEndpoint = "https://receiver.com/versions"
 
 val credentialsClientService = CredentialsClientService(
     clientVersionsEndpointUrl = senderVersionsEndpint,
-    clientPlatformRepository = senderPlatformRepository,
+    partnerRepository = senderPartnerRepository,
     clientVersionsRepository = senderVersionsRepository,
-    clientBusinessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
-    clientPartyId = "ABC",
-    clientCountryCode = "FR",
-    serverVersionsEndpointUrl = receiverVersionsEndpoint,
+    credentialsRoleRepository = object : CredentialsRoleRepository { ... },
+    serverVersionsUrlProvider = { receiverVersionsEndpoint },
     transportClientBuilder = Http4kTransportClientBuilder()
 )
 
@@ -235,29 +226,3 @@ val locationsEmspClient = LocationsEmspClient(
 // Example on how to get a specific location
 locationsEmspClient.getLocation(locationId = "location1")
 ```
-
-## Differences
-
-### ocpi-lib-2.1.1 -> ocpi-lib-2.2.1
-
-Also see:
-- OCPI 2.1.1 -> OCPI 2.2 -> OCPI 2.2.1: [official doc](https://github.com/ocpi/ocpi/blob/2.2.1/changelog.asciidoc#changelog_changelog)
-
-What actually changed in the lib:
-
-| Module      | Changements                                                                                                                                                                                                                                                                                                                                                   |
-|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Common      | - Added hub exceptions<br/>- Added CiString type                                                                                                                                                                                                                                                                                                              |
-| Versions    | - Added V_2_2 and V_2_2_1 in VersionNumber enum<br/>- Added role in Endpoint                                                                                                                                                                                                                                                                                  |
-| Credentials | - Credentials object has a list of CredentialRoles instead of only business_details, party_id & country_code. Also added CredentialsRoleRepository for the user to specify the roles of the partner they are implementing. In 2.1.1, the user had to pass business_details, party_id, country_code to CredentialsClientService and CredentialsServerService. |
-| Locations   | - Too many changements, see [this commit for details](https://github.com/4sh/ocpi-lib/commit/dfbbd8bf2741788582e087a5921b099c07129788)                                                                                                                                                                                                                        |                                                                                                                                                                                                                                                                                                                                                            |
-
-### ocpi-lib-2.1.1 -> ocpi-lib-2.1.1-gireve
-
-| Module      | Changements                                                                                                                                                                      |
-|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Common      | nothing changed                                                                                                                                                                  |
-| Versions    | - Removed V_2_0 and V_2_1 in VersionNumber enum                                                                                                                                  |
-| Credentials | - Removed PUT (the user has to first delete() then register() to update (so token A has to be exchanged outside OCPI protocol between delete and register)                       |
-| Locations   | - evse_id is now required (added doc to explain that in Locations object)                                                                                                        |
-| Tokens      | - Too many changements, see [this commit for an insight (things may have changed since then)](https://github.com/4sh/ocpi-lib/commit/4f664247a888dcc475270f92855a191e13b42342)   |
