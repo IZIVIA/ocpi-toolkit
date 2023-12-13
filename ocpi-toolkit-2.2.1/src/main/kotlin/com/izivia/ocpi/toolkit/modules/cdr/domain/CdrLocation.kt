@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.cdr.domain
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.locations.domain.ConnectorFormat
 import com.izivia.ocpi.toolkit.modules.locations.domain.ConnectorType
+import com.izivia.ocpi.toolkit.modules.locations.domain.GeoLocation
 import com.izivia.ocpi.toolkit.modules.locations.domain.PowerType
 
 /**
@@ -35,7 +36,7 @@ data class CdrLocation(
     val city: String,
     val postalCode: String,
     val country: String,
-    val coordinates: String,
+    val coordinates: GeoLocation,
     val evseUid: CiString,
     val evseId: CiString,
     val connectorId: CiString,
