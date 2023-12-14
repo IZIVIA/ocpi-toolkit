@@ -1,29 +1,30 @@
 package com.izivia.ocpi.toolkit.modules.sessions.services
 
-import com.izivia.ocpi.toolkit.common.validation.*
+import com.izivia.ocpi.toolkit.common.validation.hasMaxLengthOf
+import com.izivia.ocpi.toolkit.common.validation.isCountryCode
+import com.izivia.ocpi.toolkit.common.validation.isCurrencyCode
+import com.izivia.ocpi.toolkit.common.validation.isPrintableAscii
 import com.izivia.ocpi.toolkit.modules.cdr.domain.*
 import com.izivia.ocpi.toolkit.modules.sessions.domain.*
 import com.izivia.ocpi.toolkit.modules.types.Price
 import com.izivia.ocpi.toolkit.modules.types.PricePartial
 import com.izivia.ocpi.toolkit.modules.types.toPartial
-import org.valiktor.functions.isGreaterThan
 import org.valiktor.functions.isGreaterThanOrEqualTo
 import org.valiktor.validate
 import java.math.BigDecimal
-import java.time.Instant
 
 fun SessionPartial.validate(): SessionPartial = validate(this) {
     validate(SessionPartial::countryCode).isCountryCode(caseSensitive = false, alpha2 = true)
     validate(SessionPartial::partyId).isPrintableAscii().hasMaxLengthOf(3)
     validate(SessionPartial::id).isPrintableAscii().hasMaxLengthOf(36)
-    validate(SessionPartial::startDateTime).isGreaterThan(Instant.now())
-    validate(SessionPartial::endDateTime).isGreaterThan(it.startDateTime ?: Instant.now())
+    // startDateTime nothing to validate
+    // endDateTime nothing to validate
     validate(SessionPartial::kwh).isGreaterThanOrEqualTo(0)
     cdrToken?.validate()
     // authMethod: nothing to validate
     validate(SessionPartial::authorizationReference).isPrintableAscii().hasMaxLengthOf(36)
     validate(SessionPartial::locationId).isPrintableAscii().hasMaxLengthOf(36)
-    validate(SessionPartial::evseUid).isEvseId()
+    validate(SessionPartial::evseUid).isPrintableAscii().hasMaxLengthOf(36)
     validate(SessionPartial::connectorId).isPrintableAscii().hasMaxLengthOf(36)
     validate(SessionPartial::meterId).isPrintableAscii().hasMaxLengthOf(255)
     validate(SessionPartial::currency).isCurrencyCode(false)
@@ -35,7 +36,7 @@ fun SessionPartial.validate(): SessionPartial = validate(this) {
 
 fun ChargingPreferencesPartial.validate(): ChargingPreferencesPartial = validate(this) {
     // profileType nothing to validate
-    validate(ChargingPreferencesPartial::departureTime).isGreaterThan(Instant.now())
+    // departureTime nothing to validate
     validate(ChargingPreferencesPartial::energyNeed).isGreaterThanOrEqualTo(0)
     // dischargeAllowed nothing to validate
 }
@@ -49,7 +50,7 @@ fun CdrTokenPartial.validate(): CdrTokenPartial = validate(this) {
 }
 
 fun ChargingPeriodPartial.validate(): ChargingPeriodPartial = validate(this) {
-    validate(ChargingPeriodPartial::startDateTime).isGreaterThan(Instant.now())
+    // startDateTime nothing to validate
     dimensions?.forEach { dimension -> dimension.validate() }
     validate(ChargingPeriodPartial::tariffId).isPrintableAscii().hasMaxLengthOf(36)
 }
