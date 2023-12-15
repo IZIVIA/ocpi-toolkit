@@ -40,3 +40,13 @@ jobs:
                     GPG_PRIVATE_KEY: ${{ secrets.DELIVERY_GPG_SECRET_KEY }}
                     GPG_PASSPHRASE: ${{ secrets.DELIVERY_GPG_KEY_PASSPHRASE }}
                 run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
+
+            -   name: Create a GH release
+                env:
+                    VERSION: ${{ github.ref_name }}
+                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: |-
+                    gh release create ${{ github.ref }} \
+                        --generate-notes \
+                        --title "Version ${VERSION#R-}" \
+                        ocpi-toolkit-2.2.1/build/libs/*.jar
