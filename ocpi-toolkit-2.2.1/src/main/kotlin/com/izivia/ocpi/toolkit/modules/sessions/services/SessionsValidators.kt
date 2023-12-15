@@ -19,7 +19,7 @@ fun SessionPartial.validate(): SessionPartial = validate(this) {
     validate(SessionPartial::id).isPrintableAscii().hasMaxLengthOf(36)
     // startDateTime nothing to validate
     // endDateTime nothing to validate
-    validate(SessionPartial::kwh).isGreaterThanOrEqualTo(0)
+    validate(SessionPartial::kwh).isGreaterThanOrEqualTo(BigDecimal.ZERO)
     cdrToken?.validate()
     // authMethod: nothing to validate
     validate(SessionPartial::authorizationReference).isPrintableAscii().hasMaxLengthOf(36)
