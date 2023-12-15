@@ -6,6 +6,7 @@ import com.izivia.ocpi.toolkit.modules.cdr.domain.AuthMethod
 import com.izivia.ocpi.toolkit.modules.cdr.domain.CdrToken
 import com.izivia.ocpi.toolkit.modules.cdr.domain.ChargingPeriod
 import com.izivia.ocpi.toolkit.modules.types.Price
+import java.math.BigDecimal
 import java.time.Instant
 
 /**
@@ -75,7 +76,7 @@ data class Session(
     val id: CiString,
     val startDateTime: Instant,
     val endDateTime: Instant? = null,
-    val kwh: Int,
+    val kwh: BigDecimal,
     val cdrToken: CdrToken,
     val authMethod: AuthMethod,
     val authorizationReference: CiString? = null,
