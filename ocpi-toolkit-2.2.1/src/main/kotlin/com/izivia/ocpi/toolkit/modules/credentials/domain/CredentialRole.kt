@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.credentials.domain
 
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 
 /**
  * @property role Type of role
