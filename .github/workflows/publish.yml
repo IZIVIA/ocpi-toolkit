@@ -6,7 +6,7 @@ on:
             - "R-*"
 
 permissions:
-    contents: read
+    contents: write
 
 jobs:
     publish:
