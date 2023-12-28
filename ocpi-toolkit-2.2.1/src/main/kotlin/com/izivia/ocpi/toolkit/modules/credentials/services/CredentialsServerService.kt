@@ -143,7 +143,7 @@ class CredentialsServerService(
             }
 
         val matchingVersion = versions.firstOrNull { it.version == VersionNumber.V2_2_1.value }
-            ?: throw OcpiServerNoMatchingEndpointsException("Expected version 2.2.1 from $versions")
+            ?: throw OcpiServerUnsupportedVersionException("Expected version 2.2.1 from $versions")
 
         partnerRepository.saveVersion(partnerUrl = credentials.url, version = matchingVersion)
 
