@@ -21,6 +21,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
+import org.eclipse.jetty.client.HttpResponseException
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
@@ -29,6 +30,7 @@ import strikt.api.expectThat
 import strikt.api.expectThrows
 import strikt.assertions.*
 import java.util.*
+import java.util.concurrent.ExecutionException
 
 class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
@@ -179,9 +181,11 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             credentialsClientService.register()
         }
             .isFailure()
-            .isA<OcpiResponseException>()
-            .get { statusCode }
-            .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            .isA<ExecutionException>()
+            .get { this.cause }
+            .isA<HttpResponseException>()
+            .get { this.response.status }
+            .isEqualTo(HttpStatus.UNAUTHORIZED.code)
 
         receiverServer.partnerCollection.deleteOne(Partner::url eq senderServer.versionsEndpoint)
         receiverServer.partnerCollection.insertOne(
@@ -196,9 +200,11 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             credentialsClientService.register()
         }
             .isFailure()
-            .isA<OcpiResponseException>()
-            .get { statusCode }
-            .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            .isA<ExecutionException>()
+            .get { this.cause }
+            .isA<HttpResponseException>()
+            .get { this.response.status }
+            .isEqualTo(HttpStatus.UNAUTHORIZED.code)
     }
 
     @Test
