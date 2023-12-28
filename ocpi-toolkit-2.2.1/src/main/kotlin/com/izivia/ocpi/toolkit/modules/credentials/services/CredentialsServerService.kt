@@ -139,7 +139,7 @@ class CredentialsServerService(
                 if (it.status != HttpStatus.OK) {
                     throw OcpiServerUnusableApiException(
                         "Could not get version of sender, there was an error in the response code: " +
-                                "URL='${credentials.url}', HttpStatus=${it.status.code}"
+                            "URL='${credentials.url}', HttpStatus=${it.status.code}"
                     )
                 }
             }
@@ -149,7 +149,7 @@ class CredentialsServerService(
             .onFailure {
                 throw OcpiServerUnusableApiException(
                     "Could not get versions of sender, there was an error parsing the response: " +
-                            "URL='${credentials.url}', error='${it.message}'"
+                        "URL='${credentials.url}', error='${it.message}'"
                 )
             }
             .getOrThrow()
@@ -181,7 +181,7 @@ class CredentialsServerService(
                 if (it.status != HttpStatus.OK) {
                     throw OcpiServerUnusableApiException(
                         "Could not get version of sender, there was an error in the response code: " +
-                                "URL='${matchingVersion.url}', HttpStatus=${it.status.code}"
+                            "URL='${matchingVersion.url}', HttpStatus=${it.status.code}"
                     )
                 }
             }
@@ -191,7 +191,7 @@ class CredentialsServerService(
             .onFailure {
                 throw OcpiServerUnusableApiException(
                     "Could not get version of sender, there was an error parsing the response: " +
-                            "URL='${matchingVersion.url}', error='${it.message}'"
+                        "URL='${matchingVersion.url}', error='${it.message}'"
                 )
             }
             .getOrThrow()
