@@ -280,6 +280,7 @@ suspend fun PartnerRepository.checkToken(
 
     if (!validToken) {
         throw OcpiClientInvalidParametersException("Invalid server token (token A allowed: $allowTokenA): $token")
+        //throw HttpException(HttpStatus.UNAUTHORIZED, "Invalid server token (token A allowed: $allowTokenA): $token")
     }
 }
 

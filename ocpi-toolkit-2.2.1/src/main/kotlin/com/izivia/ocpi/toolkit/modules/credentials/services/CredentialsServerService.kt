@@ -11,6 +11,7 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 
 class CredentialsServerService(
     private val partnerRepository: PartnerRepository,
@@ -134,10 +135,25 @@ class CredentialsServerService(
                         .authenticate(token = credentials.token)
                 )
             }
-            .parseBody<OcpiResponseBody<List<Version>>>()
+            .also {
+                if (it.status != HttpStatus.OK) {
+                    throw OcpiServerUnusableApiException(
+                        "Could not get version of sender, there was an error in the response code: URL='${credentials.url}', HttpStatus=${it.status.code}"
+                    )
+                }
+            }
+            .runCatching {
+                this.parseBody<OcpiResponseBody<List<Version>>>()
+            }
+            .onFailure {
+                throw OcpiServerUnusableApiException(
+                    "Could not get versions of sender, there was an error parsing the response. URL='${credentials.url}', error='${it.message}'"
+                )
+            }
+            .getOrThrow()
             .let {
                 it.data
-                    ?: throw OcpiServerGenericException(
+                    ?: throw OcpiServerUnusableApiException(
                         "Could not get versions of sender, there was an error during the call: '${it.status_message}'"
                     )
             }
@@ -159,10 +175,25 @@ class CredentialsServerService(
                         .authenticate(token = credentials.token)
                 )
             }
-            .parseBody<OcpiResponseBody<VersionDetails>>()
+            .also {
+                if (it.status != HttpStatus.OK) {
+                    throw OcpiServerUnusableApiException(
+                        "Could not get version of sender, there was an error in the response code: URL='${matchingVersion.url}', HttpStatus=${it.status.code}"
+                    )
+                }
+            }
+            .runCatching {
+                this.parseBody<OcpiResponseBody<VersionDetails>>()
+            }
+            .onFailure {
+                throw OcpiServerUnusableApiException(
+                    "Could not get version of sender, there was an error parsing the response: URL='${matchingVersion.url}', error='${it.message}'"
+                )
+            }
+            .getOrThrow()
             .let {
                 it.data
-                    ?: throw OcpiServerGenericException(
+                    ?: throw OcpiServerUnusableApiException(
                         "Could not get version of sender, there was an error during the call: '${it.status_message}'"
                     )
             }
