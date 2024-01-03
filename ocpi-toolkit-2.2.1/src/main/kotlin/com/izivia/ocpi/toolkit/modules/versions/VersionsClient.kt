@@ -42,10 +42,7 @@ class VersionsClient(
                     this.parseBody<OcpiResponseBody<List<Version>>>()
                 }
                 .onFailure {
-                    throw OcpiServerUnusableApiException(
-                        "Could not get versions from server, there was an error parsing the response: " +
-                            "URL='$serverVersionsEndpointUrl', error='${it.message}'"
-                    )
+                    throw OcpiToolkitResponseParsingException(serverVersionsEndpointUrl, it)
                 }
                 .getOrThrow()
         }
