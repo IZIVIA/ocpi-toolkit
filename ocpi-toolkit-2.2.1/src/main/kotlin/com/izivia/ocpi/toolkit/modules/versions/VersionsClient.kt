@@ -1,14 +1,10 @@
 package com.izivia.ocpi.toolkit.modules.versions
 
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
-import com.izivia.ocpi.toolkit.common.authenticate
-import com.izivia.ocpi.toolkit.common.parseBody
-import com.izivia.ocpi.toolkit.common.withRequiredHeaders
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
-import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
-import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.domain.*
 
 /**
  * Used to get the versions of a partner
@@ -39,6 +35,15 @@ class VersionsClient(
                         allowTokenA = true
                     )
             )
-                .parseBody()
+                .also {
+                    if (it.status != HttpStatus.OK) throw HttpException(it.status, parseHttpStatus(it.status.code).name)
+                }
+                .runCatching {
+                    this.parseBody<OcpiResponseBody<List<Version>>>()
+                }
+                .onFailure {
+                    throw OcpiToolkitResponseParsingException(serverVersionsEndpointUrl, it)
+                }
+                .getOrThrow()
         }
 }

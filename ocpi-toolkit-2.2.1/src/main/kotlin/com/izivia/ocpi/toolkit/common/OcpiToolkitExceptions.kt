@@ -9,3 +9,10 @@ class OcpiToolkitUnknownEndpointException(
         already registered, make sure that the partnerRepository works properly.
     """.trimIndent()
 )
+
+class OcpiToolkitResponseParsingException(
+    urlCalled: String,
+    cause: Throwable
+) : Exception(
+    "Response cannot be parsed. URL='$urlCalled', error='${cause.message}'"
+)
