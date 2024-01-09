@@ -9,6 +9,8 @@ import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerSer
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
+import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
@@ -38,14 +40,15 @@ fun main() {
                     override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                         CredentialRole(
                             role = Role.EMSP,
-                            businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
-                            partyId = "DEF",
-                            countryCode = "FR"
+                            business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
+                            party_id = "DEF",
+                            country_code = "FR"
                         )
                     )
                 },
                 transportClientBuilder = Http4kTransportClientBuilder(),
-                serverVersionsUrlProvider = { receiverVersionsUrl }
+                serverVersionsUrlProvider = { receiverVersionsUrl },
+                requiredClientEndpointsProvider = { mapOf(InterfaceRole.RECEIVER.name to listOf(ModuleID.credentials)) }
             )
         ).registerOn(receiverServer)
         VersionsServer(

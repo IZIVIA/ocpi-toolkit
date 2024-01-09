@@ -5,9 +5,7 @@ import com.izivia.ocpi.toolkit.modules.credentials.CredentialsInterface
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
-import com.izivia.ocpi.toolkit.modules.versions.domain.Version
-import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
-import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
+import com.izivia.ocpi.toolkit.modules.versions.domain.*
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
@@ -17,7 +15,8 @@ class CredentialsServerService(
     private val partnerRepository: PartnerRepository,
     private val credentialsRoleRepository: CredentialsRoleRepository,
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsUrlProvider: suspend () -> String
+    private val serverVersionsUrlProvider: suspend () -> String,
+    private val requiredClientEndpointsProvider: suspend () -> Map<String, List<ModuleID>>
 ) : CredentialsInterface {
 
     override suspend fun get(
@@ -202,7 +201,48 @@ class CredentialsServerService(
                     )
             }
 
+        checkRequiredClientEndpoints(versionDetail.endpoints)
+
         partnerRepository.saveEndpoints(partnerUrl = credentials.url, endpoints = versionDetail.endpoints)
+    }
+
+    private suspend fun checkRequiredClientEndpoints(endpoints: List<Endpoint>) {
+        val requiredClientEndpoints = requiredClientEndpointsProvider()
+
+        if (requiredClientEndpoints.isEmpty()) {
+            return
+        }
+
+        val requiredClientAsReceiverEndpoints = requiredClientEndpoints[InterfaceRole.RECEIVER.name] ?: listOf()
+        val requiredClientAsSenderEndpoints = requiredClientEndpoints[InterfaceRole.SENDER.name] ?: listOf()
+
+        endpoints
+            .find { it.identifier == ModuleID.credentials }
+            .let {
+                it ?: throw OcpiServerNoMatchingEndpointsException("${ModuleID.credentials} client endpoint missing")
+            }
+
+        checkRequiredRoleEndpoints(endpoints, requiredClientAsReceiverEndpoints, InterfaceRole.RECEIVER)
+        checkRequiredRoleEndpoints(endpoints, requiredClientAsSenderEndpoints, InterfaceRole.SENDER)
+    }
+
+    private suspend fun checkRequiredRoleEndpoints(
+        endpoints: List<Endpoint>,
+        requiredEndpoints: List<ModuleID>,
+        role: InterfaceRole
+    ) {
+        for (requiredEndpoint in requiredEndpoints) {
+            endpoints
+                .find {
+                    requiredEndpoint == ModuleID.credentials
+                            || (it.role == role && it.identifier == requiredEndpoint)
+                }
+                .let {
+                    it ?: throw OcpiServerNoMatchingEndpointsException(
+                        "${requiredEndpoint.name} as ${role.name} client endpoint missing"
+                    )
+                }
+        }
     }
 
     private suspend fun getCredentials(serverToken: String): Credentials = Credentials(

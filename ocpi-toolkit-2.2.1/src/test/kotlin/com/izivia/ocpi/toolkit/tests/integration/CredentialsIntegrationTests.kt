@@ -11,6 +11,8 @@ import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsClient
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
+import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
@@ -23,6 +25,7 @@ import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
 import org.eclipse.jetty.client.HttpResponseException
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 import strikt.api.expectCatching
@@ -42,7 +45,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     private var database: MongoDatabase? = null
 
-    private fun setupReceiver(): ServerSetupResult {
+    private fun setupReceiver(requiredEndpoints: Map<String, List<ModuleID>> = mapOf()): ServerSetupResult {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
         val receiverPartnerCollection = database!!
             .getCollection<Partner>("receiver-server-${UUID.randomUUID()}")
@@ -65,14 +68,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                         override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                             CredentialRole(
                                 role = Role.EMSP,
-                                businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
-                                partyId = "DEF",
-                                countryCode = "FR"
+                                business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
+                                party_id = "DEF",
+                                country_code = "FR"
                             )
                         )
                     },
                     transportClientBuilder = Http4kTransportClientBuilder(),
-                    serverVersionsUrlProvider = { receiverServerVersionsUrl }
+                    serverVersionsUrlProvider = { receiverServerVersionsUrl },
+                    requiredClientEndpointsProvider = { requiredEndpoints }
                 )
             ).registerOn(receiverServer)
             VersionsServer(
@@ -134,15 +138,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Setup sender (client)
         return CredentialsClientService(
             clientVersionsEndpointUrl = senderServerSetupResult.versionsEndpoint,
-            clientPartnerRepository = PartnerMongoRepository(collection = senderServerSetupResult.partnerCollection),
+            clientPlatformRepository = PartnerMongoRepository(collection = senderServerSetupResult.partnerCollection),
             clientVersionsRepository = VersionsCacheRepository(baseUrl = senderServerSetupResult.transport.baseUrl),
             clientCredentialsRoleRepository = object : CredentialsRoleRepository {
                 override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                     CredentialRole(
                         role = Role.CPO,
-                        businessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
-                        partyId = "ABC",
-                        countryCode = "FR"
+                        business_details = BusinessDetails(name = "Sender", website = null, logo = null),
+                        party_id = "ABC",
+                        country_code = "FR"
                     )
                 )
             },
@@ -249,8 +253,55 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     }
 
     @Test
+    fun `should not properly run registration process because required endpoints are missing`() {
+        val receiverServer = setupReceiver(
+            mapOf(
+                InterfaceRole.RECEIVER.name to listOf(
+                    ModuleID.credentials,
+                    ModuleID.locations
+                ),
+                InterfaceRole.SENDER.name to listOf(
+                    ModuleID.chargingprofiles
+                )
+            )
+        )
+        val senderServer = setupSender()
+
+        val credentialsClientService = setupCredentialsSenderClient(
+            senderServerSetupResult = senderServer,
+            receiverServerSetupResult = receiverServer
+        )
+
+        // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
+        // well in the client so that it knows what token to send
+        val tokenA = UUID.randomUUID().toString()
+        receiverServer.partnerCollection.insertOne(Partner(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.partnerCollection.insertOne(Partner(url = receiverServer.versionsEndpoint, tokenA = tokenA))
+
+        // Start the servers
+        receiverServer.transport.start()
+        senderServer.transport.start()
+
+        expectThat(
+            assertThrows<OcpiResponseException> {
+                runBlocking {
+                    credentialsClientService.register()
+                }
+            }
+        ) {
+            get { statusCode }
+                .isEqualTo(OcpiStatus.SERVER_NO_MATCHING_ENDPOINTS.code)
+        }
+
+    }
+
+    @Test
     fun `should properly run registration process then correct get credentials from receiver`() {
-        val receiverServer = setupReceiver()
+        val receiverServer = setupReceiver(mapOf(
+            InterfaceRole.RECEIVER.name to listOf(
+                ModuleID.credentials,
+                ModuleID.locations)
+        ))
         val senderServer = setupSender()
 
         val credentialsClientService = setupCredentialsSenderClient(
