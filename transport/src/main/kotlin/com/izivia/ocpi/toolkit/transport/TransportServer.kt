@@ -18,7 +18,6 @@ interface TransportServer {
         method: HttpMethod,
         path: List<PathSegment>,
         queryParams: List<String> = emptyList(),
-        secured: Boolean = true,
         filters: List<(request: HttpRequest) -> Unit> = emptyList(),
         callback: suspend (request: HttpRequest) -> HttpResponse
     )
