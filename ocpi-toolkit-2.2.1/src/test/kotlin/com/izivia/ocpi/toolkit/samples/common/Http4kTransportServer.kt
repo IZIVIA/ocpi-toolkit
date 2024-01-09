@@ -30,7 +30,6 @@ class Http4kTransportServer(
         method: HttpMethod,
         path: List<PathSegment>,
         queryParams: List<String>,
-        secured: Boolean,
         filters: List<(request: HttpRequest) -> Unit>,
         callback: suspend (request: HttpRequest) -> HttpResponse
     ) {
@@ -60,7 +59,7 @@ class Http4kTransportServer(
                         body = req.bodyString()
                     )
                         .also { httpRequest ->
-                            if (secured) runBlocking { secureFilter(httpRequest) }
+                            runBlocking { secureFilter(httpRequest) }
                         }
                         .also { httpRequest -> filters.forEach { filter -> filter(httpRequest) } }
                         .let { httpRequest ->

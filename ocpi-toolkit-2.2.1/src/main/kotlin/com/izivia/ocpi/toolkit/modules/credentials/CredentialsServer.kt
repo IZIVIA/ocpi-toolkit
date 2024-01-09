@@ -13,8 +13,7 @@ class CredentialsServer(
     override suspend fun registerOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePathSegments,
-            secured = false
+            path = basePathSegments
         ) { req ->
             req.httpResponse {
                 service.get(
@@ -25,8 +24,7 @@ class CredentialsServer(
 
         transportServer.handle(
             method = HttpMethod.POST,
-            path = basePathSegments,
-            secured = false
+            path = basePathSegments
         ) { req ->
             req.httpResponse {
                 service.post(
@@ -39,8 +37,7 @@ class CredentialsServer(
 
         transportServer.handle(
             method = HttpMethod.PUT,
-            path = basePathSegments,
-            secured = false
+            path = basePathSegments
         ) { req ->
             req.httpResponse {
                 service.put(
@@ -53,8 +50,7 @@ class CredentialsServer(
 
         transportServer.handle(
             method = HttpMethod.DELETE,
-            path = basePathSegments,
-            secured = false
+            path = basePathSegments
         ) { req ->
             req.httpResponse {
                 service.delete(
