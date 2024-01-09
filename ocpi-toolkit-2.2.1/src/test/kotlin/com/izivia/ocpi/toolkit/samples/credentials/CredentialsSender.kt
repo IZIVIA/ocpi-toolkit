@@ -8,6 +8,8 @@ import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsClientSer
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
+import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
@@ -61,7 +63,8 @@ fun main() {
             )
         },
         serverVersionsEndpointUrl = receiverVersionsUrl,
-        transportClientBuilder = Http4kTransportClientBuilder()
+        transportClientBuilder = Http4kTransportClientBuilder(),
+        requiredOtherPartEndpointsProvider = { mapOf(InterfaceRole.RECEIVER to listOf(ModuleID.credentials)) }
     )
 
     runBlocking {

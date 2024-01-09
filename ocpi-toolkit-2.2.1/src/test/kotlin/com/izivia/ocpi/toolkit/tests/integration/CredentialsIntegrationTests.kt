@@ -45,7 +45,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     private var database: MongoDatabase? = null
 
-    private fun setupReceiver(requiredEndpoints: Map<String, List<ModuleID>> = mapOf()): ServerSetupResult {
+    private fun setupReceiver(requiredEndpoints: Map<InterfaceRole, List<ModuleID>> = mapOf()): ServerSetupResult {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
         val receiverPartnerCollection = database!!
             .getCollection<Partner>("receiver-server-${UUID.randomUUID()}")
@@ -68,15 +68,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                         override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                             CredentialRole(
                                 role = Role.EMSP,
-                                business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
-                                party_id = "DEF",
-                                country_code = "FR"
+                                businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
+                                partyId = "DEF",
+                                countryCode = "FR"
                             )
                         )
                     },
                     transportClientBuilder = Http4kTransportClientBuilder(),
                     serverVersionsUrlProvider = { receiverServerVersionsUrl },
-                    requiredClientEndpointsProvider = { requiredEndpoints }
+                    requiredOtherPartEndpointsProvider = { requiredEndpoints }
                 )
             ).registerOn(receiverServer)
             VersionsServer(
@@ -133,25 +133,27 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     private fun setupCredentialsSenderClient(
         senderServerSetupResult: ServerSetupResult,
-        receiverServerSetupResult: ServerSetupResult
+        receiverServerSetupResult: ServerSetupResult,
+        requiredEndpoints: Map<InterfaceRole, List<ModuleID>> = mapOf()
     ): CredentialsClientService {
         // Setup sender (client)
         return CredentialsClientService(
             clientVersionsEndpointUrl = senderServerSetupResult.versionsEndpoint,
-            clientPlatformRepository = PartnerMongoRepository(collection = senderServerSetupResult.partnerCollection),
+            clientPartnerRepository = PartnerMongoRepository(collection = senderServerSetupResult.partnerCollection),
             clientVersionsRepository = VersionsCacheRepository(baseUrl = senderServerSetupResult.transport.baseUrl),
             clientCredentialsRoleRepository = object : CredentialsRoleRepository {
                 override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                     CredentialRole(
                         role = Role.CPO,
-                        business_details = BusinessDetails(name = "Sender", website = null, logo = null),
-                        party_id = "ABC",
-                        country_code = "FR"
+                        businessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
+                        partyId = "ABC",
+                        countryCode = "FR"
                     )
                 )
             },
             serverVersionsEndpointUrl = receiverServerSetupResult.versionsEndpoint,
-            transportClientBuilder = Http4kTransportClientBuilder()
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            requiredOtherPartEndpointsProvider = { requiredEndpoints }
         )
     }
 
@@ -256,11 +258,11 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     fun `should not properly run registration process because required endpoints are missing`() {
         val receiverServer = setupReceiver(
             mapOf(
-                InterfaceRole.RECEIVER.name to listOf(
+                InterfaceRole.RECEIVER to listOf(
                     ModuleID.credentials,
                     ModuleID.locations
                 ),
-                InterfaceRole.SENDER.name to listOf(
+                InterfaceRole.SENDER to listOf(
                     ModuleID.chargingprofiles
                 )
             )
@@ -292,16 +294,18 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SERVER_NO_MATCHING_ENDPOINTS.code)
         }
-
     }
 
     @Test
     fun `should properly run registration process then correct get credentials from receiver`() {
-        val receiverServer = setupReceiver(mapOf(
-            InterfaceRole.RECEIVER.name to listOf(
-                ModuleID.credentials,
-                ModuleID.locations)
-        ))
+        val receiverServer = setupReceiver(
+            mapOf(
+                InterfaceRole.RECEIVER to listOf(
+                    ModuleID.credentials,
+                    ModuleID.locations
+                )
+            )
+        )
         val senderServer = setupSender()
 
         val credentialsClientService = setupCredentialsSenderClient(

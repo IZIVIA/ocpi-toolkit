@@ -32,6 +32,8 @@ fun main() {
         secureFilter = receiverPlatformRepository::checkToken
     )
 
+    val requiredOtherPartEndpoints = mapOf(InterfaceRole.RECEIVER to listOf(ModuleID.credentials))
+
     runBlocking {
         CredentialsServer(
             service = CredentialsServerService(
@@ -40,15 +42,15 @@ fun main() {
                     override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
                         CredentialRole(
                             role = Role.EMSP,
-                            business_details = BusinessDetails(name = "Receiver", website = null, logo = null),
-                            party_id = "DEF",
-                            country_code = "FR"
+                            businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
+                            partyId = "DEF",
+                            countryCode = "FR"
                         )
                     )
                 },
                 transportClientBuilder = Http4kTransportClientBuilder(),
                 serverVersionsUrlProvider = { receiverVersionsUrl },
-                requiredClientEndpointsProvider = { mapOf(InterfaceRole.RECEIVER.name to listOf(ModuleID.credentials)) }
+                requiredOtherPartEndpointsProvider = { requiredOtherPartEndpoints }
             )
         ).registerOn(receiverServer)
         VersionsServer(
