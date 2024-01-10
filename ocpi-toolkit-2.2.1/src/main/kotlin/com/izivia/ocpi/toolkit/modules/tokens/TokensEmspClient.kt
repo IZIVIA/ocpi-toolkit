@@ -62,11 +62,9 @@ class TokensEmspClient(
             send(
                 HttpRequest(
                     method = HttpMethod.PUT,
+                    path = "/$countryCode/$partyId/$tokenUid",
                     body = mapper.writeValueAsString(token),
                     queryParams = listOfNotNull(
-                        "country_code" to countryCode,
-                        "party_id" to partyId,
-                        "token_uid" to tokenUid,
                         type?.let { "type" to type.toString() }
                     ).toMap()
                 )
@@ -89,11 +87,9 @@ class TokensEmspClient(
             send(
                 HttpRequest(
                     method = HttpMethod.PATCH,
+                    path = "/$countryCode/$partyId/$tokenUid",
                     body = mapper.writeValueAsString(token),
                     queryParams = listOfNotNull(
-                        "country_code" to countryCode,
-                        "party_id" to partyId,
-                        "token_uid" to tokenUid,
                         type?.let { "type" to type.toString() }
                     ).toMap()
                 )
