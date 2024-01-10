@@ -7,11 +7,11 @@ import com.izivia.ocpi.toolkit.modules.credentials.domain.Role
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsClientService
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
+import com.izivia.ocpi.toolkit.modules.credentials.services.RequiredEndpoints
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsClient
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
-import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
@@ -45,7 +45,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     private var database: MongoDatabase? = null
 
-    private fun setupReceiver(requiredEndpoints: Map<InterfaceRole, List<ModuleID>> = mapOf()): ServerSetupResult {
+    private fun setupReceiver(requiredEndpoints: RequiredEndpoints? = null): ServerSetupResult {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
         val receiverPartnerCollection = database!!
             .getCollection<Partner>("receiver-server-${UUID.randomUUID()}")
@@ -76,7 +76,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     },
                     transportClientBuilder = Http4kTransportClientBuilder(),
                     serverVersionsUrlProvider = { receiverServerVersionsUrl },
-                    requiredOtherPartEndpointsProvider = { requiredEndpoints }
+                    requiredEndpoints = requiredEndpoints
                 )
             ).registerOn(receiverServer)
             VersionsServer(
@@ -134,7 +134,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     private fun setupCredentialsSenderClient(
         senderServerSetupResult: ServerSetupResult,
         receiverServerSetupResult: ServerSetupResult,
-        requiredEndpoints: Map<InterfaceRole, List<ModuleID>> = mapOf()
+        requiredEndpoints: RequiredEndpoints? = null
     ): CredentialsClientService {
         // Setup sender (client)
         return CredentialsClientService(
@@ -153,7 +153,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             },
             serverVersionsEndpointUrl = receiverServerSetupResult.versionsEndpoint,
             transportClientBuilder = Http4kTransportClientBuilder(),
-            requiredOtherPartEndpointsProvider = { requiredEndpoints }
+            requiredEndpoints = requiredEndpoints
         )
     }
 
@@ -257,14 +257,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     @Test
     fun `should not properly run registration process because required endpoints are missing`() {
         val receiverServer = setupReceiver(
-            mapOf(
-                InterfaceRole.RECEIVER to listOf(
-                    ModuleID.credentials,
-                    ModuleID.locations
-                ),
-                InterfaceRole.SENDER to listOf(
-                    ModuleID.chargingprofiles
-                )
+            RequiredEndpoints(
+                receiver = listOf(ModuleID.credentials, ModuleID.locations),
+                sender = listOf(ModuleID.chargingprofiles)
             )
         )
         val senderServer = setupSender()
@@ -299,11 +294,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     @Test
     fun `should properly run registration process then correct get credentials from receiver`() {
         val receiverServer = setupReceiver(
-            mapOf(
-                InterfaceRole.RECEIVER to listOf(
-                    ModuleID.credentials,
-                    ModuleID.locations
-                )
+            RequiredEndpoints(
+                receiver = listOf(ModuleID.credentials, ModuleID.locations)
             )
         )
         val senderServer = setupSender()

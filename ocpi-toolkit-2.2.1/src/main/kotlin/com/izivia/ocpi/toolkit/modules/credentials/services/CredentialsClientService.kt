@@ -8,7 +8,6 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepositor
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsClient
 import com.izivia.ocpi.toolkit.modules.versions.VersionsClient
 import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
-import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.parseVersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.VersionsRepository
@@ -29,7 +28,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
  * @property clientCredentialsRoleRepository client's repository to retrieve its role
  * @property serverVersionsEndpointUrl the versions endpoint url of the server (for the client to retrieve endpoints)
  * @property transportClientBuilder used to build a transport (will be used to create CredentialClient to make calls)
- * @property requiredOtherPartEndpointsProvider the endpoints this client expects from the other part to provide
+ * @property requiredEndpoints the endpoints this client expects from the other part to provide
  */
 class CredentialsClientService(
     private val clientVersionsEndpointUrl: String,
@@ -38,7 +37,7 @@ class CredentialsClientService(
     private val clientCredentialsRoleRepository: CredentialsRoleRepository,
     private val serverVersionsEndpointUrl: String,
     private val transportClientBuilder: TransportClientBuilder,
-    private val requiredOtherPartEndpointsProvider: suspend () -> Map<InterfaceRole, List<ModuleID>>
+    private val requiredEndpoints: RequiredEndpoints?
 ) {
     suspend fun get(): Credentials = clientPartnerRepository
         .getCredentialsClientToken(partnerUrl = serverVersionsEndpointUrl)
@@ -229,7 +228,7 @@ class CredentialsClientService(
                 it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
             }
 
-        CredentialsCommon.checkRequiredEndpoints(requiredOtherPartEndpointsProvider(), versionDetails.endpoints)
+        checkRequiredEndpoints(requiredEndpoints, versionDetails.endpoints)
 
         // Store version & endpoint
         return clientPartnerRepository.saveEndpoints(

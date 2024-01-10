@@ -16,7 +16,7 @@ class CredentialsServerService(
     private val credentialsRoleRepository: CredentialsRoleRepository,
     private val transportClientBuilder: TransportClientBuilder,
     private val serverVersionsUrlProvider: suspend () -> String,
-    private val requiredOtherPartEndpointsProvider: suspend () -> Map<InterfaceRole, List<ModuleID>>
+    private val requiredEndpoints: RequiredEndpoints?
 ) : CredentialsInterface {
 
     override suspend fun get(
@@ -201,7 +201,7 @@ class CredentialsServerService(
                     )
             }
 
-        CredentialsCommon.checkRequiredEndpoints(requiredOtherPartEndpointsProvider(), versionDetail.endpoints)
+        checkRequiredEndpoints(requiredEndpoints, versionDetail.endpoints)
 
         partnerRepository.saveEndpoints(partnerUrl = credentials.url, endpoints = versionDetail.endpoints)
     }
