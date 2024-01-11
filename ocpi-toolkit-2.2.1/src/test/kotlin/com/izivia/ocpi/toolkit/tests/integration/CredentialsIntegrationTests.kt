@@ -7,10 +7,12 @@ import com.izivia.ocpi.toolkit.modules.credentials.domain.Role
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsClientService
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
+import com.izivia.ocpi.toolkit.modules.credentials.services.RequiredEndpoints
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsClient
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
+import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
@@ -23,6 +25,7 @@ import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
 import org.eclipse.jetty.client.HttpResponseException
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 import strikt.api.expectCatching
@@ -42,7 +45,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     private var database: MongoDatabase? = null
 
-    private fun setupReceiver(): ServerSetupResult {
+    private fun setupReceiver(requiredEndpoints: RequiredEndpoints? = null): ServerSetupResult {
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
         val receiverPartnerCollection = database!!
             .getCollection<Partner>("receiver-server-${UUID.randomUUID()}")
@@ -72,7 +75,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                         )
                     },
                     transportClientBuilder = Http4kTransportClientBuilder(),
-                    serverVersionsUrlProvider = { receiverServerVersionsUrl }
+                    serverVersionsUrlProvider = { receiverServerVersionsUrl },
+                    requiredEndpoints = requiredEndpoints
                 )
             ).registerOn(receiverServer)
             VersionsServer(
@@ -129,7 +133,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     private fun setupCredentialsSenderClient(
         senderServerSetupResult: ServerSetupResult,
-        receiverServerSetupResult: ServerSetupResult
+        receiverServerSetupResult: ServerSetupResult,
+        requiredEndpoints: RequiredEndpoints? = null
     ): CredentialsClientService {
         // Setup sender (client)
         return CredentialsClientService(
@@ -147,7 +152,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 )
             },
             serverVersionsEndpointUrl = receiverServerSetupResult.versionsEndpoint,
-            transportClientBuilder = Http4kTransportClientBuilder()
+            transportClientBuilder = Http4kTransportClientBuilder(),
+            requiredEndpoints = requiredEndpoints
         )
     }
 
@@ -249,8 +255,49 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     }
 
     @Test
+    fun `should not properly run registration process because required endpoints are missing`() {
+        val receiverServer = setupReceiver(
+            RequiredEndpoints(
+                receiver = listOf(ModuleID.credentials, ModuleID.locations),
+                sender = listOf(ModuleID.chargingprofiles)
+            )
+        )
+        val senderServer = setupSender()
+
+        val credentialsClientService = setupCredentialsSenderClient(
+            senderServerSetupResult = senderServer,
+            receiverServerSetupResult = receiverServer
+        )
+
+        // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
+        // well in the client so that it knows what token to send
+        val tokenA = UUID.randomUUID().toString()
+        receiverServer.partnerCollection.insertOne(Partner(url = senderServer.versionsEndpoint, tokenA = tokenA))
+        senderServer.partnerCollection.insertOne(Partner(url = receiverServer.versionsEndpoint, tokenA = tokenA))
+
+        // Start the servers
+        receiverServer.transport.start()
+        senderServer.transport.start()
+
+        expectThat(
+            assertThrows<OcpiResponseException> {
+                runBlocking {
+                    credentialsClientService.register()
+                }
+            }
+        ) {
+            get { statusCode }
+                .isEqualTo(OcpiStatus.SERVER_NO_MATCHING_ENDPOINTS.code)
+        }
+    }
+
+    @Test
     fun `should properly run registration process then correct get credentials from receiver`() {
-        val receiverServer = setupReceiver()
+        val receiverServer = setupReceiver(
+            RequiredEndpoints(
+                receiver = listOf(ModuleID.credentials, ModuleID.locations)
+            )
+        )
         val senderServer = setupSender()
 
         val credentialsClientService = setupCredentialsSenderClient(

@@ -6,9 +6,11 @@ import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Role
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
+import com.izivia.ocpi.toolkit.modules.credentials.services.RequiredEndpoints
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
+import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
@@ -30,6 +32,8 @@ fun main() {
         secureFilter = receiverPlatformRepository::checkToken
     )
 
+    val requiredOtherPartEndpoints = RequiredEndpoints(receiver = listOf(ModuleID.credentials))
+
     runBlocking {
         CredentialsServer(
             service = CredentialsServerService(
@@ -45,7 +49,8 @@ fun main() {
                     )
                 },
                 transportClientBuilder = Http4kTransportClientBuilder(),
-                serverVersionsUrlProvider = { receiverVersionsUrl }
+                serverVersionsUrlProvider = { receiverVersionsUrl },
+                requiredEndpoints = requiredOtherPartEndpoints
             )
         ).registerOn(receiverServer)
         VersionsServer(

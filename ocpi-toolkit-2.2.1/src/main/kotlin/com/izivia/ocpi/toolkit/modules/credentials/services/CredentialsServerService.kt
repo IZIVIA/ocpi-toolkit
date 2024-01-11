@@ -5,9 +5,7 @@ import com.izivia.ocpi.toolkit.modules.credentials.CredentialsInterface
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
-import com.izivia.ocpi.toolkit.modules.versions.domain.Version
-import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
-import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
+import com.izivia.ocpi.toolkit.modules.versions.domain.*
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
@@ -17,7 +15,8 @@ class CredentialsServerService(
     private val partnerRepository: PartnerRepository,
     private val credentialsRoleRepository: CredentialsRoleRepository,
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsUrlProvider: suspend () -> String
+    private val serverVersionsUrlProvider: suspend () -> String,
+    private val requiredEndpoints: RequiredEndpoints?
 ) : CredentialsInterface {
 
     override suspend fun get(
@@ -201,6 +200,8 @@ class CredentialsServerService(
                         "Could not get version of sender, there was an error during the call: '${it.status_message}'"
                     )
             }
+
+        checkRequiredEndpoints(requiredEndpoints, versionDetail.endpoints)
 
         partnerRepository.saveEndpoints(partnerUrl = credentials.url, endpoints = versionDetail.endpoints)
     }

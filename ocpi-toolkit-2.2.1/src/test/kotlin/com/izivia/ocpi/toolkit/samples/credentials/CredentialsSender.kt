@@ -5,9 +5,11 @@ import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Role
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsClientService
+import com.izivia.ocpi.toolkit.modules.credentials.services.RequiredEndpoints
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
+import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
@@ -61,7 +63,8 @@ fun main() {
             )
         },
         serverVersionsEndpointUrl = receiverVersionsUrl,
-        transportClientBuilder = Http4kTransportClientBuilder()
+        transportClientBuilder = Http4kTransportClientBuilder(),
+        requiredEndpoints = RequiredEndpoints(receiver = listOf(ModuleID.credentials))
     )
 
     runBlocking {
