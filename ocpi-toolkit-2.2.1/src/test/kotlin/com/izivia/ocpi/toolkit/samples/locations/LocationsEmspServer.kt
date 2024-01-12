@@ -5,6 +5,7 @@ import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspService
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.samples.common.validLocation
 import kotlinx.coroutines.runBlocking
@@ -30,7 +31,8 @@ fun main() {
     // We implement callbacks for the server using the built-in service and our repository implementation
     runBlocking {
         LocationsEmspServer(
-            service = LocationsEmspService(service = service)
+            service = LocationsEmspService(service = service),
+            versionsRepository = InMemoryVersionsRepository()
         ).registerOn(transportServer)
     }
 
@@ -39,7 +41,7 @@ fun main() {
 }
 
 class CacheLocationsEmspRepository : LocationsEmspRepository {
-    override suspend fun getLocation(countryCode: String, partyId: String, locationId: String): Location? {
+    override suspend fun getLocation(countryCode: String, partyId: String, locationId: String): Location {
         return validLocation
     }
 

@@ -11,6 +11,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.domain.WhitelistType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensCpoRepository
 import com.izivia.ocpi.toolkit.modules.tokens.services.TokensCpoService
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -34,7 +35,7 @@ class TokensCpoHttpGetTokenTest {
             var tokenUID = slot<String>()
             var type = slot<TokenType>()
         }
-        val srv = mockk<TokensCpoRepository>() {
+        val srv = mockk<TokensCpoRepository> {
             coEvery {
                 getToken(
                     capture(slots.countryCode),
@@ -119,7 +120,8 @@ private fun TokensCpoRepository.buildServer(): TransportClient {
     runBlocking {
         TokensCpoServer(
             service = TokensCpoService(repo),
-            basePath = "/tokens"
+            versionsRepository = InMemoryVersionsRepository(),
+            basePathOverride = "/tokens"
         ).registerOn(transportServer)
     }
 

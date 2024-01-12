@@ -31,4 +31,9 @@ interface TransportServer {
      * Stops the server
      */
     fun stop()
+
+    /**
+     * The configured baseUrl this server listens to, used to generate NextPageUrl and Endpoint Url
+     */
+    fun baseUrl(): String
 }

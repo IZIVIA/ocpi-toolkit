@@ -8,6 +8,7 @@ import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspService
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -31,7 +32,7 @@ class LocationsEmspHttpPatchLocationTest {
             var locationId = slot<String>()
             var location = slot<LocationPartial>()
         }
-        val srv = mockk<LocationsEmspRepository>() {
+        val srv = mockk<LocationsEmspRepository> {
             coEvery {
                 patchLocation(
                     capture(slots.countryCode),
@@ -177,7 +178,8 @@ private fun LocationsEmspRepository.buildServer(): TransportClient {
     runBlocking {
         LocationsEmspServer(
             service = LocationsEmspService(repo),
-            basePath = "/locations"
+            versionsRepository = InMemoryVersionsRepository(),
+            basePathOverride = "/locations"
         ).registerOn(transportServer)
     }
 

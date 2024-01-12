@@ -9,6 +9,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.TokensEmspServer
 import com.izivia.ocpi.toolkit.modules.tokens.domain.*
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensEmspRepository
 import com.izivia.ocpi.toolkit.modules.tokens.services.TokensEmspService
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -30,7 +31,7 @@ class TokensEmspHttpPostTokenTest {
             var tokenUID = slot<String>()
             var type = slot<TokenType>()
         }
-        val srv = mockk<TokensEmspRepository>() {
+        val srv = mockk<TokensEmspRepository> {
             coEvery {
                 postToken(capture(slots.tokenUID), capture(slots.type), null)
             } coAnswers {
@@ -116,7 +117,7 @@ class TokensEmspHttpPostTokenTest {
             var type = slot<TokenType>()
             var locationReferences = slot<LocationReferences>()
         }
-        val srv = mockk<TokensEmspRepository>() {
+        val srv = mockk<TokensEmspRepository> {
             coEvery {
                 postToken(capture(slots.tokenUID), capture(slots.type), capture(slots.locationReferences))
             } coAnswers {
@@ -211,7 +212,8 @@ private fun TokensEmspRepository.buildServer(): TransportClient {
     runBlocking {
         TokensEmspServer(
             service = TokensEmspService(repo),
-            basePath = "/tokens"
+            versionsRepository = InMemoryVersionsRepository(),
+            basePathOverride = "/tokens"
         ).registerOn(transportServer)
     }
 

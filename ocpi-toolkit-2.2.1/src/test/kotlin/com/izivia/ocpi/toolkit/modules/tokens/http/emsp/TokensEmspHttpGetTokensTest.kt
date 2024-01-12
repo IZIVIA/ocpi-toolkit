@@ -12,6 +12,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.domain.WhitelistType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensEmspRepository
 import com.izivia.ocpi.toolkit.modules.tokens.services.TokensEmspService
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -33,7 +34,7 @@ class TokensEmspHttpGetTokensTest {
             var dateFrom = slot<Instant>()
             var dateTo = slot<Instant>()
         }
-        val srv = mockk<TokensEmspRepository>() {
+        val srv = mockk<TokensEmspRepository> {
             coEvery {
                 getTokens(capture(slots.dateFrom), capture(slots.dateTo), any(), any())
             } coAnswers {
@@ -115,7 +116,8 @@ private fun TokensEmspRepository.buildServer(): TransportClient {
     runBlocking {
         TokensEmspServer(
             service = TokensEmspService(repo),
-            basePath = "/tokens"
+            versionsRepository = InMemoryVersionsRepository(),
+            basePathOverride = "/tokens"
         ).registerOn(transportServer)
     }
 

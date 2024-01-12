@@ -6,6 +6,7 @@ import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspClient
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.*
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
 import com.izivia.ocpi.toolkit.tests.integration.mock.LocationsCpoMongoRepository
@@ -33,7 +34,8 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             LocationsCpoServer(
                 LocationsCpoService(
                     service = LocationsCpoMongoRepository(collection)
-                )
+                ),
+                versionsRepository = InMemoryVersionsRepository()
             ).registerOn(server)
         }
         return server
@@ -59,7 +61,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         val cpoServerVersionsUrl = "${cpoServer.baseUrl}/versions"
 
         val partnerRepo = DummyPartnerCacheRepository().also {
-            val versionDetailsCpo = VersionDetailsCacheRepository(baseUrl = cpoServer.baseUrl)
+            val versionDetailsCpo = VersionsCacheRepository(baseUrl = cpoServer.baseUrl)
 
             runBlocking {
                 it.saveEndpoints(

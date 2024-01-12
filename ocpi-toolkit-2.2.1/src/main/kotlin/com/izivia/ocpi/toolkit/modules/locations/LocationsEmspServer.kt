@@ -1,23 +1,30 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
-import com.izivia.ocpi.toolkit.common.OcpiModuleServer
+import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
+import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
+import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 
-/**
- * Receives calls from a CPO
- * @property transportServer
- */
 class LocationsEmspServer(
     private val service: LocationsEmspInterface,
-    basePath: String = "/2.2.1/locations"
-) : OcpiModuleServer(basePath) {
+    versionsRepository: MutableVersionsRepository,
+    basePathOverride: String? = null
+) : OcpiSelfRegisteringModuleServer(
+    versionsRepository = versionsRepository,
+    ocpiVersion = VersionNumber.V2_2_1,
+    moduleID = ModuleID.locations,
+    interfaceRole = InterfaceRole.RECEIVER,
+    basePathOverride = basePathOverride
+) {
 
-    override suspend fun registerOn(transportServer: TransportServer) {
+    override suspend fun doRegisterOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments + listOf(

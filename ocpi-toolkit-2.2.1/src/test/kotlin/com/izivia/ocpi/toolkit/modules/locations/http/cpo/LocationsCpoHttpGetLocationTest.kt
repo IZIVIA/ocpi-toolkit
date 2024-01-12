@@ -7,6 +7,7 @@ import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -27,7 +28,7 @@ class LocationsCpoHttpGetLocationTest {
         val slots = object {
             var locationId = slot<String>()
         }
-        val srv = mockk<LocationsCpoRepository>() {
+        val srv = mockk<LocationsCpoRepository> {
             coEvery { getLocation(capture((slots.locationId))) } coAnswers {
                 Location(
                     countryCode = "BE",
@@ -215,7 +216,8 @@ private fun LocationsCpoRepository.buildServer(): TransportClient {
     runBlocking {
         LocationsCpoServer(
             service = LocationsCpoService(repo),
-            basePath = "/locations"
+            versionsRepository = InMemoryVersionsRepository(),
+            basePathOverride = "/locations"
         ).registerOn(transportServer)
     }
 

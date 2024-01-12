@@ -7,12 +7,14 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleR
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsClientService
 import com.izivia.ocpi.toolkit.modules.credentials.services.RequiredEndpoints
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
-import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
-import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
-import com.izivia.ocpi.toolkit.samples.common.*
+import com.izivia.ocpi.toolkit.samples.common.Http4kTransportClientBuilder
+import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
+import com.izivia.ocpi.toolkit.samples.common.Partner
+import com.izivia.ocpi.toolkit.samples.common.PartnerCacheRepository
 import kotlinx.coroutines.runBlocking
 
 const val senderPort = 8081
@@ -21,8 +23,7 @@ const val senderVersionsUrl = "http://localhost:$senderPort/versions"
 
 fun main() {
     // Add token A associated with the sender
-    val senderVersionsRepository = VersionsCacheRepository(baseUrl = senderUrl)
-    val senderVersionDetailsRepository = VersionDetailsCacheRepository(baseUrl = senderUrl)
+    val senderVersionsRepository = InMemoryVersionsRepository()
     val senderPlatformRepository = PartnerCacheRepository()
     senderPlatformRepository.partners.add(Partner(url = receiverVersionsUrl, tokenA = tokenA))
 
@@ -36,12 +37,8 @@ fun main() {
     runBlocking {
         VersionsServer(
             service = VersionsService(
-                repository = senderVersionsRepository
-            )
-        ).registerOn(senderServer)
-        VersionDetailsServer(
-            service = VersionDetailsService(
-                repository = senderVersionDetailsRepository
+                repository = senderVersionsRepository,
+                baseUrl = senderUrl
             )
         ).registerOn(senderServer)
     }

@@ -9,11 +9,12 @@ import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsClientSer
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
 import com.izivia.ocpi.toolkit.modules.credentials.services.RequiredEndpoints
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
-import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsClient
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
-import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
+import com.izivia.ocpi.toolkit.modules.versions.domain.Version
+import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
@@ -58,8 +59,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val receiverPlatformRepo = PartnerMongoRepository(collection = receiverPartnerCollection)
         val receiverServer = buildTransportServer(receiverPlatformRepo)
         val receiverServerVersionsUrl = "${receiverServer.baseUrl}/versions"
-        val receiverVersionsCacheRepository = VersionsCacheRepository(baseUrl = receiverServer.baseUrl)
-        val receiverVersionDetailsCacheRepository = VersionDetailsCacheRepository(baseUrl = receiverServer.baseUrl)
+        val receiverVersionsCacheRepository = InMemoryVersionsRepository()
         runBlocking {
             CredentialsServer(
                 service = CredentialsServerService(
@@ -77,16 +77,13 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     transportClientBuilder = Http4kTransportClientBuilder(),
                     serverVersionsUrlProvider = { receiverServerVersionsUrl },
                     requiredEndpoints = requiredEndpoints
-                )
+                ),
+                versionsRepository = receiverVersionsCacheRepository
             ).registerOn(receiverServer)
             VersionsServer(
                 service = VersionsService(
-                    repository = receiverVersionsCacheRepository
-                )
-            ).registerOn(receiverServer)
-            VersionDetailsServer(
-                service = VersionDetailsService(
-                    repository = receiverVersionDetailsCacheRepository
+                    repository = receiverVersionsCacheRepository,
+                    baseUrl = receiverServer.baseUrl
                 )
             ).registerOn(receiverServer)
         }
@@ -114,12 +111,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         runBlocking {
             VersionsServer(
                 service = VersionsService(
-                    repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl)
-                )
-            ).registerOn(senderServer)
-            VersionDetailsServer(
-                service = VersionDetailsService(
-                    repository = VersionDetailsCacheRepository(baseUrl = senderServer.baseUrl)
+                    repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl),
+                    baseUrl = senderServer.baseUrl
                 )
             ).registerOn(senderServer)
         }
@@ -240,13 +233,14 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         ) {
             get { data }
                 .isNotNull()
+                .isNotEmpty()
                 .isEqualTo(
-                    runBlocking {
-                        VersionsCacheRepository(
-                            baseUrl =
-                            receiverServer.transport.baseUrl
-                        ).getVersions()
-                    }
+                    listOf(
+                        Version(
+                            version = VersionNumber.V2_2_1.value,
+                            url = "${receiverServer.transport.baseUrl}/2.2.1"
+                        )
+                    )
                 )
 
             get { status_code }
@@ -293,11 +287,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
     @Test
     fun `should properly run registration process then correct get credentials from receiver`() {
-        val receiverServer = setupReceiver(
-            RequiredEndpoints(
-                receiver = listOf(ModuleID.credentials, ModuleID.locations)
-            )
-        )
+        val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
         val credentialsClientService = setupCredentialsSenderClient(
@@ -466,10 +456,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isNotNull()
                 .isNotEmpty()
                 .isEqualTo(
-                    runBlocking {
-                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                            .getVersions()
-                    }
+                    listOf(
+                        Version(
+                            version = VersionNumber.V2_2_1.value,
+                            url = "${receiverServer.transport.baseUrl}/2.2.1"
+                        )
+                    )
                 )
 
             get { status_code }
@@ -521,10 +513,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isNotNull()
                 .isNotEmpty()
                 .isEqualTo(
-                    runBlocking {
-                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                            .getVersions()
-                    }
+                    listOf(
+                        Version(
+                            version = VersionNumber.V2_2_1.value,
+                            url = "${receiverServer.transport.baseUrl}/2.2.1"
+                        )
+                    )
                 )
 
             get { status_code }
@@ -559,10 +553,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isNotNull()
                 .isNotEmpty()
                 .isEqualTo(
-                    runBlocking {
-                        VersionsCacheRepository(baseUrl = senderServer.transport.baseUrl)
-                            .getVersions()
-                    }
+                    listOf(
+                        Version(
+                            version = VersionNumber.V2_2_1.value,
+                            url = "${senderServer.transport.baseUrl}/2.2.1"
+                        )
+                    )
                 )
 
             get { status_code }
@@ -579,10 +575,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isNotNull()
                 .isNotEmpty()
                 .isEqualTo(
-                    runBlocking {
-                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                            .getVersions()
-                    }
+                    listOf(
+                        Version(
+                            version = VersionNumber.V2_2_1.value,
+                            url = "${receiverServer.transport.baseUrl}/2.2.1"
+                        )
+                    )
                 )
 
             get { status_code }
@@ -632,10 +630,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isNotNull()
                 .isNotEmpty()
                 .isEqualTo(
-                    runBlocking {
-                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                            .getVersions()
-                    }
+                    listOf(
+                        Version(
+                            version = VersionNumber.V2_2_1.value,
+                            url = "${receiverServer.transport.baseUrl}/2.2.1"
+                        )
+                    )
                 )
 
             get { status_code }
@@ -661,10 +661,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 .isNotNull()
                 .isNotEmpty()
                 .isEqualTo(
-                    runBlocking {
-                        VersionsCacheRepository(baseUrl = receiverServer.transport.baseUrl)
-                            .getVersions()
-                    }
+                    listOf(
+                        Version(
+                            version = VersionNumber.V2_2_1.value,
+                            url = "${receiverServer.transport.baseUrl}/2.2.1"
+                        )
+                    )
                 )
 
             get { status_code }

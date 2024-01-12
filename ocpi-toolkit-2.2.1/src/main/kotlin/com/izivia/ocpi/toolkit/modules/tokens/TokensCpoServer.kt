@@ -1,24 +1,32 @@
 package com.izivia.ocpi.toolkit.modules.tokens
 
-import com.izivia.ocpi.toolkit.common.OcpiModuleServer
+import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenPartial
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
+import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
+import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 
-/**
- * Receives calls from a CPO
- * @property transportServer
- */
 class TokensCpoServer(
     private val service: TokensCpoInterface,
-    basePath: String = "/2.2.1/tokens"
-) : OcpiModuleServer(basePath) {
-    override suspend fun registerOn(transportServer: TransportServer) {
+    versionsRepository: MutableVersionsRepository,
+    basePathOverride: String? = null
+) : OcpiSelfRegisteringModuleServer(
+    versionsRepository = versionsRepository,
+    ocpiVersion = VersionNumber.V2_2_1,
+    moduleID = ModuleID.tokens,
+    interfaceRole = InterfaceRole.SENDER,
+    basePathOverride = basePathOverride
+) {
+
+    override suspend fun doRegisterOn(transportServer: TransportServer) {
         // Get Method
         transportServer.handle(
             method = HttpMethod.GET,
