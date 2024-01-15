@@ -14,13 +14,13 @@ import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 
 class LocationsEmspServer(
     private val service: LocationsEmspInterface,
-    versionsRepository: MutableVersionsRepository,
+    versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null
 ) : OcpiSelfRegisteringModuleServer(
-    versionsRepository = versionsRepository,
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.locations,
     interfaceRole = InterfaceRole.RECEIVER,
+    versionsRepository = versionsRepository,
     basePathOverride = basePathOverride
 ) {
 

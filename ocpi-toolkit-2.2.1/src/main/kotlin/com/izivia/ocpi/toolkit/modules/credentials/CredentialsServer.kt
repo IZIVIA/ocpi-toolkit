@@ -12,14 +12,14 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 
 class CredentialsServer(
     private val service: CredentialsServerService,
-    versionsRepository: MutableVersionsRepository,
+    versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null
 ) : OcpiSelfRegisteringModuleServer(
-    versionsRepository = versionsRepository,
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.credentials,
     // role irrelevant for module credentials, but docs suggest using SENDER
     interfaceRole = InterfaceRole.SENDER,
+    versionsRepository = versionsRepository,
     basePathOverride = basePathOverride
 ) {
 

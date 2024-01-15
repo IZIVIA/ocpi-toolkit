@@ -16,13 +16,13 @@ import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 
 class TokensCpoServer(
     private val service: TokensCpoInterface,
-    versionsRepository: MutableVersionsRepository,
+    versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null
 ) : OcpiSelfRegisteringModuleServer(
-    versionsRepository = versionsRepository,
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.tokens,
     interfaceRole = InterfaceRole.SENDER,
+    versionsRepository = versionsRepository,
     basePathOverride = basePathOverride
 ) {
 

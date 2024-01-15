@@ -8,17 +8,17 @@ import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepo
 import com.izivia.ocpi.toolkit.transport.TransportServer
 
 abstract class OcpiSelfRegisteringModuleServer(
-    private val versionsRepository: MutableVersionsRepository,
     private val ocpiVersion: VersionNumber,
     private val moduleID: ModuleID,
     private val interfaceRole: InterfaceRole,
+    private val versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null
 ) : OcpiModuleServer(basePathOverride ?: "/${ocpiVersion.value}/${moduleID.name}") {
 
     protected abstract suspend fun doRegisterOn(transportServer: TransportServer)
 
     override suspend fun registerOn(transportServer: TransportServer) {
-        versionsRepository.addEndpoint(
+        versionsRepository?.addEndpoint(
             ocpiVersion,
             Endpoint(
                 identifier = moduleID,
