@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.common
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import com.izivia.ocpi.toolkit.common.context.currentResponseMessageRoutingHeadersOrNull
 import com.izivia.ocpi.toolkit.common.validation.toReadableString
 import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
@@ -142,7 +143,7 @@ suspend fun <T> HttpRequest.httpResponse(fn: suspend () -> OcpiResponseBody<T>):
         ).let {
             if (isPaginated) {
                 it.copy(
-                    headers = (ocpiResponseBody as OcpiResponseBody<SearchResult<*>>)
+                    headers = it.headers + (ocpiResponseBody as OcpiResponseBody<SearchResult<*>>)
                         .getPaginatedHeaders(request = this)
                 )
             } else {
