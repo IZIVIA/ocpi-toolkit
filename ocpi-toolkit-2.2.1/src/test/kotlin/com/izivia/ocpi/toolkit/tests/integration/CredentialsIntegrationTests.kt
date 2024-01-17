@@ -83,7 +83,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             VersionsServer(
                 service = VersionsService(
                     repository = receiverVersionsCacheRepository,
-                    baseUrl = receiverServer.baseUrl
+                    baseUrlProvider = receiverServer::baseUrl
                 )
             ).registerOn(receiverServer)
         }
@@ -112,7 +112,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             VersionsServer(
                 service = VersionsService(
                     repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl),
-                    baseUrl = senderServer.baseUrl
+                    baseUrlProvider = senderServer::baseUrl
                 )
             ).registerOn(senderServer)
         }

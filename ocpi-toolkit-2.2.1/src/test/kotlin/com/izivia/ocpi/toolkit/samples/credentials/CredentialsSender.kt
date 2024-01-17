@@ -38,7 +38,7 @@ fun main() {
         VersionsServer(
             service = VersionsService(
                 repository = senderVersionsRepository,
-                baseUrl = senderUrl
+                baseUrlProvider = { receiverUrl }
             )
         ).registerOn(senderServer)
     }

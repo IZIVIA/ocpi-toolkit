@@ -60,7 +60,7 @@ fun main() {
         VersionsServer(
             service = VersionsService(
                 repository = receiverVersionsRepository,
-                baseUrl = receiverUrl
+                baseUrlProvider = { receiverUrl }
             )
         ).registerOn(receiverServer)
     }

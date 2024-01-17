@@ -10,7 +10,7 @@ import com.izivia.ocpi.toolkit.modules.versions.repositories.VersionsRepository
 
 class VersionsService(
     private val repository: VersionsRepository,
-    private val baseUrl: String,
+    private val baseUrlProvider: suspend () -> String,
     val versionsBasePath: String = "/versions",
     val versionDetailsBasePath: String = ""
 ) : VersionsInterface {
@@ -19,7 +19,7 @@ class VersionsService(
         repository.getVersions().map {
             Version(
                 version = it.value,
-                url = "$baseUrl$versionDetailsBasePath/${it.value}"
+                url = "${baseUrlProvider()}$versionDetailsBasePath/${it.value}"
             )
         }
     }
