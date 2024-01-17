@@ -201,14 +201,14 @@ class CredentialsClientService(
             .let {
                 it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
             }
-        val availableClientVersions = clientVersionsRepository.getVersions()
+        val availableClientVersionNumbers = clientVersionsRepository.getVersions()
 
         // Get available versions and pick latest mutual
         val latestMutualVersion = availableServerVersions
             .sortedByDescending { clientVersion -> parseVersionNumber(clientVersion.version)!!.index }
             .firstOrNull { serverVersion ->
-                availableClientVersions
-                    .any { clientVersion -> serverVersion.version == clientVersion.version }
+                availableClientVersionNumbers
+                    .any { clientVersionNumber -> serverVersion.version == clientVersionNumber.value }
             }
             ?: throw OcpiServerUnsupportedVersionException(
                 "Could not find mutual version with partner $serverVersionsEndpointUrl"

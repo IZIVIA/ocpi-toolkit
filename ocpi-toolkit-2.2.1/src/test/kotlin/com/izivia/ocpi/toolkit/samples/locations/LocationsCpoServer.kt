@@ -8,6 +8,7 @@ import com.izivia.ocpi.toolkit.modules.locations.domain.Evse
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
@@ -33,7 +34,8 @@ fun main() {
     // We implement callbacks for the server using the built-in service and our service implementation
     runBlocking {
         LocationsCpoServer(
-            service = LocationsCpoService(service = service)
+            service = LocationsCpoService(service = service),
+            versionsRepository = InMemoryVersionsRepository()
         ).registerOn(transportServer)
     }
 

@@ -31,4 +31,12 @@ interface TransportServer {
      * Stops the server
      */
     fun stop()
+
+    /**
+     * The configured baseUrl this server listens to.
+     * Used by [com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer] to generate Endpoint URL.
+     * Can be used by implementations of TransportServer to populate the baseUrl of HttpRequest (see example), which in
+     * turn is used to generate NextPageUrl of SearchResult
+     */
+    fun baseUrl(): String
 }

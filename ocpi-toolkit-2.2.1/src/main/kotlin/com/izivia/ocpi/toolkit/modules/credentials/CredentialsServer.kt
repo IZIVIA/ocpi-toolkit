@@ -3,14 +3,27 @@ package com.izivia.ocpi.toolkit.modules.credentials
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
+import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
+import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 
 class CredentialsServer(
     private val service: CredentialsServerService,
-    basePath: String = "/2.2.1/credentials"
-) : OcpiModuleServer(basePath) {
-    override suspend fun registerOn(transportServer: TransportServer) {
+    versionsRepository: MutableVersionsRepository? = null,
+    basePathOverride: String? = null
+) : OcpiSelfRegisteringModuleServer(
+    ocpiVersion = VersionNumber.V2_2_1,
+    moduleID = ModuleID.credentials,
+    // role irrelevant for module credentials, but docs suggest using SENDER
+    interfaceRole = InterfaceRole.SENDER,
+    versionsRepository = versionsRepository,
+    basePathOverride = basePathOverride
+) {
+
+    override suspend fun doRegisterOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments

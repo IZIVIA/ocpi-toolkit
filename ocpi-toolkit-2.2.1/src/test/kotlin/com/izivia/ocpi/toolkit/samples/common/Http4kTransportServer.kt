@@ -107,5 +107,9 @@ class Http4kTransportServer(
         server.stop()
     }
 
+    override fun baseUrl(): String {
+        return baseUrl
+    }
+
     fun initRouterAndBuildClient() = Http4kTransportClient(buildRouter())
 }

@@ -1,24 +1,32 @@
 package com.izivia.ocpi.toolkit.modules.sessions
 
-import com.izivia.ocpi.toolkit.common.OcpiModuleServer
+import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferences
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
+import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
+import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 import java.time.Instant
 
-/**
- * Receives calls from a CPO
- * @property transportServer
- */
 class SessionsCpoServer(
     private val service: SessionsCpoInterface,
-    basePath: String = "/2.2.1/sessions"
-) : OcpiModuleServer(basePath) {
-    override suspend fun registerOn(transportServer: TransportServer) {
+    versionsRepository: MutableVersionsRepository? = null,
+    basePathOverride: String? = null
+) : OcpiSelfRegisteringModuleServer(
+    ocpiVersion = VersionNumber.V2_2_1,
+    moduleID = ModuleID.sessions,
+    interfaceRole = InterfaceRole.SENDER,
+    versionsRepository = versionsRepository,
+    basePathOverride = basePathOverride
+) {
+
+    override suspend fun doRegisterOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments,

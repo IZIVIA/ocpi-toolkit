@@ -8,12 +8,14 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleR
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
 import com.izivia.ocpi.toolkit.modules.credentials.services.RequiredEndpoints
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
-import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsServer
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
-import com.izivia.ocpi.toolkit.modules.versions.services.VersionDetailsService
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
-import com.izivia.ocpi.toolkit.samples.common.*
+import com.izivia.ocpi.toolkit.samples.common.Http4kTransportClientBuilder
+import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
+import com.izivia.ocpi.toolkit.samples.common.Partner
+import com.izivia.ocpi.toolkit.samples.common.PartnerCacheRepository
 import kotlinx.coroutines.runBlocking
 
 const val receiverPort = 8080
@@ -23,6 +25,7 @@ const val tokenA = "06f7967e-65c3-4def-a966-701ffb362b3c"
 
 fun main() {
     // Add token A associated with the sender
+    val receiverVersionsRepository = InMemoryVersionsRepository()
     val receiverPlatformRepository = PartnerCacheRepository()
     receiverPlatformRepository.partners.add(Partner(tokenA = tokenA))
 
@@ -51,17 +54,13 @@ fun main() {
                 transportClientBuilder = Http4kTransportClientBuilder(),
                 serverVersionsUrlProvider = { receiverVersionsUrl },
                 requiredEndpoints = requiredOtherPartEndpoints
-            )
+            ),
+            receiverVersionsRepository
         ).registerOn(receiverServer)
         VersionsServer(
             service = VersionsService(
-                repository = VersionsCacheRepository(baseUrl = receiverUrl)
-            )
-        ).registerOn(receiverServer)
-
-        VersionDetailsServer(
-            service = VersionDetailsService(
-                repository = VersionDetailsCacheRepository(baseUrl = receiverUrl)
+                repository = receiverVersionsRepository,
+                baseUrlProvider = { receiverUrl }
             )
         ).registerOn(receiverServer)
     }

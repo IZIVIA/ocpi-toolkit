@@ -7,6 +7,7 @@ import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
+import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -28,7 +29,7 @@ class LocationsCpoHttpGetEvseTest {
             var locationId = slot<String>()
             var evseUid = slot<String>()
         }
-        val srv = mockk<LocationsCpoRepository>() {
+        val srv = mockk<LocationsCpoRepository> {
             coEvery { getEvse(capture(slots.locationId), capture(slots.evseUid)) } coAnswers {
                 Evse(
                     uid = "3256",
@@ -130,7 +131,8 @@ private fun LocationsCpoRepository.buildServer(): TransportClient {
     runBlocking {
         LocationsCpoServer(
             service = LocationsCpoService(repo),
-            basePath = "/locations"
+            versionsRepository = InMemoryVersionsRepository(),
+            basePathOverride = "/locations"
         ).registerOn(transportServer)
     }
 
