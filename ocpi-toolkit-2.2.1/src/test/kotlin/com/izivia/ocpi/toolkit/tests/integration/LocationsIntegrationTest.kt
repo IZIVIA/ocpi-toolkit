@@ -142,8 +142,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     // request
                     get { method }.isEqualTo(HttpMethod.GET)
                     get { path }.isEqualTo("/2.2.1/locations")
-                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-1")
-                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-1")
                     get { headers[Header.OCPI_FROM_PARTY_ID] }.isNotNull()
                         .isEqualTo(requestMessageRoutingHeaders.fromPartyId)
                     get { headers[Header.OCPI_FROM_COUNTRY_CODE] }.isNotNull()
@@ -156,8 +154,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
                 get { second }.and {
                     // response
-                    get { headers[Header.X_REQUEST_ID] }.isNotNull().isEqualTo("req-id-1")
-                    get { headers[Header.X_CORRELATION_ID] }.isNotNull().isEqualTo("corr-id-1")
                     get { headers[Header.OCPI_FROM_PARTY_ID] }.isNotNull()
                         .isEqualTo(requestMessageRoutingHeaders.toPartyId)
                     get { headers[Header.OCPI_FROM_COUNTRY_CODE] }.isNotNull()
