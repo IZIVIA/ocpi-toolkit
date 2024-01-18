@@ -13,7 +13,19 @@ data class ResponseMessageRoutingHeaders(
     var fromPartyId: String? = null,
     var fromCountryCode: String? = null
 ) : AbstractCoroutineContextElement(ResponseMessageRoutingHeaders) {
-    companion object Key : CoroutineContext.Key<ResponseMessageRoutingHeaders>
+    companion object Key : CoroutineContext.Key<ResponseMessageRoutingHeaders> {
+        /**
+         * Creates [ResponseMessageRoutingHeaders] by inverting "from" and "to" headers of
+         * the [RequestMessageRoutingHeaders].
+         */
+        fun invertFromRequest(requestMessageRoutingHeaders: RequestMessageRoutingHeaders) =
+            ResponseMessageRoutingHeaders(
+                toPartyId = requestMessageRoutingHeaders.fromPartyId,
+                toCountryCode = requestMessageRoutingHeaders.fromCountryCode,
+                fromPartyId = requestMessageRoutingHeaders.toPartyId,
+                fromCountryCode = requestMessageRoutingHeaders.toCountryCode
+            )
+    }
 }
 
 /**
