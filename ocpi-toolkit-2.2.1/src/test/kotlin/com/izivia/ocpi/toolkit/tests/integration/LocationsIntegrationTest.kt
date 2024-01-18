@@ -11,7 +11,6 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.*
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
-import com.izivia.ocpi.toolkit.tests.integration.mock.CustomLocationsCpoService
 import com.izivia.ocpi.toolkit.tests.integration.mock.LocationsCpoMongoRepository
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.mongodb.client.MongoDatabase
@@ -37,7 +36,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         runBlocking {
             LocationsCpoServer(
                 LocationsCpoService(
-                    service = CustomLocationsCpoService(LocationsCpoMongoRepository(collection))
+                    service = LocationsCpoMongoRepository(collection)
                 ),
                 versionsRepository = InMemoryVersionsRepository()
             ).registerOn(server)

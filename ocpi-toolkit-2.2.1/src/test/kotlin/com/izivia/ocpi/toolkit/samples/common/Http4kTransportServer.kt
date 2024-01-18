@@ -60,8 +60,11 @@ class Http4kTransportServer(
                         }
                         .also { httpRequest -> filters.forEach { filter -> filter(httpRequest) } }
                         .let { httpRequest ->
+                            val requestMessageRoutingHeaders = httpRequest.messageRoutingHeaders()
+
                             httpRequest to runBlocking(
-                                httpRequest.messageRoutingHeaders() + ResponseMessageRoutingHeaders()
+                                requestMessageRoutingHeaders +
+                                    ResponseMessageRoutingHeaders.invertFromRequest(requestMessageRoutingHeaders)
                             ) {
                                 callback(httpRequest)
                             }
