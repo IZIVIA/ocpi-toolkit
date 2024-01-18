@@ -2,6 +2,7 @@ package com.izivia.ocpi.toolkit.samples.common
 
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.common.context.ResponseMessageRoutingHeaders
+import com.izivia.ocpi.toolkit.common.validation.toReadableString
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.*
 import kotlinx.coroutines.runBlocking
@@ -11,6 +12,7 @@ import org.http4k.routing.*
 import org.http4k.server.Http4kServer
 import org.http4k.server.Netty
 import org.http4k.server.asServer
+import org.valiktor.ConstraintViolationException
 
 class Http4kTransportServer(
     val baseUrl: String,
@@ -56,16 +58,24 @@ class Http4kTransportServer(
                         body = req.bodyString()
                     )
                         .also { httpRequest ->
+                            try {
+                                httpRequest.headers.validateMessageRoutingHeaders()
+                            } catch (e: ConstraintViolationException) {
+                                throw OcpiClientInvalidParametersException(
+                                    message = "invalid message routing headers: " + e.toReadableString()
+                                )
+                            }
+                        }
+                        .also { httpRequest ->
                             runBlocking { secureFilter(httpRequest) }
                         }
                         .also { httpRequest -> filters.forEach { filter -> filter(httpRequest) } }
                         .let { httpRequest ->
                             val requestMessageRoutingHeaders = httpRequest.messageRoutingHeaders()
+                            val responseMessageRoutingHeaders = ResponseMessageRoutingHeaders
+                                .invertFromRequest(requestMessageRoutingHeaders)
 
-                            httpRequest to runBlocking(
-                                requestMessageRoutingHeaders +
-                                    ResponseMessageRoutingHeaders.invertFromRequest(requestMessageRoutingHeaders)
-                            ) {
+                            httpRequest to runBlocking(requestMessageRoutingHeaders + responseMessageRoutingHeaders) {
                                 callback(httpRequest)
                             }
                         }

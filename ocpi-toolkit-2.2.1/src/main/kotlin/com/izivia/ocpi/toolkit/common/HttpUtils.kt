@@ -6,6 +6,8 @@ import com.izivia.ocpi.toolkit.common.Header.OCPI_FROM_PARTY_ID
 import com.izivia.ocpi.toolkit.common.Header.OCPI_TO_COUNTRY_CODE
 import com.izivia.ocpi.toolkit.common.Header.OCPI_TO_PARTY_ID
 import com.izivia.ocpi.toolkit.common.context.*
+import com.izivia.ocpi.toolkit.common.validation.validate
+import com.izivia.ocpi.toolkit.common.validation.validateLength
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
@@ -31,6 +33,15 @@ object Header {
 
 object ContentType {
     const val APPLICATION_JSON = "application/json"
+}
+
+fun Map<String, String>.validateMessageRoutingHeaders() {
+    validate {
+        validateLength(OCPI_TO_PARTY_ID, getByNormalizedKey(OCPI_TO_PARTY_ID).orEmpty(), 3)
+        validateLength(OCPI_TO_COUNTRY_CODE, getByNormalizedKey(OCPI_TO_COUNTRY_CODE).orEmpty(), 2)
+        validateLength(OCPI_FROM_PARTY_ID, getByNormalizedKey(OCPI_FROM_PARTY_ID).orEmpty(), 3)
+        validateLength(OCPI_FROM_COUNTRY_CODE, getByNormalizedKey(OCPI_FROM_COUNTRY_CODE).orEmpty(), 2)
+    }
 }
 
 /**
