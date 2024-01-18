@@ -19,41 +19,45 @@ fun <T> validate(fn: ValidationContext.() -> T) = with(ValidationContext()) {
     }
 }
 
-fun ValidationContext.validateLength(propertyName: String, property: String, maxLength: Int) {
-    if (property.length > maxLength) {
+fun ValidationContext.validateLength(property: String, value: String, maxLength: Int) {
+    if (value.length > maxLength) {
         violations.add(
             DefaultConstraintViolation(
                 property = property,
-                constraint = Greater(maxLength)
+                value = value,
+                constraint = MaxLengthContraint(maxLength)
             )
         )
     }
 }
 
-fun ValidationContext.validateDates(fromPropertyName: String, from: Instant, toPropertyName: String, to: Instant) {
-    if (from.isAfter(to)) {
+fun ValidationContext.validateDates(fromProperty: String, fromValue: Instant, toProperty: String, toValue: Instant) {
+    if (fromValue.isAfter(toValue)) {
         violations.add(
             DefaultConstraintViolation(
-                property = "from",
-                constraint = Greater(to)
+                property = fromProperty,
+                value = fromValue,
+                constraint = IsAfterContraint(toProperty, toValue)
             )
         )
     }
 }
 
-fun ValidationContext.validateInt(propertyName: String, property: Int, min: Int?, max: Int?) {
-    if (min != null && property < min) {
+fun ValidationContext.validateInt(property: String, value: Int, min: Int?, max: Int?) {
+    if (min != null && value < min) {
         violations.add(
             DefaultConstraintViolation(
-                property = "value",
+                property = property,
+                value = value,
                 constraint = Less(min)
             )
         )
-    } else if (max != null && property > max) {
+    } else if (max != null && value > max) {
         violations.add(
             DefaultConstraintViolation(
-                property = "value",
-                constraint = Greater(min)
+                property = property,
+                value = value,
+                constraint = Greater(max)
             )
         )
     }
