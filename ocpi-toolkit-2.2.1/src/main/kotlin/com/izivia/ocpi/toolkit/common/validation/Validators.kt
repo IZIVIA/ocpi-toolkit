@@ -4,17 +4,19 @@ import com.izivia.ocpi.toolkit.common.CiString
 import org.valiktor.Constraint
 import org.valiktor.ConstraintViolationException
 import org.valiktor.Validator
-import org.valiktor.i18n.toMessage
 import java.net.URL
+import java.time.Instant
 import java.util.*
 
-fun ConstraintViolationException.toReadableString(): String = constraintViolations
-    .map { it.toMessage(baseName = "messages", locale = Locale.ENGLISH) }
-    .joinToString(",") { "${it.property}: ${it.message}" }
+fun ConstraintViolationException.toReadableString(): String =
+    constraintViolations.joinToString(", ") {
+        "${it.constraint} violation on ${it.property}=${it.value}"
+    }
 
 class PrintableAsciiConstraint : Constraint
 class PrintableUtf8Constraint : Constraint
-class MaxLengthContraint(val length: Int) : Constraint
+data class MaxLengthContraint(val length: Int) : Constraint
+data class IsAfterContraint(val property: String, val instant: Instant) : Constraint
 class CountryCodeConstraint : Constraint
 class CurrencyCodeConstraint : Constraint
 class UrlConstraint : Constraint
