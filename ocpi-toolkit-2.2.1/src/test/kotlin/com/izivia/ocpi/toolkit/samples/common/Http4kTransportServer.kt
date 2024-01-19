@@ -1,19 +1,18 @@
 package com.izivia.ocpi.toolkit.samples.common
 
-import com.izivia.ocpi.toolkit.common.OcpiException
-import com.izivia.ocpi.toolkit.common.toHttpResponse
+import com.izivia.ocpi.toolkit.common.*
+import com.izivia.ocpi.toolkit.common.context.ResponseMessageRoutingHeaders
+import com.izivia.ocpi.toolkit.common.validation.toReadableString
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.*
 import kotlinx.coroutines.runBlocking
 import org.http4k.core.*
 import org.http4k.filter.DebuggingFilters
-import org.http4k.routing.RoutingHttpHandler
-import org.http4k.routing.bind
-import org.http4k.routing.path
-import org.http4k.routing.routes
+import org.http4k.routing.*
 import org.http4k.server.Http4kServer
 import org.http4k.server.Netty
 import org.http4k.server.asServer
+import org.valiktor.ConstraintViolationException
 
 class Http4kTransportServer(
     val baseUrl: String,
@@ -34,7 +33,7 @@ class Http4kTransportServer(
         callback: suspend (request: HttpRequest) -> HttpResponse
     ) {
         val pathParams = path
-            .filterIsInstance(VariablePathSegment::class.java)
+            .filterIsInstance<VariablePathSegment>()
             .map { it.path }
 
         val route = path.joinToString("/") { segment ->
@@ -59,11 +58,24 @@ class Http4kTransportServer(
                         body = req.bodyString()
                     )
                         .also { httpRequest ->
+                            try {
+                                httpRequest.headers.validateMessageRoutingHeaders()
+                            } catch (e: ConstraintViolationException) {
+                                throw OcpiClientInvalidParametersException(
+                                    message = "invalid message routing headers: " + e.toReadableString()
+                                )
+                            }
+                        }
+                        .also { httpRequest ->
                             runBlocking { secureFilter(httpRequest) }
                         }
                         .also { httpRequest -> filters.forEach { filter -> filter(httpRequest) } }
                         .let { httpRequest ->
-                            httpRequest to runBlocking {
+                            val requestMessageRoutingHeaders = httpRequest.messageRoutingHeaders()
+                            val responseMessageRoutingHeaders = ResponseMessageRoutingHeaders
+                                .invertFromRequest(requestMessageRoutingHeaders)
+
+                            httpRequest to runBlocking(requestMessageRoutingHeaders + responseMessageRoutingHeaders) {
                                 callback(httpRequest)
                             }
                         }

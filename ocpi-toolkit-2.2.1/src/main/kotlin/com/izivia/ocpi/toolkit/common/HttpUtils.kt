@@ -1,6 +1,13 @@
 package com.izivia.ocpi.toolkit.common
 
 import com.fasterxml.jackson.core.type.TypeReference
+import com.izivia.ocpi.toolkit.common.Header.OCPI_FROM_COUNTRY_CODE
+import com.izivia.ocpi.toolkit.common.Header.OCPI_FROM_PARTY_ID
+import com.izivia.ocpi.toolkit.common.Header.OCPI_TO_COUNTRY_CODE
+import com.izivia.ocpi.toolkit.common.Header.OCPI_TO_PARTY_ID
+import com.izivia.ocpi.toolkit.common.context.*
+import com.izivia.ocpi.toolkit.common.validation.validate
+import com.izivia.ocpi.toolkit.common.validation.validateLength
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
@@ -18,10 +25,23 @@ object Header {
     const val X_LIMIT = "X-Limit"
     const val LINK = "Link"
     const val CONTENT_TYPE = "Content-Type"
+    const val OCPI_TO_PARTY_ID = "OCPI-to-party-id"
+    const val OCPI_TO_COUNTRY_CODE = "OCPI-to-country-code"
+    const val OCPI_FROM_PARTY_ID = "OCPI-from-party-id"
+    const val OCPI_FROM_COUNTRY_CODE = "OCPI-from-country-code"
 }
 
 object ContentType {
     const val APPLICATION_JSON = "application/json"
+}
+
+fun Map<String, String>.validateMessageRoutingHeaders() {
+    validate {
+        validateLength(OCPI_TO_PARTY_ID, getByNormalizedKey(OCPI_TO_PARTY_ID).orEmpty(), 3)
+        validateLength(OCPI_TO_COUNTRY_CODE, getByNormalizedKey(OCPI_TO_COUNTRY_CODE).orEmpty(), 2)
+        validateLength(OCPI_FROM_PARTY_ID, getByNormalizedKey(OCPI_FROM_PARTY_ID).orEmpty(), 3)
+        validateLength(OCPI_FROM_COUNTRY_CODE, getByNormalizedKey(OCPI_FROM_COUNTRY_CODE).orEmpty(), 2)
+    }
 }
 
 /**
@@ -130,13 +150,58 @@ fun HttpRequest.authenticate(token: String): AuthenticatedHttpRequest =
  * It adds Content-Type header as "application/json" if the body is not null.
  */
 private fun HttpRequest.withContentTypeHeaderIfNeeded(): HttpRequest =
-    withHeaders(
-        headers = if (body != null) {
-            headers.plus(Header.CONTENT_TYPE to ContentType.APPLICATION_JSON)
-        } else {
-            headers
-        }
+    if (body != null) {
+        withHeaders(headers = headers.plus(Header.CONTENT_TYPE to ContentType.APPLICATION_JSON))
+    } else {
+        this
+    }
+
+/**
+ * It adds message routing header if they are set in the current coroutine context
+ */
+private suspend fun HttpRequest.withRequestMessageRoutingHeadersIfPresent(): HttpRequest {
+    val requestMessageRoutingHeaders = currentRequestMessageRoutingHeadersOrNull()
+
+    return if (requestMessageRoutingHeaders != null) {
+        withHeaders(headers = headers.plus(requestMessageRoutingHeaders.httpHeaders()))
+    } else {
+        this
+    }
+}
+
+/**
+ * It builds MessageRoutingHeaders from the headers of the request.
+ */
+fun HttpRequest.messageRoutingHeaders(): RequestMessageRoutingHeaders =
+    RequestMessageRoutingHeaders(
+        toPartyId = headers.getByNormalizedKey(OCPI_TO_PARTY_ID),
+        toCountryCode = headers.getByNormalizedKey(OCPI_TO_COUNTRY_CODE),
+        fromPartyId = headers.getByNormalizedKey(OCPI_FROM_PARTY_ID),
+        fromCountryCode = headers.getByNormalizedKey(OCPI_FROM_COUNTRY_CODE)
     )
+
+/**
+ * It builds headers from a ResponseMessageRoutingHeaders
+ */
+private fun RequestMessageRoutingHeaders.httpHeaders(): Map<String, String> =
+    mapOf(
+        OCPI_TO_PARTY_ID to toPartyId,
+        OCPI_TO_COUNTRY_CODE to toCountryCode,
+        OCPI_FROM_PARTY_ID to fromPartyId,
+        OCPI_FROM_COUNTRY_CODE to fromCountryCode
+    )
+        .filter { it.value != null }
+        .mapValues { it.value!! }
+
+fun ResponseMessageRoutingHeaders.httpHeaders(): Map<String, String> =
+    mapOf(
+        OCPI_TO_PARTY_ID to toPartyId,
+        OCPI_TO_COUNTRY_CODE to toCountryCode,
+        OCPI_FROM_PARTY_ID to fromPartyId,
+        OCPI_FROM_COUNTRY_CODE to fromCountryCode
+    )
+        .filter { it.value != null }
+        .mapValues { it.value!! }
 
 /**
  * For debugging issues, OCPI implementations are required to include unique IDs via HTTP headers in every
@@ -156,7 +221,7 @@ private fun HttpRequest.withContentTypeHeaderIfNeeded(): HttpRequest =
  * Dev note: When the server does a request (not a response), it must keep the same X-Correlation-ID but generate a new
  * X-Request-ID. So don't call this method in that case.
  */
-fun HttpRequest.withRequiredHeaders(
+suspend fun HttpRequest.withRequiredHeaders(
     requestId: String,
     correlationId: String
 ): HttpRequest =
@@ -164,7 +229,9 @@ fun HttpRequest.withRequiredHeaders(
         headers = headers
             .plus(Header.X_REQUEST_ID to requestId)
             .plus(Header.X_CORRELATION_ID to correlationId)
-    ).withContentTypeHeaderIfNeeded()
+    )
+        .withContentTypeHeaderIfNeeded()
+        .withRequestMessageRoutingHeadersIfPresent()
 
 /**
  * For debugging issues, OCPI implementations are required to include unique IDs via HTTP headers in every
