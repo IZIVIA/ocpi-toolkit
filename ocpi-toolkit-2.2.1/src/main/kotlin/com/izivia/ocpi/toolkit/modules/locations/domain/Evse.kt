@@ -42,7 +42,7 @@ import java.time.Instant
 @Partial
 data class Evse(
     val uid: CiString,
-    val evseId: CiString,
+    val evseId: CiString?,
     val status: Status,
     val statusSchedule: List<StatusSchedule>? = null,
     val capabilities: List<Capability>? = null,
