@@ -22,7 +22,7 @@ class TokensEmspServer(
 ) : OcpiSelfRegisteringModuleServer(
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.tokens,
-    interfaceRole = InterfaceRole.RECEIVER,
+    interfaceRole = InterfaceRole.SENDER,
     versionsRepository = versionsRepository,
     basePathOverride = basePathOverride
 ) {
