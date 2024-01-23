@@ -9,7 +9,7 @@ import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 import com.izivia.ocpi.toolkit.modules.sessions.repositories.SessionsEmspRepository
 
-class SessionsEmspService(
+open class SessionsEmspService(
     private val service: SessionsEmspRepository
 ) : SessionsEmspInterface {
     override suspend fun getSession(

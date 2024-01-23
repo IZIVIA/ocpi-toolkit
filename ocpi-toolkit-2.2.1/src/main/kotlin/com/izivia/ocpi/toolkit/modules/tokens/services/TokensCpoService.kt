@@ -10,7 +10,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenPartial
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensCpoRepository
 
-class TokensCpoService(
+open class TokensCpoService(
     private val service: TokensCpoRepository
 ) : TokensCpoInterface {
     override suspend fun getToken(

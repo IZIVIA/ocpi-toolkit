@@ -8,7 +8,7 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
 import com.izivia.ocpi.toolkit.modules.versions.domain.parseVersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.VersionsRepository
 
-class VersionsService(
+open class VersionsService(
     private val repository: VersionsRepository,
     private val baseUrlProvider: suspend () -> String,
     val versionsBasePath: String = "/versions",

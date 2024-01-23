@@ -14,7 +14,7 @@ import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import com.izivia.ocpi.toolkit.modules.sessions.repositories.SessionsCpoRepository
 import java.time.Instant
 
-class SessionsCpoService(
+open class SessionsCpoService(
     private val service: SessionsCpoRepository
 ) : SessionsCpoInterface {
     override suspend fun getSessions(

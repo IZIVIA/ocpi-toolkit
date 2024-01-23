@@ -8,7 +8,7 @@ import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspInterface
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
 
-class LocationsEmspService(
+open class LocationsEmspService(
     private val service: LocationsEmspRepository
 ) : LocationsEmspInterface {
 
