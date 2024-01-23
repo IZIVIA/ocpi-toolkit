@@ -11,7 +11,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 
-class CredentialsServerService(
+open class CredentialsServerService(
     private val partnerRepository: PartnerRepository,
     private val credentialsRoleRepository: CredentialsRoleRepository,
     private val transportClientBuilder: TransportClientBuilder,

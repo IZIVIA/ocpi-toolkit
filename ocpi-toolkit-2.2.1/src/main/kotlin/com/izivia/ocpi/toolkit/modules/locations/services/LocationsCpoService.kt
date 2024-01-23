@@ -14,7 +14,7 @@ import com.izivia.ocpi.toolkit.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import java.time.Instant
 
-class LocationsCpoService(
+open class LocationsCpoService(
     private val service: LocationsCpoRepository
 ) : LocationsCpoInterface {
 

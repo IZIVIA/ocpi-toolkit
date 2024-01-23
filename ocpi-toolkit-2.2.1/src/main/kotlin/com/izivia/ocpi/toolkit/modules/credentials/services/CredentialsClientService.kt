@@ -30,7 +30,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
  * @property transportClientBuilder used to build a transport (will be used to create CredentialClient to make calls)
  * @property requiredEndpoints the endpoints this client expects from the other part to provide
  */
-class CredentialsClientService(
+open class CredentialsClientService(
     private val clientVersionsEndpointUrl: String,
     private val clientPartnerRepository: PartnerRepository,
     private val clientVersionsRepository: VersionsRepository,

@@ -15,7 +15,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensEmspRepository
 import java.time.Instant
 
-class TokensEmspService(
+open class TokensEmspService(
     private val service: TokensEmspRepository
 ) : TokensEmspInterface {
     override suspend fun getTokens(
