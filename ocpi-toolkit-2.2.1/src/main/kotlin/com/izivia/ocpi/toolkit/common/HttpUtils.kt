@@ -360,3 +360,6 @@ suspend fun TransportClientBuilder.buildFor(
         .find { it.identifier == module }
         ?.let { build(baseUrl = it.url) }
         ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)
+
+fun <T, P> Map<T, P>.add(key: T, value: P?): Map<T, P> =
+    if (value != null) this.plus(key to value) else this

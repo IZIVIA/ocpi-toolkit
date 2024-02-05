@@ -47,7 +47,10 @@ class LocationsEmspClient(
                     dateTo?.let { "date_to" to dateTo.toString() },
                     "offset" to offset.toString(),
                     limit?.let { "limit" to limit.toString() }
-                ).toMap()
+                ).toMap(),
+                headers = emptyMap<String, String>()
+                    .add(Header.OCPI_TO_COUNTRY_CODE, countryCode)
+                    .add(Header.OCPI_TO_PARTY_ID, partyId)
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -66,7 +69,10 @@ class LocationsEmspClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$locationId"
+                path = "/$locationId",
+                headers = emptyMap<String, String>()
+                    .add(Header.OCPI_TO_COUNTRY_CODE, countryCode)
+                    .add(Header.OCPI_TO_PARTY_ID, partyId)
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -87,7 +93,10 @@ class LocationsEmspClient(
             send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/$locationId/$evseUid"
+                    path = "/$locationId/$evseUid",
+                    headers = emptyMap<String, String>()
+                        .add(Header.OCPI_TO_COUNTRY_CODE, countryCode)
+                        .add(Header.OCPI_TO_PARTY_ID, partyId)
                 )
                     .withRequiredHeaders(
                         requestId = generateRequestId(),
@@ -108,7 +117,10 @@ class LocationsEmspClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$locationId/$evseUid/$connectorId"
+                path = "/$locationId/$evseUid/$connectorId",
+                headers = emptyMap<String, String>()
+                    .add(Header.OCPI_TO_COUNTRY_CODE, countryCode)
+                    .add(Header.OCPI_TO_PARTY_ID, partyId)
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
