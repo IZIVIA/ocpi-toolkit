@@ -35,7 +35,9 @@ class LocationsEmspClient(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
-        limit: Int?
+        limit: Int?,
+        countryCode: String?,
+        partyId: String?
     ): OcpiResponseBody<SearchResult<Location>> = with(buildTransport()) {
         send(
             HttpRequest(
@@ -56,7 +58,11 @@ class LocationsEmspClient(
             .parsePaginatedBody(offset)
     }
 
-    override suspend fun getLocation(locationId: CiString): OcpiResponseBody<Location?> = with(buildTransport()) {
+    override suspend fun getLocation(
+        locationId: CiString,
+        countryCode: String?,
+        partyId: String?
+    ): OcpiResponseBody<Location?> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.GET,
@@ -71,7 +77,12 @@ class LocationsEmspClient(
             .parseBody()
     }
 
-    override suspend fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?> =
+    override suspend fun getEvse(
+        locationId: CiString,
+        evseUid: CiString,
+        countryCode: String?,
+        partyId: String?
+    ): OcpiResponseBody<Evse?> =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -90,7 +101,9 @@ class LocationsEmspClient(
     override suspend fun getConnector(
         locationId: CiString,
         evseUid: CiString,
-        connectorId: CiString
+        connectorId: CiString,
+        countryCode: String?,
+        partyId: String?
     ): OcpiResponseBody<Connector?> = with(buildTransport()) {
         send(
             HttpRequest(

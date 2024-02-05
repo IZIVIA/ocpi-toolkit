@@ -20,7 +20,9 @@ class LocationsCpoMongoRepository(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
-        limit: Int?
+        limit: Int?,
+        countryCode: String?,
+        partyId: String?
     ): SearchResult<Location> =
         collection
             .run {
@@ -42,15 +44,30 @@ class LocationsCpoMongoRepository(
                     .toSearchResult(totalCount = size, limit = actualLimit, offset = offset)
             }
 
-    override suspend fun getLocation(locationId: String): Location? {
+    override suspend fun getLocation(
+        locationId: String,
+        countryCode: String?,
+        partyId: String?
+    ): Location? {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getEvse(locationId: String, evseUid: String): Evse? {
+    override suspend fun getEvse(
+        locationId: String,
+        evseUid: String,
+        countryCode: String?,
+        partyId: String?
+    ): Evse? {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector? {
+    override suspend fun getConnector(
+        locationId: String,
+        evseUid: String,
+        connectorId: String,
+        countryCode: String?,
+        partyId: String?
+    ): Connector? {
         TODO("Not yet implemented")
     }
 }

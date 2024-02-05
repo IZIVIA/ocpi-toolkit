@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.cpo
 
+import com.izivia.ocpi.toolkit.common.Header
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
@@ -27,12 +28,28 @@ class LocationsCpoHttpGetLocationsTest {
     @Test
     fun `should list locations`() {
         // given
+        var countryCode: String? = null
+        var partyId: String? = null
+
         val slots = object {
             var dateFrom = slot<Instant>()
             var dateTo = slot<Instant>()
+            var countryCode = mutableListOf<String?>()
+            var partyId = mutableListOf<String?>()
         }
         val srv = mockk<LocationsCpoRepository> {
-            coEvery { getLocations(capture(slots.dateFrom), capture(slots.dateTo), any(), any()) } coAnswers {
+            coEvery {
+                getLocations(
+                    capture(slots.dateFrom),
+                    capture(slots.dateTo),
+                    any(),
+                    any(),
+                    captureNullable(slots.countryCode),
+                    captureNullable(slots.partyId)
+                )
+            } coAnswers {
+                countryCode = slots.countryCode.captured()
+                partyId = slots.partyId.captured()
                 listOf(
                     Location(
                         countryCode = "NL",
@@ -76,7 +93,17 @@ class LocationsCpoHttpGetLocationsTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.GET, "/locations/?date_from=2019-01-28T12:00:00Z&date_to=2019-01-29T12:00:00Z")
+            buildHttpRequest(
+                HttpMethod.GET,
+                "/locations/?date_from=2019-01-28T12:00:00Z&date_to=2019-01-29T12:00:00Z"
+            ).withHeaders(
+                mapOf(
+                    Header.OCPI_TO_PARTY_ID to "ABC",
+                    Header.OCPI_TO_COUNTRY_CODE to "FR",
+                    Header.OCPI_FROM_PARTY_ID to "GRV",
+                    Header.OCPI_FROM_COUNTRY_CODE to "EN"
+                )
+            )
         )
 
         // then
@@ -84,6 +111,8 @@ class LocationsCpoHttpGetLocationsTest {
             get { dateFrom.captured }.isEqualTo(Instant.parse("2019-01-28T12:00:00Z"))
             get { dateTo.captured }.isEqualTo(Instant.parse("2019-01-29T12:00:00Z"))
         }
+        expectThat(countryCode).isEqualTo("FR")
+        expectThat(partyId).isEqualTo("ABC")
         expectThat(resp) {
             get { status }.isEqualTo(HttpStatus.OK)
             get { headers["X-Total-Count"] }.isEqualTo("1")

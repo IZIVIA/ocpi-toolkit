@@ -27,26 +27,56 @@ interface LocationsCpoRepository {
      * @param dateTo Instant? Only return Locations that have last_updated before this Date/Time.
      * @param offset Int? The offset of the first object returned. Default is 0.
      * @param limit Int? Maximum number of objects to GET.
+     * @param countryCode String? ISO-3166 alpha-2 country code of the Locations' CPO to return.
+     * @param partyId String? ID of the Locations' CPO to return.
      * @return List<Location> The endpoint returns a list of Location objects The header will
      * contain the pagination related headers.
      */
-    suspend fun getLocations(dateFrom: Instant?, dateTo: Instant?, offset: Int = 0, limit: Int?): SearchResult<Location>
+    suspend fun getLocations(
+        dateFrom: Instant?,
+        dateTo: Instant?,
+        offset: Int = 0,
+        limit: Int?,
+        countryCode: String?,
+        partyId: String?
+    ): SearchResult<Location>
 
     /**
      * @param locationId String max-length = 39
+     * @param countryCode String? max-length = 2; ISO-3166 alpha-2 country code of the Locations' CPO to return.
+     * @param partyId String? max-length = 3; ID of the Locations' CPO to return.
      */
-    suspend fun getLocation(locationId: String): Location?
+    suspend fun getLocation(
+        locationId: String,
+        countryCode: String?,
+        partyId: String?
+    ): Location?
 
     /**
      * @param locationId String max-length = 39
      * @param evseUid String? max-length = 39
+     * @param countryCode String? max-length = 2; ISO-3166 alpha-2 country code of the Locations' CPO to return.
+     * @param partyId String? max-length = 3; ID of the Locations' CPO to return.
      */
-    suspend fun getEvse(locationId: String, evseUid: String): Evse?
+    suspend fun getEvse(
+        locationId: String,
+        evseUid: String,
+        countryCode: String?,
+        partyId: String?
+    ): Evse?
 
     /**
      * @param locationId String max-length = 39
      * @param evseUid max-length = 39
      * @param connectorId max-length = 39
+     * @param countryCode String? max-length = 2; ISO-3166 alpha-2 country code of the Locations' CPO to return.
+     * @param partyId String? max-length = 3; ID of the Locations' CPO to return.
      */
-    suspend fun getConnector(locationId: String, evseUid: String, connectorId: String): Connector?
+    suspend fun getConnector(
+        locationId: String,
+        evseUid: String,
+        connectorId: String,
+        countryCode: String?,
+        partyId: String?
+    ): Connector?
 }

@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.cpo
 
+import com.izivia.ocpi.toolkit.common.Header
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
@@ -25,11 +26,24 @@ import java.time.Instant
 class LocationsCpoHttpGetLocationTest {
     @Test
     fun `should be location`() {
+        var countryCode: String? = null
+        var partyId: String? = null
+
         val slots = object {
             var locationId = slot<String>()
+            var countryCode = mutableListOf<String?>()
+            var partyId = mutableListOf<String?>()
         }
         val srv = mockk<LocationsCpoRepository> {
-            coEvery { getLocation(capture((slots.locationId))) } coAnswers {
+            coEvery {
+                getLocation(
+                    capture((slots.locationId)),
+                    captureNullable(slots.countryCode),
+                    captureNullable(slots.partyId)
+                )
+            } coAnswers {
+                countryCode = slots.countryCode.captured()
+                partyId = slots.partyId.captured()
                 Location(
                     countryCode = "BE",
                     partyId = "BEC",
@@ -108,13 +122,22 @@ class LocationsCpoHttpGetLocationTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.GET, "/locations/LOC1")
+            buildHttpRequest(HttpMethod.GET, "/locations/LOC1").withHeaders(
+                mapOf(
+                    Header.OCPI_TO_PARTY_ID to "ABC",
+                    Header.OCPI_TO_COUNTRY_CODE to "FR",
+                    Header.OCPI_FROM_PARTY_ID to "GRV",
+                    Header.OCPI_FROM_COUNTRY_CODE to "EN"
+                )
+            )
         )
 
         // then
         expectThat(slots) {
             get { locationId.captured }.isEqualTo("LOC1")
         }
+        expectThat(countryCode).isEqualTo("FR")
+        expectThat(partyId).isEqualTo("ABC")
         expectThat(resp) {
             get { status }.isEqualTo(HttpStatus.OK)
             get { body }.isJsonEqualTo(

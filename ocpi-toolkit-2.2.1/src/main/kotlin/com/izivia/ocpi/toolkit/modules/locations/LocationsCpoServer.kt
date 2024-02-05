@@ -1,6 +1,9 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
+import com.izivia.ocpi.toolkit.common.Header.OCPI_TO_COUNTRY_CODE
+import com.izivia.ocpi.toolkit.common.Header.OCPI_TO_PARTY_ID
 import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
+import com.izivia.ocpi.toolkit.common.getByNormalizedKey
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -38,7 +41,9 @@ class LocationsCpoServer(
                         dateFrom = dateFrom?.let { Instant.parse(it) },
                         dateTo = dateTo?.let { Instant.parse(it) },
                         offset = req.queryParams["offset"]?.toInt() ?: 0,
-                        limit = req.queryParams["limit"]?.toInt()
+                        limit = req.queryParams["limit"]?.toInt(),
+                        countryCode = req.headers.getByNormalizedKey(OCPI_TO_COUNTRY_CODE),
+                        partyId = req.headers.getByNormalizedKey(OCPI_TO_PARTY_ID)
                     )
             }
         }
@@ -52,7 +57,9 @@ class LocationsCpoServer(
             req.httpResponse {
                 service
                     .getLocation(
-                        locationId = req.pathParams["locationId"]!!
+                        locationId = req.pathParams["locationId"]!!,
+                        countryCode = req.headers.getByNormalizedKey(OCPI_TO_COUNTRY_CODE),
+                        partyId = req.headers.getByNormalizedKey(OCPI_TO_PARTY_ID)
                     )
             }
         }
@@ -68,7 +75,9 @@ class LocationsCpoServer(
                 service
                     .getEvse(
                         locationId = req.pathParams["locationId"]!!,
-                        evseUid = req.pathParams["evseUid"]!!
+                        evseUid = req.pathParams["evseUid"]!!,
+                        countryCode = req.headers.getByNormalizedKey(OCPI_TO_COUNTRY_CODE),
+                        partyId = req.headers.getByNormalizedKey(OCPI_TO_PARTY_ID)
                     )
             }
         }
@@ -86,7 +95,9 @@ class LocationsCpoServer(
                     .getConnector(
                         locationId = req.pathParams["locationId"]!!,
                         evseUid = req.pathParams["evseUid"]!!,
-                        connectorId = req.pathParams["connectorId"]!!
+                        connectorId = req.pathParams["connectorId"]!!,
+                        countryCode = req.headers.getByNormalizedKey(OCPI_TO_COUNTRY_CODE),
+                        partyId = req.headers.getByNormalizedKey(OCPI_TO_PARTY_ID)
                     )
             }
         }

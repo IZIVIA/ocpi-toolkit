@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.cpo
 
+import com.izivia.ocpi.toolkit.common.Header
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
@@ -25,12 +26,25 @@ import java.time.Instant
 class LocationsCpoHttpGetEvseTest {
     @Test
     fun `should be evse`() {
+        var countryCode: String? = null
+        var partyId: String? = null
         val slots = object {
             var locationId = slot<String>()
             var evseUid = slot<String>()
+            var countryCode = mutableListOf<String?>()
+            var partyId = mutableListOf<String?>()
         }
         val srv = mockk<LocationsCpoRepository> {
-            coEvery { getEvse(capture(slots.locationId), capture(slots.evseUid)) } coAnswers {
+            coEvery {
+                getEvse(
+                    capture(slots.locationId),
+                    capture(slots.evseUid),
+                    captureNullable(slots.countryCode),
+                    captureNullable(slots.partyId)
+                )
+            } coAnswers {
+                countryCode = slots.countryCode.captured()
+                partyId = slots.partyId.captured()
                 Evse(
                     uid = "3256",
                     evseId = "BE*BEC*E041503001",
@@ -68,7 +82,14 @@ class LocationsCpoHttpGetEvseTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.GET, "/locations/LOC1/3256")
+            buildHttpRequest(HttpMethod.GET, "/locations/LOC1/3256").withHeaders(
+                mapOf(
+                    Header.OCPI_TO_PARTY_ID to "ABC",
+                    Header.OCPI_TO_COUNTRY_CODE to "FR",
+                    Header.OCPI_FROM_PARTY_ID to "GRV",
+                    Header.OCPI_FROM_COUNTRY_CODE to "EN"
+                )
+            )
         )
 
         // then
@@ -76,6 +97,8 @@ class LocationsCpoHttpGetEvseTest {
             get { locationId.captured }.isEqualTo("LOC1")
             get { evseUid.captured }.isEqualTo("3256")
         }
+        expectThat(countryCode).isEqualTo("FR")
+        expectThat(partyId).isEqualTo("ABC")
         expectThat(resp) {
             get { status }.isEqualTo(HttpStatus.OK)
             get { body }.isJsonEqualTo(

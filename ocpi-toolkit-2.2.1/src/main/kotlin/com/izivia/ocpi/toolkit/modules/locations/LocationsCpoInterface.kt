@@ -32,6 +32,8 @@ interface LocationsCpoInterface {
      * @param dateTo Instant? Only return Locations that have last_updated before this Date/Time.
      * @param offset Int? The offset of the first object returned. Default is 0.
      * @param limit Int? Maximum number of objects to GET.
+     * @param countryCode String? ISO-3166 alpha-2 country code of the Locations' CPO to return.
+     * @param partyId String? ID of the Locations' CPO to return.
      * @return List<Location> The endpoint returns a list of Location objects The header will
      * contain the pagination related headers.
      */
@@ -39,28 +41,47 @@ interface LocationsCpoInterface {
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int = 0,
-        limit: Int?
+        limit: Int?,
+        countryCode: String?,
+        partyId: String?
     ): OcpiResponseBody<SearchResult<Location>>
 
     /**
      * @param locationId String max-length = 36
+     * @param countryCode String? ISO-3166 alpha-2 country code of the Locations' CPO to return.
+     * @param partyId String? ID of the Locations' CPO to return.
      */
-    suspend fun getLocation(locationId: CiString): OcpiResponseBody<Location?>
+    suspend fun getLocation(
+        locationId: CiString,
+        countryCode: String?,
+        partyId: String?
+    ): OcpiResponseBody<Location?>
 
     /**
      * @param locationId String max-length = 36
      * @param evseUid String? max-length = 36
+     * @param countryCode String? ISO-3166 alpha-2 country code of the Locations' CPO to return.
+     * @param partyId String? ID of the Locations' CPO to return.
      */
-    suspend fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?>
+    suspend fun getEvse(
+        locationId: CiString,
+        evseUid: CiString,
+        countryCode: String?,
+        partyId: String?
+    ): OcpiResponseBody<Evse?>
 
     /**
      * @param locationId String max-length = 36
      * @param evseUid max-length = 36
      * @param connectorId max-length = 36
+     * @param countryCode String? ISO-3166 alpha-2 country code of the Locations' CPO to return.
+     * @param partyId String? ID of the Locations' CPO to return.
      */
     suspend fun getConnector(
         locationId: CiString,
         evseUid: CiString,
-        connectorId: CiString
+        connectorId: CiString,
+        countryCode: String?,
+        partyId: String?
     ): OcpiResponseBody<Connector?>
 }

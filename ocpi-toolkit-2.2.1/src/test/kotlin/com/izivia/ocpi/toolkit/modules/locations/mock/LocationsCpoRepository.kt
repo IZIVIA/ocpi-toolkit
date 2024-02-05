@@ -19,7 +19,14 @@ fun locationsCpoRepository(locations: List<Location>): LocationsCpoRepository = 
     val limit = mutableListOf<Int?>()
 
     coEvery {
-        getLocations(captureNullable(dateFrom), captureNullable(dateTo), capture(offset), captureNullable(limit))
+        getLocations(
+            captureNullable(dateFrom),
+            captureNullable(dateTo),
+            capture(offset),
+            captureNullable(limit),
+            any(),
+            any()
+        )
     } coAnswers {
         val capturedOffset = offset.captured
         val capturedLimit = limit.captured() ?: 10
@@ -38,18 +45,39 @@ fun locationsCpoRepository(locations: List<Location>): LocationsCpoRepository = 
             .toSearchResult(totalCount = locations.size, limit = capturedLimit, offset = capturedOffset)
     }
 
-    coEvery { getLocation(capture(locationId)) } coAnswers {
+    coEvery {
+        getLocation(
+            capture(locationId),
+            any(),
+            any()
+        )
+    } coAnswers {
         locations.find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
     }
 
-    coEvery { getEvse(capture(locationId), capture(evseUid)) } coAnswers {
+    coEvery {
+        getEvse(
+            capture(locationId),
+            capture(evseUid),
+            any(),
+            any()
+        )
+    } coAnswers {
         locations
             .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
             ?.evses
             ?.find { it.uid.lowercase(Locale.ENGLISH) == evseUid.captured.lowercase(Locale.ENGLISH) }
     }
 
-    coEvery { getConnector(capture(locationId), capture(evseUid), capture(connectorId)) } coAnswers {
+    coEvery {
+        getConnector(
+            capture(locationId),
+            capture(evseUid),
+            capture(connectorId),
+            any(),
+            any()
+        )
+    } coAnswers {
         locations
             .find { it.id.lowercase(Locale.ENGLISH) == locationId.captured.lowercase(Locale.ENGLISH) }
             ?.evses

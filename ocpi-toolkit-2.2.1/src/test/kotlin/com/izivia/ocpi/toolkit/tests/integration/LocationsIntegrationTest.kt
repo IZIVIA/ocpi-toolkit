@@ -99,7 +99,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -176,7 +178,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -223,7 +227,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -270,7 +276,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -317,7 +325,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -364,7 +374,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -411,7 +423,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -458,7 +472,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -505,7 +521,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -547,7 +565,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {

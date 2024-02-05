@@ -23,7 +23,16 @@ class LocationsCpoServiceTest {
         service = LocationsCpoService(service = locationsCpoRepository(emptyList()))
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = from, dateTo = from, offset = 0, limit = null) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = from,
+                    dateTo = from,
+                    offset = 0,
+                    limit = null,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -35,7 +44,16 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = to, dateTo = from, offset = 0, limit = null) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = to,
+                    dateTo = from,
+                    offset = 0,
+                    limit = null,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -45,7 +63,16 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = from, dateTo = to, offset = 0, limit = null) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = from,
+                    dateTo = to,
+                    offset = 0,
+                    limit = null,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -57,7 +84,16 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = to, offset = 0, limit = null) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = null,
+                    dateTo = to,
+                    offset = 0,
+                    limit = null,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -69,7 +105,16 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = from, dateTo = null, offset = 0, limit = null) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = from,
+                    dateTo = null,
+                    offset = 0,
+                    limit = null,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -81,7 +126,16 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = null) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = null,
+                    dateTo = null,
+                    offset = 0,
+                    limit = null,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -93,7 +147,16 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = -10, limit = null) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = null,
+                    dateTo = null,
+                    offset = -10,
+                    limit = null,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -103,7 +166,16 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = -10) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = null,
+                    dateTo = null,
+                    offset = 0,
+                    limit = -10,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -113,7 +185,16 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = 100) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = null,
+                    dateTo = null,
+                    offset = 0,
+                    limit = 100,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -130,7 +211,16 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 100, limit = 100) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = null,
+                    dateTo = null,
+                    offset = 100,
+                    limit = 100,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -147,7 +237,16 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = 0) }
+            runBlocking {
+                service.getLocations(
+                    dateFrom = null,
+                    dateTo = null,
+                    offset = 0,
+                    limit = 0,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
         ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -173,17 +272,41 @@ class LocationsCpoServiceTest {
         val str36chars = "abababababababababababababababababab"
         val str37chars = "ababababababababababababababababababa"
 
-        expectThat(runBlocking { service.getLocation(locationId = str3chars) }) {
+        expectThat(
+            runBlocking {
+                service.getLocation(
+                    locationId = str3chars,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(runBlocking { service.getLocation(locationId = str36chars) }) {
+        expectThat(
+            runBlocking {
+                service.getLocation(
+                    locationId = str36chars,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(runBlocking { service.getLocation(locationId = str37chars) }) {
+        expectThat(
+            runBlocking {
+                service.getLocation(
+                    locationId = str37chars,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -197,37 +320,100 @@ class LocationsCpoServiceTest {
         val str36chars = "abababababababababababababababababab"
         val str37chars = "ababababababababababababababababababa"
 
-        expectThat(runBlocking { service.getEvse(locationId = str3chars, evseUid = str3chars) }) {
+        expectThat(
+            runBlocking {
+                service.getEvse(
+                    locationId = str3chars,
+                    evseUid = str3chars,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(runBlocking { service.getEvse(locationId = str36chars, evseUid = str3chars) }) {
+        expectThat(
+            runBlocking {
+                service.getEvse(
+                    locationId = str36chars,
+                    evseUid = str3chars,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(runBlocking { service.getEvse(locationId = str37chars, evseUid = str3chars) }) {
+        expectThat(
+            runBlocking {
+                service.getEvse(
+                    locationId = str37chars,
+                    evseUid = str3chars,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
-        expectThat(runBlocking { service.getEvse(locationId = str3chars, evseUid = str3chars) }) {
+        expectThat(
+            runBlocking {
+                service.getEvse(
+                    locationId = str3chars,
+                    evseUid = str3chars,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(runBlocking { service.getEvse(locationId = str3chars, evseUid = str36chars) }) {
+        expectThat(
+            runBlocking {
+                service.getEvse(
+                    locationId = str3chars,
+                    evseUid = str36chars,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
-        expectThat(runBlocking { service.getEvse(locationId = str3chars, evseUid = str37chars) }) {
+        expectThat(
+            runBlocking {
+                service.getEvse(
+                    locationId = str3chars,
+                    evseUid = str37chars,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
-        expectThat(runBlocking { service.getEvse(locationId = str37chars, evseUid = str37chars) }) {
+        expectThat(
+            runBlocking {
+                service.getEvse(
+                    locationId = str37chars,
+                    evseUid = str37chars,
+                    countryCode = null,
+                    partyId = null
+                )
+            }
+        ) {
             get { status_code }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -247,7 +433,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str3chars,
                     evseUid = str3chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -260,7 +448,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str36chars,
                     evseUid = str3chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -273,7 +463,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str37chars,
                     evseUid = str3chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -286,7 +478,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str3chars,
                     evseUid = str3chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -299,7 +493,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str3chars,
                     evseUid = str36chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -312,7 +508,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str3chars,
                     evseUid = str37chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -325,7 +523,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str37chars,
                     evseUid = str37chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -338,7 +538,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str3chars,
                     evseUid = str3chars,
-                    connectorId = str37chars
+                    connectorId = str37chars,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {
@@ -351,7 +553,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str37chars,
                     evseUid = str37chars,
-                    connectorId = str37chars
+                    connectorId = str37chars,
+                    countryCode = null,
+                    partyId = null
                 )
             }
         ) {

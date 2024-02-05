@@ -18,7 +18,13 @@ fun main() {
     // We can use it
     println(
         runBlocking {
-            locationsEmspClient.getConnector(locationId = "location1", evseUid = "evse1", connectorId = "connector1")
+            locationsEmspClient.getConnector(
+                locationId = "location1",
+                evseUid = "evse1",
+                connectorId = "connector1",
+                countryCode = null,
+                partyId = null
+            )
         }
     )
 }
