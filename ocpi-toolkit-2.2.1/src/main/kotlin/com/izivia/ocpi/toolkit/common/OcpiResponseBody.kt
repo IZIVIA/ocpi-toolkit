@@ -124,7 +124,7 @@ suspend fun <T> HttpRequest.httpResponse(fn: suspend () -> OcpiResponseBody<T>):
             status = when (ocpiResponseBody.status_code) {
                 OcpiStatus.SUCCESS.code -> if (ocpiResponseBody.data != null) HttpStatus.OK else HttpStatus.NOT_FOUND
                 OcpiStatus.CLIENT_INVALID_PARAMETERS.code -> HttpStatus.BAD_REQUEST
-                else -> HttpStatus.INTERNAL_SERVER_ERROR
+                else -> HttpStatus.OK
             },
             body = mapper.writeValueAsString(
                 if (isPaginated) {
