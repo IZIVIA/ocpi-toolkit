@@ -31,5 +31,5 @@ data class ReserveNow(
     val reservationId: CiString,
     val locationId: CiString,
     val evseUid: CiString?,
-    val authorizationReference: CiString?,
+    val authorizationReference: CiString?
 )

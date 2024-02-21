@@ -11,5 +11,5 @@ import com.izivia.ocpi.toolkit.common.CiString
  */
 data class CancelReservation(
     val responseUrl: CiString,
-    val reservationId: CiString,
+    val reservationId: CiString
 )

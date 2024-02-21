@@ -10,5 +10,5 @@ import com.izivia.ocpi.toolkit.common.CiString
  */
 data class StopSession(
     val responseUrl: CiString,
-    val sessionId: CiString,
+    val sessionId: CiString
 )

@@ -9,12 +9,12 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
 class CommandCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
-    private val partnerRepository: PartnerRepository,
+    private val partnerRepository: PartnerRepository
 ) {
     suspend fun postCommandCallback(
         commandResult: CommandResult,
         partnerUrl: String,
-        responseUrl: String,
+        responseUrl: String
     ): OcpiResponseBody<Any> =
         transportClientBuilder
             .build("")

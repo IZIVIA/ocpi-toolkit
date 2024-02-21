@@ -15,7 +15,7 @@ class CommandEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val serverVersionsEndpointUrl: String,
     private val partnerRepository: PartnerRepository,
-    private val callbackBaseUrl: String,
+    private val callbackBaseUrl: String
 ) {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
@@ -30,7 +30,7 @@ class CommandEmspClient(
         locationId: CiString,
         evseId: CiString?,
         connectorId: CiString?,
-        authorizationReference: CiString,
+        authorizationReference: CiString
     ): OcpiResponseBody<CommandResponse> =
         with(buildTransport()) {
             send(
@@ -39,12 +39,12 @@ class CommandEmspClient(
                     path = "/START_SESSION",
                     body = mapper.writeValueAsString(
                         StartSession(
-                            responseUrl = "${callbackBaseUrl}/START_SESSION/callback/${authorizationReference}",
+                            responseUrl = "$callbackBaseUrl/START_SESSION/callback/$authorizationReference",
                             token = token,
                             locationId = locationId,
                             evseUid = evseId,
                             connectorId = connectorId,
-                            authorizationReference = authorizationReference,
+                            authorizationReference = authorizationReference
                         )
                     )
                 )
@@ -65,8 +65,8 @@ class CommandEmspClient(
                     path = "/STOP_SESSION",
                     body = mapper.writeValueAsString(
                         StopSession(
-                            responseUrl = "${callbackBaseUrl}/STOP_SESSION/callback/${sessionId}",
-                            sessionId = sessionId,
+                            responseUrl = "$callbackBaseUrl/STOP_SESSION/callback/$sessionId",
+                            sessionId = sessionId
                         )
                     )
                 )
@@ -85,7 +85,7 @@ class CommandEmspClient(
         reservationId: CiString,
         locationId: CiString,
         evseUid: CiString?,
-        authorizationReference: CiString?,
+        authorizationReference: CiString?
     ): OcpiResponseBody<CommandResponse> =
         with(buildTransport()) {
             send(
@@ -94,13 +94,13 @@ class CommandEmspClient(
                     path = "/RESERVE_NOW",
                     body = mapper.writeValueAsString(
                         ReserveNow(
-                            responseUrl = "${callbackBaseUrl}/RESERVE_NOW/callback/${reservationId}",
+                            responseUrl = "$callbackBaseUrl/RESERVE_NOW/callback/$reservationId",
                             token = token,
                             expiryDate = expiryDate,
                             reservationId = reservationId,
                             locationId = locationId,
                             evseUid = evseUid,
-                            authorizationReference = authorizationReference,
+                            authorizationReference = authorizationReference
                         )
                     )
                 )
@@ -121,8 +121,8 @@ class CommandEmspClient(
                     path = "/CANCEL_RESERVATION",
                     body = mapper.writeValueAsString(
                         CancelReservation(
-                            responseUrl = "${callbackBaseUrl}/CANCEL_RESERVATION/callback/${reservationId}",
-                            reservationId = reservationId,
+                            responseUrl = "$callbackBaseUrl/CANCEL_RESERVATION/callback/$reservationId",
+                            reservationId = reservationId
                         )
                     )
                 )
@@ -138,7 +138,7 @@ class CommandEmspClient(
     suspend fun postUnlockConnector(
         locationId: CiString,
         evseUid: CiString,
-        connectorId: CiString,
+        connectorId: CiString
     ): OcpiResponseBody<CommandResponse> =
         with(buildTransport()) {
             send(
@@ -147,10 +147,11 @@ class CommandEmspClient(
                     path = "/UNLOCK_CONNECTOR",
                     body = mapper.writeValueAsString(
                         UnlockConnector(
-                            responseUrl = "${callbackBaseUrl}/UNLOCK_CONNECTOR/callback/${locationId}/${evseUid}/${connectorId}",
+                            responseUrl =
+                            "$callbackBaseUrl/UNLOCK_CONNECTOR/callback/$locationId/$evseUid/$connectorId",
                             locationId = locationId,
                             evseUid = evseUid,
-                            connectorId = connectorId,
+                            connectorId = connectorId
                         )
                     )
                 )
