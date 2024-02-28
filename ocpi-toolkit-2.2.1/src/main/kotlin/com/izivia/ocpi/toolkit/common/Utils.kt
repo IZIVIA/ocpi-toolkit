@@ -7,3 +7,4 @@ fun generateUUIDv4Token(): String {
 }
 
 typealias CiString = String
+typealias URL = String
