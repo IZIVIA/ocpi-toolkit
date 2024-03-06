@@ -20,6 +20,4 @@ interface ChargingProfilesChargePointService {
         sessionId: String,
         responseUrl: URL
     ): ChargingProfileResponse
-
-
 }

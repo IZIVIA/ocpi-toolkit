@@ -8,8 +8,10 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepositor
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
+import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 
 class ChargingProfilesScspClient(
     private val transportClientBuilder: TransportClientBuilder,
@@ -36,7 +38,8 @@ class ChargingProfilesScspClient(
                 path = "/$sessionId",
                 queryParams = mapOf(
                     "duration" to duration.toString(),
-                    "response_url" to "$callbackBaseUrl/${ChargingProfilesScspServer.ACTIVE_CHARGING_PROFILE_CALLBACK_URL}/$requestId"
+                    "response_url" to "$callbackBaseUrl/" +
+                        "${ChargingProfilesScspServer.ACTIVE_CHARGING_PROFILE_CALLBACK_URL}/$requestId"
                 )
             )
                 .withRequiredHeaders(
@@ -45,6 +48,7 @@ class ChargingProfilesScspClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
+            .also { if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}") }
             .parseBody()
     }
 
@@ -60,7 +64,8 @@ class ChargingProfilesScspClient(
                 body = mapper.writeValueAsString(
                     SetChargingProfile(
                         chargingProfile = chargingProfile,
-                        responseUrl = "$callbackBaseUrl/${ChargingProfilesScspServer.CHARGING_PROFILE_CALLBACK_URL}/$requestId"
+                        responseUrl = "$callbackBaseUrl/" +
+                            "${ChargingProfilesScspServer.CHARGING_PROFILE_CALLBACK_URL}/$requestId"
                     )
                 )
             )
@@ -70,6 +75,7 @@ class ChargingProfilesScspClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
+            .also { if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}") }
             .parseBody()
     }
 
@@ -82,7 +88,8 @@ class ChargingProfilesScspClient(
                 method = HttpMethod.DELETE,
                 path = "/$sessionId",
                 queryParams = mapOf(
-                    "response_url" to "$callbackBaseUrl/${ChargingProfilesScspServer.CLEAR_PROFILE_CALLBACK_URL}/$requestId"
+                    "response_url" to "$callbackBaseUrl/" +
+                        "${ChargingProfilesScspServer.CLEAR_PROFILE_CALLBACK_URL}/$requestId"
                 )
             )
                 .withRequiredHeaders(
@@ -91,6 +98,7 @@ class ChargingProfilesScspClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
+            .also { if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}") }
             .parseBody()
     }
 }
