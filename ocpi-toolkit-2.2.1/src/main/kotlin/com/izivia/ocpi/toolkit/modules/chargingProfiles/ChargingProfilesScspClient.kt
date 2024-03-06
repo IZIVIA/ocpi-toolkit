@@ -75,7 +75,11 @@ class ChargingProfilesScspClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
-            .also { if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}") }
+            .also {
+                if (it.status != HttpStatus.OK && it.status != HttpStatus.CREATED) {
+                    throw HttpException(it.status, "status should be ${HttpStatus.OK} or ${HttpStatus.CREATED}")
+                }
+            }
             .parseBody()
     }
 

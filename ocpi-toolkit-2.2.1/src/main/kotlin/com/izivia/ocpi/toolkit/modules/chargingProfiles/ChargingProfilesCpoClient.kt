@@ -9,8 +9,10 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepositor
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
+import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 
 /**
  * Send calls to the SCSP
@@ -53,6 +55,7 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
+            .also { if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}") }
             .parseBody()
     }
 
@@ -72,6 +75,7 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
+            .also { if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}") }
             .parseBody()
     }
 
@@ -91,6 +95,7 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
+            .also { if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}") }
             .parseBody()
     }
 
@@ -110,6 +115,7 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
         )
+            .also { if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}") }
             .parseBody()
     }
 }
