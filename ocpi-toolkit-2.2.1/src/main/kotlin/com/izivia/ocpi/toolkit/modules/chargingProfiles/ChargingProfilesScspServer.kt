@@ -56,7 +56,7 @@ class ChargingProfilesScspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment(CHARGING_PROFILE_CALLBACK_URL),
-                VariablePathSegment("chargingProfileId")
+                VariablePathSegment("requestId")
             )
         ) { req ->
             req.httpResponse {
@@ -72,7 +72,7 @@ class ChargingProfilesScspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment(CLEAR_PROFILE_CALLBACK_URL),
-                VariablePathSegment("chargingProfileId")
+                VariablePathSegment("requestId")
             )
         ) { req ->
             req.httpResponse {
