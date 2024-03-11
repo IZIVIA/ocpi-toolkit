@@ -95,7 +95,7 @@ open class CredentialsClientService(
 
         // Initiate registration process
         val credentials = buildCredentialClient().post(
-            tokenA = credentialsTokenA,
+            token = credentialsTokenA,
             credentials = Credentials(
                 token = serverToken,
                 url = clientVersionsEndpointUrl,

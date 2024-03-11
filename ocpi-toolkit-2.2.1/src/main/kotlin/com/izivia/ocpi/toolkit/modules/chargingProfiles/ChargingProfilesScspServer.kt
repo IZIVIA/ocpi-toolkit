@@ -46,7 +46,7 @@ class ChargingProfilesScspServer(
             req.httpResponse {
                 service
                     .postCallbackActiveChargingProfile(
-                        requestId = req.queryParams["requestId"] ?: "",
+                        requestId = req.pathParams["requestId"].orEmpty(),
                         result = mapper.readValue(req.body, ActiveChargingProfileResult::class.java)
                     )
             }
@@ -62,7 +62,7 @@ class ChargingProfilesScspServer(
             req.httpResponse {
                 service
                     .postCallbackChargingProfile(
-                        requestId = req.queryParams["requestId"] ?: "",
+                        requestId = req.pathParams["requestId"].orEmpty(),
                         result = mapper.readValue(req.body, ChargingProfileResult::class.java)
                     )
             }
@@ -78,7 +78,7 @@ class ChargingProfilesScspServer(
             req.httpResponse {
                 service
                     .postCallbackClearProfile(
-                        requestId = req.queryParams["requestId"] ?: "",
+                        requestId = req.pathParams["requestId"].orEmpty(),
                         result = mapper.readValue(req.body, ClearProfileResult::class.java)
                     )
             }
@@ -94,7 +94,7 @@ class ChargingProfilesScspServer(
             req.httpResponse {
                 service
                     .putActiveChargingProfile(
-                        sessionId = req.queryParams["sessionId"] ?: "",
+                        sessionId = req.pathParams["sessionId"].orEmpty(),
                         activeChargingProfile = mapper.readValue(req.body, ActiveChargingProfile::class.java)
                     )
             }

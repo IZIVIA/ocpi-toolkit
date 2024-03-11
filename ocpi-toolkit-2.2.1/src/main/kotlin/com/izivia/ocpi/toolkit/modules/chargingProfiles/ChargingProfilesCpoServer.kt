@@ -29,14 +29,15 @@ class ChargingProfilesCpoServer(
             method = HttpMethod.GET,
             path = basePathSegments + listOf(
                 VariablePathSegment("sessionId")
-            )
+            ),
+            queryParams = listOf("duration", "response_url")
         ) { req ->
             req.httpResponse {
                 service
                     .getActiveChargingProfile(
                         sessionId = req.pathParams["sessionId"]!!,
                         duration = req.queryParams["duration"]!!.toInt(),
-                        responseUrl = req.queryParams["responseUrl"]!!
+                        responseUrl = req.queryParams["response_url"]!!
                     )
             }
         }

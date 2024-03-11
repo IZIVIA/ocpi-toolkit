@@ -27,7 +27,7 @@ class CredentialsClient(
             .parseBody()
 
     override suspend fun post(
-        tokenA: String,
+        token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials> =
@@ -41,7 +41,7 @@ class CredentialsClient(
                         requestId = transportClient.generateRequestId(),
                         correlationId = transportClient.generateCorrelationId()
                     )
-                    .authenticate(token = tokenA)
+                    .authenticate(token = token)
             )
             .parseBody()
 
