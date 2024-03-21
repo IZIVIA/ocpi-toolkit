@@ -54,8 +54,10 @@ inline fun <reified T> HttpResponse.parsePaginatedBody(offset: Int): OcpiRespons
         .let { parsedBody ->
             OcpiResponseBody(
                 data = parsedBody.data?.toSearchResult(
-                    totalCount = getHeader(Header.X_TOTAL_COUNT)!!.toInt(),
-                    limit = getHeader(Header.X_LIMIT)!!.toInt(),
+                    totalCount = getHeader(Header.X_TOTAL_COUNT)?.toInt()
+                        ?: throw OcpiToolkitMissingRequiredResponseHeaderException(Header.X_TOTAL_COUNT),
+                    limit = getHeader(Header.X_LIMIT)?.toInt()
+                        ?: throw OcpiToolkitMissingRequiredResponseHeaderException(Header.X_LIMIT),
                     offset = offset,
                     nextPageUrl = getHeader(Header.LINK)?.split("<")?.get(1)?.split(">")?.first()
                 ),
