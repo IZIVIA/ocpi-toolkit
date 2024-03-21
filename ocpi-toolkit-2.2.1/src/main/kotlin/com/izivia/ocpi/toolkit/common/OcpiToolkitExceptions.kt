@@ -16,3 +16,9 @@ class OcpiToolkitResponseParsingException(
 ) : Exception(
     "Response cannot be parsed. URL='$urlCalled', error='${cause.message}'"
 )
+
+class OcpiToolkitMissingRequiredResponseHeaderException(
+    header: String
+) : Exception(
+    """Required header "$header" not found in the response from the server"""
+)
