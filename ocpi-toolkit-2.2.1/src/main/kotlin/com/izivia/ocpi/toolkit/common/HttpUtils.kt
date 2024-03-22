@@ -59,7 +59,7 @@ inline fun <reified T> HttpResponse.parsePaginatedBody(offset: Int): OcpiRespons
                     limit = getHeader(Header.X_LIMIT)?.toInt()
                         ?: throw OcpiToolkitMissingRequiredResponseHeaderException(Header.X_LIMIT),
                     offset = offset,
-                    nextPageUrl = getHeader(Header.LINK)?.split("<")?.get(1)?.split(">")?.first()
+                    nextPageUrl = getHeader(Header.LINK)?.split("<")?.elementAtOrNull(1)?.split(">")?.first()
                 ),
                 status_code = parsedBody.status_code,
                 status_message = parsedBody.status_message,
