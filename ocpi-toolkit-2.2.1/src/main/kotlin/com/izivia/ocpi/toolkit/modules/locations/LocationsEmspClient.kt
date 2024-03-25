@@ -56,6 +56,15 @@ class LocationsEmspClient(
             .parsePaginatedBody(offset)
     }
 
+    suspend fun getLocationsNextPage(
+        previousResponse: OcpiResponseBody<SearchResult<Location>>
+    ): OcpiResponseBody<SearchResult<Location>>? = getNextPage(
+        transportClientBuilder = transportClientBuilder,
+        serverVersionsEndpointUrl = serverVersionsEndpointUrl,
+        partnerRepository = partnerRepository,
+        previousResponse = previousResponse
+    )
+
     override suspend fun getLocation(locationId: CiString): OcpiResponseBody<Location?> = with(buildTransport()) {
         send(
             HttpRequest(
