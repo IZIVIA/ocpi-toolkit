@@ -55,6 +55,15 @@ class SessionsEmspClient(
                 .parsePaginatedBody(offset)
         }
 
+    suspend fun getSessionsNextPage(
+        previousResponse: OcpiResponseBody<SearchResult<Session>>
+    ): OcpiResponseBody<SearchResult<Session>>? = getNextPage(
+        transportClientBuilder = transportClientBuilder,
+        serverVersionsEndpointUrl = serverVersionsEndpointUrl,
+        partnerRepository = partnerRepository,
+        previousResponse = previousResponse
+    )
+
     override suspend fun putChargingPreferences(
         sessionId: CiString,
         chargingPreferences: ChargingPreferences

@@ -57,6 +57,15 @@ class TokensCpoClient(
                 .parsePaginatedBody(offset)
         }
 
+    suspend fun getTokensNextPage(
+        previousResponse: OcpiResponseBody<SearchResult<Token>>
+    ): OcpiResponseBody<SearchResult<Token>>? = getNextPage(
+        transportClientBuilder = transportClientBuilder,
+        serverVersionsEndpointUrl = serverVersionsEndpointUrl,
+        partnerRepository = partnerRepository,
+        previousResponse = previousResponse
+    )
+
     override suspend fun postToken(
         tokenUid: CiString,
         type: TokenType?,
