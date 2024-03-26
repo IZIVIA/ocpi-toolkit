@@ -103,7 +103,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -180,7 +180,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -227,7 +227,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -274,7 +274,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -321,7 +321,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -368,7 +368,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -415,7 +415,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -462,7 +462,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -509,7 +509,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -551,7 +551,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }

@@ -44,7 +44,7 @@ open class CredentialsClientService(
         ?.let { clientToken ->
             buildCredentialClient()
                 .get(token = clientToken)
-                .let { it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown") }
+                .let { it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown") }
         }
         ?: throw OcpiClientGenericException(
             "Could not find CREDENTIALS_TOKEN_C associated with partner $serverVersionsEndpointUrl"
@@ -103,7 +103,7 @@ open class CredentialsClientService(
             ),
             debugHeaders = emptyMap()
         ).let {
-            it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
+            it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
         }
 
         // Save credentials roles of partner
@@ -152,7 +152,7 @@ open class CredentialsClientService(
             ),
             debugHeaders = emptyMap()
         ).let {
-            it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
+            it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
         }
 
         // Save credentials roles of partner
@@ -182,8 +182,8 @@ open class CredentialsClientService(
                     clientPartnerRepository.invalidateCredentialsServerToken(partnerUrl = serverVersionsEndpointUrl)
                 }
                 .also {
-                    if (it.status_code != OcpiStatus.SUCCESS.code) {
-                        throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
+                    if (it.statusCode != OcpiStatus.SUCCESS.code) {
+                        throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
                     }
                 }
         }
@@ -199,7 +199,7 @@ open class CredentialsClientService(
         )
             .getVersions()
             .let {
-                it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
+                it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
             }
         val availableClientVersionNumbers = clientVersionsRepository.getVersions()
 
@@ -225,7 +225,7 @@ open class CredentialsClientService(
         )
             .getVersionDetails()
             .let {
-                it.data ?: throw OcpiResponseException(it.status_code, it.status_message ?: "unknown")
+                it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
             }
 
         checkRequiredEndpoints(requiredEndpoints, versionDetails.endpoints)
