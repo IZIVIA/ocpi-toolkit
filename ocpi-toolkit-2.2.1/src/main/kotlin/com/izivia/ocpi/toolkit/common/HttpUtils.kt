@@ -61,8 +61,8 @@ inline fun <reified T> HttpResponse.parsePaginatedBody(offset: Int): OcpiRespons
                     offset = offset,
                     nextPageUrl = getHeader(Header.LINK)?.split("<")?.elementAtOrNull(1)?.split(">")?.first()
                 ),
-                status_code = parsedBody.status_code,
-                status_message = parsedBody.status_message,
+                statusCode = parsedBody.statusCode,
+                statusMessage = parsedBody.statusMessage,
                 timestamp = parsedBody.timestamp
             )
         }

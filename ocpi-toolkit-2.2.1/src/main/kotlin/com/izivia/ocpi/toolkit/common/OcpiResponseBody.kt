@@ -22,15 +22,15 @@ import java.time.Instant
  *
  * @property data Contains the actual response data object or list of objects from each request, depending on the
  * cardinality of the response data, this is an array (card. * or +), or a single object (card. 1 or ?)
- * @property status_code Response code, as listed in Status Codes, indicates how the request was handled. To avoid
+ * @property statusCode Response code, as listed in Status Codes, indicates how the request was handled. To avoid
  * confusion with HTTP codes, at least four digits are used.
- * @property status_message An optional status message which may help when debugging.
+ * @property statusMessage An optional status message which may help when debugging.
  * @property timestamp The time this message was generated.
  */
 data class OcpiResponseBody<T>(
     val data: T?,
-    val status_code: Int,
-    val status_message: String?,
+    val statusCode: Int,
+    val statusMessage: String?,
     val timestamp: Instant
 ) {
     companion object {
@@ -41,15 +41,15 @@ data class OcpiResponseBody<T>(
 
         fun <T> success(data: T) = OcpiResponseBody(
             data = data,
-            status_code = OcpiStatus.SUCCESS.code,
-            status_message = "Success",
+            statusCode = OcpiStatus.SUCCESS.code,
+            statusMessage = "Success",
             timestamp = now()
         )
 
         fun <T> invalid(message: String) = OcpiResponseBody<T>(
             data = null,
-            status_code = OcpiStatus.CLIENT_INVALID_PARAMETERS.code,
-            status_message = message,
+            statusCode = OcpiStatus.CLIENT_INVALID_PARAMETERS.code,
+            statusMessage = message,
             timestamp = now()
         )
 
@@ -99,8 +99,8 @@ fun OcpiException.toHttpResponse(): HttpResponse =
         body = mapper.writeValueAsString(
             OcpiResponseBody(
                 data = null,
-                status_code = ocpiStatus.code,
-                status_message = message,
+                statusCode = ocpiStatus.code,
+                statusMessage = message,
                 timestamp = Instant.now()
             )
         ),
@@ -121,7 +121,7 @@ suspend fun <T> HttpRequest.httpResponse(fn: suspend () -> OcpiResponseBody<T>):
         val isPaginated = ocpiResponseBody.data is SearchResult<*>
 
         HttpResponse(
-            status = when (ocpiResponseBody.status_code) {
+            status = when (ocpiResponseBody.statusCode) {
                 OcpiStatus.SUCCESS.code -> if (ocpiResponseBody.data != null) HttpStatus.OK else HttpStatus.NOT_FOUND
                 OcpiStatus.CLIENT_INVALID_PARAMETERS.code -> HttpStatus.BAD_REQUEST
                 else -> HttpStatus.OK
@@ -130,8 +130,8 @@ suspend fun <T> HttpRequest.httpResponse(fn: suspend () -> OcpiResponseBody<T>):
                 if (isPaginated) {
                     OcpiResponseBody(
                         data = (ocpiResponseBody.data as SearchResult<*>?)?.list,
-                        status_code = ocpiResponseBody.status_code,
-                        status_message = ocpiResponseBody.status_message,
+                        statusCode = ocpiResponseBody.statusCode,
+                        statusMessage = ocpiResponseBody.statusMessage,
                         timestamp = ocpiResponseBody.timestamp
                     )
                 } else {

@@ -36,7 +36,7 @@ class TokensEmspServiceTest {
         service = TokensEmspService(service = getTokensEmspRepositoryTest(emptyList()))
 
         expectThat(runBlocking { service.getTokens(dateFrom = from, dateTo = from, offset = 0, limit = null) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -46,7 +46,7 @@ class TokensEmspServiceTest {
         }
 
         expectThat(runBlocking { service.getTokens(dateFrom = to, dateTo = from, offset = 0, limit = null) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
             get { data }
@@ -54,7 +54,7 @@ class TokensEmspServiceTest {
         }
 
         expectThat(runBlocking { service.getTokens(dateFrom = from, dateTo = to, offset = 0, limit = null) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -64,7 +64,7 @@ class TokensEmspServiceTest {
         }
 
         expectThat(runBlocking { service.getTokens(dateFrom = null, dateTo = to, offset = 0, limit = null) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -74,7 +74,7 @@ class TokensEmspServiceTest {
         }
 
         expectThat(runBlocking { service.getTokens(dateFrom = from, dateTo = null, offset = 0, limit = null) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -84,7 +84,7 @@ class TokensEmspServiceTest {
         }
 
         expectThat(runBlocking { service.getTokens(dateFrom = null, dateTo = null, offset = 0, limit = null) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -94,7 +94,7 @@ class TokensEmspServiceTest {
         }
 
         expectThat(runBlocking { service.getTokens(dateFrom = null, dateTo = null, offset = -10, limit = null) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
             get { data }
@@ -102,7 +102,7 @@ class TokensEmspServiceTest {
         }
 
         expectThat(runBlocking { service.getTokens(dateFrom = null, dateTo = null, offset = 0, limit = -10) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
 
             get { data }
@@ -110,7 +110,7 @@ class TokensEmspServiceTest {
         }
 
         expectThat(runBlocking { service.getTokens(dateFrom = null, dateTo = null, offset = 0, limit = 100) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -125,7 +125,7 @@ class TokensEmspServiceTest {
         }
 
         expectThat(runBlocking { service.getTokens(dateFrom = null, dateTo = null, offset = 100, limit = 100) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -140,7 +140,7 @@ class TokensEmspServiceTest {
         }
 
         expectThat(runBlocking { service.getTokens(dateFrom = null, dateTo = null, offset = 0, limit = 0) }) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
 
             get { data }
@@ -168,31 +168,31 @@ class TokensEmspServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
             runBlocking { service.postToken(tokenUid = str36chars, type = TokenType.RFID) }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
             runBlocking { service.postToken(tokenUid = str36chars, locationReferences = validLocationReference) }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
             runBlocking { service.postToken(tokenUid = str36chars) }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
             runBlocking { service.postToken(tokenUid = str40chars) }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 }

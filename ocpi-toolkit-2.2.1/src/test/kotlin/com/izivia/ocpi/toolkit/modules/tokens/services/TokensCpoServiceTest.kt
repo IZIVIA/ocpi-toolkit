@@ -28,7 +28,7 @@ class TokensCpoServiceTest {
         expectThat(
             runBlocking { service.getToken(countryCode = str2chars, partyId = str3chars, tokenUid = str36chars) }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -41,7 +41,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -54,7 +54,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
         expectThat(
             runBlocking {
@@ -66,7 +66,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
         expectThat(
             runBlocking {
@@ -78,7 +78,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -96,7 +96,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -110,7 +110,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -124,7 +124,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -138,7 +138,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -152,7 +152,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 
@@ -170,7 +170,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -184,7 +184,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.SUCCESS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
@@ -198,7 +198,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -212,7 +212,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
 
         expectThat(
@@ -226,7 +226,7 @@ class TokensCpoServiceTest {
                 )
             }
         ) {
-            get { status_code }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
+            get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
     }
 }

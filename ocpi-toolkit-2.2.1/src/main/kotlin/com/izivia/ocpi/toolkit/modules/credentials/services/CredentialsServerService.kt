@@ -155,7 +155,7 @@ open class CredentialsServerService(
             .let {
                 it.data
                     ?: throw OcpiServerUnusableApiException(
-                        "Could not get versions of sender, there was an error during the call: '${it.status_message}'"
+                        "Could not get versions of sender, there was an error during the call: '${it.statusMessage}'"
                     )
             }
 
@@ -197,7 +197,7 @@ open class CredentialsServerService(
             .let {
                 it.data
                     ?: throw OcpiServerUnusableApiException(
-                        "Could not get version of sender, there was an error during the call: '${it.status_message}'"
+                        "Could not get version of sender, there was an error during the call: '${it.statusMessage}'"
                     )
             }
 

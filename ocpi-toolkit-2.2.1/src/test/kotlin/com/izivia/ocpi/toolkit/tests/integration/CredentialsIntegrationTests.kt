@@ -243,7 +243,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     )
                 )
 
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
     }
@@ -464,7 +464,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     )
                 )
 
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
     }
@@ -521,7 +521,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     )
                 )
 
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
@@ -561,7 +561,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     )
                 )
 
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
@@ -583,7 +583,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     )
                 )
 
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
     }
@@ -638,7 +638,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     )
                 )
 
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
@@ -669,7 +669,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     )
                 )
 
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
@@ -692,7 +692,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 senderVersionsClient.getVersions()
             }
         ) {
-            get { status_code }
+            get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
         }
     }
