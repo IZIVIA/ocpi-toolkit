@@ -26,7 +26,7 @@ interface SessionsCpoInterface {
      * Only Sessions with last_update between the given {date_from} (including) and {date_to} (excluding) will be returned.
      * This request is paginated, it supports the pagination related URL parameters
      *
-     * @param dateFrom Instant? Only return Sessions that have last_updated after this Date/Time.
+     * @param dateFrom Instant Only return Sessions that have last_updated after this Date/Time.
      * @param dateTo Instant? Only return Sessions that have last_updated before this Date/Time.
      * @param offset Int? The offset of the first object returned. Default is 0.
      * @param limit Int? Maximum number of objects to GET.
@@ -34,7 +34,7 @@ interface SessionsCpoInterface {
      * pagination related headers.
      */
     suspend fun getSessions(
-        dateFrom: Instant?,
+        dateFrom: Instant,
         dateTo: Instant?,
         offset: Int = 0,
         limit: Int?
