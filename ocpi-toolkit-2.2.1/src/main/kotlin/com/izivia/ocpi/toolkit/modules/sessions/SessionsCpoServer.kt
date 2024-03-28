@@ -38,7 +38,7 @@ class SessionsCpoServer(
 
                 service
                     .getSessions(
-                        dateFrom = dateFrom?.let { Instant.parse(it) },
+                        dateFrom = Instant.parse(dateFrom),
                         dateTo = dateTo?.let { Instant.parse(it) },
                         offset = req.queryParams["offset"]?.toInt() ?: 0,
                         limit = req.queryParams["limit"]?.toInt()

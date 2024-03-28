@@ -31,7 +31,7 @@ class SessionsEmspClient(
         )
 
     override suspend fun getSessions(
-        dateFrom: Instant?,
+        dateFrom: Instant,
         dateTo: Instant?,
         offset: Int,
         limit: Int?
@@ -41,7 +41,7 @@ class SessionsEmspClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     queryParams = listOfNotNull(
-                        dateFrom?.let { "date_from" to dateFrom.toString() },
+                        "date_from" to dateFrom.toString(),
                         dateTo?.let { "date_to" to dateTo.toString() },
                         "offset" to offset.toString(),
                         limit?.let { "limit" to limit.toString() }
