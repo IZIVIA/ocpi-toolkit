@@ -18,13 +18,13 @@ open class SessionsCpoService(
     private val service: SessionsCpoRepository
 ) : SessionsCpoInterface {
     override suspend fun getSessions(
-        dateFrom: Instant?,
+        dateFrom: Instant,
         dateTo: Instant?,
         offset: Int,
         limit: Int?
     ): OcpiResponseBody<SearchResult<Session>> = OcpiResponseBody.of {
         validate {
-            if (dateFrom != null && dateTo != null) validateDates("dateFrom", dateFrom, "dateTo", dateTo)
+            if (dateTo != null) validateDates("dateFrom", dateFrom, "dateTo", dateTo)
             if (limit != null) validateInt("limit", limit, 0, null)
             validateInt("offset", offset, 0, null)
         }
