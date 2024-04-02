@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.sessions
 
+import com.izivia.ocpi.toolkit.common.OcpiClientInvalidParametersException
 import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
@@ -38,7 +39,10 @@ class SessionsCpoServer(
 
                 service
                     .getSessions(
-                        dateFrom = Instant.parse(dateFrom),
+                        dateFrom = dateFrom?.let { Instant.parse(dateFrom) }
+                            ?: throw OcpiClientInvalidParametersException(
+                                "Missing required 'date_from' query parameter"
+                            ),
                         dateTo = dateTo?.let { Instant.parse(it) },
                         offset = req.queryParams["offset"]?.toInt() ?: 0,
                         limit = req.queryParams["limit"]?.toInt()
