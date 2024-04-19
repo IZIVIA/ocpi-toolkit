@@ -8,7 +8,7 @@ import com.izivia.ocpi.toolkit.annotations.Partial
  *
  * @property regularHours Regular hours, weekday based. Should not be set for representing 24/7 as this is the most
  * common case.
- * @property twentyFourSeven True to represent 24 hours a day and 7 days a week, except the given exceptions.
+ * @property twentyfourseven True to represent 24 hours a day and 7 days a week, except the given exceptions.
  * @property exceptionalOpenings Exceptions for specified calendar dates, time-range based. Periods the station is
  * operating/accessible. Additional to regular hours. May overlap regular rules.
  * @property exceptionalClosings Exceptions for specified calendar dates, time-range based. Periods the station is not
@@ -17,7 +17,7 @@ import com.izivia.ocpi.toolkit.annotations.Partial
 @Partial
 data class Hours(
     val regularHours: List<RegularHours>?,
-    val twentyFourSeven: Boolean,
+    val twentyfourseven: Boolean,
     val exceptionalOpenings: List<ExceptionalPeriod>?,
     val exceptionalClosings: List<ExceptionalPeriod>?
 )

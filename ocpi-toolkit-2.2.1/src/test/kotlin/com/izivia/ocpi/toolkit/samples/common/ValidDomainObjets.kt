@@ -60,7 +60,7 @@ val validExceptionalPeriod = ExceptionalPeriod(
 
 val validHours = Hours(
     regularHours = listOf(validRegularHours),
-    twentyFourSeven = false,
+    twentyfourseven = false,
     exceptionalOpenings = listOf(validExceptionalPeriod),
     exceptionalClosings = emptyList()
 )
