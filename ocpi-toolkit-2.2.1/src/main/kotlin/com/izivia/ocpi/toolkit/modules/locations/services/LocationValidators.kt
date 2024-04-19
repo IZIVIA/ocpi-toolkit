@@ -92,24 +92,24 @@ fun RegularHoursPartial.validate(): RegularHoursPartial = validate(this) { regul
 }
 
 fun HoursPartial.validate(): HoursPartial = validate(this) { hours ->
-    if (hours.regularHours == null && hours.twentyFourSeven == false) {
+    if (hours.regularHours == null && hours.twentyfourseven == false) {
         constraintViolations.add(
             DefaultConstraintViolation(
                 property = "regularHours is not set whereas twentyFourSeven is false",
                 constraint = RegularHoursSetWhenNotTwentyFourSevenConstraint()
             )
         )
-    } else if (hours.regularHours != null && hours.twentyFourSeven == true) {
+    } else if (hours.regularHours != null && hours.twentyfourseven == true) {
         constraintViolations.add(
             DefaultConstraintViolation(
-                property = "twentyFourSeven is set to true whereas regularHours are set",
+                property = "twentyfourseven is set to true whereas regularHours are set",
                 constraint = RegularHoursSetAtTheSameTimeAsTwentyFourSevenConstraint()
             )
         )
     }
 
     regularHours?.forEach { it.validate() }
-    // twentyFourSeven: nothing to validate
+    // twentyfourseven: nothing to validate
     exceptionalOpenings?.forEach { it.validate() }
     exceptionalClosings?.forEach { it.validate() }
 }

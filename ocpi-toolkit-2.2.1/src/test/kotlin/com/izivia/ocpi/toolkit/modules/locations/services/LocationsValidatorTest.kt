@@ -424,7 +424,7 @@ class LocationsValidatorTest {
 
             validHours.copy(
                 regularHours = null,
-                twentyFourSeven = true
+                twentyfourseven = true
             ).validate()
 
             validHours.copy(
@@ -436,21 +436,21 @@ class LocationsValidatorTest {
         expectCatching {
             validHours.copy(
                 regularHours = listOf(validRegularHours),
-                twentyFourSeven = true
+                twentyfourseven = true
             ).toPartial().validate()
         }.isFailure()
 
         expectCatching {
             validHours.copy(
                 regularHours = listOf(validRegularHours),
-                twentyFourSeven = true
+                twentyfourseven = true
             ).validate()
         }.isFailure()
 
         expectCatching {
             validHours.copy(
                 regularHours = null,
-                twentyFourSeven = false
+                twentyfourseven = false
             ).validate()
         }.isFailure()
     }
