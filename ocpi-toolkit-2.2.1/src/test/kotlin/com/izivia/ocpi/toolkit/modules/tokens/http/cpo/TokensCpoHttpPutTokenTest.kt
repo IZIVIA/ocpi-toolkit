@@ -71,7 +71,11 @@ class TokensCpoHttpPutTokenTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PUT, "/tokens/DE/TNM/12345678905880/?type=RFID", mapper.writeValueAsString(token))
+            buildHttpRequest(
+                HttpMethod.PUT,
+                "/tokens/DE/TNM/12345678905880/?type=RFID",
+                mapper.writeValueAsString(token)
+            )
         )
 
         // then
