@@ -90,9 +90,9 @@ class TokensCpoServiceTest {
             runBlocking {
                 service.putToken(
                     token = validTokenFullRfid,
-                    countryCode = str2chars,
-                    partyId = str3chars,
-                    tokenUid = str4chars
+                    countryCode = validTokenFullRfid.countryCode,
+                    partyId = validTokenFullRfid.partyId,
+                    tokenUid = validTokenFullRfid.uid
                 )
             }
         ) {
@@ -103,9 +103,9 @@ class TokensCpoServiceTest {
             runBlocking {
                 service.putToken(
                     token = validTokenFullRfid,
-                    countryCode = str2chars,
-                    partyId = str3chars,
-                    tokenUid = str36chars,
+                    countryCode = validTokenFullRfid.countryCode,
+                    partyId = validTokenFullRfid.partyId,
+                    tokenUid = validTokenFullRfid.uid,
                     type = TokenType.RFID
                 )
             }

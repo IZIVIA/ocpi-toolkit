@@ -583,23 +583,9 @@ class LocationsEmspServiceTest {
         expectThat(
             runBlocking {
                 service.putLocation(
-                    countryCode = str1char,
-                    partyId = str2chars,
-                    locationId = str4chars,
-                    location = validLocation
-                )
-            }
-        ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
-        }
-
-        expectThat(
-            runBlocking {
-                service.putLocation(
-                    countryCode = str2chars,
-                    partyId = str3chars,
-                    locationId = str36chars,
+                    countryCode = validLocation.countryCode,
+                    partyId = validLocation.partyId,
+                    locationId = validLocation.id,
                     location = validLocation
                 )
             }
@@ -613,7 +599,7 @@ class LocationsEmspServiceTest {
                 service.putLocation(
                     countryCode = str3chars,
                     partyId = str3chars,
-                    locationId = str36chars,
+                    locationId = validLocation.id,
                     location = validLocation
                 )
             }
@@ -627,7 +613,7 @@ class LocationsEmspServiceTest {
                 service.putLocation(
                     countryCode = str2chars,
                     partyId = str4chars,
-                    locationId = str36chars,
+                    locationId = validLocation.id,
                     location = validLocation
                 )
             }
@@ -661,7 +647,7 @@ class LocationsEmspServiceTest {
                     countryCode = str1char,
                     partyId = str2chars,
                     locationId = str4chars,
-                    evseUid = str4chars,
+                    evseUid = validEvse.uid,
                     evse = validEvse
                 )
             }
@@ -676,7 +662,7 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     locationId = str36chars,
-                    evseUid = str36chars,
+                    evseUid = validEvse.uid,
                     evse = validEvse
                 )
             }
@@ -691,7 +677,7 @@ class LocationsEmspServiceTest {
                     countryCode = str3chars,
                     partyId = str3chars,
                     locationId = str36chars,
-                    evseUid = str36chars,
+                    evseUid = validEvse.uid,
                     evse = validEvse
                 )
             }
@@ -706,7 +692,7 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str4chars,
                     locationId = str36chars,
-                    evseUid = str36chars,
+                    evseUid = validEvse.uid,
                     evse = validEvse
                 )
             }
@@ -721,7 +707,7 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     locationId = str40chars,
-                    evseUid = str36chars,
+                    evseUid = validEvse.uid,
                     evse = validEvse
                 )
             }
@@ -757,7 +743,7 @@ class LocationsEmspServiceTest {
                     partyId = str2chars,
                     locationId = str4chars,
                     evseUid = str4chars,
-                    connectorId = str4chars,
+                    connectorId = validConnector.id,
                     connector = validConnector
                 )
             }
@@ -773,7 +759,7 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str36chars,
-                    connectorId = str36chars,
+                    connectorId = validConnector.id,
                     connector = validConnector
                 )
             }
@@ -789,7 +775,7 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str36chars,
-                    connectorId = str36chars,
+                    connectorId = validConnector.id,
                     connector = validConnector
                 )
             }
@@ -805,7 +791,7 @@ class LocationsEmspServiceTest {
                     partyId = str4chars,
                     locationId = str36chars,
                     evseUid = str36chars,
-                    connectorId = str36chars,
+                    connectorId = validConnector.id,
                     connector = validConnector
                 )
             }
@@ -821,7 +807,7 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str40chars,
                     evseUid = str36chars,
-                    connectorId = str36chars,
+                    connectorId = validConnector.id,
                     connector = validConnector
                 )
             }
@@ -837,7 +823,7 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str40chars,
-                    connectorId = str36chars,
+                    connectorId = validConnector.id,
                     connector = validConnector
                 )
             }
