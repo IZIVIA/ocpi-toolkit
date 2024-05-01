@@ -71,14 +71,18 @@ class TokensCpoHttpPutTokenTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PUT, "/tokens/DE/TNM/012345678/?type=RFID", mapper.writeValueAsString(token))
+            buildHttpRequest(
+                HttpMethod.PUT,
+                "/tokens/DE/TNM/12345678905880/?type=RFID",
+                mapper.writeValueAsString(token)
+            )
         )
 
         // then
         expectThat(slots) {
             get { countryCode.captured }.isEqualTo("DE")
             get { partyId.captured }.isEqualTo("TNM")
-            get { tokenUID.captured }.isEqualTo("012345678")
+            get { tokenUID.captured }.isEqualTo("12345678905880")
             get { type.captured }.isEqualTo(TokenType.RFID)
         }
         expectThat(resp) {

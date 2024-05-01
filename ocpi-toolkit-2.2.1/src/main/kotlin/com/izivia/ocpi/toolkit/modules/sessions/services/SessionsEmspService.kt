@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateLength
+import com.izivia.ocpi.toolkit.common.validation.validateSame
 import com.izivia.ocpi.toolkit.modules.sessions.SessionsEmspInterface
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
@@ -38,6 +39,9 @@ open class SessionsEmspService(
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("sessionId", sessionId, 36)
+            validateSame("countryCode", countryCode, session.countryCode)
+            validateSame("partyId", partyId, session.partyId)
+            validateSame("sessionId", sessionId, session.id)
         }
         service.putSession(countryCode, partyId, sessionId, session)?.validate()
     }

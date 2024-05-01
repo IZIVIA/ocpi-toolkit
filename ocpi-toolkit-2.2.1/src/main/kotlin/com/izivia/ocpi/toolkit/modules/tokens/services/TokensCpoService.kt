@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateLength
+import com.izivia.ocpi.toolkit.common.validation.validateSame
 import com.izivia.ocpi.toolkit.modules.tokens.TokensCpoInterface
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenPartial
@@ -40,6 +41,9 @@ open class TokensCpoService(
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("tokenUid", tokenUid, 36)
+            validateSame("countryCode", countryCode, token.countryCode)
+            validateSame("partyId", partyId, token.partyId)
+            validateSame("tokenUid", tokenUid, token.uid)
         }
 
         service.putToken(token, countryCode, partyId, tokenUid, type).validate()

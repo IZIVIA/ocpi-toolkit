@@ -29,6 +29,7 @@ class EvseIdConstraint : Constraint
 class NoHtmlConstraint : Constraint
 class RegularHoursSetWhenNotTwentyFourSevenConstraint : Constraint
 class RegularHoursSetAtTheSameTimeAsTwentyFourSevenConstraint : Constraint
+data class SameStringValueConstraint(val reference: String) : Constraint
 
 fun String.isPrintableAscii(): Boolean = matches("[\\x20-\\x7E]*".toRegex())
 fun String.isPrintableUtf8(): Boolean = matches("[\\x20-\\x7E]*".toRegex())

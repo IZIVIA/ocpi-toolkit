@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateLength
+import com.izivia.ocpi.toolkit.common.validation.validateSame
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspInterface
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
@@ -82,6 +83,9 @@ open class LocationsEmspService(
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
+            validateSame("countryCode", countryCode, location.countryCode)
+            validateSame("partyId", partyId, location.partyId)
+            validateSame("locationId", locationId, location.id)
             location.validate()
         }
 
@@ -102,6 +106,7 @@ open class LocationsEmspService(
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
             validateLength("evseUid", evseUid, 36)
+            validateSame("evseUid", evseUid, evse.uid)
             evse.validate()
         }
 
@@ -130,6 +135,7 @@ open class LocationsEmspService(
             validateLength("locationId", locationId, 36)
             validateLength("evseUid", evseUid, 36)
             validateLength("connectorId", connectorId, 36)
+            validateSame("connectorId", connectorId, connector.id)
             connector.validate()
         }
 

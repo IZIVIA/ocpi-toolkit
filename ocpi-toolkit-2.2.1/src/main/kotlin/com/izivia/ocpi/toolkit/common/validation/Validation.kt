@@ -62,3 +62,15 @@ fun ValidationContext.validateInt(property: String, value: Int, min: Int?, max: 
         )
     }
 }
+
+fun ValidationContext.validateSame(property: String, value: String, reference: String) {
+    if (value != reference) {
+        violations.add(
+            DefaultConstraintViolation(
+                property = property,
+                value = value,
+                constraint = SameStringValueConstraint(reference)
+            )
+        )
+    }
+}
