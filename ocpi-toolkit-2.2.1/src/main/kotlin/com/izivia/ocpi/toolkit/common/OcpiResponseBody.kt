@@ -3,10 +3,7 @@ package com.izivia.ocpi.toolkit.common
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.izivia.ocpi.toolkit.common.context.currentResponseMessageRoutingHeadersOrNull
 import com.izivia.ocpi.toolkit.common.validation.toReadableString
-import com.izivia.ocpi.toolkit.transport.domain.HttpException
-import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
-import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
-import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import com.izivia.ocpi.toolkit.transport.domain.*
 import org.apache.logging.log4j.LogManager
 import org.valiktor.ConstraintViolationException
 import java.time.Instant
@@ -122,7 +119,12 @@ suspend fun <T> HttpRequest.httpResponse(fn: suspend () -> OcpiResponseBody<T>):
 
         HttpResponse(
             status = when (ocpiResponseBody.statusCode) {
-                OcpiStatus.SUCCESS.code -> if (ocpiResponseBody.data != null) HttpStatus.OK else HttpStatus.NOT_FOUND
+                OcpiStatus.SUCCESS.code ->
+                    if (this.method == HttpMethod.DELETE || ocpiResponseBody.data != null) {
+                        HttpStatus.OK
+                    } else {
+                        HttpStatus.NOT_FOUND
+                    }
                 OcpiStatus.CLIENT_INVALID_PARAMETERS.code -> HttpStatus.BAD_REQUEST
                 else -> HttpStatus.OK
             },
