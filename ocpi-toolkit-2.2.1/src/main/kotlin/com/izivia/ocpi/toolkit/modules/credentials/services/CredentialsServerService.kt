@@ -76,7 +76,9 @@ open class CredentialsServerService(
         debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
         val partnerUrl = partnerRepository.getPartnerUrlByCredentialsServerToken(token)
-            ?: throw OcpiClientInvalidParametersException("Invalid server token ($token)")
+            // This line should not be reached when using the HttpUtils.kt PartnerRepository.checkToken
+            // implementation of the toolkit, but is included for custom implementations.
+            ?: throw OcpiClientMethodNotAllowedException()
 
         // Save credentials roles of partner
         partnerRepository.saveCredentialsRoles(
@@ -113,7 +115,9 @@ open class CredentialsServerService(
                 // to the system.
                 partnerRepository.invalidateCredentialsClientToken(partnerUrl = partnerUrl)
             }
-            ?: throw OcpiClientInvalidParametersException("Invalid server token ($token)")
+            // This line should not be reached when using the HttpUtils.kt PartnerRepository.checkToken
+            // implementation of the toolkit, but is included for custom implementations.
+            ?: throw OcpiClientMethodNotAllowedException()
 
         null
     }
