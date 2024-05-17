@@ -340,9 +340,9 @@ suspend fun PartnerRepository.checkToken(
      * So, we allow token A only if we are in this case.
      */
 
-    val allowTokenA = httpRequest.path.contains("versions") ||
+    val allowTokenA = httpRequest.path.contains(ModuleID.versions.name) ||
         httpRequest.path.contains("/{versionNumber}") ||
-        httpRequest.path.contains("credentials")
+        httpRequest.path.contains(ModuleID.credentials.name)
 
     val validToken = (allowTokenA && isCredentialsTokenAValid(token)) ||
         isCredentialsServerTokenValid(token)
@@ -352,7 +352,7 @@ suspend fun PartnerRepository.checkToken(
     // This method MUST return a HTTP status code 405: method not allowed if the client has not been registered yet
     // 7.2.4. DELETE Method
     // This method MUST return a HTTP status code 405: method not allowed if the client has not been registered before.
-    if (!validToken && httpRequest.path.contains("credentials") && httpRequest.method in listOf(
+    if (!validToken && httpRequest.path.contains(ModuleID.credentials.name) && httpRequest.method in listOf(
             HttpMethod.PUT,
             HttpMethod.DELETE
         )
