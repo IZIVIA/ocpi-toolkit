@@ -44,6 +44,12 @@ class OcpiClientUnknownTokenException(
     override val ocpiStatus: OcpiStatus = OcpiStatus.CLIENT_UNKNOWN_TOKEN
 ) : OcpiException(message, httpStatus, ocpiStatus)
 
+class OcpiClientMethodNotAllowedException(
+    message: String = "Method not allowed",
+    override val httpStatus: HttpStatus = HttpStatus.METHOD_NOT_ALLOWED,
+    override val ocpiStatus: OcpiStatus = OcpiStatus.CLIENT_UNKNOWN_TOKEN
+) : OcpiException(message, httpStatus, ocpiStatus)
+
 // 3xxx: Server errors
 class OcpiServerGenericException(
     message: String,

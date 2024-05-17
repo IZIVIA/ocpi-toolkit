@@ -26,5 +26,7 @@ enum class ModuleID {
 
     tariffs,
 
-    tokens
+    tokens,
+
+    versions
 }
