@@ -155,14 +155,17 @@ suspend fun <T> HttpRequest.httpResponse(fn: suspend () -> OcpiResponseBody<T>):
         }
     } catch (e: OcpiException) {
         e.toHttpResponse()
+            .let { it.copy(headers = it.headers + getDebugHeaders()) }
     } catch (e: HttpException) {
         logger.error(e)
         HttpResponse(
-            status = e.status
+            status = e.status,
+            headers = getDebugHeaders()
         )
     } catch (e: JsonProcessingException) {
         logger.error(e)
         HttpResponse(
-            status = HttpStatus.BAD_REQUEST
+            status = HttpStatus.BAD_REQUEST,
+            headers = getDebugHeaders()
         )
     }
