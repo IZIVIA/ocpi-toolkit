@@ -7,7 +7,6 @@ import com.izivia.ocpi.toolkit.common.validation.isPrintableAscii
 import com.izivia.ocpi.toolkit.modules.cdr.domain.*
 import com.izivia.ocpi.toolkit.modules.sessions.domain.*
 import com.izivia.ocpi.toolkit.modules.types.Price
-import com.izivia.ocpi.toolkit.modules.types.PricePartial
 import com.izivia.ocpi.toolkit.modules.types.toPartial
 import org.valiktor.functions.isGreaterThanOrEqualTo
 import org.valiktor.validate
@@ -58,11 +57,6 @@ fun ChargingPeriodPartial.validate(): ChargingPeriodPartial = validate(this) {
 fun CdrDimensionPartial.validate(): CdrDimensionPartial = validate(this) {
     // cdrDimensionType : nothing to validate
     validate(CdrDimensionPartial::volume).isGreaterThanOrEqualTo(BigDecimal.ZERO)
-}
-
-fun PricePartial.validate(): PricePartial = validate(this) {
-    validate(PricePartial::exclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
-    validate(PricePartial::inclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
 }
 
 fun Session.validate(): Session = validate(this) {

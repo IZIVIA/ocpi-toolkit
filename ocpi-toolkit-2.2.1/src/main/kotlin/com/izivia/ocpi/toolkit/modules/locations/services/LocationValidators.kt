@@ -3,7 +3,6 @@ package com.izivia.ocpi.toolkit.modules.locations.services
 import com.izivia.ocpi.toolkit.common.validation.*
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.types.DisplayText
-import com.izivia.ocpi.toolkit.modules.types.DisplayTextPartial
 import com.izivia.ocpi.toolkit.modules.types.toPartial
 import org.valiktor.DefaultConstraintViolation
 import org.valiktor.constraints.Greater
@@ -140,14 +139,6 @@ fun AdditionalGeoLocationPartial.validate(): AdditionalGeoLocationPartial = vali
     name?.validate()
 }
 
-fun DisplayTextPartial.validate(): DisplayTextPartial = validate(this) {
-    validate(DisplayTextPartial::language).isLanguage()
-    validate(DisplayTextPartial::text)
-        .isPrintableUtf8()
-        .hasNoHtml()
-        .hasMaxLengthOf(512)
-}
-
 fun StatusSchedulePartial.validate(): StatusSchedulePartial = validate(this) {
     if (it.periodEnd != null) {
         validate(StatusSchedulePartial::periodBegin).isLessThanOrEqualTo(it.periodEnd)
@@ -178,7 +169,7 @@ fun ConnectorPartial.validate(): ConnectorPartial = validate(this) {
     // powerType: nothing to validate
     validate(ConnectorPartial::maxVoltage).isGreaterThanOrEqualTo(0)
     validate(ConnectorPartial::maxAmperage).isGreaterThanOrEqualTo(0)
-    validate(ConnectorPartial::maxVoltage).isGreaterThanOrEqualTo(0)
+    validate(ConnectorPartial::maxElectricPower).isGreaterThanOrEqualTo(0)
     tariffIds?.forEach { tariffId ->
         if (tariffId.length > 36) {
             constraintViolations.add(
