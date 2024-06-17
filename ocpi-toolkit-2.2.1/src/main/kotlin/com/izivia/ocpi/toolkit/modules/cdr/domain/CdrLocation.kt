@@ -13,7 +13,9 @@ platforms). This field can never be changed, modified or renamed.
  * @property name Display name of the location.
  * @property address Street/block name and house number if available
  * @property city City or town
- * @property postalCode Postal code of the location.
+ * @property postalCode Postal code of the location, may only be omitted when the location has no postal code: in some
+countries charging locations at highways don’t have postal codes.
+ * @property state State only to be used when relevant.
  * @property country ISO 3166-1 alpha-3 code for the country of this location.
  * @property coordinates Coordinates of the location.
  * @property evseUid Uniquely identifies the EVSE within the CPO’s platform (and suboperator
@@ -34,7 +36,8 @@ data class CdrLocation(
     val name: String? = null,
     val address: String,
     val city: String,
-    val postalCode: String,
+    val postalCode: String? = null,
+    val state: String? = null,
     val country: String,
     val coordinates: GeoLocation,
     val evseUid: CiString,
