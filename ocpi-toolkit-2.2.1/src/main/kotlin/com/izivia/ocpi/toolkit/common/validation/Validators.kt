@@ -102,6 +102,22 @@ fun <E> Validator<E>.Property<String?>.isUrl() =
     }.hasMaxLengthOf(255)
 
 /**
+ * Valid if the string is a URL following the w3.org spec
+ */
+fun String?.validateUrl() =
+    validate(this) {
+        it == null || isUrl(it)
+    }
+
+private fun isUrl(url: String): Boolean {
+    return url.length <= 255 && try {
+        URL(url).toURI().let { true }
+    } catch (e: Exception) {
+        false
+    }
+}
+
+/**
  * Valid if the string is one of IANA tzdata's TZ-values representing the time zone.
  * Examples: "Europe/Oslo", "Europe/Zurich". (http://www.iana.org/time-zones)
  */
@@ -181,7 +197,7 @@ fun <E> Validator<E>.Property<CiString?>.isEvseId() =
 
 fun <E> Validator<E>.Property<BigDecimal?>.validate() = this.isGreaterThanOrEqualTo(BigDecimal.ZERO)
 
-fun <E> Validator<E>.Property<Int?>.validate() = this.isGreaterThanOrEqualTo(0)
+fun <E> Validator<E>.Property<Int?>.isPositive() = this.isGreaterThanOrEqualTo(0)
 
 fun PricePartial.validate(): PricePartial = validate(this) {
     validate(PricePartial::exclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
