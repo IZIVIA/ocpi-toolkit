@@ -25,10 +25,9 @@ interface CdrsEmspRepository {
      * No structure defined. This is open to the eMSP to define, the URL is provided to the CPO by the eMSP in
      * the result of the POST request. Therefore, OCPI does not define variables.
      *
-     * @param cdrId (max-length 36) id of the Cdr object to get from the eMSP’s system.
      * @return Cdr Requested Cdr object.
      */
-    suspend fun getCdr(cdrId: CiString): Cdr?
+    suspend fun getCdr(id: String): Cdr?
 
     /**
      * POST Method

@@ -13,7 +13,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 
 class CdrsEmspServer(
-    private val service: CdrsEmspInterface,
+    private val service: CdrsEmspInterface<String>,
     versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null
 ) : OcpiSelfRegisteringModuleServer(
@@ -26,15 +26,10 @@ class CdrsEmspServer(
     override suspend fun doRegisterOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePathSegments + listOf(
-                VariablePathSegment("cdrId")
-            )
+            path = basePathSegments + listOf(VariablePathSegment("cdrId"))
         ) { req ->
             req.httpResponse {
-                service
-                    .getCdr(
-                        cdrId = req.pathParams["cdrId"]!!
-                    )
+                service.getCdr(param = req.pathParams["cdrId"]!!)
             }
         }
 

@@ -19,7 +19,7 @@ class CdrsCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val serverVersionsEndpointUrl: String,
     private val partnerRepository: PartnerRepository
-) : CdrsEmspInterface {
+) : CdrsEmspInterface<URL> {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.cdrs,
@@ -27,14 +27,12 @@ class CdrsCpoClient(
             partnerRepository = partnerRepository
         )
 
-    override suspend fun getCdr(
-        cdrId: CiString
-    ): OcpiResponseBody<Cdr?> =
-        with(buildTransport()) {
+    override suspend fun getCdr(param: URL): OcpiResponseBody<Cdr?> =
+        with(transportClientBuilder.build(param)) {
             send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/$cdrId"
+                    path = "/"
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
@@ -44,9 +42,7 @@ class CdrsCpoClient(
                 .parseBody()
         }
 
-    override suspend fun postCdr(
-        cdr: Cdr
-    ): OcpiResponseBody<URL?> =
+    override suspend fun postCdr(cdr: Cdr): OcpiResponseBody<URL?> =
         with(buildTransport()) {
             send(
                 HttpRequest(
