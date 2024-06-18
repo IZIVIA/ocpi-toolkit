@@ -195,9 +195,9 @@ fun <E> Validator<E>.Property<CiString?>.isEvseId() =
         it == null || it.matches("(?i)[a-z]{2}\\*?[a-z\\d]{3}\\*?E[a-z\\d*]{1,31}".toRegex())
     }
 
-fun <E> Validator<E>.Property<BigDecimal?>.validate() = this.isGreaterThanOrEqualTo(BigDecimal.ZERO)
+fun <E> Validator<E>.Property<BigDecimal?>.isBigDecimalPositive() = this.isGreaterThanOrEqualTo(BigDecimal.ZERO)
 
-fun <E> Validator<E>.Property<Int?>.isPositive() = this.isGreaterThanOrEqualTo(0)
+fun <E> Validator<E>.Property<Int?>.isIntPositive() = this.isGreaterThanOrEqualTo(0)
 
 fun PricePartial.validate(): PricePartial = validate(this) {
     validate(PricePartial::exclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)

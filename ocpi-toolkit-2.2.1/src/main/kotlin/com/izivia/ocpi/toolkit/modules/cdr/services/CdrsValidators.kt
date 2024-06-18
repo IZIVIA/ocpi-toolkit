@@ -27,11 +27,11 @@ fun CdrPartial.validate(): CdrPartial =
         signedData?.validate()
         totalCost?.validate()
         totalFixedCost?.validate()
-        validate(CdrPartial::totalEnergy).validate()
+        validate(CdrPartial::totalEnergy).isBigDecimalPositive()
         totalEnergyCost?.validate()
-        validate(CdrPartial::totalTime).validate()
+        validate(CdrPartial::totalTime).isBigDecimalPositive()
         totalTimeCost?.validate()
-        validate(CdrPartial::totalParkingTime).validate()
+        validate(CdrPartial::totalParkingTime).isBigDecimalPositive()
         totalParkingCost?.validate()
         totalReservationCost?.validate()
         validate(CdrPartial::remark).isPrintableAscii().hasMaxLengthOf(255)
@@ -80,7 +80,7 @@ fun CdrDimensionPartial.validate(): CdrDimensionPartial = validate(this) {
 
 fun SignedDataPartial.validate() = validate(this) {
     validate(SignedDataPartial::encodingMethod).isPrintableAscii().hasMaxLengthOf(36)
-    validate(SignedDataPartial::encodingMethodVersion).isPositive()
+    validate(SignedDataPartial::encodingMethodVersion).isIntPositive()
     validate(SignedDataPartial::publicKey).isPrintableAscii().hasMaxLengthOf(512)
     signedValues?.forEach { signedValue -> signedValue.validate() }
     validate(SignedDataPartial::url).isPrintableAscii().hasMaxLengthOf(512)

@@ -32,9 +32,9 @@ private fun TariffElementPartial.validate() = validate(this) {
 
 private fun PriceComponentPartial.validate() = validate(this) {
     // type: nothing to validate
-    validate(PriceComponentPartial::price).validate()
-    validate(PriceComponentPartial::vat).validate()
-    validate(PriceComponentPartial::stepSize).isPositive()
+    validate(PriceComponentPartial::price).isBigDecimalPositive()
+    validate(PriceComponentPartial::vat).isBigDecimalPositive()
+    validate(PriceComponentPartial::stepSize).isIntPositive()
 }
 
 private fun TariffRestrictionsPartial.validate() = validate(this) {
@@ -42,14 +42,14 @@ private fun TariffRestrictionsPartial.validate() = validate(this) {
     validate(TariffRestrictionsPartial::endTime).isTime()
     validate(TariffRestrictionsPartial::startDate).isDate()
     validate(TariffRestrictionsPartial::endDate).isDate()
-    validate(TariffRestrictionsPartial::minKwh).validate()
-    validate(TariffRestrictionsPartial::maxKwh).validate()
-    validate(TariffRestrictionsPartial::minCurrent).validate()
-    validate(TariffRestrictionsPartial::maxCurrent).validate()
-    validate(TariffRestrictionsPartial::minPower).validate()
-    validate(TariffRestrictionsPartial::maxPower).validate()
-    validate(TariffRestrictionsPartial::minDuration).isPositive()
-    validate(TariffRestrictionsPartial::maxDuration).isPositive()
+    validate(TariffRestrictionsPartial::minKwh).isBigDecimalPositive()
+    validate(TariffRestrictionsPartial::maxKwh).isBigDecimalPositive()
+    validate(TariffRestrictionsPartial::minCurrent).isBigDecimalPositive()
+    validate(TariffRestrictionsPartial::maxCurrent).isBigDecimalPositive()
+    validate(TariffRestrictionsPartial::minPower).isBigDecimalPositive()
+    validate(TariffRestrictionsPartial::maxPower).isBigDecimalPositive()
+    validate(TariffRestrictionsPartial::minDuration).isIntPositive()
+    validate(TariffRestrictionsPartial::maxDuration).isIntPositive()
     // dayOfWeek: nothing to validate
     // reservation: nothing to validate
 }
