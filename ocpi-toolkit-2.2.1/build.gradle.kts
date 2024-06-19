@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":common"))
+    implementation(project(":annotation-processor"))
     ksp(project(":annotation-processor"))
     api(project(":transport"))
 
