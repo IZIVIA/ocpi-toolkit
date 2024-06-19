@@ -77,6 +77,8 @@ Maybe even group CDRs that will be on the same invoice.
 credit_reference_id needs to be set as well.
  * @property creditReferenceId (max-length=39) Is required to be set for a Credit CDR. This SHALL contain the id
 of the CDR for which this is a Credit CDR.
+ * @property homeChargingCompensation When set to true, this CDR is for a charging session using the home charger of the
+EV Driver for which the energy cost needs to be financially compensated to the EV Driver.
  * @property lastUpdated Timestamp when this CDR was last updated (or created).
  */
 
@@ -94,7 +96,7 @@ data class Cdr(
     val cdrLocation: CdrLocation,
     val meterId: String? = null,
     val currency: String,
-    val tariffs: List<Tariff>,
+    val tariffs: List<Tariff>?,
     val chargingPeriods: List<ChargingPeriod>,
     val signedData: SignedData? = null,
     val totalCost: Price,
@@ -110,5 +112,6 @@ data class Cdr(
     val invoiceReferenceId: CiString? = null,
     val credit: Boolean? = null,
     val creditReferenceId: CiString? = null,
+    val homeChargingCompensation: Boolean? = null,
     val lastUpdated: Instant
 )

@@ -18,7 +18,7 @@ the possibility to check the signed data from a charging session.
 @Partial
 data class SignedData(
     val encodingMethod: CiString,
-    val encodingMethodVersion: Int,
+    val encodingMethodVersion: Int? = null,
     val publicKey: CiString? = null,
     val signedValues: List<SignedValue>,
     val url: CiString? = null

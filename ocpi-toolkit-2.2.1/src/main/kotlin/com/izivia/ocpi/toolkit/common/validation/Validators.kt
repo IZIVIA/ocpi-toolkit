@@ -1,9 +1,14 @@
 package com.izivia.ocpi.toolkit.common.validation
 
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.modules.types.DisplayTextPartial
+import com.izivia.ocpi.toolkit.modules.types.PricePartial
 import org.valiktor.Constraint
 import org.valiktor.ConstraintViolationException
 import org.valiktor.Validator
+import org.valiktor.functions.isGreaterThanOrEqualTo
+import org.valiktor.validate
+import java.math.BigDecimal
 import java.net.URL
 import java.time.Instant
 import java.util.*
@@ -97,6 +102,22 @@ fun <E> Validator<E>.Property<String?>.isUrl() =
     }.hasMaxLengthOf(255)
 
 /**
+ * Valid if the string is a URL following the w3.org spec
+ */
+fun String?.validateUrl() =
+    validate(this) {
+        it == null || isUrl(it)
+    }
+
+private fun isUrl(url: String): Boolean {
+    return url.length <= 255 && try {
+        URL(url).toURI().let { true }
+    } catch (e: Exception) {
+        false
+    }
+}
+
+/**
  * Valid if the string is one of IANA tzdata's TZ-values representing the time zone.
  * Examples: "Europe/Oslo", "Europe/Zurich". (http://www.iana.org/time-zones)
  */
@@ -138,6 +159,14 @@ fun <E> Validator<E>.Property<String?>.isTime() =
     }
 
 /**
+ * Valid if the string is a date in the format YYYY-MM-DD
+ */
+fun <E> Validator<E>.Property<String?>.isDate() =
+    this.validate(TimeConstraint()) {
+        it == null || it.matches("([12][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])".toRegex())
+    }
+
+/**
  * Compliant with the following specification for EVSE ID from "eMI3 standard version V1.0"
  * (http://emi3group.com/documents-links/) "Part 2: business objects." Optional because: if an EVSE ID is to be re-used
  * the EVSE ID can be removed from an EVSE that is removed (status: REMOVED)
@@ -165,3 +194,20 @@ fun <E> Validator<E>.Property<CiString?>.isEvseId() =
     this.validate(EvseIdConstraint()) {
         it == null || it.matches("(?i)[a-z]{2}\\*?[a-z\\d]{3}\\*?E[a-z\\d*]{1,31}".toRegex())
     }
+
+fun <E> Validator<E>.Property<BigDecimal?>.isBigDecimalPositive() = this.isGreaterThanOrEqualTo(BigDecimal.ZERO)
+
+fun <E> Validator<E>.Property<Int?>.isIntPositive() = this.isGreaterThanOrEqualTo(0)
+
+fun PricePartial.validate(): PricePartial = validate(this) {
+    validate(PricePartial::exclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
+    validate(PricePartial::inclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
+}
+
+fun DisplayTextPartial.validate(): DisplayTextPartial = validate(this) {
+    validate(DisplayTextPartial::language).isLanguage()
+    validate(DisplayTextPartial::text)
+        .isPrintableAscii()
+        .hasNoHtml()
+        .hasMaxLengthOf(512)
+}

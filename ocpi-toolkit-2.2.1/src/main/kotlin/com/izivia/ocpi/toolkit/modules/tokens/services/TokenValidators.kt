@@ -3,7 +3,6 @@ package com.izivia.ocpi.toolkit.modules.tokens.services
 import com.izivia.ocpi.toolkit.common.validation.*
 import com.izivia.ocpi.toolkit.modules.tokens.domain.*
 import com.izivia.ocpi.toolkit.modules.types.DisplayText
-import com.izivia.ocpi.toolkit.modules.types.DisplayTextPartial
 import com.izivia.ocpi.toolkit.modules.types.toPartial
 import org.valiktor.DefaultConstraintViolation
 import org.valiktor.validate
@@ -58,14 +57,6 @@ fun LocationReferencesPartial.validate(): LocationReferencesPartial = validate(t
 fun EnergyContractPartial.validate(): EnergyContractPartial = validate(this) {
     validate(EnergyContractPartial::supplierName).isPrintableAscii().hasMaxLengthOf(64)
     validate(EnergyContractPartial::contractId).isPrintableAscii().hasMaxLengthOf(64)
-}
-
-fun DisplayTextPartial.validate(): DisplayTextPartial = validate(this) {
-    validate(DisplayTextPartial::language).isLanguage()
-    validate(DisplayTextPartial::text)
-        .isPrintableAscii()
-        .hasNoHtml()
-        .hasMaxLengthOf(512)
 }
 
 fun DisplayText.validate(): DisplayText = org.valiktor.validate(this) {

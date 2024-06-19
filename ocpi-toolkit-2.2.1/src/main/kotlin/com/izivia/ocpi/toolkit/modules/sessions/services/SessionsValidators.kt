@@ -1,13 +1,13 @@
 package com.izivia.ocpi.toolkit.modules.sessions.services
 
-import com.izivia.ocpi.toolkit.common.validation.hasMaxLengthOf
-import com.izivia.ocpi.toolkit.common.validation.isCountryCode
-import com.izivia.ocpi.toolkit.common.validation.isCurrencyCode
-import com.izivia.ocpi.toolkit.common.validation.isPrintableAscii
-import com.izivia.ocpi.toolkit.modules.cdr.domain.*
+import com.izivia.ocpi.toolkit.common.validation.*
+import com.izivia.ocpi.toolkit.modules.cdr.domain.CdrDimension
+import com.izivia.ocpi.toolkit.modules.cdr.domain.CdrToken
+import com.izivia.ocpi.toolkit.modules.cdr.domain.ChargingPeriod
+import com.izivia.ocpi.toolkit.modules.cdr.domain.toPartial
+import com.izivia.ocpi.toolkit.modules.cdr.services.validate
 import com.izivia.ocpi.toolkit.modules.sessions.domain.*
 import com.izivia.ocpi.toolkit.modules.types.Price
-import com.izivia.ocpi.toolkit.modules.types.PricePartial
 import com.izivia.ocpi.toolkit.modules.types.toPartial
 import org.valiktor.functions.isGreaterThanOrEqualTo
 import org.valiktor.validate
@@ -39,30 +39,6 @@ fun ChargingPreferencesPartial.validate(): ChargingPreferencesPartial = validate
     // departureTime nothing to validate
     validate(ChargingPreferencesPartial::energyNeed).isGreaterThanOrEqualTo(0)
     // dischargeAllowed nothing to validate
-}
-
-fun CdrTokenPartial.validate(): CdrTokenPartial = validate(this) {
-    validate(CdrTokenPartial::countryCode).isCountryCode(caseSensitive = false, alpha2 = true)
-    validate(CdrTokenPartial::partyId).isPrintableAscii().hasMaxLengthOf(3)
-    validate(CdrTokenPartial::uid).isPrintableAscii().hasMaxLengthOf(36)
-    // tokenType : nothing to validate
-    validate(CdrTokenPartial::contractId).isPrintableAscii().hasMaxLengthOf(36)
-}
-
-fun ChargingPeriodPartial.validate(): ChargingPeriodPartial = validate(this) {
-    // startDateTime nothing to validate
-    dimensions?.forEach { dimension -> dimension.validate() }
-    validate(ChargingPeriodPartial::tariffId).isPrintableAscii().hasMaxLengthOf(36)
-}
-
-fun CdrDimensionPartial.validate(): CdrDimensionPartial = validate(this) {
-    // cdrDimensionType : nothing to validate
-    validate(CdrDimensionPartial::volume).isGreaterThanOrEqualTo(BigDecimal.ZERO)
-}
-
-fun PricePartial.validate(): PricePartial = validate(this) {
-    validate(PricePartial::exclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
-    validate(PricePartial::inclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
 }
 
 fun Session.validate(): Session = validate(this) {
