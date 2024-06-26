@@ -8,7 +8,10 @@ import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsClientSer
 import com.izivia.ocpi.toolkit.modules.credentials.services.RequiredEndpoints
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
+import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportClientBuilder
@@ -38,9 +41,14 @@ fun main() {
         VersionsServer(
             service = VersionsService(
                 repository = senderVersionsRepository,
-                baseUrlProvider = { receiverUrl }
+                baseUrlProvider = { senderUrl }
             )
         ).registerOn(senderServer)
+
+        senderVersionsRepository.addEndpoint(
+            VersionNumber.V2_2_1,
+            Endpoint(ModuleID.credentials, InterfaceRole.SENDER, "$senderUrl/2.2.1/credentials")
+        )
     }
     senderServer.start()
 
