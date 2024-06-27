@@ -55,7 +55,7 @@ fun main() {
                 serverVersionsUrlProvider = { receiverVersionsUrl },
                 requiredEndpoints = requiredOtherPartEndpoints
             ),
-            receiverVersionsRepository
+            versionsRepository = receiverVersionsRepository
         ).registerOn(receiverServer)
         VersionsServer(
             service = VersionsService(

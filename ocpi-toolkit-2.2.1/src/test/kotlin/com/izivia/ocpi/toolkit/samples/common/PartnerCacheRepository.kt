@@ -21,10 +21,11 @@ open class PartnerCacheRepository : PartnerRepository {
 
     override suspend fun savePartnerUrlForTokenA(tokenA: String, partnerUrl: String): String? = partners
         .toList()
-        .firstOrNull { it.tokenA == tokenA }
-        ?.copy(url = partnerUrl)
-        ?.also { partners[it.url!!] = it }
-        ?.url
+        .indexOfFirst { it.tokenA == tokenA }
+        .let { index ->
+            partners[index] = partners[index].copy(url = partnerUrl)
+            partnerUrl
+        }
 
     override suspend fun saveCredentialsRoles(
         partnerUrl: String,
