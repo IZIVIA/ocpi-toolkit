@@ -105,8 +105,8 @@ suspend fun PartnerRepository.buildAuthorizationHeader(
     allowTokenA: Boolean = false
 ): Pair<String, String> =
     if (allowTokenA) {
-        getCredentialsTokenA(partnerUrl = partnerUrl)
-            ?: getCredentialsClientToken(partnerUrl = partnerUrl)
+        getCredentialsClientToken(partnerUrl = partnerUrl)
+            ?: getCredentialsTokenA(partnerUrl = partnerUrl)
             ?: throw throw OcpiClientUnknownTokenException(
                 "Could not find token A or client token associated with partner $partnerUrl"
             )
