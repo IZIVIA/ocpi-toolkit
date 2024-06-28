@@ -47,7 +47,6 @@ class CdrsCpoClient(
             send(
                 HttpRequest(
                     method = HttpMethod.POST,
-                    path = "/${cdr.id}",
                     body = mapper.writeValueAsString(cdr)
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
