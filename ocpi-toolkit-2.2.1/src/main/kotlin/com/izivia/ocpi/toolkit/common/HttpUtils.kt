@@ -206,6 +206,14 @@ fun ResponseMessageRoutingHeaders.httpHeaders(): Map<String, String> =
         .mapValues { it.value!! }
 
 /**
+ * It builds TokenHeader from the header of the request (it can be used in coroutine context)
+ */
+fun HttpRequest.extractTokenHeader(): TokenHeader =
+    TokenHeader(
+        token = parseAuthorizationHeader()
+    )
+
+/**
  * For debugging issues, OCPI implementations are required to include unique IDs via HTTP headers in every
  * request/response.
  *
