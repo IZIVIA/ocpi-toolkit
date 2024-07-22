@@ -1,3 +1,7 @@
+plugins {
+    `public-lib`
+}
+
 java {
     withJavadocJar()
     withSourcesJar()
