@@ -1,11 +1,10 @@
 plugins {
     id("java-library")
-    id("maven-publish")
     id("com.google.devtools.ksp")
 }
 
 dependencies {
-    implementation(project(":common"))
+    implementation(project(":annotation-processor"))
     ksp(project(":annotation-processor"))
     api(project(":transport"))
 

@@ -1,8 +1,3 @@
-plugins {
-    kotlin("jvm")
-    id("maven-publish")
-}
-
 java {
     withJavadocJar()
     withSourcesJar()
