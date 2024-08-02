@@ -171,7 +171,8 @@ suspend fun <T> HttpRequest.httpResponse(fn: suspend () -> OcpiResponseBody<T>):
         logger.error(e)
         HttpResponse(
             status = HttpStatus.BAD_REQUEST,
-            headers = baseHeaders
+            headers = baseHeaders,
+            body = e.message
         )
     }
 }
