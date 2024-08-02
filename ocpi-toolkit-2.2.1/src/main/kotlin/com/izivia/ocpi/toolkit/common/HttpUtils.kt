@@ -324,7 +324,13 @@ fun HttpRequest.parseAuthorizationHeader() = getHeader(Header.AUTHORIZATION)
         }
     }
     ?.removePrefix("Token ")
-    ?.decodeBase64()
+    ?.let {
+        try {
+            it.decodeBase64()
+        } catch (e: Exception) {
+            throw HttpException(HttpStatus.BAD_REQUEST, "${Header.AUTHORIZATION} token cannot be decoded")
+        }
+    }
     ?: throw HttpException(HttpStatus.UNAUTHORIZED, "${Header.AUTHORIZATION} header missing")
 
 /**
