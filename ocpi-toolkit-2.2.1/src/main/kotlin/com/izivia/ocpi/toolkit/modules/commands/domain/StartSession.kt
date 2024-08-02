@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.commands.domain
 
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.URL
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 
 /**
@@ -23,7 +24,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
  * reference will be provided in the relevant Session and/or CDR.
  */
 data class StartSession(
-    val responseUrl: CiString,
+    val responseUrl: URL,
     val token: Token,
     val locationId: CiString,
     val evseUid: CiString?,

@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.commands.domain
 
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.URL
 
 /**
  * @property responseUrl (max-length=255) URL that the CommandResult POST should be sent to. This URL might contain a
@@ -10,6 +11,6 @@ import com.izivia.ocpi.toolkit.common.CiString
  * a reservation that matches this reservationId the Charge Point will replace the reservation.
  */
 data class CancelReservation(
-    val responseUrl: CiString,
+    val responseUrl: URL,
     val reservationId: CiString
 )
