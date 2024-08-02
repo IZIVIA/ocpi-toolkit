@@ -2,6 +2,7 @@ package com.izivia.ocpi.toolkit.modules.tariff.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.URL
 import com.izivia.ocpi.toolkit.modules.locations.domain.EnergyMix
 import com.izivia.ocpi.toolkit.modules.types.DisplayText
 import com.izivia.ocpi.toolkit.modules.types.Price
@@ -47,7 +48,7 @@ data class Tariff(
     val countryCode: CiString,
     val currency: String,
     val tariffAltText: List<DisplayText>? = null,
-    val tariffAltUrl: CiString? = null,
+    val tariffAltUrl: URL? = null,
     val minPrice: Price? = null,
     val maxPrice: Price? = null,
     val elements: List<TariffElement>,

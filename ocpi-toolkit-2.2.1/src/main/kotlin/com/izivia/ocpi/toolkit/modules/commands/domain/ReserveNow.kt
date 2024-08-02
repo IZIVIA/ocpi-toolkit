@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.commands.domain
 
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.URL
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import java.time.Instant
 
@@ -25,7 +26,7 @@ import java.time.Instant
  * reference will be provided in the relevant Session and/or CDR.
  */
 data class ReserveNow(
-    val responseUrl: CiString,
+    val responseUrl: URL,
     val token: Token,
     val expiryDate: Instant,
     val reservationId: CiString,
