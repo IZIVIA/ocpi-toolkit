@@ -11,7 +11,7 @@ fun main() {
     // We instantiate the clients that we want to use
     val locationsCpoClient = LocationsCpoClient(
         transportClientBuilder = Http4kTransportClientBuilder(),
-        serverVersionsEndpointUrl = emspServerVersionsUrl,
+        partnerId = emspServerVersionsUrl,
         partnerRepository = DUMMY_PLATFORM_REPOSITORY
     )
 

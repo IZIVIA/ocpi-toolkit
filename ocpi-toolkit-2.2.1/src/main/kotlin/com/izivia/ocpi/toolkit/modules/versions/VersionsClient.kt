@@ -15,6 +15,7 @@ import com.izivia.ocpi.toolkit.transport.domain.*
 class VersionsClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val serverVersionsEndpointUrl: String,
+    private val partnerId: String,
     private val partnerRepository: PartnerRepository
 ) : VersionsInterface {
 
@@ -31,7 +32,7 @@ class VersionsClient(
                     )
                     .authenticate(
                         partnerRepository = partnerRepository,
-                        partnerUrl = serverVersionsEndpointUrl,
+                        partnerId = partnerId,
                         allowTokenA = true
                     )
             )

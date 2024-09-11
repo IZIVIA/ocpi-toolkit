@@ -16,18 +16,18 @@ import java.time.Instant
 /**
  * Sends calls to an eMSP server
  * @property transportClientBuilder used to build transport client
- * @property serverVersionsEndpointUrl used to know which partner to communicate with
+ * @property partnerId used to know which partner to communicate with
  * @property partnerRepository used to get information about the partner (endpoint, token)
  */
 class TokensCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsEndpointUrl: String,
+    private val partnerId: String,
     private val partnerRepository: PartnerRepository
 ) : TokensEmspInterface {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.tokens,
-            partnerUrl = serverVersionsEndpointUrl,
+            partnerId = partnerId,
             partnerRepository = partnerRepository
         )
 
@@ -52,7 +52,7 @@ class TokensCpoClient(
                         requestId = generateRequestId(),
                         correlationId = generateCorrelationId()
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             )
                 .parsePaginatedBody(offset)
         }
@@ -61,7 +61,7 @@ class TokensCpoClient(
         previousResponse: OcpiResponseBody<SearchResult<Token>>
     ): OcpiResponseBody<SearchResult<Token>>? = getNextPage(
         transportClientBuilder = transportClientBuilder,
-        serverVersionsEndpointUrl = serverVersionsEndpointUrl,
+        partnerId = partnerId,
         partnerRepository = partnerRepository,
         previousResponse = previousResponse
     )
@@ -83,7 +83,7 @@ class TokensCpoClient(
                         requestId = generateRequestId(),
                         correlationId = generateCorrelationId()
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             ).parseBody()
         }
 }

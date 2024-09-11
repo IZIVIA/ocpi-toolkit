@@ -145,6 +145,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 )
             },
             serverVersionsEndpointUrl = receiverServerSetupResult.versionsEndpoint,
+            partnerId = receiverServerSetupResult.versionsEndpoint,
             transportClientBuilder = Http4kTransportClientBuilder(),
             requiredEndpoints = requiredEndpoints
         )
@@ -223,6 +224,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val versionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
+            partnerId = receiverServer.versionsEndpoint,
             partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
         )
 
@@ -446,6 +448,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val versionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
+            partnerId = receiverServer.versionsEndpoint,
             partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
         )
 
@@ -496,11 +499,13 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val senderVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
+            partnerId = receiverServer.versionsEndpoint,
             partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
         )
         val receiverVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = senderServer.versionsEndpoint,
+            partnerId = senderServer.versionsEndpoint,
             partnerRepository = PartnerMongoRepository(collection = receiverServer.partnerCollection)
         )
 
@@ -613,11 +618,13 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val senderVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = receiverServer.versionsEndpoint,
+            partnerId = receiverServer.versionsEndpoint,
             partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
         )
         val receiverVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             serverVersionsEndpointUrl = senderServer.versionsEndpoint,
+            partnerId = senderServer.versionsEndpoint,
             partnerRepository = PartnerMongoRepository(collection = receiverServer.partnerCollection)
         )
 

@@ -96,24 +96,24 @@ fun authorizationHeader(token: String): Pair<String, String> = Header.AUTHORIZAT
  * Creates the authorization header by taking the client token (or the token A if allowed) in the partner repository
  *
  * @receiver PlatformRepository used to retrieve tokens
- * @param partnerUrl partner /versions url
+ * @param partnerId partner identifier
  * @param allowTokenA only true when called on versions / credentials module
  * @return Pair<String, String>
  */
 suspend fun PartnerRepository.buildAuthorizationHeader(
-    partnerUrl: String,
+    partnerId: String,
     allowTokenA: Boolean = false
 ): Pair<String, String> =
     if (allowTokenA) {
-        getCredentialsClientToken(partnerUrl = partnerUrl)
-            ?: getCredentialsTokenA(partnerUrl = partnerUrl)
+        getCredentialsClientToken(partnerId = partnerId)
+            ?: getCredentialsTokenA(partnerId = partnerId)
             ?: throw throw OcpiClientUnknownTokenException(
-                "Could not find token A or client token associated with partner $partnerUrl"
+                "Could not find token A or client token associated with partner $partnerId"
             )
     } else {
-        getCredentialsClientToken(partnerUrl = partnerUrl)
+        getCredentialsClientToken(partnerId = partnerId)
             ?: throw throw OcpiClientUnknownTokenException(
-                "Could not find client token associated with partner $partnerUrl"
+                "Could not find client token associated with partner $partnerId"
             )
     }
         .let { token -> authorizationHeader(token = token) }
@@ -123,18 +123,18 @@ suspend fun PartnerRepository.buildAuthorizationHeader(
  * repository.
  *
  * @param partnerRepository use to retrieve tokens
- * @param partnerUrl partner /versions url
+ * @param partnerId partner identifier
  * @param allowTokenA only true when called on versions / credentials module
  */
 suspend fun HttpRequest.authenticate(
     partnerRepository: PartnerRepository,
-    partnerUrl: String,
+    partnerId: String,
     allowTokenA: Boolean = false
 ): AuthenticatedHttpRequest =
     withHeaders(
         headers = headers.plus(
             partnerRepository.buildAuthorizationHeader(
-                partnerUrl = partnerUrl,
+                partnerId = partnerId,
                 allowTokenA = allowTokenA
             )
         )
@@ -381,11 +381,11 @@ suspend fun PartnerRepository.checkToken(
 
 suspend fun TransportClientBuilder.buildFor(
     module: ModuleID,
-    partnerUrl: String,
+    partnerId: String,
     partnerRepository: PartnerRepository
 ): TransportClient =
     partnerRepository
-        .getEndpoints(partnerUrl = partnerUrl)
+        .getEndpoints(partnerId = partnerId)
         .find { it.identifier == module }
         ?.let { build(baseUrl = it.url) }
         ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)

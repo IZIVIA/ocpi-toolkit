@@ -10,12 +10,12 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 /**
  * Used to get the version details of a partner
  * @property transportClientBuilder used to build transport client
- * @property serverVersionsEndpointUrl used to know which partner to communicate with
+ * @property partnerId used to know which partner to communicate with
  * @property partnerRepository used to get information about the partner (endpoint, token)
  */
 class VersionDetailsClient(
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsEndpointUrl: String,
+    private val partnerId: String,
     private val partnerRepository: PartnerRepository
 ) : VersionDetailsInterface {
 
@@ -24,7 +24,7 @@ class VersionDetailsClient(
             transportClientBuilder
                 .build(
                     baseUrl = partnerRepository
-                        .getVersion(partnerUrl = serverVersionsEndpointUrl)
+                        .getVersion(partnerId = partnerId)
                         ?.url
                         ?: throw OcpiToolkitUnknownEndpointException("version details")
                 )
@@ -37,7 +37,7 @@ class VersionDetailsClient(
                     )
                     .authenticate(
                         partnerRepository = partnerRepository,
-                        partnerUrl = serverVersionsEndpointUrl,
+                        partnerId = partnerId,
                         allowTokenA = true
                     )
             )

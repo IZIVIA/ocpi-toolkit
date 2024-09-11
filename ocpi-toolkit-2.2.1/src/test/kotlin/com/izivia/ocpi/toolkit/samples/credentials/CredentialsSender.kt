@@ -68,6 +68,7 @@ fun main() {
             )
         },
         serverVersionsEndpointUrl = receiverVersionsUrl,
+        partnerId = receiverVersionsUrl,
         transportClientBuilder = Http4kTransportClientBuilder(),
         requiredEndpoints = RequiredEndpoints(receiver = listOf(ModuleID.credentials))
     )

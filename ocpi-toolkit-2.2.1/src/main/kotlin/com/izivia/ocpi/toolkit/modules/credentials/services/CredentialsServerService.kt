@@ -35,36 +35,45 @@ open class CredentialsServerService(
         // A partner can use a valid serverToken on registration.
         // It can happen when a partner unregister, then registers with its clientToken (which is the serverToken
         // for us)
-        val partnerUrl = partnerRepository
-            .getPartnerUrlByCredentialsServerToken(token)
+        partnerRepository.getPartnerUrlByCredentialsServerToken(token)
             // If we could not find a partner with this serverToken, then, it means that it's probably a tokenA
             ?: partnerRepository.savePartnerUrlForTokenA(tokenA = token, partnerUrl = credentials.url)
+            ?: throw OcpiClientInvalidParametersException(
+                "Invalid token ($token) - should be either a TokenA or a ServerToken"
+            )
+        val partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
+            // If we could not find a partner with this serverToken, then, it means that it's probably a tokenA
+            ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)
             ?: throw OcpiClientInvalidParametersException(
                 "Invalid token ($token) - should be either a TokenA or a ServerToken"
             )
 
         // Save credentials roles of partner
         partnerRepository.saveCredentialsRoles(
-            partnerUrl = credentials.url,
+            partnerId = partnerId,
             credentialsRoles = credentials.roles
         )
 
         // Save token B, which is in our case the client token, because it's the one that we will use to communicate
         // with the sender
         partnerRepository.saveCredentialsClientToken(
-            partnerUrl = credentials.url,
+            partnerId = partnerId,
             credentialsClientToken = credentials.token
         )
 
-        findLatestMutualVersionAndStoreInformation(credentials = credentials, debugHeaders = debugHeaders)
+        findLatestMutualVersionAndStoreInformation(
+            partnerId = partnerId,
+            credentials = credentials,
+            debugHeaders = debugHeaders
+        )
 
         // Remove token A because it is useless from now on
-        partnerRepository.invalidateCredentialsTokenA(partnerUrl = partnerUrl)
+        partnerRepository.invalidateCredentialsTokenA(partnerId = partnerId)
 
         // Return Credentials objet to sender with the token C inside (which is for us the server token)
         getCredentials(
             serverToken = partnerRepository.saveCredentialsServerToken(
-                partnerUrl = partnerUrl,
+                partnerId = partnerId,
                 credentialsServerToken = generateUUIDv4Token()
             )
         )
@@ -75,31 +84,35 @@ open class CredentialsServerService(
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
-        val partnerUrl = partnerRepository.getPartnerUrlByCredentialsServerToken(token)
+        val partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
             // This line should not be reached when using the HttpUtils.kt PartnerRepository.checkToken
             // implementation of the toolkit, but is included for custom implementations.
             ?: throw OcpiClientMethodNotAllowedException()
 
         // Save credentials roles of partner
         partnerRepository.saveCredentialsRoles(
-            partnerUrl = credentials.url,
+            partnerId = partnerId,
             credentialsRoles = credentials.roles
         )
 
         // In the payload, there is the new token B (the client token for us) to use to communicate with the receiver,
         // so we save it
         partnerRepository.saveCredentialsClientToken(
-            partnerUrl = credentials.url,
+            partnerId = partnerId,
             credentialsClientToken = credentials.token
         )
 
         // Update versions
-        findLatestMutualVersionAndStoreInformation(credentials = credentials, debugHeaders = debugHeaders)
+        findLatestMutualVersionAndStoreInformation(
+            partnerId = partnerId,
+            credentials = credentials,
+            debugHeaders = debugHeaders
+        )
 
         // Return Credentials objet to sender with the updated token C inside (which is for us the server token)
         getCredentials(
             serverToken = partnerRepository.saveCredentialsServerToken(
-                partnerUrl = partnerUrl,
+                partnerId = partnerId,
                 credentialsServerToken = generateUUIDv4Token()
             )
         )
@@ -109,11 +122,11 @@ open class CredentialsServerService(
         token: String
     ): OcpiResponseBody<Credentials?> = OcpiResponseBody.of {
         partnerRepository
-            .getPartnerUrlByCredentialsServerToken(token)
-            ?.also { partnerUrl ->
+            .getPartnerIdByCredentialsServerToken(token)
+            ?.also { partnerId ->
                 // Only client token is invalidated. It means that the partner can still send authenticated requests
                 // to the system.
-                partnerRepository.invalidateCredentialsClientToken(partnerUrl = partnerUrl)
+                partnerRepository.invalidateCredentialsClientToken(partnerId = partnerId)
             }
             // This line should not be reached when using the HttpUtils.kt PartnerRepository.checkToken
             // implementation of the toolkit, but is included for custom implementations.
@@ -123,6 +136,7 @@ open class CredentialsServerService(
     }
 
     private suspend fun findLatestMutualVersionAndStoreInformation(
+        partnerId: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>
     ) {
@@ -166,7 +180,7 @@ open class CredentialsServerService(
         val matchingVersion = versions.firstOrNull { it.version == VersionNumber.V2_2_1.value }
             ?: throw OcpiServerUnsupportedVersionException("Expected version 2.2.1 from $versions")
 
-        partnerRepository.saveVersion(partnerUrl = credentials.url, version = matchingVersion)
+        partnerRepository.saveVersion(partnerId = partnerId, version = matchingVersion)
 
         val versionDetail = transportClientBuilder
             .build(matchingVersion.url)
@@ -207,7 +221,7 @@ open class CredentialsServerService(
 
         checkRequiredEndpoints(requiredEndpoints, versionDetail.endpoints)
 
-        partnerRepository.saveEndpoints(partnerUrl = credentials.url, endpoints = versionDetail.endpoints)
+        partnerRepository.saveEndpoints(partnerId = partnerId, endpoints = versionDetail.endpoints)
     }
 
     private suspend fun getCredentials(serverToken: String): Credentials = Credentials(

@@ -15,19 +15,19 @@ import java.time.Instant
 /**
  * Sends calls to the CPO
  * @property transportClientBuilder used to build transport client
- * @property serverVersionsEndpointUrl used to know which partner to communicate with
+ * @property partnerId used to know which partner to communicate with
  * @property partnerRepository used to get information about the partner (endpoint, token)
  */
 class LocationsEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsEndpointUrl: String,
+    private val partnerId: String,
     private val partnerRepository: PartnerRepository
 ) : LocationsCpoInterface {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.locations,
-            partnerUrl = serverVersionsEndpointUrl,
+            partnerId = partnerId,
             partnerRepository = partnerRepository
         )
 
@@ -51,7 +51,7 @@ class LocationsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
         )
             .parsePaginatedBody(offset)
     }
@@ -60,7 +60,7 @@ class LocationsEmspClient(
         previousResponse: OcpiResponseBody<SearchResult<Location>>
     ): OcpiResponseBody<SearchResult<Location>>? = getNextPage(
         transportClientBuilder = transportClientBuilder,
-        serverVersionsEndpointUrl = serverVersionsEndpointUrl,
+        partnerId = partnerId,
         partnerRepository = partnerRepository,
         previousResponse = previousResponse
     )
@@ -75,7 +75,7 @@ class LocationsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
         )
             .parseBody()
     }
@@ -91,7 +91,7 @@ class LocationsEmspClient(
                         requestId = generateRequestId(),
                         correlationId = generateCorrelationId()
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             )
                 .parseBody()
         }
@@ -110,7 +110,7 @@ class LocationsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
         )
             .parseBody()
     }

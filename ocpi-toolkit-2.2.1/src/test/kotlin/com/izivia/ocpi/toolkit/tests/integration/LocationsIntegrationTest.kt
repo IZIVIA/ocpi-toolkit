@@ -76,7 +76,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
         val locationsEmspClient = LocationsEmspClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
-            serverVersionsEndpointUrl = cpoServerVersionsUrl,
+            partnerId = cpoServerVersionsUrl,
             partnerRepository = partnerRepo
         )
 

@@ -18,13 +18,13 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
  * Send calls to the SCSP
  *
  * @property transportClientBuilder used to build transport client
- * @property serverVersionsEndpointUrl used to know which partner to communicate with
+ * @property partnerId used to know which partner to communicate with
  * @property partnerRepository used to get information about the partner (endpoint, token)
  * @property callbackBaseUrl used to build the callback URL sent to the other partner
  */
 class ChargingProfilesCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsEndpointUrl: String,
+    private val partnerId: String,
     private val partnerRepository: PartnerRepository,
     private val callbackBaseUrl: String
 ) {
@@ -35,7 +35,7 @@ class ChargingProfilesCpoClient(
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.chargingprofiles,
-            partnerUrl = serverVersionsEndpointUrl,
+            partnerId = partnerId,
             partnerRepository = partnerRepository
         )
 
@@ -53,7 +53,7 @@ class ChargingProfilesCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
         )
             .also {
                 if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")
@@ -75,7 +75,7 @@ class ChargingProfilesCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
         )
             .also {
                 if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")
@@ -97,7 +97,7 @@ class ChargingProfilesCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
         )
             .also {
                 if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")
@@ -119,7 +119,7 @@ class ChargingProfilesCpoClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
         )
             .also {
                 if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")

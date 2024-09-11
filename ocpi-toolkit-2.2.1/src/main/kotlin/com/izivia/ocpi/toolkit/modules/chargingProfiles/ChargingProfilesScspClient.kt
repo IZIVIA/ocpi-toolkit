@@ -15,7 +15,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 
 class ChargingProfilesScspClient(
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsEndpointUrl: String,
+    private val partnerId: String,
     private val partnerRepository: PartnerRepository,
     private val callbackBaseUrl: URL
 ) {
@@ -23,7 +23,7 @@ class ChargingProfilesScspClient(
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.chargingprofiles,
-            partnerUrl = serverVersionsEndpointUrl,
+            partnerId = partnerId,
             partnerRepository = partnerRepository
         )
 
@@ -46,7 +46,7 @@ class ChargingProfilesScspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
         )
             .also {
                 if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")
@@ -75,7 +75,7 @@ class ChargingProfilesScspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
         )
             .also {
                 if (it.status != HttpStatus.OK && it.status != HttpStatus.CREATED) {
@@ -102,7 +102,7 @@ class ChargingProfilesScspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
         )
             .also {
                 if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")
