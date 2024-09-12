@@ -62,6 +62,14 @@ interface PartnerRepository {
     suspend fun isCredentialsServerTokenValid(credentialsServerToken: String): Boolean
 
     /**
+     * Used to find a partner url by its identifier.
+     *
+     * @param partnerId, identifies uniquely the partner
+     * @return the partner url
+     */
+    suspend fun getPartnerUrl(partnerId: String): String?
+
+    /**
      * Used to find a partner url by its server token. Basically used to retrieve all the partner information
      * from the token in a request.
      *

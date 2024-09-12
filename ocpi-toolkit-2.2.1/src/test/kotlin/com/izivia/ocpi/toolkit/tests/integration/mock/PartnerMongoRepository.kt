@@ -66,6 +66,9 @@ class PartnerMongoRepository(
     override suspend fun isCredentialsServerTokenValid(credentialsServerToken: String): Boolean = collection
         .findOne(Partner::serverToken eq credentialsServerToken) != null
 
+    override suspend fun getPartnerUrl(partnerId: String): String? = collection
+        .findOne(Partner::url eq partnerId)?.url
+
     override suspend fun getPartnerUrlByCredentialsServerToken(credentialsServerToken: String): String? = collection
         .findOne(Partner::serverToken eq credentialsServerToken)?.url
 

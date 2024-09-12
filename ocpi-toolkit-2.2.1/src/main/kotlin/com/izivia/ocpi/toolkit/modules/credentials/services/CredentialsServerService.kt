@@ -35,12 +35,6 @@ open class CredentialsServerService(
         // A partner can use a valid serverToken on registration.
         // It can happen when a partner unregister, then registers with its clientToken (which is the serverToken
         // for us)
-        partnerRepository.getPartnerUrlByCredentialsServerToken(token)
-            // If we could not find a partner with this serverToken, then, it means that it's probably a tokenA
-            ?: partnerRepository.savePartnerUrlForTokenA(tokenA = token, partnerUrl = credentials.url)
-            ?: throw OcpiClientInvalidParametersException(
-                "Invalid token ($token) - should be either a TokenA or a ServerToken"
-            )
         val partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
             // If we could not find a partner with this serverToken, then, it means that it's probably a tokenA
             ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)

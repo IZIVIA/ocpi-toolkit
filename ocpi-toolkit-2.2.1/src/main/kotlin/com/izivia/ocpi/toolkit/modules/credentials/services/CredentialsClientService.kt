@@ -26,7 +26,6 @@ import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
  * @property clientPartnerRepository client's repository to store and retrieve tokens and information about partners
  * @property clientVersionsRepository client's repository to retrieve available versions on the client
  * @property clientCredentialsRoleRepository client's repository to retrieve its role
- * @property serverVersionsEndpointUrl the versions endpoint url of the server (for the client to retrieve endpoints)
  * @property partnerId a value that identifies uniquely the partner
  * @property transportClientBuilder used to build a transport (will be used to create CredentialClient to make calls)
  * @property requiredEndpoints the endpoints this client expects from the other part to provide
@@ -36,7 +35,6 @@ open class CredentialsClientService(
     private val clientPartnerRepository: PartnerRepository,
     private val clientVersionsRepository: VersionsRepository,
     private val clientCredentialsRoleRepository: CredentialsRoleRepository,
-    private val serverVersionsEndpointUrl: String,
     private val partnerId: String,
     private val transportClientBuilder: TransportClientBuilder,
     private val requiredEndpoints: RequiredEndpoints?
@@ -196,7 +194,6 @@ open class CredentialsClientService(
     private suspend fun findLatestMutualVersionAndSaveInformation(): List<Endpoint> {
         val availableServerVersions = VersionsClient(
             transportClientBuilder = transportClientBuilder,
-            serverVersionsEndpointUrl = serverVersionsEndpointUrl,
             partnerId = partnerId,
             partnerRepository = clientPartnerRepository
         )

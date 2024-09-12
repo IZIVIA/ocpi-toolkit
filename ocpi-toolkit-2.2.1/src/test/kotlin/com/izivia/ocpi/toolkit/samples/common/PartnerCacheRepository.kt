@@ -72,6 +72,9 @@ open class PartnerCacheRepository : PartnerRepository {
     override suspend fun isCredentialsServerTokenValid(credentialsServerToken: String): Boolean = partners
         .any { it.serverToken == credentialsServerToken }
 
+    override suspend fun getPartnerUrl(partnerId: String): String? = partners
+        .firstOrNull { it.url == partnerId }?.url
+
     override suspend fun getPartnerUrlByCredentialsServerToken(credentialsServerToken: String): String? = partners
         .firstOrNull { it.serverToken == credentialsServerToken }?.url
 
