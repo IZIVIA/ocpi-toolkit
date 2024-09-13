@@ -24,41 +24,41 @@ class PartnerMongoRepository(
             ?.url
 
     override suspend fun saveCredentialsRoles(
-        partnerUrl: String,
+        partnerId: String,
         credentialsRoles: List<CredentialRole>
     ): List<CredentialRole> =
         credentialsRoles.also {
             collection
-                .updateOne(Partner::url eq partnerUrl, set(Partner::credentialsRoles setTo it))
+                .updateOne(Partner::url eq partnerId, set(Partner::credentialsRoles setTo it))
         }
 
-    override suspend fun saveVersion(partnerUrl: String, version: Version): Version = version.also {
+    override suspend fun saveVersion(partnerId: String, version: Version): Version = version.also {
         collection
-            .updateOne(Partner::url eq partnerUrl, set(Partner::version setTo it))
+            .updateOne(Partner::url eq partnerId, set(Partner::version setTo it))
     }
 
-    override suspend fun saveEndpoints(partnerUrl: String, endpoints: List<Endpoint>): List<Endpoint> = endpoints.also {
+    override suspend fun saveEndpoints(partnerId: String, endpoints: List<Endpoint>): List<Endpoint> = endpoints.also {
         collection
-            .updateOne(Partner::url eq partnerUrl, set(Partner::endpoints setTo it))
+            .updateOne(Partner::url eq partnerId, set(Partner::endpoints setTo it))
     }
 
-    override suspend fun saveCredentialsClientToken(partnerUrl: String, credentialsClientToken: String): String =
+    override suspend fun saveCredentialsClientToken(partnerId: String, credentialsClientToken: String): String =
         credentialsClientToken.also {
             collection
-                .updateOne(Partner::url eq partnerUrl, set(Partner::clientToken setTo it))
+                .updateOne(Partner::url eq partnerId, set(Partner::clientToken setTo it))
         }
 
-    override suspend fun saveCredentialsServerToken(partnerUrl: String, credentialsServerToken: String): String =
+    override suspend fun saveCredentialsServerToken(partnerId: String, credentialsServerToken: String): String =
         credentialsServerToken.also {
             collection
-                .updateOne(Partner::url eq partnerUrl, set(Partner::serverToken setTo it))
+                .updateOne(Partner::url eq partnerId, set(Partner::serverToken setTo it))
         }
 
-    override suspend fun getCredentialsTokenA(partnerUrl: String): String? = collection
-        .findOne(Partner::url eq partnerUrl)?.tokenA
+    override suspend fun getCredentialsTokenA(partnerId: String): String? = collection
+        .findOne(Partner::url eq partnerId)?.tokenA
 
-    override suspend fun getCredentialsClientToken(partnerUrl: String): String? = collection
-        .findOne(Partner::url eq partnerUrl)?.clientToken
+    override suspend fun getCredentialsClientToken(partnerId: String): String? = collection
+        .findOne(Partner::url eq partnerId)?.clientToken
 
     override suspend fun isCredentialsTokenAValid(credentialsTokenA: String): Boolean = collection
         .findOne(Partner::tokenA eq credentialsTokenA) != null
@@ -66,34 +66,44 @@ class PartnerMongoRepository(
     override suspend fun isCredentialsServerTokenValid(credentialsServerToken: String): Boolean = collection
         .findOne(Partner::serverToken eq credentialsServerToken) != null
 
+    override suspend fun getPartnerUrl(partnerId: String): String? = collection
+        .findOne(Partner::url eq partnerId)?.url
+
     override suspend fun getPartnerUrlByCredentialsServerToken(credentialsServerToken: String): String? = collection
         .findOne(Partner::serverToken eq credentialsServerToken)?.url
 
-    override suspend fun getEndpoints(partnerUrl: String): List<Endpoint> = collection
-        .findOne(Partner::url eq partnerUrl)?.endpoints ?: emptyList()
+    override suspend fun getPartnerIdByCredentialsServerToken(credentialsServerToken: String): String? = collection
+        .findOne(Partner::serverToken eq credentialsServerToken)?.url
 
-    override suspend fun getVersion(partnerUrl: String): Version? = collection
-        .findOne(Partner::url eq partnerUrl)?.version
+    override suspend fun getPartnerIdByCredentialsTokenA(credentialsTokenA: String): String? = collection.findOne(
+        Partner::tokenA eq credentialsTokenA
+    )?.url
 
-    override suspend fun invalidateCredentialsTokenA(partnerUrl: String): Boolean =
+    override suspend fun getEndpoints(partnerId: String): List<Endpoint> = collection
+        .findOne(Partner::url eq partnerId)?.endpoints ?: emptyList()
+
+    override suspend fun getVersion(partnerId: String): Version? = collection
+        .findOne(Partner::url eq partnerId)?.version
+
+    override suspend fun invalidateCredentialsTokenA(partnerId: String): Boolean =
         collection
-            .updateOne(Partner::url eq partnerUrl, set(Partner::tokenA setTo null))
+            .updateOne(Partner::url eq partnerId, set(Partner::tokenA setTo null))
             .matchedCount == 1L
 
-    override suspend fun invalidateCredentialsClientToken(partnerUrl: String): Boolean =
+    override suspend fun invalidateCredentialsClientToken(partnerId: String): Boolean =
         collection
             .updateOne(
-                Partner::url eq partnerUrl,
+                Partner::url eq partnerId,
                 combine(
                     set(Partner::clientToken setTo null)
                 )
             )
             .matchedCount == 1L
 
-    override suspend fun invalidateCredentialsServerToken(partnerUrl: String): Boolean =
+    override suspend fun invalidateCredentialsServerToken(partnerId: String): Boolean =
         collection
             .updateOne(
-                Partner::url eq partnerUrl,
+                Partner::url eq partnerId,
                 combine(
                     set(Partner::serverToken setTo null)
                 )

@@ -4,6 +4,8 @@ class DummyPartnerCacheRepository : PartnerCacheRepository() {
     override suspend fun isCredentialsServerTokenValid(credentialsServerToken: String): Boolean =
         true
 
-    override suspend fun getCredentialsClientToken(partnerUrl: String): String =
+    override suspend fun getPartnerUrl(partnerId: String): String = partnerId
+
+    override suspend fun getCredentialsClientToken(partnerId: String): String =
         "*"
 }

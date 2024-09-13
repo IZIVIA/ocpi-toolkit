@@ -13,7 +13,7 @@ import java.time.Instant
 
 class CommandEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsEndpointUrl: String,
+    private val partnerId: String,
     private val partnerRepository: PartnerRepository,
     private val callbackBaseUrl: String
 ) {
@@ -21,7 +21,7 @@ class CommandEmspClient(
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.commands,
-            partnerUrl = serverVersionsEndpointUrl,
+            partnerId = partnerId,
             partnerRepository = partnerRepository
         )
 
@@ -52,7 +52,7 @@ class CommandEmspClient(
                         requestId = generateUUIDv4Token(),
                         correlationId = generateUUIDv4Token()
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             )
                 .parseBody()
         }
@@ -74,7 +74,7 @@ class CommandEmspClient(
                         requestId = generateUUIDv4Token(),
                         correlationId = generateUUIDv4Token()
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             )
                 .parseBody()
         }
@@ -108,7 +108,7 @@ class CommandEmspClient(
                         requestId = generateUUIDv4Token(),
                         correlationId = generateUUIDv4Token()
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             )
                 .parseBody()
         }
@@ -130,7 +130,7 @@ class CommandEmspClient(
                         requestId = generateUUIDv4Token(),
                         correlationId = generateUUIDv4Token()
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             )
                 .parseBody()
         }
@@ -159,7 +159,7 @@ class CommandEmspClient(
                         requestId = generateUUIDv4Token(),
                         correlationId = generateUUIDv4Token()
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             )
                 .parseBody()
         }

@@ -12,13 +12,13 @@ import java.time.Instant
 
 class CdrsEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
-    private val serverVersionsEndpointUrl: String,
+    private val partnerId: String,
     private val partnerRepository: PartnerRepository
 ) : CdrsCpoInterface {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.cdrs,
-            partnerUrl = serverVersionsEndpointUrl,
+            partnerId = partnerId,
             partnerRepository = partnerRepository
         )
 
@@ -42,7 +42,7 @@ class CdrsEmspClient(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId()
                 )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             )
                 .parsePaginatedBody(offset)
         }
@@ -51,7 +51,7 @@ class CdrsEmspClient(
         previousResponse: OcpiResponseBody<SearchResult<Cdr>>
     ): OcpiResponseBody<SearchResult<Cdr>>? = getNextPage(
         transportClientBuilder = transportClientBuilder,
-        serverVersionsEndpointUrl = serverVersionsEndpointUrl,
+        partnerId = partnerId,
         partnerRepository = partnerRepository,
         previousResponse = previousResponse
     )

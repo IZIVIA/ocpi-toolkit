@@ -13,7 +13,7 @@ class CommandCpoClient(
 ) {
     suspend fun postCommandCallback(
         commandResult: CommandResult,
-        partnerUrl: String,
+        partnerId: String,
         responseUrl: String
     ): OcpiResponseBody<Any> =
         transportClientBuilder
@@ -28,6 +28,6 @@ class CommandCpoClient(
                         requestId = generateUUIDv4Token(),
                         correlationId = generateUUIDv4Token()
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = partnerUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             ).parseBody()
 }

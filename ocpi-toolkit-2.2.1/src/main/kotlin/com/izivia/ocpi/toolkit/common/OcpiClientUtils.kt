@@ -7,7 +7,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
 suspend inline fun <reified T> getNextPage(
     transportClientBuilder: TransportClientBuilder,
-    serverVersionsEndpointUrl: String,
+    partnerId: String,
     partnerRepository: PartnerRepository,
     previousResponse: OcpiResponseBody<SearchResult<T>>
 ): OcpiResponseBody<SearchResult<T>>? =
@@ -21,7 +21,7 @@ suspend inline fun <reified T> getNextPage(
                         requestId = generateRequestId(),
                         correlationId = generateCorrelationId()
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerUrl = serverVersionsEndpointUrl)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
             )
                 .parsePaginatedBody(previousResponse.data.offset)
         }
