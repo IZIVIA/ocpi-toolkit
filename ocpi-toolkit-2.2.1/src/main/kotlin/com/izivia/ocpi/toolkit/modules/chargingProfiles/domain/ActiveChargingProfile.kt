@@ -4,5 +4,5 @@ import java.time.Instant
 
 data class ActiveChargingProfile(
     val startDateTime: Instant,
-    val chargingProfile: ChargingProfile
+    val chargingProfile: ChargingProfile,
 )

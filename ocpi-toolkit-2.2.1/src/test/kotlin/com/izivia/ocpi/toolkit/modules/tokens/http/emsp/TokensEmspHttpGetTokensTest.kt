@@ -54,10 +54,10 @@ class TokensEmspHttpGetTokensTest {
                         defaultProfileType = ProfileType.GREEN,
                         energyContract = EnergyContract(
                             supplierName = "Greenpeace Energy eG",
-                            contractId = "0123456789"
+                            contractId = "0123456789",
                         ),
-                        lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
-                    )
+                        lastUpdated = Instant.parse("2018-12-10T17:25:10Z"),
+                    ),
                 ).toSearchResult()
             }
         }.buildServer()
@@ -65,7 +65,7 @@ class TokensEmspHttpGetTokensTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.GET, "/tokens/?date_from=2019-01-28T12:00:00Z&date_to=2019-01-29T12:00:00Z")
+            buildHttpRequest(HttpMethod.GET, "/tokens/?date_from=2019-01-28T12:00:00Z&date_to=2019-01-29T12:00:00Z"),
         )
 
         // then
@@ -103,7 +103,7 @@ class TokensEmspHttpGetTokensTest {
                     "status_message": "Success",
                     "timestamp": "2015-06-30T21:59:59Z"
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -117,7 +117,7 @@ private fun TokensEmspRepository.buildServer(): TransportClient {
         TokensEmspServer(
             service = TokensEmspService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/tokens"
+            basePathOverride = "/tokens",
         ).registerOn(transportServer)
     }
 

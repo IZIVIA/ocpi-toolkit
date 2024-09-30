@@ -17,20 +17,20 @@ class ChargingProfilesScspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
     private val partnerRepository: PartnerRepository,
-    private val callbackBaseUrl: URL
+    private val callbackBaseUrl: URL,
 ) {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.chargingprofiles,
             partnerId = partnerId,
-            partnerRepository = partnerRepository
+            partnerRepository = partnerRepository,
         )
 
     suspend fun getActiveChargingProfile(
         sessionId: CiString,
         duration: Int,
-        requestId: String
+        requestId: String,
     ): OcpiResponseBody<ChargingProfileResponse> = with(buildTransport()) {
         send(
             HttpRequest(
@@ -39,14 +39,14 @@ class ChargingProfilesScspClient(
                 queryParams = mapOf(
                     "duration" to duration.toString(),
                     "response_url" to "$callbackBaseUrl/" +
-                        "${ChargingProfilesScspServer.ACTIVE_CHARGING_PROFILE_CALLBACK_URL}/$requestId"
-                )
+                        "${ChargingProfilesScspServer.ACTIVE_CHARGING_PROFILE_CALLBACK_URL}/$requestId",
+                ),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .also {
                 if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")
@@ -57,7 +57,7 @@ class ChargingProfilesScspClient(
     suspend fun putChargingProfile(
         sessionId: CiString,
         chargingProfile: ChargingProfile,
-        requestId: String
+        requestId: String,
     ): OcpiResponseBody<ChargingProfileResponse> = with(buildTransport()) {
         send(
             HttpRequest(
@@ -67,15 +67,15 @@ class ChargingProfilesScspClient(
                     SetChargingProfile(
                         chargingProfile = chargingProfile,
                         responseUrl = "$callbackBaseUrl/" +
-                            "${ChargingProfilesScspServer.CHARGING_PROFILE_CALLBACK_URL}/$requestId"
-                    )
-                )
+                            "${ChargingProfilesScspServer.CHARGING_PROFILE_CALLBACK_URL}/$requestId",
+                    ),
+                ),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .also {
                 if (it.status != HttpStatus.OK && it.status != HttpStatus.CREATED) {
@@ -87,7 +87,7 @@ class ChargingProfilesScspClient(
 
     suspend fun deleteChargingProfile(
         sessionId: CiString,
-        requestId: String
+        requestId: String,
     ): OcpiResponseBody<ChargingProfileResponse> = with(buildTransport()) {
         send(
             HttpRequest(
@@ -95,14 +95,14 @@ class ChargingProfilesScspClient(
                 path = "/$sessionId",
                 queryParams = mapOf(
                     "response_url" to "$callbackBaseUrl/" +
-                        "${ChargingProfilesScspServer.CLEAR_PROFILE_CALLBACK_URL}/$requestId"
-                )
+                        "${ChargingProfilesScspServer.CLEAR_PROFILE_CALLBACK_URL}/$requestId",
+                ),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .also {
                 if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")

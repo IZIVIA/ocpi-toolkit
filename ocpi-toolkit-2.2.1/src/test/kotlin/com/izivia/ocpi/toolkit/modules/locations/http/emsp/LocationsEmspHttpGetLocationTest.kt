@@ -35,7 +35,7 @@ class LocationsEmspHttpGetLocationTest {
                 getLocation(
                     capture(slots.countryCode),
                     capture(slots.partyId),
-                    capture(slots.locationId)
+                    capture(slots.locationId),
                 )
             } coAnswers {
                 Location(
@@ -64,7 +64,7 @@ class LocationsEmspHttpGetLocationTest {
                                     maxVoltage = 220,
                                     maxAmperage = 16,
                                     tariffIds = listOf("11"),
-                                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
+                                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z"),
                                 ),
                                 Connector(
                                     id = "2",
@@ -74,12 +74,12 @@ class LocationsEmspHttpGetLocationTest {
                                     maxVoltage = 220,
                                     maxAmperage = 16,
                                     tariffIds = listOf("13"),
-                                    lastUpdated = Instant.parse("2015-03-18T08:12:01Z")
-                                )
+                                    lastUpdated = Instant.parse("2015-03-18T08:12:01Z"),
+                                ),
                             ),
                             floorLevel = "-1",
                             physicalReference = "1",
-                            lastUpdated = Instant.parse("2015-06-28T08:12:01Z")
+                            lastUpdated = Instant.parse("2015-06-28T08:12:01Z"),
                         ),
                         Evse(
                             uid = "3257",
@@ -95,20 +95,20 @@ class LocationsEmspHttpGetLocationTest {
                                     maxVoltage = 220,
                                     maxAmperage = 16,
                                     tariffIds = listOf("12"),
-                                    lastUpdated = Instant.parse("2015-06-29T20:39:09Z")
-                                )
+                                    lastUpdated = Instant.parse("2015-06-29T20:39:09Z"),
+                                ),
                             ),
                             floorLevel = "-2",
                             physicalReference = "2",
-                            lastUpdated = Instant.parse("2015-06-29T20:39:09Z")
-                        )
+                            lastUpdated = Instant.parse("2015-06-29T20:39:09Z"),
+                        ),
                     ),
                     operator = BusinessDetails(
-                        name = "BeCharged"
+                        name = "BeCharged",
                     ),
                     publish = true,
                     timeZone = "Europe/Brussels",
-                    lastUpdated = Instant.parse("2015-06-29T20:39:09Z")
+                    lastUpdated = Instant.parse("2015-06-29T20:39:09Z"),
                 )
             }
         }.buildServer()
@@ -116,7 +116,7 @@ class LocationsEmspHttpGetLocationTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.GET, "/locations/BE/BEC/LOC1")
+            buildHttpRequest(HttpMethod.GET, "/locations/BE/BEC/LOC1"),
         )
 
         // then
@@ -213,7 +213,7 @@ class LocationsEmspHttpGetLocationTest {
                   "status_message": "Success",
                   "timestamp": "2015-06-30T21:59:59Z"
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -227,7 +227,7 @@ private fun LocationsEmspRepository.buildServer(): TransportClient {
         LocationsEmspServer(
             service = LocationsEmspService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/locations"
+            basePathOverride = "/locations",
         ).registerOn(transportServer)
     }
 

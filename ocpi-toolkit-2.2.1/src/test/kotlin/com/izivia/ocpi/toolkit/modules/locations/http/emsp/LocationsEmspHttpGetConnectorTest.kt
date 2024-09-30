@@ -42,7 +42,7 @@ class LocationsEmspHttpGetConnectorTest {
                     capture(slots.partyId),
                     capture(slots.locationId),
                     capture(slots.evseUid),
-                    capture(slots.connectorId)
+                    capture(slots.connectorId),
                 )
             } coAnswers {
                 Connector(
@@ -53,7 +53,7 @@ class LocationsEmspHttpGetConnectorTest {
                     maxVoltage = 220,
                     maxAmperage = 16,
                     tariffIds = listOf("11"),
-                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
+                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z"),
                 )
             }
         }.buildServer()
@@ -61,7 +61,7 @@ class LocationsEmspHttpGetConnectorTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.GET, "/locations/BE/BEC/LOC1/3256/1")
+            buildHttpRequest(HttpMethod.GET, "/locations/BE/BEC/LOC1/3256/1"),
         )
 
         // then
@@ -91,7 +91,7 @@ class LocationsEmspHttpGetConnectorTest {
                       "status_message": "Success",
                       "timestamp": "2015-06-30T21:59:59Z"
                     }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -105,7 +105,7 @@ private fun LocationsEmspRepository.buildServer(): TransportClient {
         LocationsEmspServer(
             service = LocationsEmspService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/locations"
+            basePathOverride = "/locations",
         ).registerOn(transportServer)
     }
 

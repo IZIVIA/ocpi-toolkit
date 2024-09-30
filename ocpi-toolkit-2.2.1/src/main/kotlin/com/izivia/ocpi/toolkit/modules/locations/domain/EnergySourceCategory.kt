@@ -42,5 +42,5 @@ enum class EnergySourceCategory {
     /**
      * Regenerative power from water turbines.
      */
-    WATER
+    WATER,
 }

@@ -38,7 +38,7 @@ interface TokensCpoInterface {
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
-        type: TokenType? = TokenType.RFID
+        type: TokenType? = TokenType.RFID,
     ): OcpiResponseBody<Token>
 
     /**
@@ -62,7 +62,7 @@ interface TokensCpoInterface {
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
-        type: TokenType? = TokenType.RFID
+        type: TokenType? = TokenType.RFID,
     ): OcpiResponseBody<Token>
 
     /**
@@ -89,6 +89,6 @@ interface TokensCpoInterface {
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
-        type: TokenType? = TokenType.RFID
+        type: TokenType? = TokenType.RFID,
     ): OcpiResponseBody<Token?>
 }

@@ -21,5 +21,5 @@ data class ChargingPreferences(
     val profileType: ProfileType,
     val departureTime: Instant? = null,
     val energyNeed: Int? = null,
-    val dischargeAllowed: Boolean? = false
+    val dischargeAllowed: Boolean? = false,
 )

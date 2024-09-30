@@ -11,13 +11,13 @@ import com.izivia.ocpi.toolkit.modules.cdr.repositories.CdrsCpoRepository
 import java.time.Instant
 
 class CdrsCpoService(
-    private val service: CdrsCpoRepository
+    private val service: CdrsCpoRepository,
 ) : CdrsCpoInterface {
     override suspend fun getCdrs(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
-        limit: Int?
+        limit: Int?,
     ): OcpiResponseBody<SearchResult<Cdr>> = OcpiResponseBody.of {
         validate {
             if (dateTo != null && dateFrom != null) validateDates("dateFrom", dateFrom, "dateTo", dateTo)

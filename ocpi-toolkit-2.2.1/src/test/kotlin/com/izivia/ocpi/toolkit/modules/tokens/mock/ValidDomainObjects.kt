@@ -7,17 +7,17 @@ import java.time.Instant
 
 val validEnergyContract = EnergyContract(
     supplierName = "Greenpeace Energy eG",
-    contractId = "0123456789"
+    contractId = "0123456789",
 )
 
 val validDisplayText = DisplayText(
     language = "fr",
-    text = "abcdef"
+    text = "abcdef",
 )
 
 val validLocationReference = LocationReferences(
     locationId = "LOC1",
-    evseUids = listOf("BE*BEC*E041503001", "BE*BEC*E041503002")
+    evseUids = listOf("BE*BEC*E041503001", "BE*BEC*E041503002"),
 )
 
 val validTokenAppUser = Token(
@@ -29,7 +29,7 @@ val validTokenAppUser = Token(
     issuer = "TheNewMotion",
     valid = true,
     whitelist = WhitelistType.ALLOWED,
-    lastUpdated = Instant.parse("2018-12-10T17:16:15Z")
+    lastUpdated = Instant.parse("2018-12-10T17:16:15Z"),
 )
 
 val validTokenFullRfid = Token(
@@ -46,7 +46,7 @@ val validTokenFullRfid = Token(
     language = "it",
     defaultProfileType = ProfileType.GREEN,
     energyContract = validEnergyContract,
-    lastUpdated = Instant.now()
+    lastUpdated = Instant.now(),
 )
 
 val validAuthorizationInfo = AuthorizationInfo(
@@ -54,5 +54,5 @@ val validAuthorizationInfo = AuthorizationInfo(
     token = validTokenFullRfid,
     location = validLocationReference,
     authorizationReference = "567890",
-    info = validDisplayText
+    info = validDisplayText,
 )

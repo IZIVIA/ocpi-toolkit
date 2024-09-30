@@ -11,5 +11,5 @@ import java.math.BigDecimal
 @Partial
 data class Price(
     val exclVat: BigDecimal,
-    val inclVat: BigDecimal? = null
+    val inclVat: BigDecimal? = null,
 )

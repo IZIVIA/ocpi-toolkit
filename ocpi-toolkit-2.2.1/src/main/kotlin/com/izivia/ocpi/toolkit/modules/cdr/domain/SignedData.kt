@@ -21,5 +21,5 @@ data class SignedData(
     val encodingMethodVersion: Int? = null,
     val publicKey: CiString? = null,
     val signedValues: List<SignedValue>,
-    val url: CiString? = null
+    val url: CiString? = null,
 )

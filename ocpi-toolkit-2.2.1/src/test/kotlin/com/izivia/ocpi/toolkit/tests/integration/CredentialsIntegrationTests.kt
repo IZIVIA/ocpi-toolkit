@@ -41,7 +41,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
     data class ServerSetupResult(
         val transport: Http4kTransportServer,
         val partnerCollection: MongoCollection<Partner>,
-        val versionsEndpoint: String
+        val versionsEndpoint: String,
     )
 
     private var database: MongoDatabase? = null
@@ -70,28 +70,28 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                                 role = Role.EMSP,
                                 businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
                                 partyId = "DEF",
-                                countryCode = "FR"
-                            )
+                                countryCode = "FR",
+                            ),
                         )
                     },
                     transportClientBuilder = Http4kTransportClientBuilder(),
                     serverVersionsUrlProvider = { receiverServerVersionsUrl },
-                    requiredEndpoints = requiredEndpoints
+                    requiredEndpoints = requiredEndpoints,
                 ),
-                versionsRepository = receiverVersionsCacheRepository
+                versionsRepository = receiverVersionsCacheRepository,
             ).registerOn(receiverServer)
             VersionsServer(
                 service = VersionsService(
                     repository = receiverVersionsCacheRepository,
-                    baseUrlProvider = receiverServer::baseUrl
-                )
+                    baseUrlProvider = receiverServer::baseUrl,
+                ),
             ).registerOn(receiverServer)
         }
 
         return ServerSetupResult(
             transport = receiverServer,
             partnerCollection = receiverPartnerCollection,
-            versionsEndpoint = receiverServerVersionsUrl
+            versionsEndpoint = receiverServerVersionsUrl,
         )
     }
 
@@ -112,22 +112,22 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             VersionsServer(
                 service = VersionsService(
                     repository = VersionsCacheRepository(baseUrl = senderServer.baseUrl),
-                    baseUrlProvider = senderServer::baseUrl
-                )
+                    baseUrlProvider = senderServer::baseUrl,
+                ),
             ).registerOn(senderServer)
         }
 
         return ServerSetupResult(
             transport = senderServer,
             partnerCollection = senderPartnerCollection,
-            versionsEndpoint = senderServerVersionsUrl
+            versionsEndpoint = senderServerVersionsUrl,
         )
     }
 
     private fun setupCredentialsSenderClient(
         senderServerSetupResult: ServerSetupResult,
         receiverServerSetupResult: ServerSetupResult,
-        requiredEndpoints: RequiredEndpoints? = null
+        requiredEndpoints: RequiredEndpoints? = null,
     ): CredentialsClientService {
         // Setup sender (client)
         return CredentialsClientService(
@@ -140,13 +140,13 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                         role = Role.CPO,
                         businessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
                         partyId = "ABC",
-                        countryCode = "FR"
-                    )
+                        countryCode = "FR",
+                    ),
                 )
             },
             partnerId = receiverServerSetupResult.versionsEndpoint,
             transportClientBuilder = Http4kTransportClientBuilder(),
-            requiredEndpoints = requiredEndpoints
+            requiredEndpoints = requiredEndpoints,
         )
     }
 
@@ -157,7 +157,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         val credentialsClientService = setupCredentialsSenderClient(
             senderServerSetupResult = senderServer,
-            receiverServerSetupResult = receiverServer
+            receiverServerSetupResult = receiverServer,
         )
 
         val tokenA = UUID.randomUUID().toString()
@@ -190,8 +190,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.partnerCollection.insertOne(
             Partner(
                 url = receiverServer.versionsEndpoint,
-                tokenA = "!$tokenA"
-            )
+                tokenA = "!$tokenA",
+            ),
         )
 
         // Fails because the token sent by sender is not the same as the one in the receiver
@@ -223,13 +223,13 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val versionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             partnerId = receiverServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
+            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection),
         )
 
         expectThat(
             runBlocking {
                 versionsClient.getVersions()
-            }
+            },
         ) {
             get { data }
                 .isNotNull()
@@ -238,9 +238,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     listOf(
                         Version(
                             version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1"
-                        )
-                    )
+                            url = "${receiverServer.transport.baseUrl}/2.2.1",
+                        ),
+                    ),
                 )
 
             get { statusCode }
@@ -253,14 +253,14 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val receiverServer = setupReceiver(
             RequiredEndpoints(
                 receiver = listOf(ModuleID.credentials, ModuleID.locations),
-                sender = listOf(ModuleID.chargingprofiles)
-            )
+                sender = listOf(ModuleID.chargingprofiles),
+            ),
         )
         val senderServer = setupSender()
 
         val credentialsClientService = setupCredentialsSenderClient(
             senderServerSetupResult = senderServer,
-            receiverServerSetupResult = receiverServer
+            receiverServerSetupResult = receiverServer,
         )
 
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
@@ -278,7 +278,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 runBlocking {
                     credentialsClientService.register()
                 }
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SERVER_NO_MATCHING_ENDPOINTS.code)
@@ -292,7 +292,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         val credentialsClientService = setupCredentialsSenderClient(
             senderServerSetupResult = senderServer,
-            receiverServerSetupResult = receiverServer
+            receiverServerSetupResult = receiverServer,
         )
 
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
@@ -310,7 +310,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
 
         expectThat(
-            receiverServer.transport.requestHistory
+            receiverServer.transport.requestHistory,
         ).hasSize(3).and {
             get(0).and {
                 get { first }.and { // request
@@ -373,7 +373,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             .substringAfterLast("\"token\":\"").split("\"").first()
 
         expectThat(
-            senderServer.transport.requestHistory
+            senderServer.transport.requestHistory,
         ).hasSize(2).and {
             get(0).and {
                 get { first }.and { // request
@@ -416,7 +416,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         expectThat(
             runBlocking {
                 credentialsClientService.get()
-            }
+            },
         ).isEqualTo(credentials)
     }
 
@@ -427,7 +427,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         val credentialsClientService = setupCredentialsSenderClient(
             senderServerSetupResult = senderServer,
-            receiverServerSetupResult = receiverServer
+            receiverServerSetupResult = receiverServer,
         )
 
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
@@ -446,11 +446,11 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val versionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             partnerId = receiverServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
+            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection),
         )
 
         expectThat(
-            versionsClient.getVersions()
+            versionsClient.getVersions(),
         ) {
             get { data }
                 .isNotNull()
@@ -459,9 +459,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     listOf(
                         Version(
                             version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1"
-                        )
-                    )
+                            url = "${receiverServer.transport.baseUrl}/2.2.1",
+                        ),
+                    ),
                 )
 
             get { statusCode }
@@ -476,7 +476,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         val senderCredentialsClientService = setupCredentialsSenderClient(
             senderServerSetupResult = senderServer,
-            receiverServerSetupResult = receiverServer
+            receiverServerSetupResult = receiverServer,
         )
 
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
@@ -496,18 +496,18 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val senderVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             partnerId = receiverServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
+            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection),
         )
         val receiverVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             partnerId = senderServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = receiverServer.partnerCollection)
+            partnerRepository = PartnerMongoRepository(collection = receiverServer.partnerCollection),
         )
 
         expectThat(
             runBlocking {
                 senderVersionsClient.getVersions()
-            }
+            },
         ) {
             get { data }
                 .isNotNull()
@@ -516,9 +516,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     listOf(
                         Version(
                             version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1"
-                        )
-                    )
+                            url = "${receiverServer.transport.baseUrl}/2.2.1",
+                        ),
+                    ),
                 )
 
             get { statusCode }
@@ -547,7 +547,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         expectThat(
             runBlocking {
                 receiverVersionsClient.getVersions()
-            }
+            },
         ) {
             get { data }
                 .isNotNull()
@@ -556,9 +556,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     listOf(
                         Version(
                             version = VersionNumber.V2_2_1.value,
-                            url = "${senderServer.transport.baseUrl}/2.2.1"
-                        )
-                    )
+                            url = "${senderServer.transport.baseUrl}/2.2.1",
+                        ),
+                    ),
                 )
 
             get { statusCode }
@@ -569,7 +569,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         expectThat(
             runBlocking {
                 senderVersionsClient.getVersions()
-            }
+            },
         ) {
             get { data }
                 .isNotNull()
@@ -578,9 +578,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     listOf(
                         Version(
                             version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1"
-                        )
-                    )
+                            url = "${receiverServer.transport.baseUrl}/2.2.1",
+                        ),
+                    ),
                 )
 
             get { statusCode }
@@ -595,7 +595,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
         val senderCredentialsClientService = setupCredentialsSenderClient(
             senderServerSetupResult = senderServer,
-            receiverServerSetupResult = receiverServer
+            receiverServerSetupResult = receiverServer,
         )
 
         // Store token A on the receiver side, that will be used by the sender to begin registration and store it as
@@ -613,18 +613,18 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         val senderVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             partnerId = receiverServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection)
+            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection),
         )
         val receiverVersionsClient = VersionsClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             partnerId = senderServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = receiverServer.partnerCollection)
+            partnerRepository = PartnerMongoRepository(collection = receiverServer.partnerCollection),
         )
 
         expectThat(
             runBlocking {
                 senderVersionsClient.getVersions()
-            }
+            },
         ) {
             get { data }
                 .isNotNull()
@@ -633,9 +633,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     listOf(
                         Version(
                             version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1"
-                        )
-                    )
+                            url = "${receiverServer.transport.baseUrl}/2.2.1",
+                        ),
+                    ),
                 )
 
             get { statusCode }
@@ -645,7 +645,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         expectThat(
             runBlocking {
                 senderCredentialsClientService.get()
-            }
+            },
         ).isEqualTo(credentialsAfterRegistration)
 
         runBlocking {
@@ -655,7 +655,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         expectThat(
             runBlocking {
                 senderVersionsClient.getVersions()
-            }
+            },
         ) {
             get { data }
                 .isNotNull()
@@ -664,9 +664,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                     listOf(
                         Version(
                             version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1"
-                        )
-                    )
+                            url = "${receiverServer.transport.baseUrl}/2.2.1",
+                        ),
+                    ),
                 )
 
             get { statusCode }
@@ -690,7 +690,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         expectThat(
             runBlocking {
                 senderVersionsClient.getVersions()
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)

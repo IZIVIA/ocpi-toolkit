@@ -27,7 +27,7 @@ class LocationsEmspServiceTest {
         service = LocationsEmspService(service = locationsEmspRepository(emptyList()))
 
         expectThat(
-            runBlocking { service.getLocation(countryCode = str1char, partyId = str2chars, locationId = str4chars) }
+            runBlocking { service.getLocation(countryCode = str1char, partyId = str2chars, locationId = str4chars) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -38,9 +38,9 @@ class LocationsEmspServiceTest {
                 service.getLocation(
                     countryCode = str2chars,
                     partyId = str3chars,
-                    locationId = str36chars
+                    locationId = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -51,9 +51,9 @@ class LocationsEmspServiceTest {
                 service.getLocation(
                     countryCode = str3chars,
                     partyId = str3chars,
-                    locationId = str36chars
+                    locationId = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -64,9 +64,9 @@ class LocationsEmspServiceTest {
                 service.getLocation(
                     countryCode = str2chars,
                     partyId = str4chars,
-                    locationId = str36chars
+                    locationId = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -77,9 +77,9 @@ class LocationsEmspServiceTest {
                 service.getLocation(
                     countryCode = str2chars,
                     partyId = str3chars,
-                    locationId = str40chars
+                    locationId = str40chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -96,9 +96,9 @@ class LocationsEmspServiceTest {
                     countryCode = str1char,
                     partyId = str2chars,
                     locationId = str4chars,
-                    evseUid = str4chars
+                    evseUid = str4chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -110,9 +110,9 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     locationId = str36chars,
-                    evseUid = str36chars
+                    evseUid = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -124,9 +124,9 @@ class LocationsEmspServiceTest {
                     countryCode = str3chars,
                     partyId = str3chars,
                     locationId = str36chars,
-                    evseUid = str36chars
+                    evseUid = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -138,9 +138,9 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str4chars,
                     locationId = str36chars,
-                    evseUid = str36chars
+                    evseUid = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -152,9 +152,9 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     locationId = str40chars,
-                    evseUid = str36chars
+                    evseUid = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -166,9 +166,9 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     locationId = str36chars,
-                    evseUid = str40chars
+                    evseUid = str40chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -186,9 +186,9 @@ class LocationsEmspServiceTest {
                     partyId = str2chars,
                     locationId = str4chars,
                     evseUid = str4chars,
-                    connectorId = str4chars
+                    connectorId = str4chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -202,9 +202,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str36chars,
-                    connectorId = str36chars
+                    connectorId = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -218,9 +218,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str36chars,
-                    connectorId = str36chars
+                    connectorId = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -234,9 +234,9 @@ class LocationsEmspServiceTest {
                     partyId = str4chars,
                     locationId = str36chars,
                     evseUid = str36chars,
-                    connectorId = str36chars
+                    connectorId = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -250,9 +250,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str40chars,
                     evseUid = str36chars,
-                    connectorId = str36chars
+                    connectorId = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -265,9 +265,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str40chars,
-                    connectorId = str36chars
+                    connectorId = str36chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -280,9 +280,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str36chars,
-                    connectorId = str37chars
+                    connectorId = str37chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -299,9 +299,9 @@ class LocationsEmspServiceTest {
                     countryCode = str1char,
                     partyId = str2chars,
                     locationId = str4chars,
-                    location = validLocation.toPartial()
+                    location = validLocation.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -313,9 +313,9 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     locationId = str36chars,
-                    location = validLocation.toPartial()
+                    location = validLocation.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -327,9 +327,9 @@ class LocationsEmspServiceTest {
                     countryCode = str3chars,
                     partyId = str3chars,
                     locationId = str36chars,
-                    location = validLocation.toPartial()
+                    location = validLocation.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -341,9 +341,9 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str4chars,
                     locationId = str36chars,
-                    location = validLocation.toPartial()
+                    location = validLocation.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -355,9 +355,9 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     locationId = str40chars,
-                    location = validLocation.toPartial()
+                    location = validLocation.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -375,9 +375,9 @@ class LocationsEmspServiceTest {
                     partyId = str2chars,
                     locationId = str4chars,
                     evseUid = str4chars,
-                    evse = validEvse.toPartial()
+                    evse = validEvse.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -390,9 +390,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str36chars,
-                    evse = validEvse.toPartial()
+                    evse = validEvse.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -405,9 +405,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str36chars,
-                    evse = validEvse.toPartial()
+                    evse = validEvse.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -420,9 +420,9 @@ class LocationsEmspServiceTest {
                     partyId = str4chars,
                     locationId = str36chars,
                     evseUid = str36chars,
-                    evse = validEvse.toPartial()
+                    evse = validEvse.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -435,9 +435,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str40chars,
                     evseUid = str36chars,
-                    evse = validEvse.toPartial()
+                    evse = validEvse.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -450,9 +450,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str40chars,
-                    evse = validEvse.toPartial()
+                    evse = validEvse.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -471,9 +471,9 @@ class LocationsEmspServiceTest {
                     locationId = str4chars,
                     evseUid = str4chars,
                     connectorId = str4chars,
-                    connector = validConnector.toPartial()
+                    connector = validConnector.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -487,9 +487,9 @@ class LocationsEmspServiceTest {
                     locationId = str36chars,
                     evseUid = str36chars,
                     connectorId = str36chars,
-                    connector = validConnector.toPartial()
+                    connector = validConnector.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -503,9 +503,9 @@ class LocationsEmspServiceTest {
                     locationId = str36chars,
                     evseUid = str36chars,
                     connectorId = str36chars,
-                    connector = validConnector.toPartial()
+                    connector = validConnector.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -519,9 +519,9 @@ class LocationsEmspServiceTest {
                     locationId = str36chars,
                     evseUid = str36chars,
                     connectorId = str36chars,
-                    connector = validConnector.toPartial()
+                    connector = validConnector.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -535,9 +535,9 @@ class LocationsEmspServiceTest {
                     locationId = str40chars,
                     evseUid = str36chars,
                     connectorId = str36chars,
-                    connector = validConnector.toPartial()
+                    connector = validConnector.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -551,9 +551,9 @@ class LocationsEmspServiceTest {
                     locationId = str36chars,
                     evseUid = str40chars,
                     connectorId = str36chars,
-                    connector = validConnector.toPartial()
+                    connector = validConnector.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -567,9 +567,9 @@ class LocationsEmspServiceTest {
                     locationId = str36chars,
                     evseUid = str36chars,
                     connectorId = str37chars,
-                    connector = validConnector.toPartial()
+                    connector = validConnector.toPartial(),
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -586,9 +586,9 @@ class LocationsEmspServiceTest {
                     countryCode = validLocation.countryCode,
                     partyId = validLocation.partyId,
                     locationId = validLocation.id,
-                    location = validLocation
+                    location = validLocation,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -600,9 +600,9 @@ class LocationsEmspServiceTest {
                     countryCode = str3chars,
                     partyId = str3chars,
                     locationId = validLocation.id,
-                    location = validLocation
+                    location = validLocation,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -614,9 +614,9 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str4chars,
                     locationId = validLocation.id,
-                    location = validLocation
+                    location = validLocation,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -628,9 +628,9 @@ class LocationsEmspServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     locationId = str40chars,
-                    location = validLocation
+                    location = validLocation,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -648,9 +648,9 @@ class LocationsEmspServiceTest {
                     partyId = str2chars,
                     locationId = str4chars,
                     evseUid = validEvse.uid,
-                    evse = validEvse
+                    evse = validEvse,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -663,9 +663,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = validEvse.uid,
-                    evse = validEvse
+                    evse = validEvse,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -678,9 +678,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = validEvse.uid,
-                    evse = validEvse
+                    evse = validEvse,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -693,9 +693,9 @@ class LocationsEmspServiceTest {
                     partyId = str4chars,
                     locationId = str36chars,
                     evseUid = validEvse.uid,
-                    evse = validEvse
+                    evse = validEvse,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -708,9 +708,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str40chars,
                     evseUid = validEvse.uid,
-                    evse = validEvse
+                    evse = validEvse,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -723,9 +723,9 @@ class LocationsEmspServiceTest {
                     partyId = str3chars,
                     locationId = str36chars,
                     evseUid = str40chars,
-                    evse = validEvse
+                    evse = validEvse,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -744,9 +744,9 @@ class LocationsEmspServiceTest {
                     locationId = str4chars,
                     evseUid = str4chars,
                     connectorId = validConnector.id,
-                    connector = validConnector
+                    connector = validConnector,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -760,9 +760,9 @@ class LocationsEmspServiceTest {
                     locationId = str36chars,
                     evseUid = str36chars,
                     connectorId = validConnector.id,
-                    connector = validConnector
+                    connector = validConnector,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -776,9 +776,9 @@ class LocationsEmspServiceTest {
                     locationId = str36chars,
                     evseUid = str36chars,
                     connectorId = validConnector.id,
-                    connector = validConnector
+                    connector = validConnector,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -792,9 +792,9 @@ class LocationsEmspServiceTest {
                     locationId = str36chars,
                     evseUid = str36chars,
                     connectorId = validConnector.id,
-                    connector = validConnector
+                    connector = validConnector,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -808,9 +808,9 @@ class LocationsEmspServiceTest {
                     locationId = str40chars,
                     evseUid = str36chars,
                     connectorId = validConnector.id,
-                    connector = validConnector
+                    connector = validConnector,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -824,9 +824,9 @@ class LocationsEmspServiceTest {
                     locationId = str36chars,
                     evseUid = str40chars,
                     connectorId = validConnector.id,
-                    connector = validConnector
+                    connector = validConnector,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -840,9 +840,9 @@ class LocationsEmspServiceTest {
                     locationId = str36chars,
                     evseUid = str36chars,
                     connectorId = str37chars,
-                    connector = validConnector
+                    connector = validConnector,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)

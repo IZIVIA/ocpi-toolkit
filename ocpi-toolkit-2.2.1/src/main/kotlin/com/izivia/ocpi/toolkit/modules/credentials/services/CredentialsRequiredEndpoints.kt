@@ -7,12 +7,12 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 
 data class RequiredEndpoints(
     val receiver: List<ModuleID> = listOf(),
-    val sender: List<ModuleID> = listOf()
+    val sender: List<ModuleID> = listOf(),
 )
 
 fun checkRequiredEndpoints(
     requiredEndpoints: RequiredEndpoints?,
-    actualEndpoints: List<Endpoint>
+    actualEndpoints: List<Endpoint>,
 ) {
     if (requiredEndpoints == null) {
         return
@@ -29,7 +29,7 @@ fun checkRequiredEndpoints(
 private fun checkRequiredRoleEndpoints(
     endpoints: List<Endpoint>,
     requiredEndpoints: List<ModuleID>,
-    role: InterfaceRole
+    role: InterfaceRole,
 ) {
     for (requiredEndpoint in requiredEndpoints) {
         endpoints

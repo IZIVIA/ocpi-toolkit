@@ -84,5 +84,5 @@ enum class CdrDimensionType {
      * Time charging during this ChargingPeriod: defined in hours, default step_size multiplier is 1
      second.
      */
-    TIME
+    TIME,
 }

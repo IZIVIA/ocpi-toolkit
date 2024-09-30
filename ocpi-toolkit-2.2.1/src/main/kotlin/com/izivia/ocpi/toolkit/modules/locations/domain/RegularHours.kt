@@ -15,5 +15,5 @@ import com.izivia.ocpi.toolkit.annotations.Partial
 data class RegularHours(
     val weekday: Int,
     val periodBegin: String,
-    val periodEnd: String
+    val periodEnd: String,
 )

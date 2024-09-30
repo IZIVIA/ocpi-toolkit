@@ -37,7 +37,7 @@ class LocationsEmspHttpGetEvseTest {
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.locationId),
-                    capture(slots.evseUid)
+                    capture(slots.evseUid),
                 )
             } coAnswers {
                 Evse(
@@ -54,7 +54,7 @@ class LocationsEmspHttpGetEvseTest {
                             maxVoltage = 220,
                             maxAmperage = 16,
                             tariffIds = listOf("11"),
-                            lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
+                            lastUpdated = Instant.parse("2015-03-16T10:10:02Z"),
                         ),
                         Connector(
                             id = "2",
@@ -64,12 +64,12 @@ class LocationsEmspHttpGetEvseTest {
                             maxVoltage = 220,
                             maxAmperage = 16,
                             tariffIds = listOf("13"),
-                            lastUpdated = Instant.parse("2015-03-18T08:12:01Z")
-                        )
+                            lastUpdated = Instant.parse("2015-03-18T08:12:01Z"),
+                        ),
                     ),
                     floorLevel = "-1",
                     physicalReference = "1",
-                    lastUpdated = Instant.parse("2015-06-28T08:12:01Z")
+                    lastUpdated = Instant.parse("2015-06-28T08:12:01Z"),
                 )
             }
         }.buildServer()
@@ -77,7 +77,7 @@ class LocationsEmspHttpGetEvseTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.GET, "/locations/BE/BEC/LOC1/3256")
+            buildHttpRequest(HttpMethod.GET, "/locations/BE/BEC/LOC1/3256"),
         )
 
         // then
@@ -129,7 +129,7 @@ class LocationsEmspHttpGetEvseTest {
                   "status_message": "Success",
                   "timestamp": "2015-06-30T21:59:59Z"
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -143,7 +143,7 @@ private fun LocationsEmspRepository.buildServer(): TransportClient {
         LocationsEmspServer(
             service = LocationsEmspService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/locations"
+            basePathOverride = "/locations",
         ).registerOn(transportServer)
     }
 

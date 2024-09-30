@@ -12,5 +12,5 @@ enum class ConnectorFormat {
     /**
      * 	The connector is an attached cable; the EV users car needs to have a fitting inlet.
      */
-    CABLE
+    CABLE,
 }

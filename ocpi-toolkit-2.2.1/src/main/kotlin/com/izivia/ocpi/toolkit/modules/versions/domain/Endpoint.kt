@@ -10,5 +10,5 @@ package com.izivia.ocpi.toolkit.modules.versions.domain
 data class Endpoint(
     val identifier: ModuleID,
     val role: InterfaceRole,
-    val url: String
+    val url: String,
 )

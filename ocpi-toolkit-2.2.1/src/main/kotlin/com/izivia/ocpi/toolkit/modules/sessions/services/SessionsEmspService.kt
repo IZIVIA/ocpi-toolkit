@@ -11,12 +11,12 @@ import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 import com.izivia.ocpi.toolkit.modules.sessions.repositories.SessionsEmspRepository
 
 open class SessionsEmspService(
-    private val service: SessionsEmspRepository
+    private val service: SessionsEmspRepository,
 ) : SessionsEmspInterface {
     override suspend fun getSession(
         countryCode: CiString,
         partyId: CiString,
-        sessionId: CiString
+        sessionId: CiString,
     ): OcpiResponseBody<Session?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
@@ -32,7 +32,7 @@ open class SessionsEmspService(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-        session: Session
+        session: Session,
     ): OcpiResponseBody<Session?> = OcpiResponseBody.of {
         validate {
             session.validate()
@@ -50,7 +50,7 @@ open class SessionsEmspService(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-        session: SessionPartial
+        session: SessionPartial,
     ): OcpiResponseBody<Session?> = OcpiResponseBody.of {
         validate {
             session.validate()

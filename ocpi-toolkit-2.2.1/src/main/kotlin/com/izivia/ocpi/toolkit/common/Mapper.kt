@@ -19,7 +19,7 @@ val mapper: ObjectMapper = jacksonObjectMapper()
             .configure(KotlinFeature.NullIsSameAsDefault, false)
             .configure(KotlinFeature.SingletonSupport, false)
             .configure(KotlinFeature.StrictNullChecks, false)
-            .build()
+            .build(),
     )
     .registerModule(JavaTimeModule())
     .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)

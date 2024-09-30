@@ -26,7 +26,7 @@ class TokensCpoServiceTest {
         service = TokensCpoService(service = tokensCpoRepositoryTest(validTokenFullRfid))
 
         expectThat(
-            runBlocking { service.getToken(countryCode = str2chars, partyId = str3chars, tokenUid = str36chars) }
+            runBlocking { service.getToken(countryCode = str2chars, partyId = str3chars, tokenUid = str36chars) },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
@@ -37,9 +37,9 @@ class TokensCpoServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     tokenUid = str36chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
@@ -50,9 +50,9 @@ class TokensCpoServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     tokenUid = str37chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -62,9 +62,9 @@ class TokensCpoServiceTest {
                     countryCode = str3chars,
                     partyId = str3chars,
                     tokenUid = str36chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -74,9 +74,9 @@ class TokensCpoServiceTest {
                     countryCode = str2chars,
                     partyId = str4chars,
                     tokenUid = str36chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -92,9 +92,9 @@ class TokensCpoServiceTest {
                     token = validTokenFullRfid,
                     countryCode = validTokenFullRfid.countryCode,
                     partyId = validTokenFullRfid.partyId,
-                    tokenUid = validTokenFullRfid.uid
+                    tokenUid = validTokenFullRfid.uid,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
@@ -106,9 +106,9 @@ class TokensCpoServiceTest {
                     countryCode = validTokenFullRfid.countryCode,
                     partyId = validTokenFullRfid.partyId,
                     tokenUid = validTokenFullRfid.uid,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
@@ -120,9 +120,9 @@ class TokensCpoServiceTest {
                     countryCode = str3chars,
                     partyId = str3chars,
                     tokenUid = str36chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -134,9 +134,9 @@ class TokensCpoServiceTest {
                     countryCode = str2chars,
                     partyId = str4chars,
                     tokenUid = str36chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -148,9 +148,9 @@ class TokensCpoServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     tokenUid = str40chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -166,9 +166,9 @@ class TokensCpoServiceTest {
                     token = validTokenFullRfid.toPartial(),
                     countryCode = str2chars,
                     partyId = str3chars,
-                    tokenUid = str4chars
+                    tokenUid = str4chars,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
@@ -180,9 +180,9 @@ class TokensCpoServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     tokenUid = str36chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
@@ -194,9 +194,9 @@ class TokensCpoServiceTest {
                     countryCode = str3chars,
                     partyId = str3chars,
                     tokenUid = str36chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -208,9 +208,9 @@ class TokensCpoServiceTest {
                     countryCode = str2chars,
                     partyId = str4chars,
                     tokenUid = str36chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }
@@ -222,9 +222,9 @@ class TokensCpoServiceTest {
                     countryCode = str2chars,
                     partyId = str3chars,
                     tokenUid = str40chars,
-                    type = TokenType.RFID
+                    type = TokenType.RFID,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }

@@ -28,21 +28,21 @@ import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ClearProfileResul
 interface ChargingProfilesScspInterface {
     suspend fun postCallbackActiveChargingProfile(
         requestId: String,
-        result: ActiveChargingProfileResult
+        result: ActiveChargingProfileResult,
     ): OcpiResponseBody<Any>
 
     suspend fun postCallbackChargingProfile(
         requestId: String,
-        result: ChargingProfileResult
+        result: ChargingProfileResult,
     ): OcpiResponseBody<Any>
 
     suspend fun postCallbackClearProfile(
         requestId: String,
-        result: ClearProfileResult
+        result: ClearProfileResult,
     ): OcpiResponseBody<Any>
 
     suspend fun putActiveChargingProfile(
         sessionId: CiString,
-        activeChargingProfile: ActiveChargingProfile
+        activeChargingProfile: ActiveChargingProfile,
     ): OcpiResponseBody<Any>
 }

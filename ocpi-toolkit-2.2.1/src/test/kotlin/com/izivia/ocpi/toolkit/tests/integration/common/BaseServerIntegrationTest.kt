@@ -11,12 +11,12 @@ abstract class BaseServerIntegrationTest : BaseDBIntegrationTest() {
     private fun getFreeNetworkPort() = ServerSocket(0).use { it.localPort }
 
     protected fun buildTransportServer(
-        partnerRepository: PartnerRepository? = null
+        partnerRepository: PartnerRepository? = null,
     ): Http4kTransportServer {
         val port = getFreeNetworkPort()
         return Http4kTransportServer(
             baseUrl = "http://localhost:$port",
-            port = port
+            port = port,
         ) {
             partnerRepository?.checkToken(it)
         }

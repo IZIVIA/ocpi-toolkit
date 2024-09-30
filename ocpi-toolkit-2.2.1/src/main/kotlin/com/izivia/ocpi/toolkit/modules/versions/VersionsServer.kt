@@ -9,13 +9,13 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 
 class VersionsServer(
-    private val service: VersionsService
+    private val service: VersionsService,
 ) : OcpiModuleServer("") {
 
     override suspend fun registerOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = listOf(FixedPathSegment(service.versionsBasePath))
+            path = listOf(FixedPathSegment(service.versionsBasePath)),
         ) { req ->
             req.httpResponse {
                 service.getVersions()
@@ -26,12 +26,12 @@ class VersionsServer(
             method = HttpMethod.GET,
             path = listOf(
                 FixedPathSegment(service.versionDetailsBasePath),
-                VariablePathSegment("versionNumber")
-            )
+                VariablePathSegment("versionNumber"),
+            ),
         ) { req ->
             req.httpResponse {
                 service.getVersionDetails(
-                    versionNumber = req.pathParams["versionNumber"]!!
+                    versionNumber = req.pathParams["versionNumber"]!!,
                 )
             }
         }

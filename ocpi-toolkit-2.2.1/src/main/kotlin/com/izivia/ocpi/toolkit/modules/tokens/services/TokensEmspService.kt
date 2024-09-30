@@ -16,13 +16,13 @@ import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensEmspRepository
 import java.time.Instant
 
 open class TokensEmspService(
-    private val service: TokensEmspRepository
+    private val service: TokensEmspRepository,
 ) : TokensEmspInterface {
     override suspend fun getTokens(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
-        limit: Int?
+        limit: Int?,
     ): OcpiResponseBody<SearchResult<Token>> = OcpiResponseBody.of {
         validate {
             if (dateFrom != null && dateTo != null) validateDates("dateFrom", dateFrom, "dateTo", dateTo)
@@ -39,7 +39,7 @@ open class TokensEmspService(
     override suspend fun postToken(
         tokenUid: CiString,
         type: TokenType?,
-        locationReferences: LocationReferences?
+        locationReferences: LocationReferences?,
     ): OcpiResponseBody<AuthorizationInfo> = OcpiResponseBody.of {
         validate {
             validateLength("tokenUid", tokenUid, 36)

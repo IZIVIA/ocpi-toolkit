@@ -28,5 +28,5 @@ enum class ModuleID {
 
     tokens,
 
-    versions
+    versions,
 }

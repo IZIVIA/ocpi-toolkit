@@ -18,13 +18,13 @@ import java.time.Instant
 class TokensEmspServer(
     private val service: TokensEmspInterface,
     versionsRepository: MutableVersionsRepository? = null,
-    basePathOverride: String? = null
+    basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.tokens,
     interfaceRole = InterfaceRole.SENDER,
     versionsRepository = versionsRepository,
-    basePathOverride = basePathOverride
+    basePathOverride = basePathOverride,
 ) {
 
     override suspend fun doRegisterOn(transportServer: TransportServer) {
@@ -32,7 +32,7 @@ class TokensEmspServer(
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments,
-            queryParams = listOf("date_from", "date_to", "offset", "limit")
+            queryParams = listOf("date_from", "date_to", "offset", "limit"),
         ) { req ->
             req.httpResponse {
                 val dateFrom = req.queryParams["date_from"]
@@ -43,7 +43,7 @@ class TokensEmspServer(
                         dateFrom = dateFrom?.let { Instant.parse(it) },
                         dateTo = dateTo?.let { Instant.parse(it) },
                         offset = req.queryParams["offset"]?.toInt() ?: 0,
-                        limit = req.queryParams["limit"]?.toInt()
+                        limit = req.queryParams["limit"]?.toInt(),
                     )
             }
         }
@@ -53,9 +53,9 @@ class TokensEmspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 VariablePathSegment("tokenUid"),
-                FixedPathSegment("authorize")
+                FixedPathSegment("authorize"),
             ),
-            queryParams = listOf("type")
+            queryParams = listOf("type"),
         ) { req ->
             req.httpResponse {
                 service.postToken(
@@ -63,7 +63,7 @@ class TokensEmspServer(
                     type = req.queryParams["type"]?.let { enumValueOf<TokenType>(it) } ?: TokenType.RFID,
                     locationReferences = req.body
                         ?.takeIf { it.isNotBlank() } // During Test if client sent body = null, this reiceve body=""
-                        ?.let { mapper.readValue(it, LocationReferences::class.java) }
+                        ?.let { mapper.readValue(it, LocationReferences::class.java) },
                 )
             }
         }

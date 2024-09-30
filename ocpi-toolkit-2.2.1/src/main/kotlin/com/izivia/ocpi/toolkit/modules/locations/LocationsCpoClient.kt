@@ -18,31 +18,31 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 class LocationsCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository
+    private val partnerRepository: PartnerRepository,
 ) : LocationsEmspInterface {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.locations,
             partnerId = partnerId,
-            partnerRepository = partnerRepository
+            partnerRepository = partnerRepository,
         )
 
     override suspend fun getLocation(
         countryCode: CiString,
         partyId: CiString,
-        locationId: CiString
+        locationId: CiString,
     ): OcpiResponseBody<Location?> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$countryCode/$partyId/$locationId"
+                path = "/$countryCode/$partyId/$locationId",
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .parseBody()
     }
@@ -51,18 +51,18 @@ class LocationsCpoClient(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
-        evseUid: CiString
+        evseUid: CiString,
     ): OcpiResponseBody<Evse?> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$countryCode/$partyId/$locationId/$evseUid"
+                path = "/$countryCode/$partyId/$locationId/$evseUid",
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .parseBody()
     }
@@ -72,18 +72,18 @@ class LocationsCpoClient(
         partyId: CiString,
         locationId: CiString,
         evseUid: CiString,
-        connectorId: CiString
+        connectorId: CiString,
     ): OcpiResponseBody<Connector?> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId"
+                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .parseBody()
     }
@@ -92,19 +92,19 @@ class LocationsCpoClient(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
-        location: Location
+        location: Location,
     ): OcpiResponseBody<Location> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
                 path = "/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(location)
+                body = mapper.writeValueAsString(location),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .parseBody()
     }
@@ -114,19 +114,19 @@ class LocationsCpoClient(
         partyId: CiString,
         locationId: CiString,
         evseUid: CiString,
-        evse: Evse
+        evse: Evse,
     ): OcpiResponseBody<Evse> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
                 path = "/$countryCode/$partyId/$locationId/$evseUid",
-                body = mapper.writeValueAsString(evse)
+                body = mapper.writeValueAsString(evse),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .parseBody()
     }
@@ -137,19 +137,19 @@ class LocationsCpoClient(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
-        connector: Connector
+        connector: Connector,
     ): OcpiResponseBody<Connector> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
                 path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
-                body = mapper.writeValueAsString(connector)
+                body = mapper.writeValueAsString(connector),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .parseBody()
     }
@@ -158,19 +158,19 @@ class LocationsCpoClient(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
-        location: LocationPartial
+        location: LocationPartial,
     ): OcpiResponseBody<Location?> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
                 path = "/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(location)
+                body = mapper.writeValueAsString(location),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .parseBody()
     }
@@ -180,19 +180,19 @@ class LocationsCpoClient(
         partyId: CiString,
         locationId: CiString,
         evseUid: CiString,
-        evse: EvsePartial
+        evse: EvsePartial,
     ): OcpiResponseBody<Evse?> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
                 path = "/$countryCode/$partyId/$locationId/$evseUid",
-                body = mapper.writeValueAsString(evse)
+                body = mapper.writeValueAsString(evse),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .parseBody()
     }
@@ -203,19 +203,19 @@ class LocationsCpoClient(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
-        connector: ConnectorPartial
+        connector: ConnectorPartial,
     ): OcpiResponseBody<Connector?> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
                 path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
-                body = mapper.writeValueAsString(connector)
+                body = mapper.writeValueAsString(connector),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
             .parseBody()
     }

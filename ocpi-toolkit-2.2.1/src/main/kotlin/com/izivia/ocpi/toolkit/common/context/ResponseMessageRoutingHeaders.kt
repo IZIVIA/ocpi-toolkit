@@ -11,7 +11,7 @@ data class ResponseMessageRoutingHeaders(
     var toPartyId: String? = null,
     var toCountryCode: String? = null,
     var fromPartyId: String? = null,
-    var fromCountryCode: String? = null
+    var fromCountryCode: String? = null,
 ) : AbstractCoroutineContextElement(ResponseMessageRoutingHeaders) {
     companion object Key : CoroutineContext.Key<ResponseMessageRoutingHeaders> {
         /**
@@ -23,7 +23,7 @@ data class ResponseMessageRoutingHeaders(
                 toPartyId = requestMessageRoutingHeaders.fromPartyId,
                 toCountryCode = requestMessageRoutingHeaders.fromCountryCode,
                 fromPartyId = requestMessageRoutingHeaders.toPartyId,
-                fromCountryCode = requestMessageRoutingHeaders.toCountryCode
+                fromCountryCode = requestMessageRoutingHeaders.toCountryCode,
             )
     }
 }

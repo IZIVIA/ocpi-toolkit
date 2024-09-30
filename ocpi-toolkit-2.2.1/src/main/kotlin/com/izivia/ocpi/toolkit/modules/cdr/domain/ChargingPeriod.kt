@@ -18,5 +18,5 @@ provided, no Tariff is relevant during this period.
 data class ChargingPeriod(
     val startDateTime: Instant,
     val dimensions: List<CdrDimension>,
-    val tariffId: CiString? = null
+    val tariffId: CiString? = null,
 )

@@ -8,5 +8,5 @@ data class ChargingProfile(
     val duration: Int? = null,
     val chargingRateUnit: ChargingRateUnit,
     val minChargingRate: BigDecimal?,
-    val chargingProfilePeriod: List<ChargingProfilePeriod>?
+    val chargingProfilePeriod: List<ChargingProfilePeriod>?,
 )

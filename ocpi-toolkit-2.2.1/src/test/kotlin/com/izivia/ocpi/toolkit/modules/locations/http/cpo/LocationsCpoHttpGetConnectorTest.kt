@@ -38,7 +38,7 @@ class LocationsCpoHttpGetConnectorTest {
                 getConnector(
                     capture(slots.locationId),
                     capture(slots.evseUid),
-                    capture(slots.connectorId)
+                    capture(slots.connectorId),
                 )
             } coAnswers {
                 Connector(
@@ -49,7 +49,7 @@ class LocationsCpoHttpGetConnectorTest {
                     maxVoltage = 220,
                     maxAmperage = 16,
                     tariffIds = listOf("11"),
-                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
+                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z"),
                 )
             }
         }.buildServer()
@@ -57,7 +57,7 @@ class LocationsCpoHttpGetConnectorTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.GET, "/locations/LOC1/3256/1")
+            buildHttpRequest(HttpMethod.GET, "/locations/LOC1/3256/1"),
         )
 
         // then
@@ -85,7 +85,7 @@ class LocationsCpoHttpGetConnectorTest {
                       "status_message": "Success",
                       "timestamp": "2015-06-30T21:59:59Z"
                     }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -99,7 +99,7 @@ private fun LocationsCpoRepository.buildServer(): TransportClient {
         LocationsCpoServer(
             service = LocationsCpoService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/locations"
+            basePathOverride = "/locations",
         ).registerOn(transportServer)
     }
 

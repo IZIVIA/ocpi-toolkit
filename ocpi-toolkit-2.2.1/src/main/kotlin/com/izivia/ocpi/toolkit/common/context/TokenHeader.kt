@@ -8,7 +8,7 @@ import kotlin.coroutines.coroutineContext
  * Contains context about the current token header
  */
 data class TokenHeader(
-    val token: String? = null
+    val token: String? = null,
 ) : AbstractCoroutineContextElement(TokenHeader) {
     companion object Key : CoroutineContext.Key<TokenHeader>
 }

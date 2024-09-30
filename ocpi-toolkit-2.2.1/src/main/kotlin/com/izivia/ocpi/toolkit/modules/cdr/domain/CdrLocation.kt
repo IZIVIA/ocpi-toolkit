@@ -45,5 +45,5 @@ data class CdrLocation(
     val connectorId: CiString,
     val connectorStandard: ConnectorType,
     val connectorFormat: ConnectorFormat,
-    val connectorPowerType: PowerType
+    val connectorPowerType: PowerType,
 )

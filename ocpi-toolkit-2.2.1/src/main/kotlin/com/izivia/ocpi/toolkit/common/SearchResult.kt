@@ -5,7 +5,7 @@ data class SearchResult<T>(
     val totalCount: Int,
     val limit: Int,
     val offset: Int,
-    val nextPageUrl: String?
+    val nextPageUrl: String?,
 )
 
 fun <T> List<T>.toSearchResult(totalCount: Int, limit: Int, offset: Int, nextPageUrl: String? = null) = SearchResult(
@@ -13,5 +13,5 @@ fun <T> List<T>.toSearchResult(totalCount: Int, limit: Int, offset: Int, nextPag
     totalCount = totalCount,
     limit = limit,
     offset = offset,
-    nextPageUrl = nextPageUrl
+    nextPageUrl = nextPageUrl,
 )

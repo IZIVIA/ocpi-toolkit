@@ -21,7 +21,7 @@ fun tokensCpoRepositoryTest(responseToken: Token): TokensCpoRepository = mockk {
             capture(country_code),
             capture(party_id),
             capture(token_uid),
-            captureNullable(type)
+            captureNullable(type),
         )
     } coAnswers { responseToken }
 
@@ -31,7 +31,7 @@ fun tokensCpoRepositoryTest(responseToken: Token): TokensCpoRepository = mockk {
             countryCode = capture(country_code),
             partyId = capture(party_id),
             tokenUid = capture(token_uid),
-            type = captureNullable(type)
+            type = captureNullable(type),
         )
     } coAnswers { responseToken }
 
@@ -41,7 +41,7 @@ fun tokensCpoRepositoryTest(responseToken: Token): TokensCpoRepository = mockk {
             countryCode = capture(country_code),
             partyId = capture(party_id),
             tokenUid = capture(token_uid),
-            type = captureNullable(type)
+            type = captureNullable(type),
         )
     } coAnswers { responseToken }
 }

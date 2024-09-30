@@ -11,13 +11,13 @@ import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileRe
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.SetChargingProfile
 
 open class ChargingProfilesCpoService(
-    private val service: ChargingProfilesChargePointService
+    private val service: ChargingProfilesChargePointService,
 ) : ChargingProfilesCpoInterface {
 
     override suspend fun getActiveChargingProfile(
         sessionId: CiString,
         duration: Int,
-        responseUrl: URL
+        responseUrl: URL,
     ): OcpiResponseBody<ChargingProfileResponse> =
         validate {
             validateLength("sessionId", sessionId, 36)
@@ -28,7 +28,7 @@ open class ChargingProfilesCpoService(
 
     override suspend fun putChargingProfile(
         sessionId: CiString,
-        setChargingProfile: SetChargingProfile
+        setChargingProfile: SetChargingProfile,
     ): OcpiResponseBody<ChargingProfileResponse> =
         validate {
             validateLength("sessionId", sessionId, 36)
@@ -38,7 +38,7 @@ open class ChargingProfilesCpoService(
 
     override suspend fun deleteChargingProfile(
         sessionId: CiString,
-        responseUrl: URL
+        responseUrl: URL,
     ): OcpiResponseBody<ChargingProfileResponse> =
         validate {
             validateLength("sessionId", sessionId, 36)

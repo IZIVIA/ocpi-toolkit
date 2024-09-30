@@ -12,5 +12,5 @@ import java.time.Instant
 @Partial
 data class ExceptionalPeriod(
     val periodBegin: Instant,
-    val periodEnd: Instant
+    val periodEnd: Instant,
 )

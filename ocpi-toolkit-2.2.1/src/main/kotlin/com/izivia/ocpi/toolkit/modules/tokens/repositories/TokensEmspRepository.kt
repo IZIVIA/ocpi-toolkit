@@ -72,6 +72,6 @@ interface TokensEmspRepository {
     suspend fun postToken(
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-        locationReferences: LocationReferences? = null
+        locationReferences: LocationReferences? = null,
     ): AuthorizationInfo
 }

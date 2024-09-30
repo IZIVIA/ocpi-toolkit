@@ -25,7 +25,7 @@ fun main() {
     val transportServer = Http4kTransportServer(
         baseUrl = cpoServerUrl,
         port = cpoServerPort,
-        secureFilter = DUMMY_PLATFORM_REPOSITORY::checkToken
+        secureFilter = DUMMY_PLATFORM_REPOSITORY::checkToken,
     )
 
     // We specify service for the validation service
@@ -35,7 +35,7 @@ fun main() {
     runBlocking {
         LocationsCpoServer(
             service = LocationsCpoService(service = service),
-            versionsRepository = InMemoryVersionsRepository()
+            versionsRepository = InMemoryVersionsRepository(),
         ).registerOn(transportServer)
     }
 
@@ -48,7 +48,7 @@ class CacheLocationsCpoRepository : LocationsCpoRepository {
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
-        limit: Int?
+        limit: Int?,
     ): SearchResult<Location> {
         TODO("Not yet implemented")
     }

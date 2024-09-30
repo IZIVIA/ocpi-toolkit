@@ -84,8 +84,8 @@ fun RegularHoursPartial.validate(): RegularHoursPartial = validate(this) { regul
         constraintViolations.add(
             DefaultConstraintViolation(
                 property = "periodBegin ($periodBegin) is after periodEnd ($periodEnd)",
-                constraint = Greater(endInMinutes)
-            )
+                constraint = Greater(endInMinutes),
+            ),
         )
     }
 }
@@ -95,15 +95,15 @@ fun HoursPartial.validate(): HoursPartial = validate(this) { hours ->
         constraintViolations.add(
             DefaultConstraintViolation(
                 property = "regularHours is not set whereas twentyFourSeven is false",
-                constraint = RegularHoursSetWhenNotTwentyFourSevenConstraint()
-            )
+                constraint = RegularHoursSetWhenNotTwentyFourSevenConstraint(),
+            ),
         )
     } else if (hours.regularHours != null && hours.twentyfourseven == true) {
         constraintViolations.add(
             DefaultConstraintViolation(
                 property = "twentyfourseven is set to true whereas regularHours are set",
-                constraint = RegularHoursSetAtTheSameTimeAsTwentyFourSevenConstraint()
-            )
+                constraint = RegularHoursSetAtTheSameTimeAsTwentyFourSevenConstraint(),
+            ),
         )
     }
 
@@ -175,16 +175,16 @@ fun ConnectorPartial.validate(): ConnectorPartial = validate(this) {
             constraintViolations.add(
                 DefaultConstraintViolation(
                     property = "tariffIds",
-                    constraint = MaxLengthContraint(36)
-                )
+                    constraint = MaxLengthContraint(36),
+                ),
             )
         }
         if (!tariffId.isPrintableAscii()) {
             constraintViolations.add(
                 DefaultConstraintViolation(
                     property = "tariffIds",
-                    constraint = PrintableAsciiConstraint()
-                )
+                    constraint = PrintableAsciiConstraint(),
+                ),
             )
         }
     }

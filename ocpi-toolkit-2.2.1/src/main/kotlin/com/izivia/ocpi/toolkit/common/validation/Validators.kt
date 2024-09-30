@@ -74,7 +74,7 @@ fun <E> Validator<E>.Property<String?>.isCountryCode(caseSensitive: Boolean, alp
         it == null || Locale
             .getISOCountries(if (alpha2) Locale.IsoCountryCode.PART1_ALPHA2 else Locale.IsoCountryCode.PART1_ALPHA3)
             .contains(
-                if (caseSensitive) it else it.uppercase(Locale.ENGLISH)
+                if (caseSensitive) it else it.uppercase(Locale.ENGLISH),
             )
     }
 
@@ -85,7 +85,7 @@ fun <E> Validator<E>.Property<String?>.isCurrencyCode(caseSensitive: Boolean) =
     this.validate(CurrencyCodeConstraint()) {
         it == null || Currency.getAvailableCurrencies()
             .contains(
-                if (caseSensitive) Currency.getInstance(it) else Currency.getInstance(it.uppercase(Locale.ENGLISH))
+                if (caseSensitive) Currency.getInstance(it) else Currency.getInstance(it.uppercase(Locale.ENGLISH)),
             )
     }
 

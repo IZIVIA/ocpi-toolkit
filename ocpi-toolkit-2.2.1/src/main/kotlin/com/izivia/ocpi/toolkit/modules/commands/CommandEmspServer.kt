@@ -16,13 +16,13 @@ import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 class CommandEmspServer(
     private val service: CommandEmspInterface,
     versionsRepository: MutableVersionsRepository? = null,
-    basePathOverride: String? = null
+    basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.commands,
     interfaceRole = InterfaceRole.SENDER,
     versionsRepository = versionsRepository,
-    basePathOverride = basePathOverride
+    basePathOverride = basePathOverride,
 ) {
 
     override suspend fun doRegisterOn(transportServer: TransportServer) {
@@ -30,13 +30,13 @@ class CommandEmspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment("START_SESSION/callback"),
-                VariablePathSegment("authRef")
-            )
+                VariablePathSegment("authRef"),
+            ),
         ) { req ->
             req.httpResponse {
                 service.postCallbackStartSession(
                     req.pathParams["authRef"]!!,
-                    result = mapper.readValue(req.body, CommandResult::class.java)
+                    result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
         }
@@ -45,13 +45,13 @@ class CommandEmspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment("STOP_SESSION/callback"),
-                VariablePathSegment("sessionId")
-            )
+                VariablePathSegment("sessionId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service.postCallbackStopSession(
                     req.pathParams["sessionId"]!!,
-                    result = mapper.readValue(req.body, CommandResult::class.java)
+                    result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
         }
@@ -60,13 +60,13 @@ class CommandEmspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment("RESERVE_NOW/callback"),
-                VariablePathSegment("reservationId")
-            )
+                VariablePathSegment("reservationId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service.postCallbackReserveNow(
                     req.pathParams["reservationId"]!!,
-                    result = mapper.readValue(req.body, CommandResult::class.java)
+                    result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
         }
@@ -75,13 +75,13 @@ class CommandEmspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment("CANCEL_RESERVATION/callback"),
-                VariablePathSegment("reservationId")
-            )
+                VariablePathSegment("reservationId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service.postCallbackCancelReservation(
                     req.pathParams["reservationId"]!!,
-                    result = mapper.readValue(req.body, CommandResult::class.java)
+                    result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
         }
@@ -92,15 +92,15 @@ class CommandEmspServer(
                 FixedPathSegment("UNLOCK_CONNECTOR/callback"),
                 VariablePathSegment("locationId"),
                 VariablePathSegment("evseId"),
-                VariablePathSegment("connectorId")
-            )
+                VariablePathSegment("connectorId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service.postCallbackUnlockConnector(
                     req.pathParams["locationId"]!!,
                     req.pathParams["evseId"]!!,
                     req.pathParams["connectorId"]!!,
-                    result = mapper.readValue(req.body, CommandResult::class.java)
+                    result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
         }

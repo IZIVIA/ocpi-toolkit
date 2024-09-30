@@ -20,5 +20,5 @@ enum class ProfileType {
     /**
      * Driver does not have special preferences.
      */
-    REGULAR
+    REGULAR,
 }

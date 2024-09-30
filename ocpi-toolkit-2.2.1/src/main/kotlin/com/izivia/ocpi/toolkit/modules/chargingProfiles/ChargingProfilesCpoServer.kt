@@ -15,29 +15,29 @@ import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 class ChargingProfilesCpoServer(
     private val service: ChargingProfilesCpoInterface,
     versionsRepository: MutableVersionsRepository? = null,
-    basePathOverride: String? = null
+    basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.chargingprofiles,
     interfaceRole = InterfaceRole.RECEIVER,
     versionsRepository = versionsRepository,
-    basePathOverride = basePathOverride
+    basePathOverride = basePathOverride,
 ) {
 
     override suspend fun doRegisterOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
             path = basePathSegments + listOf(
-                VariablePathSegment("sessionId")
+                VariablePathSegment("sessionId"),
             ),
-            queryParams = listOf("duration", "response_url")
+            queryParams = listOf("duration", "response_url"),
         ) { req ->
             req.httpResponse {
                 service
                     .getActiveChargingProfile(
                         sessionId = req.pathParams["sessionId"]!!,
                         duration = req.queryParams["duration"]!!.toInt(),
-                        responseUrl = req.queryParams["response_url"]!!
+                        responseUrl = req.queryParams["response_url"]!!,
                     )
             }
         }
@@ -45,14 +45,14 @@ class ChargingProfilesCpoServer(
         transportServer.handle(
             method = HttpMethod.PUT,
             path = basePathSegments + listOf(
-                VariablePathSegment("sessionId")
-            )
+                VariablePathSegment("sessionId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service
                     .putChargingProfile(
                         sessionId = req.pathParams["sessionId"]!!,
-                        setChargingProfile = mapper.readValue(req.body, SetChargingProfile::class.java)
+                        setChargingProfile = mapper.readValue(req.body, SetChargingProfile::class.java),
                     )
             }
         }
@@ -60,15 +60,15 @@ class ChargingProfilesCpoServer(
         transportServer.handle(
             method = HttpMethod.DELETE,
             path = basePathSegments + listOf(
-                VariablePathSegment("sessionId")
+                VariablePathSegment("sessionId"),
             ),
-            queryParams = listOf("response_url")
+            queryParams = listOf("response_url"),
         ) { req ->
             req.httpResponse {
                 service
                     .deleteChargingProfile(
                         sessionId = req.pathParams["sessionId"]!!,
-                        responseUrl = req.queryParams["response_url"]!!
+                        responseUrl = req.queryParams["response_url"]!!,
                     )
             }
         }

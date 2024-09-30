@@ -37,7 +37,7 @@ interface SessionsCpoInterface {
         dateFrom: Instant,
         dateTo: Instant?,
         offset: Int = 0,
-        limit: Int?
+        limit: Int?,
     ): OcpiResponseBody<SearchResult<Session>>
 
     /**
@@ -52,6 +52,6 @@ interface SessionsCpoInterface {
      */
     suspend fun putChargingPreferences(
         sessionId: CiString,
-        chargingPreferences: ChargingPreferences
+        chargingPreferences: ChargingPreferences,
     ): OcpiResponseBody<ChargingPreferencesResponseType>
 }

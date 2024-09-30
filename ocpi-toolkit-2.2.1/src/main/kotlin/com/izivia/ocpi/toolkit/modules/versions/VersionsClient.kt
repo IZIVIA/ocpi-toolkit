@@ -15,7 +15,7 @@ import com.izivia.ocpi.toolkit.transport.domain.*
 class VersionsClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository
+    private val partnerRepository: PartnerRepository,
 ) : VersionsInterface {
 
     override suspend fun getVersions(): OcpiResponseBody<List<Version>> =
@@ -24,20 +24,20 @@ class VersionsClient(
                 .build(
                     baseUrl = partnerRepository
                         .getPartnerUrl(partnerId = partnerId)
-                        ?: throw OcpiToolkitUnknownEndpointException("version with no url")
-                )
+                        ?: throw OcpiToolkitUnknownEndpointException("version with no url"),
+                ),
         ) {
             send(
                 HttpRequest(method = HttpMethod.GET)
                     .withRequiredHeaders(
                         requestId = generateRequestId(),
-                        correlationId = generateCorrelationId()
+                        correlationId = generateCorrelationId(),
                     )
                     .authenticate(
                         partnerRepository = partnerRepository,
                         partnerId = partnerId,
-                        allowTokenA = true
-                    )
+                        allowTokenA = true,
+                    ),
             )
                 .also {
                     if (it.status != HttpStatus.OK) throw HttpException(it.status, parseHttpStatus(it.status.code).name)

@@ -19,13 +19,13 @@ import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 class ChargingProfilesScspServer(
     private val service: ChargingProfilesScspInterface,
     versionsRepository: MutableVersionsRepository? = null,
-    basePathOverride: String? = null
+    basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.chargingprofiles,
     interfaceRole = InterfaceRole.SENDER,
     versionsRepository = versionsRepository,
-    basePathOverride = basePathOverride
+    basePathOverride = basePathOverride,
 ) {
 
     companion object {
@@ -40,14 +40,14 @@ class ChargingProfilesScspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment(ACTIVE_CHARGING_PROFILE_CALLBACK_URL),
-                VariablePathSegment("requestId")
-            )
+                VariablePathSegment("requestId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service
                     .postCallbackActiveChargingProfile(
                         requestId = req.pathParams["requestId"].orEmpty(),
-                        result = mapper.readValue(req.body, ActiveChargingProfileResult::class.java)
+                        result = mapper.readValue(req.body, ActiveChargingProfileResult::class.java),
                     )
             }
         }
@@ -56,14 +56,14 @@ class ChargingProfilesScspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment(CHARGING_PROFILE_CALLBACK_URL),
-                VariablePathSegment("requestId")
-            )
+                VariablePathSegment("requestId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service
                     .postCallbackChargingProfile(
                         requestId = req.pathParams["requestId"].orEmpty(),
-                        result = mapper.readValue(req.body, ChargingProfileResult::class.java)
+                        result = mapper.readValue(req.body, ChargingProfileResult::class.java),
                     )
             }
         }
@@ -72,14 +72,14 @@ class ChargingProfilesScspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment(CLEAR_PROFILE_CALLBACK_URL),
-                VariablePathSegment("requestId")
-            )
+                VariablePathSegment("requestId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service
                     .postCallbackClearProfile(
                         requestId = req.pathParams["requestId"].orEmpty(),
-                        result = mapper.readValue(req.body, ClearProfileResult::class.java)
+                        result = mapper.readValue(req.body, ClearProfileResult::class.java),
                     )
             }
         }
@@ -88,14 +88,14 @@ class ChargingProfilesScspServer(
             method = HttpMethod.PUT,
             path = basePathSegments + listOf(
                 FixedPathSegment(PUT_ACTIVE_CHARGING_PROFILE_URL),
-                VariablePathSegment("sessionId")
-            )
+                VariablePathSegment("sessionId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service
                     .putActiveChargingProfile(
                         sessionId = req.pathParams["sessionId"].orEmpty(),
-                        activeChargingProfile = mapper.readValue(req.body, ActiveChargingProfile::class.java)
+                        activeChargingProfile = mapper.readValue(req.body, ActiveChargingProfile::class.java),
                     )
             }
         }

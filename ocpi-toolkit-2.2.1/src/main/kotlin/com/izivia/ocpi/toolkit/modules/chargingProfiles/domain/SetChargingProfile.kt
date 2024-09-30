@@ -4,5 +4,5 @@ import com.izivia.ocpi.toolkit.common.URL
 
 data class SetChargingProfile(
     val chargingProfile: ChargingProfile,
-    val responseUrl: URL
+    val responseUrl: URL,
 )

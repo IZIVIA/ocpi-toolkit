@@ -13,5 +13,5 @@ import com.izivia.ocpi.toolkit.annotations.Partial
 @Partial
 data class GeoLocation(
     val latitude: String,
-    val longitude: String
+    val longitude: String,
 )

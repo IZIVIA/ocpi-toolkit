@@ -23,7 +23,7 @@ class LocationsCpoServiceTest {
         service = LocationsCpoService(service = locationsCpoRepository(emptyList()))
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = from, dateTo = from, offset = 0, limit = null) }
+            runBlocking { service.getLocations(dateFrom = from, dateTo = from, offset = 0, limit = null) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -35,7 +35,7 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = to, dateTo = from, offset = 0, limit = null) }
+            runBlocking { service.getLocations(dateFrom = to, dateTo = from, offset = 0, limit = null) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -45,7 +45,7 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = from, dateTo = to, offset = 0, limit = null) }
+            runBlocking { service.getLocations(dateFrom = from, dateTo = to, offset = 0, limit = null) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -57,7 +57,7 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = to, offset = 0, limit = null) }
+            runBlocking { service.getLocations(dateFrom = null, dateTo = to, offset = 0, limit = null) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -69,7 +69,7 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = from, dateTo = null, offset = 0, limit = null) }
+            runBlocking { service.getLocations(dateFrom = from, dateTo = null, offset = 0, limit = null) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -81,7 +81,7 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = null) }
+            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = null) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -93,7 +93,7 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = -10, limit = null) }
+            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = -10, limit = null) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -103,7 +103,7 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = -10) }
+            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = -10) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -113,7 +113,7 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = 100) }
+            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = 100) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -130,7 +130,7 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 100, limit = 100) }
+            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 100, limit = 100) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -147,7 +147,7 @@ class LocationsCpoServiceTest {
         }
 
         expectThat(
-            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = 0) }
+            runBlocking { service.getLocations(dateFrom = null, dateTo = null, offset = 0, limit = 0) },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -247,9 +247,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str3chars,
                     evseUid = str3chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -260,9 +260,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str36chars,
                     evseUid = str3chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -273,9 +273,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str37chars,
                     evseUid = str3chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -286,9 +286,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str3chars,
                     evseUid = str3chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -299,9 +299,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str3chars,
                     evseUid = str36chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -312,9 +312,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str3chars,
                     evseUid = str37chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -325,9 +325,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str37chars,
                     evseUid = str37chars,
-                    connectorId = str3chars
+                    connectorId = str3chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -338,9 +338,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str3chars,
                     evseUid = str3chars,
-                    connectorId = str37chars
+                    connectorId = str37chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
@@ -351,9 +351,9 @@ class LocationsCpoServiceTest {
                 service.getConnector(
                     locationId = str37chars,
                     evseUid = str37chars,
-                    connectorId = str37chars
+                    connectorId = str37chars,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)

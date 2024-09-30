@@ -74,5 +74,5 @@ data class Location(
     val chargingWhenClosed: Boolean? = null,
     val images: List<Image>? = null,
     val energyMix: EnergyMix? = null,
-    val lastUpdated: Instant
+    val lastUpdated: Instant,
 )

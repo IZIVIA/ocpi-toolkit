@@ -42,9 +42,9 @@ class TokensCpoHttpPatchTokenTest {
             defaultProfileType = ProfileType.GREEN,
             energyContract = EnergyContract(
                 supplierName = "Greenpeace Energy eG",
-                contractId = "0123456789"
+                contractId = "0123456789",
             ),
-            lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
+            lastUpdated = Instant.parse("2018-12-10T17:25:10Z"),
         )
         val slots = object {
             var token = slot<TokenPartial>()
@@ -60,7 +60,7 @@ class TokensCpoHttpPatchTokenTest {
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.tokenUID),
-                    capture(slots.type)
+                    capture(slots.type),
                 )
             } coAnswers { token }
         }.buildServer()
@@ -68,7 +68,7 @@ class TokensCpoHttpPatchTokenTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PATCH, "/tokens/DE/TNM/012345678/?type=RFID", mapper.writeValueAsString(token))
+            buildHttpRequest(HttpMethod.PATCH, "/tokens/DE/TNM/012345678/?type=RFID", mapper.writeValueAsString(token)),
         )
 
         // then
@@ -87,7 +87,7 @@ class TokensCpoHttpPatchTokenTest {
                     "status_message": "Success",
                     "timestamp": "2015-06-30T21:59:59Z"
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -109,9 +109,9 @@ class TokensCpoHttpPatchTokenTest {
             defaultProfileType = ProfileType.GREEN,
             energyContract = EnergyContract(
                 supplierName = "Greenpeace Energy eG",
-                contractId = "0123456789"
+                contractId = "0123456789",
             ),
-            lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
+            lastUpdated = Instant.parse("2018-12-10T17:25:10Z"),
         )
 
         val partialToken = TokenPartial(
@@ -131,9 +131,9 @@ class TokensCpoHttpPatchTokenTest {
             defaultProfileType = ProfileType.GREEN,
             energyContract = EnergyContractPartial(
                 supplierName = "Greenpeace Energy eG",
-                contractId = "0123456789"
+                contractId = "0123456789",
             ),
-            lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
+            lastUpdated = Instant.parse("2018-12-10T17:25:10Z"),
         )
 
         val slots = object {
@@ -150,7 +150,7 @@ class TokensCpoHttpPatchTokenTest {
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.tokenUID),
-                    capture(slots.type)
+                    capture(slots.type),
                 )
             } coAnswers { token }
         }.buildServer()
@@ -161,8 +161,8 @@ class TokensCpoHttpPatchTokenTest {
             buildHttpRequest(
                 HttpMethod.PATCH,
                 "/tokens/DE/TNM/012345678/?type=RFID",
-                mapper.writeValueAsString(partialToken)
-            )
+                mapper.writeValueAsString(partialToken),
+            ),
         )
 
         // then
@@ -181,7 +181,7 @@ class TokensCpoHttpPatchTokenTest {
                     "status_message": "Success",
                     "timestamp": "2015-06-30T21:59:59Z"
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -194,7 +194,7 @@ private fun TokensCpoRepository.buildServer(): TransportClient {
         TokensCpoServer(
             service = TokensCpoService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/tokens"
+            basePathOverride = "/tokens",
         ).registerOn(transportServer)
     }
 

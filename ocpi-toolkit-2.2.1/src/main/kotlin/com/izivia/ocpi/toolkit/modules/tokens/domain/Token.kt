@@ -69,5 +69,5 @@ data class Token(
     val language: String? = null,
     val defaultProfileType: ProfileType? = null,
     val energyContract: EnergyContract? = null,
-    val lastUpdated: Instant
+    val lastUpdated: Instant,
 )

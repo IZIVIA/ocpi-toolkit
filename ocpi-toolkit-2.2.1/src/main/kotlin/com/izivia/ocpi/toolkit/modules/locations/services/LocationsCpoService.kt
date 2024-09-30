@@ -15,14 +15,14 @@ import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoReposi
 import java.time.Instant
 
 open class LocationsCpoService(
-    private val service: LocationsCpoRepository
+    private val service: LocationsCpoRepository,
 ) : LocationsCpoInterface {
 
     override suspend fun getLocations(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
-        limit: Int?
+        limit: Int?,
     ): OcpiResponseBody<SearchResult<Location>> = OcpiResponseBody.of {
         validate {
             if (dateFrom != null && dateTo != null) validateDates("dateFrom", dateFrom, "dateTo", dateTo)
@@ -38,7 +38,7 @@ open class LocationsCpoService(
     }
 
     override suspend fun getLocation(
-        locationId: CiString
+        locationId: CiString,
     ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
         validate {
             validateLength("locationId", locationId, 36)
@@ -51,7 +51,7 @@ open class LocationsCpoService(
 
     override suspend fun getEvse(
         locationId: CiString,
-        evseUid: CiString
+        evseUid: CiString,
     ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
         validate {
             validateLength("locationId", locationId, 36)
@@ -66,7 +66,7 @@ open class LocationsCpoService(
     override suspend fun getConnector(
         locationId: CiString,
         evseUid: CiString,
-        connectorId: CiString
+        connectorId: CiString,
     ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
         validate {
             validateLength("locationId", locationId, 36)

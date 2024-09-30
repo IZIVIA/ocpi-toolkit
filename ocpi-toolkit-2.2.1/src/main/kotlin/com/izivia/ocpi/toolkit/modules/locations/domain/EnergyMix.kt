@@ -24,5 +24,5 @@ data class EnergyMix(
     val energySources: List<EnergySource>?,
     val environImpact: List<EnvironmentalImpact>?,
     val supplierName: String?,
-    val energyProductName: String?
+    val energyProductName: String?,
 )

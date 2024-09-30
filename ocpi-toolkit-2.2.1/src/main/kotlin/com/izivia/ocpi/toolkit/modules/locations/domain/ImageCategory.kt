@@ -41,5 +41,5 @@ enum class ImageCategory {
      * Logo of the charge points owner, for example a local store, to be displayed with the EVSEs detailed information
      * view
      */
-    OWNER
+    OWNER,
 }

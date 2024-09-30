@@ -22,7 +22,7 @@ fun main() {
     val transportServer = Http4kTransportServer(
         baseUrl = emspServerUrl,
         port = emspServerPort,
-        secureFilter = DUMMY_PLATFORM_REPOSITORY::checkToken
+        secureFilter = DUMMY_PLATFORM_REPOSITORY::checkToken,
     )
 
     // We specify service for the validation service
@@ -32,7 +32,7 @@ fun main() {
     runBlocking {
         LocationsEmspServer(
             service = LocationsEmspService(service = service),
-            versionsRepository = InMemoryVersionsRepository()
+            versionsRepository = InMemoryVersionsRepository(),
         ).registerOn(transportServer)
     }
 
@@ -54,7 +54,7 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         partyId: String,
         locationId: String,
         evseUid: String,
-        connectorId: String
+        connectorId: String,
     ): Connector? {
         TODO("Not yet implemented")
     }
@@ -63,7 +63,7 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         countryCode: String,
         partyId: String,
         locationId: String,
-        location: Location
+        location: Location,
     ): Location {
         TODO("Not yet implemented")
     }
@@ -73,7 +73,7 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         partyId: String,
         locationId: String,
         evseUid: String,
-        evse: Evse
+        evse: Evse,
     ): Evse {
         TODO("Not yet implemented")
     }
@@ -84,7 +84,7 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         locationId: String,
         evseUid: String,
         connectorId: String,
-        connector: Connector
+        connector: Connector,
     ): Connector {
         TODO("Not yet implemented")
     }
@@ -93,7 +93,7 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         countryCode: String,
         partyId: String,
         locationId: String,
-        location: LocationPartial
+        location: LocationPartial,
     ): Location? {
         TODO("Not yet implemented")
     }
@@ -103,7 +103,7 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         partyId: String,
         locationId: String,
         evseUid: String,
-        evse: EvsePartial
+        evse: EvsePartial,
     ): Evse? {
         TODO("Not yet implemented")
     }
@@ -114,7 +114,7 @@ class CacheLocationsEmspRepository : LocationsEmspRepository {
         locationId: String,
         evseUid: String,
         connectorId: String,
-        connector: ConnectorPartial
+        connector: ConnectorPartial,
     ): Connector? {
         TODO("Not yet implemented")
     }

@@ -99,5 +99,5 @@ enum class Facility {
     /**
      * Wifi or other type of internet available.
      */
-    WIFI
+    WIFI,
 }

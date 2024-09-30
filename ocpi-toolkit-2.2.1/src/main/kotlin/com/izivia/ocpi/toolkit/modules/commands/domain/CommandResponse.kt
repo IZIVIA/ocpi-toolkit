@@ -14,5 +14,5 @@ import com.izivia.ocpi.toolkit.modules.types.DisplayText
 data class CommandResponse(
     val result: CommandResponseType,
     val timeout: Int,
-    val message: List<DisplayText>
+    val message: List<DisplayText>,
 )

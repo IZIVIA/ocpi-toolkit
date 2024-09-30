@@ -113,5 +113,5 @@ data class Cdr(
     val credit: Boolean? = null,
     val creditReferenceId: CiString? = null,
     val homeChargingCompensation: Boolean? = null,
-    val lastUpdated: Instant
+    val lastUpdated: Instant,
 )

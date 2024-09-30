@@ -164,33 +164,33 @@ class TokensEmspServiceTest {
                 service.postToken(
                     tokenUid = str36chars,
                     type = TokenType.RFID,
-                    locationReferences = validLocationReference
+                    locationReferences = validLocationReference,
                 )
-            }
+            },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
-            runBlocking { service.postToken(tokenUid = str36chars, type = TokenType.RFID) }
+            runBlocking { service.postToken(tokenUid = str36chars, type = TokenType.RFID) },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
-            runBlocking { service.postToken(tokenUid = str36chars, locationReferences = validLocationReference) }
+            runBlocking { service.postToken(tokenUid = str36chars, locationReferences = validLocationReference) },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
-            runBlocking { service.postToken(tokenUid = str36chars) }
+            runBlocking { service.postToken(tokenUid = str36chars) },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.SUCCESS.code)
         }
 
         expectThat(
-            runBlocking { service.postToken(tokenUid = str40chars) }
+            runBlocking { service.postToken(tokenUid = str40chars) },
         ) {
             get { statusCode }.isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
         }

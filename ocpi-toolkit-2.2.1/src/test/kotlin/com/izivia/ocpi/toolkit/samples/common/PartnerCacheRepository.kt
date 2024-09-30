@@ -29,7 +29,7 @@ open class PartnerCacheRepository : PartnerRepository {
 
     override suspend fun saveCredentialsRoles(
         partnerId: String,
-        credentialsRoles: List<CredentialRole>
+        credentialsRoles: List<CredentialRole>,
     ): List<CredentialRole> = partners
         .getOrDefault(partnerId, Partner(partnerId))
         .copy(credentialsRoles = credentialsRoles)

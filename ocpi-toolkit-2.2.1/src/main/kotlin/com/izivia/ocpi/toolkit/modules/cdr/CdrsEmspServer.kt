@@ -15,18 +15,18 @@ import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 class CdrsEmspServer(
     private val service: CdrsEmspInterface<String>,
     versionsRepository: MutableVersionsRepository? = null,
-    basePathOverride: String? = null
+    basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.cdrs,
     interfaceRole = InterfaceRole.RECEIVER,
     versionsRepository = versionsRepository,
-    basePathOverride = basePathOverride
+    basePathOverride = basePathOverride,
 ) {
     override suspend fun doRegisterOn(transportServer: TransportServer) {
         transportServer.handle(
             method = HttpMethod.GET,
-            path = basePathSegments + listOf(VariablePathSegment("cdrId"))
+            path = basePathSegments + listOf(VariablePathSegment("cdrId")),
         ) { req ->
             req.httpResponse {
                 service.getCdr(param = req.pathParams["cdrId"]!!)
@@ -35,12 +35,12 @@ class CdrsEmspServer(
 
         transportServer.handle(
             method = HttpMethod.POST,
-            path = basePathSegments
+            path = basePathSegments,
         ) { req ->
             req.httpResponse {
                 service
                     .postCdr(
-                        cdr = mapper.readValue(req.body, Cdr::class.java)
+                        cdr = mapper.readValue(req.body, Cdr::class.java),
                     )
             }
         }

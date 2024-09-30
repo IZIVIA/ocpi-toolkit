@@ -37,7 +37,7 @@ open class CredentialsClientService(
     private val clientCredentialsRoleRepository: CredentialsRoleRepository,
     private val partnerId: String,
     private val transportClientBuilder: TransportClientBuilder,
-    private val requiredEndpoints: RequiredEndpoints?
+    private val requiredEndpoints: RequiredEndpoints?,
 ) {
     suspend fun get(): Credentials = clientPartnerRepository
         .getCredentialsClientToken(partnerId = partnerId)
@@ -47,7 +47,7 @@ open class CredentialsClientService(
                 .let { it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown") }
         }
         ?: throw OcpiClientGenericException(
-            "Could not find CREDENTIALS_TOKEN_C associated with partner $partnerId"
+            "Could not find CREDENTIALS_TOKEN_C associated with partner $partnerId",
         )
 
     /**
@@ -81,7 +81,7 @@ open class CredentialsClientService(
             clientPartnerRepository.getCredentialsClientToken(partnerId = partnerId)
                 ?: clientPartnerRepository.getCredentialsTokenA(partnerId = partnerId)
                 ?: throw OcpiClientInvalidParametersException(
-                    "Could not find the TokenA or the ClientToken associated with partner $partnerId"
+                    "Could not find the TokenA or the ClientToken associated with partner $partnerId",
                 )
 
         findLatestMutualVersionAndSaveInformation()
@@ -90,7 +90,7 @@ open class CredentialsClientService(
         // that the receiver will use to contact us.
         val serverToken = clientPartnerRepository.saveCredentialsServerToken(
             partnerId = partnerId,
-            credentialsServerToken = generateUUIDv4Token()
+            credentialsServerToken = generateUUIDv4Token(),
         )
 
         // Initiate registration process
@@ -99,9 +99,9 @@ open class CredentialsClientService(
             credentials = Credentials(
                 token = serverToken,
                 url = clientVersionsEndpointUrl,
-                roles = clientCredentialsRoleRepository.getCredentialsRoles()
+                roles = clientCredentialsRoleRepository.getCredentialsRoles(),
             ),
-            debugHeaders = emptyMap()
+            debugHeaders = emptyMap(),
         ).let {
             it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
         }
@@ -109,14 +109,14 @@ open class CredentialsClientService(
         // Save credentials roles of partner
         clientPartnerRepository.saveCredentialsRoles(
             partnerId = partnerId,
-            credentialsRoles = credentials.roles
+            credentialsRoles = credentials.roles,
         )
 
         // Store token C, which is the client token in this case because we are the sender. It's this one that
         // we will use to communicate with the receiver
         clientPartnerRepository.saveCredentialsClientToken(
             partnerId = partnerId,
-            credentialsClientToken = credentials.token
+            credentialsClientToken = credentials.token,
         )
 
         // Remove token A because it is useless from now on
@@ -130,7 +130,7 @@ open class CredentialsClientService(
         val credentialsClientToken =
             clientPartnerRepository.getCredentialsClientToken(partnerId = partnerId)
                 ?: throw OcpiClientInvalidParametersException(
-                    "Could not find the ClientToken associated with partner $partnerId"
+                    "Could not find the ClientToken associated with partner $partnerId",
                 )
 
         findLatestMutualVersionAndSaveInformation()
@@ -139,7 +139,7 @@ open class CredentialsClientService(
         // to communicate with us
         val credentialsServerToken = clientPartnerRepository.saveCredentialsServerToken(
             partnerId = partnerId,
-            credentialsServerToken = generateUUIDv4Token()
+            credentialsServerToken = generateUUIDv4Token(),
         )
 
         // Initiate registration process
@@ -148,9 +148,9 @@ open class CredentialsClientService(
             credentials = Credentials(
                 token = credentialsServerToken,
                 url = clientVersionsEndpointUrl,
-                roles = clientCredentialsRoleRepository.getCredentialsRoles()
+                roles = clientCredentialsRoleRepository.getCredentialsRoles(),
             ),
-            debugHeaders = emptyMap()
+            debugHeaders = emptyMap(),
         ).let {
             it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
         }
@@ -158,14 +158,14 @@ open class CredentialsClientService(
         // Save credentials roles of partner
         clientPartnerRepository.saveCredentialsRoles(
             partnerId = partnerId,
-            credentialsRoles = credentials.roles
+            credentialsRoles = credentials.roles,
         )
 
         // Store token C, which is the client token in this case because we are the sender. It's this one that
         // we will use to communicate with the receiver
         clientPartnerRepository.saveCredentialsClientToken(
             partnerId = partnerId,
-            credentialsClientToken = credentials.token
+            credentialsClientToken = credentials.token,
         )
 
         return credentials
@@ -188,14 +188,14 @@ open class CredentialsClientService(
                 }
         }
         ?: throw OcpiClientGenericException(
-            "Could not find client token associated with partner $partnerId"
+            "Could not find client token associated with partner $partnerId",
         )
 
     private suspend fun findLatestMutualVersionAndSaveInformation(): List<Endpoint> {
         val availableServerVersions = VersionsClient(
             transportClientBuilder = transportClientBuilder,
             partnerId = partnerId,
-            partnerRepository = clientPartnerRepository
+            partnerRepository = clientPartnerRepository,
         )
             .getVersions()
             .let {
@@ -211,7 +211,7 @@ open class CredentialsClientService(
                     .any { clientVersionNumber -> serverVersion.version == clientVersionNumber.value }
             }
             ?: throw OcpiServerUnsupportedVersionException(
-                "Could not find mutual version with partner $partnerId"
+                "Could not find mutual version with partner $partnerId",
             )
 
         // Store version that will be used
@@ -221,7 +221,7 @@ open class CredentialsClientService(
         val versionDetails = VersionDetailsClient(
             transportClientBuilder = transportClientBuilder,
             partnerId = partnerId,
-            partnerRepository = clientPartnerRepository
+            partnerRepository = clientPartnerRepository,
         )
             .getVersionDetails()
             .let {
@@ -233,7 +233,7 @@ open class CredentialsClientService(
         // Store version & endpoint
         return clientPartnerRepository.saveEndpoints(
             partnerId = partnerId,
-            endpoints = versionDetails.endpoints
+            endpoints = versionDetails.endpoints,
         )
     }
 
@@ -249,8 +249,8 @@ open class CredentialsClientService(
                     .find { it.identifier == ModuleID.credentials }
                     ?.url
                     ?: throw OcpiServerUnsupportedVersionException(
-                        "No credentials endpoint for $partnerId"
-                    )
-            )
+                        "No credentials endpoint for $partnerId",
+                    ),
+            ),
     )
 }

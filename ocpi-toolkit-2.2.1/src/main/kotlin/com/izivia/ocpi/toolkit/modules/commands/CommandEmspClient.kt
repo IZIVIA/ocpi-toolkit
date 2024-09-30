@@ -15,14 +15,14 @@ class CommandEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
     private val partnerRepository: PartnerRepository,
-    private val callbackBaseUrl: String
+    private val callbackBaseUrl: String,
 ) {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.commands,
             partnerId = partnerId,
-            partnerRepository = partnerRepository
+            partnerRepository = partnerRepository,
         )
 
     suspend fun postStartSession(
@@ -30,7 +30,7 @@ class CommandEmspClient(
         locationId: CiString,
         evseId: CiString?,
         connectorId: CiString?,
-        authorizationReference: CiString
+        authorizationReference: CiString,
     ): OcpiResponseBody<CommandResponse> =
         with(buildTransport()) {
             send(
@@ -44,15 +44,15 @@ class CommandEmspClient(
                             locationId = locationId,
                             evseUid = evseId,
                             connectorId = connectorId,
-                            authorizationReference = authorizationReference
-                        )
-                    )
+                            authorizationReference = authorizationReference,
+                        ),
+                    ),
                 )
                     .withRequiredHeaders(
                         requestId = generateUUIDv4Token(),
-                        correlationId = generateUUIDv4Token()
+                        correlationId = generateUUIDv4Token(),
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
                 .parseBody()
         }
@@ -66,15 +66,15 @@ class CommandEmspClient(
                     body = mapper.writeValueAsString(
                         StopSession(
                             responseUrl = "$callbackBaseUrl/STOP_SESSION/callback/$sessionId",
-                            sessionId = sessionId
-                        )
-                    )
+                            sessionId = sessionId,
+                        ),
+                    ),
                 )
                     .withRequiredHeaders(
                         requestId = generateUUIDv4Token(),
-                        correlationId = generateUUIDv4Token()
+                        correlationId = generateUUIDv4Token(),
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
                 .parseBody()
         }
@@ -85,7 +85,7 @@ class CommandEmspClient(
         reservationId: CiString,
         locationId: CiString,
         evseUid: CiString?,
-        authorizationReference: CiString?
+        authorizationReference: CiString?,
     ): OcpiResponseBody<CommandResponse> =
         with(buildTransport()) {
             send(
@@ -100,15 +100,15 @@ class CommandEmspClient(
                             reservationId = reservationId,
                             locationId = locationId,
                             evseUid = evseUid,
-                            authorizationReference = authorizationReference
-                        )
-                    )
+                            authorizationReference = authorizationReference,
+                        ),
+                    ),
                 )
                     .withRequiredHeaders(
                         requestId = generateUUIDv4Token(),
-                        correlationId = generateUUIDv4Token()
+                        correlationId = generateUUIDv4Token(),
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
                 .parseBody()
         }
@@ -122,15 +122,15 @@ class CommandEmspClient(
                     body = mapper.writeValueAsString(
                         CancelReservation(
                             responseUrl = "$callbackBaseUrl/CANCEL_RESERVATION/callback/$reservationId",
-                            reservationId = reservationId
-                        )
-                    )
+                            reservationId = reservationId,
+                        ),
+                    ),
                 )
                     .withRequiredHeaders(
                         requestId = generateUUIDv4Token(),
-                        correlationId = generateUUIDv4Token()
+                        correlationId = generateUUIDv4Token(),
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
                 .parseBody()
         }
@@ -138,7 +138,7 @@ class CommandEmspClient(
     suspend fun postUnlockConnector(
         locationId: CiString,
         evseUid: CiString,
-        connectorId: CiString
+        connectorId: CiString,
     ): OcpiResponseBody<CommandResponse> =
         with(buildTransport()) {
             send(
@@ -151,15 +151,15 @@ class CommandEmspClient(
                             "$callbackBaseUrl/UNLOCK_CONNECTOR/callback/$locationId/$evseUid/$connectorId",
                             locationId = locationId,
                             evseUid = evseUid,
-                            connectorId = connectorId
-                        )
-                    )
+                            connectorId = connectorId,
+                        ),
+                    ),
                 )
                     .withRequiredHeaders(
                         requestId = generateUUIDv4Token(),
-                        correlationId = generateUUIDv4Token()
+                        correlationId = generateUUIDv4Token(),
                     )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
                 .parseBody()
         }

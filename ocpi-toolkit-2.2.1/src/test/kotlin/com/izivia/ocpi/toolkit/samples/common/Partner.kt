@@ -11,5 +11,5 @@ data class Partner(
     val endpoints: List<Endpoint>? = null,
     val tokenA: String? = null,
     val clientToken: String? = null,
-    val serverToken: String? = null
+    val serverToken: String? = null,
 )

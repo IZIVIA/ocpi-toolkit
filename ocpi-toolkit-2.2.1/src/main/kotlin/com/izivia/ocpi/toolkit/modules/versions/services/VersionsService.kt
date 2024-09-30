@@ -12,20 +12,20 @@ open class VersionsService(
     private val repository: VersionsRepository,
     private val baseUrlProvider: suspend () -> String,
     val versionsBasePath: String = "/versions",
-    val versionDetailsBasePath: String = ""
+    val versionDetailsBasePath: String = "",
 ) : VersionsInterface {
 
     override suspend fun getVersions(): OcpiResponseBody<List<Version>> = OcpiResponseBody.of {
         repository.getVersions().map {
             Version(
                 version = it.value,
-                url = "${baseUrlProvider()}$versionDetailsBasePath/${it.value}"
+                url = "${baseUrlProvider()}$versionDetailsBasePath/${it.value}",
             )
         }
     }
 
     suspend fun getVersionDetails(
-        versionNumber: String
+        versionNumber: String,
     ): OcpiResponseBody<VersionDetails> = OcpiResponseBody.of {
         parseVersionNumber(versionNumber)
             ?.let { parsedVersionNumber ->

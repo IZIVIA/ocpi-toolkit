@@ -21,5 +21,5 @@ enum class TariffDimensionType {
      * Can also be used in combination with a RESERVATION restriction to describe the price of the
      * reservation time.
      */
-    TIME
+    TIME,
 }

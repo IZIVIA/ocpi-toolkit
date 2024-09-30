@@ -36,7 +36,7 @@ interface ChargingProfilesCpoInterface {
     suspend fun getActiveChargingProfile(
         sessionId: CiString,
         duration: Int,
-        responseUrl: URL
+        responseUrl: URL,
     ): OcpiResponseBody<ChargingProfileResponse>
 
     /**
@@ -49,7 +49,7 @@ interface ChargingProfilesCpoInterface {
      */
     suspend fun putChargingProfile(
         sessionId: CiString,
-        setChargingProfile: SetChargingProfile
+        setChargingProfile: SetChargingProfile,
     ): OcpiResponseBody<ChargingProfileResponse>
 
     /**
@@ -64,6 +64,6 @@ interface ChargingProfilesCpoInterface {
      */
     suspend fun deleteChargingProfile(
         sessionId: CiString,
-        responseUrl: URL
+        responseUrl: URL,
     ): OcpiResponseBody<ChargingProfileResponse>
 }

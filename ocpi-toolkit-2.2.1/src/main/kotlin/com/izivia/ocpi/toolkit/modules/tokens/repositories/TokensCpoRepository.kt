@@ -37,7 +37,7 @@ interface TokensCpoRepository {
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
-        type: TokenType? = TokenType.RFID
+        type: TokenType? = TokenType.RFID,
     ): Token
 
     /**
@@ -61,7 +61,7 @@ interface TokensCpoRepository {
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
-        type: TokenType? = TokenType.RFID
+        type: TokenType? = TokenType.RFID,
     ): Token
 
     /**
@@ -88,6 +88,6 @@ interface TokensCpoRepository {
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
-        type: TokenType? = TokenType.RFID
+        type: TokenType? = TokenType.RFID,
     ): Token?
 }

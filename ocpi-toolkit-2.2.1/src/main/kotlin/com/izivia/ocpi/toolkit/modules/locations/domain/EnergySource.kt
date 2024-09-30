@@ -12,5 +12,5 @@ import java.math.BigDecimal
 @Partial
 data class EnergySource(
     val source: EnergySourceCategory,
-    val percentage: BigDecimal
+    val percentage: BigDecimal,
 )

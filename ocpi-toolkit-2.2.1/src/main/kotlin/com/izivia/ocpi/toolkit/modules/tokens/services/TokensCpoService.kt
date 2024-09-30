@@ -12,13 +12,13 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensCpoRepository
 
 open class TokensCpoService(
-    private val service: TokensCpoRepository
+    private val service: TokensCpoRepository,
 ) : TokensCpoInterface {
     override suspend fun getToken(
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
-        type: TokenType?
+        type: TokenType?,
     ): OcpiResponseBody<Token> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
@@ -34,7 +34,7 @@ open class TokensCpoService(
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
-        type: TokenType?
+        type: TokenType?,
     ): OcpiResponseBody<Token> = OcpiResponseBody.of {
         validate {
             token.validate()
@@ -54,7 +54,7 @@ open class TokensCpoService(
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
-        type: TokenType?
+        type: TokenType?,
     ): OcpiResponseBody<Token?> = OcpiResponseBody.of {
         validate {
             token.validate()

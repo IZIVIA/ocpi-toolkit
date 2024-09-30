@@ -59,11 +59,11 @@ inline fun <reified T> HttpResponse.parsePaginatedBody(offset: Int): OcpiRespons
                     limit = getHeader(Header.X_LIMIT)?.toInt()
                         ?: throw OcpiToolkitMissingRequiredResponseHeaderException(Header.X_LIMIT),
                     offset = offset,
-                    nextPageUrl = getHeader(Header.LINK)?.split("<")?.elementAtOrNull(1)?.split(">")?.first()
+                    nextPageUrl = getHeader(Header.LINK)?.split("<")?.elementAtOrNull(1)?.split(">")?.first(),
                 ),
                 statusCode = parsedBody.statusCode,
                 statusMessage = parsedBody.statusMessage,
-                timestamp = parsedBody.timestamp
+                timestamp = parsedBody.timestamp,
             )
         }
 
@@ -102,18 +102,18 @@ fun authorizationHeader(token: String): Pair<String, String> = Header.AUTHORIZAT
  */
 suspend fun PartnerRepository.buildAuthorizationHeader(
     partnerId: String,
-    allowTokenA: Boolean = false
+    allowTokenA: Boolean = false,
 ): Pair<String, String> =
     if (allowTokenA) {
         getCredentialsClientToken(partnerId = partnerId)
             ?: getCredentialsTokenA(partnerId = partnerId)
             ?: throw throw OcpiClientUnknownTokenException(
-                "Could not find token A or client token associated with partner $partnerId"
+                "Could not find token A or client token associated with partner $partnerId",
             )
     } else {
         getCredentialsClientToken(partnerId = partnerId)
             ?: throw throw OcpiClientUnknownTokenException(
-                "Could not find client token associated with partner $partnerId"
+                "Could not find client token associated with partner $partnerId",
             )
     }
         .let { token -> authorizationHeader(token = token) }
@@ -129,15 +129,15 @@ suspend fun PartnerRepository.buildAuthorizationHeader(
 suspend fun HttpRequest.authenticate(
     partnerRepository: PartnerRepository,
     partnerId: String,
-    allowTokenA: Boolean = false
+    allowTokenA: Boolean = false,
 ): AuthenticatedHttpRequest =
     withHeaders(
         headers = headers.plus(
             partnerRepository.buildAuthorizationHeader(
                 partnerId = partnerId,
-                allowTokenA = allowTokenA
-            )
-        )
+                allowTokenA = allowTokenA,
+            ),
+        ),
     )
 
 /**
@@ -179,7 +179,7 @@ fun HttpRequest.messageRoutingHeaders(): RequestMessageRoutingHeaders =
         toPartyId = headers.getByNormalizedKey(OCPI_TO_PARTY_ID),
         toCountryCode = headers.getByNormalizedKey(OCPI_TO_COUNTRY_CODE),
         fromPartyId = headers.getByNormalizedKey(OCPI_FROM_PARTY_ID),
-        fromCountryCode = headers.getByNormalizedKey(OCPI_FROM_COUNTRY_CODE)
+        fromCountryCode = headers.getByNormalizedKey(OCPI_FROM_COUNTRY_CODE),
     )
 
 /**
@@ -190,7 +190,7 @@ private fun RequestMessageRoutingHeaders.httpHeaders(): Map<String, String> =
         OCPI_TO_PARTY_ID to toPartyId,
         OCPI_TO_COUNTRY_CODE to toCountryCode,
         OCPI_FROM_PARTY_ID to fromPartyId,
-        OCPI_FROM_COUNTRY_CODE to fromCountryCode
+        OCPI_FROM_COUNTRY_CODE to fromCountryCode,
     )
         .filter { it.value != null }
         .mapValues { it.value!! }
@@ -200,7 +200,7 @@ fun ResponseMessageRoutingHeaders.httpHeaders(): Map<String, String> =
         OCPI_TO_PARTY_ID to toPartyId,
         OCPI_TO_COUNTRY_CODE to toCountryCode,
         OCPI_FROM_PARTY_ID to fromPartyId,
-        OCPI_FROM_COUNTRY_CODE to fromCountryCode
+        OCPI_FROM_COUNTRY_CODE to fromCountryCode,
     )
         .filter { it.value != null }
         .mapValues { it.value!! }
@@ -210,7 +210,7 @@ fun ResponseMessageRoutingHeaders.httpHeaders(): Map<String, String> =
  */
 fun HttpRequest.extractTokenHeader(): TokenHeader =
     TokenHeader(
-        token = parseAuthorizationHeader()
+        token = parseAuthorizationHeader(),
     )
 
 /**
@@ -233,12 +233,12 @@ fun HttpRequest.extractTokenHeader(): TokenHeader =
  */
 suspend fun HttpRequest.withRequiredHeaders(
     requestId: String,
-    correlationId: String
+    correlationId: String,
 ): HttpRequest =
     withHeaders(
         headers = headers
             .plus(Header.X_REQUEST_ID to requestId)
-            .plus(Header.X_CORRELATION_ID to correlationId)
+            .plus(Header.X_CORRELATION_ID to correlationId),
     )
         .withContentTypeHeaderIfNeeded()
         .withRequestMessageRoutingHeadersIfPresent()
@@ -262,7 +262,7 @@ suspend fun HttpRequest.withRequiredHeaders(
  */
 fun HttpRequest.withUpdatedRequiredHeaders(
     headers: Map<String, String>,
-    generatedRequestId: String
+    generatedRequestId: String,
 ): HttpRequest =
     withHeaders(
         headers = headers
@@ -271,8 +271,8 @@ fun HttpRequest.withUpdatedRequiredHeaders(
                 Header.X_CORRELATION_ID to (
                     headers.getByNormalizedKey(Header.X_CORRELATION_ID)
                         ?: "error - could not get ${Header.X_CORRELATION_ID} header"
-                    )
-            )
+                    ),
+            ),
     ).withContentTypeHeaderIfNeeded()
 
 /**
@@ -288,7 +288,7 @@ fun HttpRequest.withUpdatedRequiredHeaders(
  */
 fun HttpRequest.getDebugHeaders() = listOfNotNull(
     getHeader(Header.X_REQUEST_ID)?.let { Header.X_REQUEST_ID to it },
-    getHeader(Header.X_CORRELATION_ID)?.let { Header.X_CORRELATION_ID to it }
+    getHeader(Header.X_CORRELATION_ID)?.let { Header.X_CORRELATION_ID to it },
 ).toMap()
 
 /**
@@ -342,7 +342,7 @@ fun HttpRequest.parseAuthorizationHeader() = getHeader(Header.AUTHORIZATION)
  *
  */
 suspend fun PartnerRepository.checkToken(
-    httpRequest: HttpRequest
+    httpRequest: HttpRequest,
 ) {
     val token = httpRequest.parseAuthorizationHeader()
 
@@ -368,7 +368,7 @@ suspend fun PartnerRepository.checkToken(
     // This method MUST return a HTTP status code 405: method not allowed if the client has not been registered before.
     if (!validToken && httpRequest.path.contains(ModuleID.credentials.name) && httpRequest.method in listOf(
             HttpMethod.PUT,
-            HttpMethod.DELETE
+            HttpMethod.DELETE,
         )
     ) {
         throw HttpException(HttpStatus.METHOD_NOT_ALLOWED, "Method not allowed")
@@ -382,7 +382,7 @@ suspend fun PartnerRepository.checkToken(
 suspend fun TransportClientBuilder.buildFor(
     module: ModuleID,
     partnerId: String,
-    partnerRepository: PartnerRepository
+    partnerRepository: PartnerRepository,
 ): TransportClient =
     partnerRepository
         .getEndpoints(partnerId = partnerId)

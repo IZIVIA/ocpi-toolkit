@@ -47,5 +47,5 @@ enum class Status {
     /**
      * No status information available. (Also used when offline)
      */
-    UNKNOWN
+    UNKNOWN,
 }

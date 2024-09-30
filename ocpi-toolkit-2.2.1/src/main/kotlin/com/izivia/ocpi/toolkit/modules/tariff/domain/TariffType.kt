@@ -26,5 +26,5 @@ enum class TariffType {
      * Used to describe that a Tariff is valid when using an RFID, without any Charging Preference, or when
      * Charging Preference: REGULAR is set for the session.
      */
-    REGULAR
+    REGULAR,
 }

@@ -14,5 +14,5 @@ import com.izivia.ocpi.toolkit.common.CiString
 @Partial
 data class LocationReferences(
     val locationId: CiString,
-    val evseUids: List<CiString>
+    val evseUids: List<CiString>,
 )

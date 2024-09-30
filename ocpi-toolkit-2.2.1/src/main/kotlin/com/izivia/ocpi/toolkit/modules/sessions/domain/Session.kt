@@ -88,5 +88,5 @@ data class Session(
     val chargingPeriods: List<ChargingPeriod>? = emptyList(),
     val totalCost: Price? = null,
     val status: SessionStatusType,
-    val lastUpdated: Instant
+    val lastUpdated: Instant,
 )

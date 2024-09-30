@@ -19,7 +19,7 @@ interface TransportServer {
         path: List<PathSegment>,
         queryParams: List<String> = emptyList(),
         filters: List<(request: HttpRequest) -> Unit> = emptyList(),
-        callback: suspend (request: HttpRequest) -> HttpResponse
+        callback: suspend (request: HttpRequest) -> HttpResponse,
     )
 
     /**

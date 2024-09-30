@@ -79,7 +79,7 @@ enum class OcpiStatus(val code: Int) {
     /**
      * Connection problem (receiving party is not connected)
      */
-    HUB_CONNECTION_PROBLEM(4003)
+    HUB_CONNECTION_PROBLEM(4003),
 }
 
 fun Int.toOcpiStatus(): OcpiStatus? = OcpiStatus.values().firstOrNull { it.code == this }

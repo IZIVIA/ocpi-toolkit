@@ -45,7 +45,7 @@ interface TokensEmspInterface {
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int = 0,
-        limit: Int?
+        limit: Int?,
     ): OcpiResponseBody<SearchResult<Token>>
 
     /**
@@ -78,6 +78,6 @@ interface TokensEmspInterface {
     suspend fun postToken(
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-        locationReferences: LocationReferences? = null
+        locationReferences: LocationReferences? = null,
     ): OcpiResponseBody<AuthorizationInfo>
 }

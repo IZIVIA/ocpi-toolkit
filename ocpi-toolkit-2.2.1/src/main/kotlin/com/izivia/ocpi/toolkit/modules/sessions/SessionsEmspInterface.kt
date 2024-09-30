@@ -50,7 +50,7 @@ interface SessionsEmspInterface {
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-        session: Session
+        session: Session,
     ): OcpiResponseBody<Session?>
 
     /**
@@ -74,6 +74,6 @@ interface SessionsEmspInterface {
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-        session: SessionPartial
+        session: SessionPartial,
     ): OcpiResponseBody<Session?>
 }

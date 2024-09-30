@@ -10,7 +10,7 @@ import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
 import com.izivia.ocpi.toolkit.modules.cdr.repositories.CdrsEmspRepository
 
 class CdrsEmspService(
-    private val service: CdrsEmspRepository
+    private val service: CdrsEmspRepository,
 ) : CdrsEmspInterface<String> {
     /**
      * GET Method

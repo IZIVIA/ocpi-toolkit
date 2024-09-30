@@ -59,7 +59,7 @@ interface LocationsEmspRepository {
         partyId: String,
         locationId: String,
         evseUid: String,
-        connectorId: String
+        connectorId: String,
     ): Connector?
 
     /**
@@ -75,7 +75,7 @@ interface LocationsEmspRepository {
         countryCode: String,
         partyId: String,
         locationId: String,
-        location: Location
+        location: Location,
     ): Location
 
     /**
@@ -93,7 +93,7 @@ interface LocationsEmspRepository {
         partyId: String,
         locationId: String,
         evseUid: String,
-        evse: Evse
+        evse: Evse,
     ): Evse
 
     /**
@@ -113,7 +113,7 @@ interface LocationsEmspRepository {
         locationId: String,
         evseUid: String,
         connectorId: String,
-        connector: Connector
+        connector: Connector,
     ): Connector
 
     /**
@@ -128,7 +128,7 @@ interface LocationsEmspRepository {
         countryCode: String,
         partyId: String,
         locationId: String,
-        location: LocationPartial
+        location: LocationPartial,
     ): Location?
 
     /**
@@ -145,7 +145,7 @@ interface LocationsEmspRepository {
         partyId: String,
         locationId: String,
         evseUid: String,
-        evse: EvsePartial
+        evse: EvsePartial,
     ): Evse?
 
     /**
@@ -164,6 +164,6 @@ interface LocationsEmspRepository {
         locationId: String,
         evseUid: String,
         connectorId: String,
-        connector: ConnectorPartial
+        connector: ConnectorPartial,
     ): Connector?
 }

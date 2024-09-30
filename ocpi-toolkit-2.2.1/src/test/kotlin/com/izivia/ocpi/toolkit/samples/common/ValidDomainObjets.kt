@@ -13,23 +13,23 @@ val validLongitude = "23.234567"
 val validStatusSchedule = StatusSchedule(
     periodBegin = Instant.parse("2022-04-28T08:00:00.000Z"),
     periodEnd = Instant.parse("2022-04-28T09:00:00.000Z"),
-    status = Status.AVAILABLE
+    status = Status.AVAILABLE,
 )
 
 val validDisplayText = DisplayText(
     language = "fr",
-    text = "abcdef"
+    text = "abcdef",
 )
 
 val validGeoLocation = GeoLocation(
     latitude = validLatitude,
-    longitude = validLongitude
+    longitude = validLongitude,
 )
 
 val validAdditionalGeoLocation = AdditionalGeoLocation(
     latitude = validLatitude,
     longitude = validLongitude,
-    name = validDisplayText
+    name = validDisplayText,
 )
 
 val validImage = Image(
@@ -38,41 +38,41 @@ val validImage = Image(
     category = ImageCategory.LOCATION,
     type = "jpeg",
     width = 12345,
-    height = 123
+    height = 123,
 )
 
 val validBusinessDetails = BusinessDetails(
     name = "name",
     website = validUrl,
-    logo = validImage
+    logo = validImage,
 )
 
 val validRegularHours = RegularHours(
     weekday = 1,
     periodBegin = "00:00",
-    periodEnd = "23:59"
+    periodEnd = "23:59",
 )
 
 val validExceptionalPeriod = ExceptionalPeriod(
     periodBegin = Instant.parse("2022-04-28T08:00:00.000Z"),
-    periodEnd = Instant.parse("2022-04-28T09:00:00.000Z")
+    periodEnd = Instant.parse("2022-04-28T09:00:00.000Z"),
 )
 
 val validHours = Hours(
     regularHours = listOf(validRegularHours),
     twentyfourseven = false,
     exceptionalOpenings = listOf(validExceptionalPeriod),
-    exceptionalClosings = emptyList()
+    exceptionalClosings = emptyList(),
 )
 
 val validEnergySource = EnergySource(
     source = EnergySourceCategory.NUCLEAR,
-    percentage = BigDecimal.ZERO
+    percentage = BigDecimal.ZERO,
 )
 
 val validEnvironmentalImpact = EnvironmentalImpact(
     category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
-    amount = BigDecimal.ZERO
+    amount = BigDecimal.ZERO,
 )
 
 val validEnergyMix = EnergyMix(
@@ -80,7 +80,7 @@ val validEnergyMix = EnergyMix(
     energySources = listOf(validEnergySource),
     environImpact = listOf(validEnvironmentalImpact),
     supplierName = "supplier_name",
-    energyProductName = "energy_product_name"
+    energyProductName = "energy_product_name",
 )
 
 val validPublishTokenType = PublishTokenType(
@@ -88,7 +88,7 @@ val validPublishTokenType = PublishTokenType(
     type = TokenType.AD_HOC_USER,
     visualNumber = "visual_number",
     issuer = "issuer",
-    groupId = "group_id"
+    groupId = "group_id",
 )
 
 val validLocation = Location(
@@ -117,7 +117,7 @@ val validLocation = Location(
     chargingWhenClosed = false,
     images = listOf(validImage),
     energyMix = validEnergyMix,
-    lastUpdated = Instant.now()
+    lastUpdated = Instant.now(),
 )
 
 val validConnector = Connector(
@@ -130,7 +130,7 @@ val validConnector = Connector(
     maxElectricPower = null,
     tariffIds = listOf("tariff_id"),
     termsAndConditions = "https://myspecs.com/me",
-    lastUpdated = Instant.now()
+    lastUpdated = Instant.now(),
 )
 
 val validEvse = Evse(
@@ -146,5 +146,5 @@ val validEvse = Evse(
     directions = listOf(validDisplayText),
     parkingRestrictions = listOf(ParkingRestriction.CUSTOMERS),
     images = listOf(validImage),
-    lastUpdated = Instant.now()
+    lastUpdated = Instant.now(),
 )
