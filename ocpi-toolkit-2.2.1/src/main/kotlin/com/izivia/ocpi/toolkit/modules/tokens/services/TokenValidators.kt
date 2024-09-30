@@ -21,8 +21,8 @@ fun TokenPartial.validate(): TokenPartial = validate(this) {
     validate(TokenPartial::uid).isPrintableAscii().hasMaxLengthOf(36)
     // type : nothing to validate
     validate(TokenPartial::contractId).isPrintableAscii().hasMaxLengthOf(36)
-    validate(TokenPartial::visualNumber).isPrintableAscii().hasMaxLengthOf(64)
-    validate(TokenPartial::issuer).isPrintableAscii().hasMaxLengthOf(64)
+    validate(TokenPartial::visualNumber).isPrintableUtf8().hasMaxLengthOf(64)
+    validate(TokenPartial::issuer).isPrintableUtf8().hasMaxLengthOf(64)
     validate(TokenPartial::groupId).isPrintableAscii().hasMaxLengthOf(36)
     // valid : nothing to validate
     // whitelist : nothing to validate
@@ -55,11 +55,11 @@ fun LocationReferencesPartial.validate(): LocationReferencesPartial = validate(t
 }
 
 fun EnergyContractPartial.validate(): EnergyContractPartial = validate(this) {
-    validate(EnergyContractPartial::supplierName).isPrintableAscii().hasMaxLengthOf(64)
+    validate(EnergyContractPartial::supplierName).isPrintableUtf8().hasMaxLengthOf(64)
     validate(EnergyContractPartial::contractId).isPrintableAscii().hasMaxLengthOf(64)
 }
 
-fun DisplayText.validate(): DisplayText = org.valiktor.validate(this) {
+fun DisplayText.validate(): DisplayText = validate(this) {
     toPartial().validate()
 }
 

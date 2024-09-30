@@ -9,6 +9,7 @@ import java.time.Instant
 val validUrl = "https://abc.com"
 val validLatitude = "-15.234567"
 val validLongitude = "23.234567"
+val validUtf8String = "abc 1234 èñü 谢谢"
 
 val validStatusSchedule = StatusSchedule(
     periodBegin = Instant.parse("2022-04-28T08:00:00.000Z"),
@@ -18,7 +19,7 @@ val validStatusSchedule = StatusSchedule(
 
 val validDisplayText = DisplayText(
     language = "fr",
-    text = "abcdef",
+    text = validUtf8String,
 )
 
 val validGeoLocation = GeoLocation(

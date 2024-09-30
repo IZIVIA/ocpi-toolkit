@@ -37,14 +37,14 @@ class RegularHoursSetAtTheSameTimeAsTwentyFourSevenConstraint : Constraint
 data class SameStringValueConstraint(val reference: String) : Constraint
 
 fun String.isPrintableAscii(): Boolean = matches("[\\x20-\\x7E]*".toRegex())
-fun String.isPrintableUtf8(): Boolean = matches("[\\x20-\\x7E]*".toRegex())
+fun String.isNonPrintableUtf8(): Boolean = matches(".*[\\x00-\\x1F\\x7F\\x80-\\x9F]+.*".toRegex()) // C0, DEL, C1
 
 /**
  * Valid if the given string only has printable ASCII characters and is smaller or has the same length as the given one.
  */
 fun <E> Validator<E>.Property<String?>.isPrintableUtf8() =
     this.validate(PrintableUtf8Constraint()) {
-        it == null || it.isPrintableUtf8()
+        it == null || !it.isNonPrintableUtf8()
     }
 
 /**
@@ -207,7 +207,7 @@ fun PricePartial.validate(): PricePartial = validate(this) {
 fun DisplayTextPartial.validate(): DisplayTextPartial = validate(this) {
     validate(DisplayTextPartial::language).isLanguage()
     validate(DisplayTextPartial::text)
-        .isPrintableAscii()
+        .isPrintableUtf8()
         .hasNoHtml()
         .hasMaxLengthOf(512)
 }
