@@ -53,5 +53,5 @@ data class Evse(
     val directions: List<DisplayText>? = null,
     val parkingRestrictions: List<ParkingRestriction>? = null,
     val images: List<Image>? = null,
-    val lastUpdated: Instant
+    val lastUpdated: Instant,
 )

@@ -9,5 +9,5 @@ import com.izivia.ocpi.toolkit.annotations.Partial
 @Partial
 data class DisplayText(
     val language: String,
-    val text: String
+    val text: String,
 )

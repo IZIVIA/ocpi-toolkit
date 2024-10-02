@@ -10,5 +10,5 @@ import com.izivia.ocpi.toolkit.modules.types.DisplayText
  */
 data class CommandResult(
     val result: CommandResultType,
-    val message: List<DisplayText>
+    val message: List<DisplayText>,
 )

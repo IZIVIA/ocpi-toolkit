@@ -46,6 +46,6 @@ interface SessionsCpoRepository {
      */
     suspend fun putChargingPreferences(
         sessionId: CiString,
-        chargingPreferences: ChargingPreferences
+        chargingPreferences: ChargingPreferences,
     ): ChargingPreferencesResponseType
 }

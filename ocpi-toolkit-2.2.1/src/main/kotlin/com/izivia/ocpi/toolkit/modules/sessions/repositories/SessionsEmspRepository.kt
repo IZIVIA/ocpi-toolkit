@@ -69,6 +69,6 @@ interface SessionsEmspRepository {
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-        session: SessionPartial
+        session: SessionPartial,
     ): Session?
 }

@@ -20,5 +20,5 @@ data class UnlockConnector(
     val responseUrl: URL,
     val locationId: CiString,
     val evseUid: CiString,
-    val connectorId: CiString
+    val connectorId: CiString,
 )

@@ -13,12 +13,12 @@ val DUMMY_PLATFORM_REPOSITORY = DummyPartnerCacheRepository().also {
     runBlocking {
         it.saveEndpoints(
             emspServerVersionsUrl,
-            versionDetailsEmsp.getVersionDetails(VersionNumber.V2_2_1)!!.endpoints
+            versionDetailsEmsp.getVersionDetails(VersionNumber.V2_2_1)!!.endpoints,
         )
 
         it.saveEndpoints(
             cpoServerVersionsUrl,
-            versionDetailsCpo.getVersionDetails(VersionNumber.V2_2_1)!!.endpoints
+            versionDetailsCpo.getVersionDetails(VersionNumber.V2_2_1)!!.endpoints,
         )
     }
 }

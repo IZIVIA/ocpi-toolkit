@@ -12,13 +12,13 @@ fun main() {
     val locationsCpoClient = LocationsCpoClient(
         transportClientBuilder = Http4kTransportClientBuilder(),
         partnerId = emspServerVersionsUrl,
-        partnerRepository = DUMMY_PLATFORM_REPOSITORY
+        partnerRepository = DUMMY_PLATFORM_REPOSITORY,
     )
 
     // We can use it
     println(
         runBlocking {
             locationsCpoClient.getLocation(countryCode = "fr", partyId = "abc", locationId = "location1")
-        }
+        },
     )
 }

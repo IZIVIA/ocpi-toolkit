@@ -19,5 +19,5 @@ import java.time.Instant
 data class StatusSchedule(
     val periodBegin: Instant,
     val periodEnd: Instant?,
-    val status: Status
+    val status: Status,
 )

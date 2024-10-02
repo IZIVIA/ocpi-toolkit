@@ -16,13 +16,13 @@ import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 class SessionsEmspServer(
     private val service: SessionsEmspInterface,
     versionsRepository: MutableVersionsRepository? = null,
-    basePathOverride: String? = null
+    basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.sessions,
     interfaceRole = InterfaceRole.RECEIVER,
     versionsRepository = versionsRepository,
-    basePathOverride = basePathOverride
+    basePathOverride = basePathOverride,
 ) {
 
     override suspend fun doRegisterOn(transportServer: TransportServer) {
@@ -31,15 +31,15 @@ class SessionsEmspServer(
             path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
-                VariablePathSegment("sessionId")
-            )
+                VariablePathSegment("sessionId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service
                     .getSession(
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
-                        sessionId = req.pathParams["sessionId"]!!
+                        sessionId = req.pathParams["sessionId"]!!,
                     )
             }
         }
@@ -49,8 +49,8 @@ class SessionsEmspServer(
             path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
-                VariablePathSegment("sessionId")
-            )
+                VariablePathSegment("sessionId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service
@@ -58,7 +58,7 @@ class SessionsEmspServer(
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         sessionId = req.pathParams["sessionId"]!!,
-                        session = mapper.readValue(req.body, Session::class.java)
+                        session = mapper.readValue(req.body, Session::class.java),
                     )
             }
         }
@@ -68,8 +68,8 @@ class SessionsEmspServer(
             path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
-                VariablePathSegment("sessionId")
-            )
+                VariablePathSegment("sessionId"),
+            ),
         ) { req ->
             req.httpResponse {
                 service
@@ -77,7 +77,7 @@ class SessionsEmspServer(
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         sessionId = req.pathParams["sessionId"]!!,
-                        session = mapper.readValue(req.body, SessionPartial::class.java)
+                        session = mapper.readValue(req.body, SessionPartial::class.java),
                     )
             }
         }

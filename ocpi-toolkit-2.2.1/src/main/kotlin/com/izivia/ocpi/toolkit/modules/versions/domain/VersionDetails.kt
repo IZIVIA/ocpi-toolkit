@@ -13,5 +13,5 @@ package com.izivia.ocpi.toolkit.modules.versions.domain
  */
 data class VersionDetails(
     val version: String,
-    val endpoints: List<Endpoint>
+    val endpoints: List<Endpoint>,
 )

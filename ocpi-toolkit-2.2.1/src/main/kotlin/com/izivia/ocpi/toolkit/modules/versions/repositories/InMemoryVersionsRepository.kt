@@ -25,7 +25,7 @@ class InMemoryVersionsRepository : MutableVersionsRepository {
         return versions[versionNumber]?.let {
             VersionDetails(
                 version = versionNumber.value,
-                endpoints = it
+                endpoints = it,
             )
         }
     }

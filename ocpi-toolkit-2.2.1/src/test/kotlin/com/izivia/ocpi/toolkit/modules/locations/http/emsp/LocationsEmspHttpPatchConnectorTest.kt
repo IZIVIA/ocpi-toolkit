@@ -42,7 +42,7 @@ class LocationsEmspHttpPatchConnectorTest {
                     capture(slots.locationId),
                     capture(slots.evseUid),
                     capture(slots.connectorId),
-                    capture(slots.connector)
+                    capture(slots.connector),
                 )
             } coAnswers {
                 Connector(
@@ -53,7 +53,7 @@ class LocationsEmspHttpPatchConnectorTest {
                     maxVoltage = 220,
                     maxAmperage = 16,
                     tariffIds = listOf("11"),
-                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
+                    lastUpdated = Instant.parse("2015-03-16T10:10:02Z"),
                 )
             }
         }.buildServer()
@@ -70,10 +70,10 @@ class LocationsEmspHttpPatchConnectorTest {
             tariffIds = null,
             maxElectricPower = null,
             termsAndConditions = null,
-            lastUpdated = null
+            lastUpdated = null,
         )
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1/3256/1", mapper.writeValueAsString(connector))
+            buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1/3256/1", mapper.writeValueAsString(connector)),
         )
 
         // then
@@ -93,7 +93,7 @@ class LocationsEmspHttpPatchConnectorTest {
                       "status_message": "Success",
                       "timestamp": "2015-06-30T21:59:59Z"
                     }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -107,7 +107,7 @@ private fun LocationsEmspRepository.buildServer(): TransportClient {
         LocationsEmspServer(
             service = LocationsEmspService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/locations"
+            basePathOverride = "/locations",
         ).registerOn(transportServer)
     }
 

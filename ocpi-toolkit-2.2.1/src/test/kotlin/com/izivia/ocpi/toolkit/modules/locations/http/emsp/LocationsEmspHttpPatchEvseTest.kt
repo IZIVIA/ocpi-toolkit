@@ -40,7 +40,7 @@ class LocationsEmspHttpPatchEvseTest {
                     capture(slots.partyId),
                     capture(slots.locationId),
                     capture(slots.evseUid),
-                    capture(slots.evse)
+                    capture(slots.evse),
                 )
             } coAnswers {
                 Evse(
@@ -57,7 +57,7 @@ class LocationsEmspHttpPatchEvseTest {
                             maxVoltage = 220,
                             maxAmperage = 16,
                             tariffIds = listOf("11"),
-                            lastUpdated = Instant.parse("2015-03-16T10:10:02Z")
+                            lastUpdated = Instant.parse("2015-03-16T10:10:02Z"),
                         ),
                         Connector(
                             id = "2",
@@ -67,12 +67,12 @@ class LocationsEmspHttpPatchEvseTest {
                             maxVoltage = 220,
                             maxAmperage = 16,
                             tariffIds = listOf("13"),
-                            lastUpdated = Instant.parse("2015-03-18T08:12:01Z")
-                        )
+                            lastUpdated = Instant.parse("2015-03-18T08:12:01Z"),
+                        ),
                     ),
                     floorLevel = "-1",
                     physicalReference = "1",
-                    lastUpdated = Instant.parse("2015-06-28T08:12:01Z")
+                    lastUpdated = Instant.parse("2015-06-28T08:12:01Z"),
                 )
             }
         }.buildServer()
@@ -92,10 +92,10 @@ class LocationsEmspHttpPatchEvseTest {
             directions = null,
             parkingRestrictions = null,
             images = null,
-            lastUpdated = null
+            lastUpdated = null,
         )
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1/3256", mapper.writeValueAsString(evse))
+            buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1/3256", mapper.writeValueAsString(evse)),
         )
 
         // then
@@ -114,7 +114,7 @@ class LocationsEmspHttpPatchEvseTest {
                   "status_message": "Success",
                   "timestamp": "2015-06-30T21:59:59Z"
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -128,7 +128,7 @@ private fun LocationsEmspRepository.buildServer(): TransportClient {
         LocationsEmspServer(
             service = LocationsEmspService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/locations"
+            basePathOverride = "/locations",
         ).registerOn(transportServer)
     }
 

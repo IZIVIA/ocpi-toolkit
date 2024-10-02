@@ -12,5 +12,5 @@ enum class EnvironmentalImpactCategory {
     /**
      * Exhausted carbon dioxide in gramms per kilowarrhour
      */
-    CARBON_DIOXIDE
+    CARBON_DIOXIDE,
 }

@@ -202,5 +202,5 @@ enum class ConnectorType {
     /**
      * Tesla Connector "Model-S"-type (oval, 5 pin)
      */
-    TESLA_S
+    TESLA_S,
 }

@@ -19,5 +19,5 @@ data class Hours(
     val regularHours: List<RegularHours>?,
     val twentyfourseven: Boolean,
     val exceptionalOpenings: List<ExceptionalPeriod>?,
-    val exceptionalClosings: List<ExceptionalPeriod>?
+    val exceptionalClosings: List<ExceptionalPeriod>?,
 )

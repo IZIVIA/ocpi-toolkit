@@ -5,9 +5,9 @@ sealed interface PathSegment {
 }
 
 data class FixedPathSegment(
-    override val path: String
+    override val path: String,
 ) : PathSegment
 
 data class VariablePathSegment(
-    override val path: String
+    override val path: String,
 ) : PathSegment

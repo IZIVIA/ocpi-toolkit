@@ -26,5 +26,5 @@ enum class TokenType {
     /**
      * RFID Token
      */
-    RFID
+    RFID,
 }

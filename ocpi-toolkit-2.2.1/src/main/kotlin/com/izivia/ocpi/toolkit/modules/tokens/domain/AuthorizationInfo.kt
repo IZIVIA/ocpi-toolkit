@@ -23,5 +23,5 @@ data class AuthorizationInfo(
     val token: Token,
     val location: LocationReferences? = null,
     val authorizationReference: CiString? = null,
-    val info: DisplayText? = null
+    val info: DisplayText? = null,
 )

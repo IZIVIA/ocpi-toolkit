@@ -41,5 +41,5 @@ data class Connector(
     @JsonSetter(contentNulls = Nulls.SKIP)
     val tariffIds: List<CiString>? = null,
     val termsAndConditions: String? = null,
-    val lastUpdated: Instant
+    val lastUpdated: Instant,
 )

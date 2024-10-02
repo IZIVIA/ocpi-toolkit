@@ -34,5 +34,5 @@ enum class Role {
     /**
      *  Smart Charging Service Provider Role
      */
-    SCSP
+    SCSP,
 }

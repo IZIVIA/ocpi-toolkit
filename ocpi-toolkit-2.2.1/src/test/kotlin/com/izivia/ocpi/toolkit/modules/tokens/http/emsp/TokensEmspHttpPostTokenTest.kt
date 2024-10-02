@@ -52,13 +52,13 @@ class TokensEmspHttpPostTokenTest {
                         defaultProfileType = ProfileType.GREEN,
                         energyContract = EnergyContract(
                             supplierName = "Greenpeace Energy eG",
-                            contractId = "0123456789"
+                            contractId = "0123456789",
                         ),
-                        lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
+                        lastUpdated = Instant.parse("2018-12-10T17:25:10Z"),
                     ),
                     location = null,
                     authorizationReference = null,
-                    info = null
+                    info = null,
                 )
             }
         }.buildServer()
@@ -66,7 +66,7 @@ class TokensEmspHttpPostTokenTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.POST, "/tokens/012345678/authorize?type=RFID")
+            buildHttpRequest(HttpMethod.POST, "/tokens/012345678/authorize?type=RFID"),
         )
 
         // then
@@ -105,7 +105,7 @@ class TokensEmspHttpPostTokenTest {
                     "status_message": "Success",
                     "timestamp": "2015-06-30T21:59:59Z"
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -138,13 +138,13 @@ class TokensEmspHttpPostTokenTest {
                         defaultProfileType = ProfileType.GREEN,
                         energyContract = EnergyContract(
                             supplierName = "Greenpeace Energy eG",
-                            contractId = "0123456789"
+                            contractId = "0123456789",
                         ),
-                        lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
+                        lastUpdated = Instant.parse("2018-12-10T17:25:10Z"),
                     ),
                     location = null,
                     authorizationReference = null,
-                    info = null
+                    info = null,
                 )
             }
         }.buildServer()
@@ -153,14 +153,14 @@ class TokensEmspHttpPostTokenTest {
         // when
         val locationReferences = LocationReferences(
             locationId = "LOC1",
-            evseUids = listOf("BE*BEC*E041503001", "BE*BEC*E041503002")
+            evseUids = listOf("BE*BEC*E041503001", "BE*BEC*E041503002"),
         )
         val resp: HttpResponse = srv.send(
             buildHttpRequest(
                 HttpMethod.POST,
                 "/tokens/012345678/authorize?type=RFID",
-                mapper.writeValueAsString(locationReferences)
-            )
+                mapper.writeValueAsString(locationReferences),
+            ),
         )
 
         // then
@@ -199,7 +199,7 @@ class TokensEmspHttpPostTokenTest {
                     "status_message": "Success",
                     "timestamp": "2015-06-30T21:59:59Z"
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -213,7 +213,7 @@ private fun TokensEmspRepository.buildServer(): TransportClient {
         TokensEmspServer(
             service = TokensEmspService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/tokens"
+            basePathOverride = "/tokens",
         ).registerOn(transportServer)
     }
 

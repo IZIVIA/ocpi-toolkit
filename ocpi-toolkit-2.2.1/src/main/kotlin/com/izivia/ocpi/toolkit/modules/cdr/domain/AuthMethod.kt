@@ -15,5 +15,5 @@ enum class AuthMethod {
     /**
      * Whitelist used for authentication, no request to the eMSP has been performed
      */
-    WHITELIST
+    WHITELIST,
 }

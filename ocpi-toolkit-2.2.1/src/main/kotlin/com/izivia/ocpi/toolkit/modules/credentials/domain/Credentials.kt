@@ -32,5 +32,5 @@ package com.izivia.ocpi.toolkit.modules.credentials.domain
 data class Credentials(
     val token: String,
     val url: String,
-    val roles: List<CredentialRole>
+    val roles: List<CredentialRole>,
 )

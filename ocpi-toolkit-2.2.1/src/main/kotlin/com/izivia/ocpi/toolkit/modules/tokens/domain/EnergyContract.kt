@@ -14,5 +14,5 @@ import com.izivia.ocpi.toolkit.annotations.Partial
 @Partial
 data class EnergyContract(
     val supplierName: String,
-    val contractId: String?
+    val contractId: String?,
 )

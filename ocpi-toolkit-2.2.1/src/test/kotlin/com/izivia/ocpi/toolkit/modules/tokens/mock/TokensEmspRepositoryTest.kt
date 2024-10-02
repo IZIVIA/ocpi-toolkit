@@ -22,7 +22,7 @@ fun getTokensEmspRepositoryTest(tokens: List<Token>): TokensEmspRepository = moc
             captureNullable(dateFrom),
             captureNullable(dateTo),
             capture(offset),
-            captureNullable(limit)
+            captureNullable(limit),
         )
     } coAnswers {
         val capturedOffset = offset.captured

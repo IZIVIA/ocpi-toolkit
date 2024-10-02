@@ -37,7 +37,7 @@ fun locationsEmspRepository(locations: List<Location>): LocationsEmspRepository 
             capture(partyId),
             capture(locationId),
             capture(evseUid),
-            capture(connectorId)
+            capture(connectorId),
         )
     } coAnswers {
         locations
@@ -73,7 +73,7 @@ fun locationsEmspRepository(locations: List<Location>): LocationsEmspRepository 
             capture(locationId),
             capture(evseUid),
             capture(connectorId),
-            capture(connectorPartial)
+            capture(connectorPartial),
         )
     } coAnswers {
         // Patch logic is not implemented
@@ -110,7 +110,7 @@ fun locationsEmspRepository(locations: List<Location>): LocationsEmspRepository 
             capture(locationId),
             capture(evseUid),
             capture(connectorId),
-            capture(connector)
+            capture(connector),
         )
     } coAnswers {
         // Put logic is not implemented

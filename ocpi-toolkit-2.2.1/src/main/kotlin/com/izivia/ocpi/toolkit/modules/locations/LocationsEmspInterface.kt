@@ -33,7 +33,7 @@ interface LocationsEmspInterface {
     suspend fun getLocation(
         countryCode: CiString,
         partyId: CiString,
-        locationId: CiString
+        locationId: CiString,
     ): OcpiResponseBody<Location?>
 
     /**
@@ -51,7 +51,7 @@ interface LocationsEmspInterface {
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
-        evseUid: CiString
+        evseUid: CiString,
     ): OcpiResponseBody<Evse?>
 
     /**
@@ -71,7 +71,7 @@ interface LocationsEmspInterface {
         partyId: CiString,
         locationId: CiString,
         evseUid: CiString,
-        connectorId: CiString
+        connectorId: CiString,
     ): OcpiResponseBody<Connector?>
 
     /**
@@ -87,7 +87,7 @@ interface LocationsEmspInterface {
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
-        location: Location
+        location: Location,
     ): OcpiResponseBody<Location>
 
     /**
@@ -105,7 +105,7 @@ interface LocationsEmspInterface {
         partyId: CiString,
         locationId: CiString,
         evseUid: CiString,
-        evse: Evse
+        evse: Evse,
     ): OcpiResponseBody<Evse>
 
     /**
@@ -125,7 +125,7 @@ interface LocationsEmspInterface {
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
-        connector: Connector
+        connector: Connector,
     ): OcpiResponseBody<Connector>
 
     /**
@@ -140,7 +140,7 @@ interface LocationsEmspInterface {
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
-        location: LocationPartial
+        location: LocationPartial,
     ): OcpiResponseBody<Location?>
 
     /**
@@ -157,7 +157,7 @@ interface LocationsEmspInterface {
         partyId: CiString,
         locationId: CiString,
         evseUid: CiString,
-        evse: EvsePartial
+        evse: EvsePartial,
     ): OcpiResponseBody<Evse?>
 
     /**
@@ -176,6 +176,6 @@ interface LocationsEmspInterface {
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
-        connector: ConnectorPartial
+        connector: ConnectorPartial,
     ): OcpiResponseBody<Connector?>
 }

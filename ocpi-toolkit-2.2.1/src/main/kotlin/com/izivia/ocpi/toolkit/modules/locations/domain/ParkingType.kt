@@ -32,5 +32,5 @@ enum class ParkingType {
     /**
      * Multistory car park, mainly underground.
      */
-    UNDERGROUND_GARAGE
+    UNDERGROUND_GARAGE,
 }

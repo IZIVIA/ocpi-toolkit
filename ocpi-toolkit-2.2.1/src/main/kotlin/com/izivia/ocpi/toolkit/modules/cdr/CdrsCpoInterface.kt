@@ -37,6 +37,6 @@ interface CdrsCpoInterface {
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int = 0,
-        limit: Int?
+        limit: Int?,
     ): OcpiResponseBody<SearchResult<Cdr>>
 }

@@ -26,5 +26,5 @@ data class PublishTokenType(
     val type: TokenType?,
     val visualNumber: String?,
     val issuer: String?,
-    val groupId: CiString?
+    val groupId: CiString?,
 )

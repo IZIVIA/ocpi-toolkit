@@ -24,5 +24,5 @@ enum class PowerType {
     /**
      * 	Direct Current.
      */
-    DC
+    DC,
 }

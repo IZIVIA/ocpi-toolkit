@@ -39,16 +39,16 @@ fun LocationReferencesPartial.validate(): LocationReferencesPartial = validate(t
             constraintViolations.add(
                 DefaultConstraintViolation(
                     property = "evseUids",
-                    constraint = MaxLengthContraint(36)
-                )
+                    constraint = MaxLengthContraint(36),
+                ),
             )
         }
         if (!evseUid.isPrintableAscii()) {
             constraintViolations.add(
                 DefaultConstraintViolation(
                     property = "evseUids",
-                    constraint = PrintableAsciiConstraint()
-                )
+                    constraint = PrintableAsciiConstraint(),
+                ),
             )
         }
     }

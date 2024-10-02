@@ -11,5 +11,5 @@ import java.math.BigDecimal
 @Partial
 data class EnvironmentalImpact(
     val category: EnvironmentalImpactCategory,
-    val amount: BigDecimal
+    val amount: BigDecimal,
 )

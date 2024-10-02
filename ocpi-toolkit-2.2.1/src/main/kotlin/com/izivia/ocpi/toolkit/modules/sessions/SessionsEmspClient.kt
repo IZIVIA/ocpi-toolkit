@@ -21,20 +21,20 @@ import java.time.Instant
 class SessionsEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository
+    private val partnerRepository: PartnerRepository,
 ) : SessionsCpoInterface {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.sessions,
             partnerId = partnerId,
-            partnerRepository = partnerRepository
+            partnerRepository = partnerRepository,
         )
 
     override suspend fun getSessions(
         dateFrom: Instant,
         dateTo: Instant?,
         offset: Int,
-        limit: Int?
+        limit: Int?,
     ): OcpiResponseBody<SearchResult<Session>> =
         with(buildTransport()) {
             send(
@@ -44,41 +44,41 @@ class SessionsEmspClient(
                         "date_from" to dateFrom.toString(),
                         dateTo?.let { "date_to" to dateTo.toString() },
                         "offset" to offset.toString(),
-                        limit?.let { "limit" to limit.toString() }
-                    ).toMap()
+                        limit?.let { "limit" to limit.toString() },
+                    ).toMap(),
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
                 .parsePaginatedBody(offset)
         }
 
     suspend fun getSessionsNextPage(
-        previousResponse: OcpiResponseBody<SearchResult<Session>>
+        previousResponse: OcpiResponseBody<SearchResult<Session>>,
     ): OcpiResponseBody<SearchResult<Session>>? = getNextPage(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
         partnerRepository = partnerRepository,
-        previousResponse = previousResponse
+        previousResponse = previousResponse,
     )
 
     override suspend fun putChargingPreferences(
         sessionId: CiString,
-        chargingPreferences: ChargingPreferences
+        chargingPreferences: ChargingPreferences,
     ): OcpiResponseBody<ChargingPreferencesResponseType> =
         with(buildTransport()) {
             send(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/$sessionId/charging_preferences",
-                    body = mapper.writeValueAsString(chargingPreferences)
+                    body = mapper.writeValueAsString(chargingPreferences),
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
                 .parseBody()
         }

@@ -11,11 +11,11 @@ import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ClearProfileResul
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.repositories.ChargingProfilesScspRepository
 
 open class ChargingProfilesScspService(
-    private val repository: ChargingProfilesScspRepository
+    private val repository: ChargingProfilesScspRepository,
 ) : ChargingProfilesScspInterface {
     override suspend fun postCallbackActiveChargingProfile(
         requestId: String,
-        result: ActiveChargingProfileResult
+        result: ActiveChargingProfileResult,
     ): OcpiResponseBody<Any> = OcpiResponseBody.of {
         validate {
             result.validate()
@@ -27,7 +27,7 @@ open class ChargingProfilesScspService(
 
     override suspend fun postCallbackChargingProfile(
         requestId: String,
-        result: ChargingProfileResult
+        result: ChargingProfileResult,
     ): OcpiResponseBody<Any> = OcpiResponseBody.of {
         validate {
             result.validate()
@@ -39,7 +39,7 @@ open class ChargingProfilesScspService(
 
     override suspend fun postCallbackClearProfile(
         requestId: String,
-        result: ClearProfileResult
+        result: ClearProfileResult,
     ): OcpiResponseBody<Any> = OcpiResponseBody.of {
         validate {
             result.validate()
@@ -51,7 +51,7 @@ open class ChargingProfilesScspService(
 
     override suspend fun putActiveChargingProfile(
         sessionId: CiString,
-        activeChargingProfile: ActiveChargingProfile
+        activeChargingProfile: ActiveChargingProfile,
     ): OcpiResponseBody<Any> = OcpiResponseBody.of {
         validate {
             activeChargingProfile.validate()

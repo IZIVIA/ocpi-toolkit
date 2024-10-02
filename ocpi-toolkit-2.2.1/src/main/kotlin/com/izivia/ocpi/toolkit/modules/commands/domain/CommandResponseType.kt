@@ -19,5 +19,5 @@ enum class CommandResponseType {
     /**
      * The Session in the requested command is not known by this CPO.
      */
-    UNKNOWN_SESSION
+    UNKNOWN_SESSION,
 }

@@ -15,13 +15,13 @@ import com.izivia.ocpi.toolkit.modules.sessions.repositories.SessionsCpoReposito
 import java.time.Instant
 
 open class SessionsCpoService(
-    private val service: SessionsCpoRepository
+    private val service: SessionsCpoRepository,
 ) : SessionsCpoInterface {
     override suspend fun getSessions(
         dateFrom: Instant,
         dateTo: Instant?,
         offset: Int,
-        limit: Int?
+        limit: Int?,
     ): OcpiResponseBody<SearchResult<Session>> = OcpiResponseBody.of {
         validate {
             if (dateTo != null) validateDates("dateFrom", dateFrom, "dateTo", dateTo)
@@ -34,7 +34,7 @@ open class SessionsCpoService(
 
     override suspend fun putChargingPreferences(
         sessionId: CiString,
-        chargingPreferences: ChargingPreferences
+        chargingPreferences: ChargingPreferences,
     ): OcpiResponseBody<ChargingPreferencesResponseType> = OcpiResponseBody.of {
         validate {
             validateLength("sessionId", sessionId, 36)

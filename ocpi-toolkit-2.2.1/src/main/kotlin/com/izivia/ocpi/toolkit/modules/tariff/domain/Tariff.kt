@@ -55,5 +55,5 @@ data class Tariff(
     val startDateTime: Instant? = null,
     val endDateTime: Instant? = null,
     val energyMix: EnergyMix? = null,
-    val lastUpdated: Instant
+    val lastUpdated: Instant,
 )

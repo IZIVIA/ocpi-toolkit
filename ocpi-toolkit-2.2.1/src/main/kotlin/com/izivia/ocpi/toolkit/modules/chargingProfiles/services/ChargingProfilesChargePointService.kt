@@ -8,16 +8,16 @@ interface ChargingProfilesChargePointService {
     suspend fun getActiveChargingProfile(
         sessionId: String,
         duration: Int,
-        responseUrl: URL
+        responseUrl: URL,
     ): ChargingProfileResponse
 
     suspend fun putChargingProfile(
         sessionId: String,
-        setChargingProfile: SetChargingProfile
+        setChargingProfile: SetChargingProfile,
     ): ChargingProfileResponse
 
     suspend fun deleteChargingProfile(
         sessionId: String,
-        responseUrl: URL
+        responseUrl: URL,
     ): ChargingProfileResponse
 }

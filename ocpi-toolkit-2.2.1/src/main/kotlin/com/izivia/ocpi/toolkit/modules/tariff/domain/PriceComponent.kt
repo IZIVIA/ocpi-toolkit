@@ -21,5 +21,5 @@ data class PriceComponent(
     val type: TariffDimensionType,
     val price: BigDecimal,
     val vat: BigDecimal? = null,
-    val stepSize: Int
+    val stepSize: Int,
 )

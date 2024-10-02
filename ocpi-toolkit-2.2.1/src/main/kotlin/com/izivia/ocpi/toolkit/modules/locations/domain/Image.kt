@@ -36,5 +36,5 @@ data class Image(
     val category: ImageCategory,
     val type: CiString,
     val width: Int?,
-    val height: Int?
+    val height: Int?,
 )

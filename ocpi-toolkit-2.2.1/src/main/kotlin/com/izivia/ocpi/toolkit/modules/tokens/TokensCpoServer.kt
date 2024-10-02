@@ -17,13 +17,13 @@ import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 class TokensCpoServer(
     private val service: TokensCpoInterface,
     versionsRepository: MutableVersionsRepository? = null,
-    basePathOverride: String? = null
+    basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
     ocpiVersion = VersionNumber.V2_2_1,
     moduleID = ModuleID.tokens,
     interfaceRole = InterfaceRole.RECEIVER,
     versionsRepository = versionsRepository,
-    basePathOverride = basePathOverride
+    basePathOverride = basePathOverride,
 ) {
 
     override suspend fun doRegisterOn(transportServer: TransportServer) {
@@ -33,9 +33,9 @@ class TokensCpoServer(
             path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
-                VariablePathSegment("tokenUid")
+                VariablePathSegment("tokenUid"),
             ),
-            queryParams = listOf("type")
+            queryParams = listOf("type"),
         ) { req ->
             req.httpResponse {
                 service
@@ -43,7 +43,7 @@ class TokensCpoServer(
                         countryCode = req.pathParams["countryCode"]!!,
                         partyId = req.pathParams["partyId"]!!,
                         tokenUid = req.pathParams["tokenUid"]!!,
-                        type = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID
+                        type = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
                     )
             }
         }
@@ -54,9 +54,9 @@ class TokensCpoServer(
             path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
-                VariablePathSegment("tokenUid")
+                VariablePathSegment("tokenUid"),
             ),
-            queryParams = listOf("type")
+            queryParams = listOf("type"),
         ) { req ->
             req.httpResponse {
                 service
@@ -65,7 +65,7 @@ class TokensCpoServer(
                         partyId = req.pathParams["partyId"]!!,
                         tokenUid = req.pathParams["tokenUid"]!!,
                         type = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
-                        token = mapper.readValue(req.body, Token::class.java)
+                        token = mapper.readValue(req.body, Token::class.java),
                     )
             }
         }
@@ -75,9 +75,9 @@ class TokensCpoServer(
             path = basePathSegments + listOf(
                 VariablePathSegment("countryCode"),
                 VariablePathSegment("partyId"),
-                VariablePathSegment("tokenUid")
+                VariablePathSegment("tokenUid"),
             ),
-            queryParams = listOf("type")
+            queryParams = listOf("type"),
         ) { req ->
             req.httpResponse {
                 service
@@ -86,7 +86,7 @@ class TokensCpoServer(
                         partyId = req.pathParams["partyId"]!!,
                         tokenUid = req.pathParams["tokenUid"]!!,
                         type = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
-                        token = mapper.readValue(req.body, TokenPartial::class.java)
+                        token = mapper.readValue(req.body, TokenPartial::class.java),
                     )
             }
         }

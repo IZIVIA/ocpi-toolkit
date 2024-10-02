@@ -154,56 +154,56 @@ class LocationsValidatorTest {
         expectCatching {
             GeoLocation(
                 "1.55",
-                "2.15"
+                "2.15",
             ).validate()
         }.isFailure()
 
         expectCatching {
             GeoLocation(
                 "1.123456",
-                "2111.123456"
+                "2111.123456",
             ).validate()
         }.isFailure()
 
         expectCatching {
             GeoLocation(
                 "111.123456",
-                "21.123456"
+                "21.123456",
             ).validate()
         }.isFailure()
 
         expectCatching {
             GeoLocation(
                 "-111.123456",
-                "21.123456"
+                "21.123456",
             ).validate()
         }.isFailure()
 
         expectCatching {
             GeoLocation(
                 "1.123456",
-                ".123456"
+                ".123456",
             ).validate()
         }.isFailure()
 
         expectCatching {
             GeoLocation(
                 "1.123456",
-                "-.123456"
+                "-.123456",
             ).validate()
         }.isFailure()
 
         expectCatching {
             GeoLocation(
                 "1.123456",
-                "-1111.123456"
+                "-1111.123456",
             ).validate()
         }.isFailure()
 
         expectCatching {
             GeoLocation(
                 "101.123456",
-                "2.123456"
+                "2.123456",
             ).validate()
         }.isFailure()
 
@@ -212,27 +212,27 @@ class LocationsValidatorTest {
 
             GeoLocation(
                 "1.123456",
-                "2.123456"
+                "2.123456",
             ).validate()
 
             GeoLocation(
                 "-5.123456",
-                "12.123456"
+                "12.123456",
             ).validate()
 
             GeoLocation(
                 "1.123456",
-                "-2.123456"
+                "-2.123456",
             ).validate()
 
             GeoLocation(
                 "-1.123456",
-                "-2.123456"
+                "-2.123456",
             ).validate()
 
             GeoLocation(
                 "-1.123456",
-                "-211.123456"
+                "-211.123456",
             ).validate()
         }.isSuccess()
     }
@@ -242,36 +242,36 @@ class LocationsValidatorTest {
         expectCatching {
             EnvironmentalImpact(
                 category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
-                amount = BigDecimal(0.0)
+                amount = BigDecimal(0.0),
             ).validate()
 
             EnvironmentalImpact(
                 category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
-                amount = BigDecimal(1.0)
+                amount = BigDecimal(1.0),
             ).validate()
 
             EnvironmentalImpact(
                 category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
-                amount = BigDecimal(12.0)
+                amount = BigDecimal(12.0),
             ).validate()
 
             EnvironmentalImpact(
                 category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
-                amount = BigDecimal(12.1234)
+                amount = BigDecimal(12.1234),
             ).validate()
         }.isSuccess()
 
         expectCatching {
             EnvironmentalImpact(
                 category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
-                amount = BigDecimal(-0.1)
+                amount = BigDecimal(-0.1),
             ).validate()
         }.isFailure()
 
         expectCatching {
             EnvironmentalImpact(
                 category = EnvironmentalImpactCategory.CARBON_DIOXIDE,
-                amount = BigDecimal(-10)
+                amount = BigDecimal(-10),
             ).validate()
         }.isFailure()
     }
@@ -281,55 +281,55 @@ class LocationsValidatorTest {
         expectCatching {
             EnergySource(
                 source = EnergySourceCategory.NUCLEAR,
-                percentage = BigDecimal(0.0)
+                percentage = BigDecimal(0.0),
             ).validate()
 
             EnergySource(
                 source = EnergySourceCategory.NUCLEAR,
-                percentage = BigDecimal(1.0)
+                percentage = BigDecimal(1.0),
             ).validate()
 
             EnergySource(
                 source = EnergySourceCategory.NUCLEAR,
-                percentage = BigDecimal(12.0)
+                percentage = BigDecimal(12.0),
             ).validate()
 
             EnergySource(
                 source = EnergySourceCategory.NUCLEAR,
-                percentage = BigDecimal(12.1234)
+                percentage = BigDecimal(12.1234),
             ).validate()
 
             EnergySource(
                 source = EnergySourceCategory.NUCLEAR,
-                percentage = BigDecimal(100.00)
+                percentage = BigDecimal(100.00),
             ).validate()
         }.isSuccess()
 
         expectCatching {
             EnergySource(
                 source = EnergySourceCategory.NUCLEAR,
-                percentage = BigDecimal(-0.1)
+                percentage = BigDecimal(-0.1),
             ).validate()
         }.isFailure()
 
         expectCatching {
             EnergySource(
                 source = EnergySourceCategory.NUCLEAR,
-                percentage = BigDecimal(-10)
+                percentage = BigDecimal(-10),
             ).validate()
         }.isFailure()
 
         expectCatching {
             EnergySource(
                 source = EnergySourceCategory.NUCLEAR,
-                percentage = BigDecimal(100.1)
+                percentage = BigDecimal(100.1),
             ).validate()
         }.isFailure()
 
         expectCatching {
             EnergySource(
                 source = EnergySourceCategory.NUCLEAR,
-                percentage = BigDecimal(101)
+                percentage = BigDecimal(101),
             ).validate()
         }.isFailure()
     }
@@ -356,14 +356,14 @@ class LocationsValidatorTest {
 
             validExceptionalPeriod.copy(
                 periodBegin = validExceptionalPeriod.periodBegin,
-                periodEnd = validExceptionalPeriod.periodBegin
+                periodEnd = validExceptionalPeriod.periodBegin,
             ).validate()
         }.isSuccess()
 
         expectCatching {
             validExceptionalPeriod.copy(
                 periodBegin = validExceptionalPeriod.periodEnd,
-                periodEnd = validExceptionalPeriod.periodBegin
+                periodEnd = validExceptionalPeriod.periodBegin,
             ).validate()
         }.isFailure()
     }
@@ -375,44 +375,44 @@ class LocationsValidatorTest {
 
             validRegularHours.copy(
                 periodBegin = validRegularHours.periodBegin,
-                periodEnd = validRegularHours.periodBegin
+                periodEnd = validRegularHours.periodBegin,
             ).validate()
         }.isSuccess()
 
         expectCatching {
             validRegularHours.copy(
                 periodBegin = validRegularHours.periodEnd,
-                periodEnd = validRegularHours.periodBegin
+                periodEnd = validRegularHours.periodBegin,
             ).validate()
         }.isFailure()
 
         expectCatching {
             validRegularHours.copy(
-                weekday = 0
+                weekday = 0,
             ).validate()
         }.isFailure()
 
         expectCatching {
             validRegularHours.copy(
-                weekday = 8
+                weekday = 8,
             ).validate()
         }.isFailure()
 
         expectCatching {
             validRegularHours.copy(
-                periodBegin = "1:00"
+                periodBegin = "1:00",
             ).validate()
         }.isFailure()
 
         expectCatching {
             validRegularHours.copy(
-                periodBegin = "00:1"
+                periodBegin = "00:1",
             ).validate()
         }.isFailure()
 
         expectCatching {
             validRegularHours.copy(
-                periodBegin = "0010"
+                periodBegin = "0010",
             ).validate()
         }.isFailure()
     }
@@ -424,33 +424,33 @@ class LocationsValidatorTest {
 
             validHours.copy(
                 regularHours = null,
-                twentyfourseven = true
+                twentyfourseven = true,
             ).validate()
 
             validHours.copy(
                 exceptionalOpenings = emptyList(),
-                exceptionalClosings = emptyList()
+                exceptionalClosings = emptyList(),
             ).validate()
         }.isSuccess()
 
         expectCatching {
             validHours.copy(
                 regularHours = listOf(validRegularHours),
-                twentyfourseven = true
+                twentyfourseven = true,
             ).toPartial().validate()
         }.isFailure()
 
         expectCatching {
             validHours.copy(
                 regularHours = listOf(validRegularHours),
-                twentyfourseven = true
+                twentyfourseven = true,
             ).validate()
         }.isFailure()
 
         expectCatching {
             validHours.copy(
                 regularHours = null,
-                twentyfourseven = false
+                twentyfourseven = false,
             ).validate()
         }.isFailure()
     }
@@ -551,7 +551,7 @@ class LocationsValidatorTest {
             validStatusSchedule.validate()
             validStatusSchedule.copy(
                 periodBegin = validStatusSchedule.periodBegin,
-                periodEnd = validStatusSchedule.periodBegin
+                periodEnd = validStatusSchedule.periodBegin,
             ).validate()
             validStatusSchedule.copy(periodEnd = null).validate()
         }.isSuccess()
@@ -559,7 +559,7 @@ class LocationsValidatorTest {
         expectCatching {
             validStatusSchedule.copy(
                 periodBegin = validStatusSchedule.periodEnd!!,
-                periodEnd = validStatusSchedule.periodBegin
+                periodEnd = validStatusSchedule.periodBegin,
             ).validate()
         }.isFailure()
     }

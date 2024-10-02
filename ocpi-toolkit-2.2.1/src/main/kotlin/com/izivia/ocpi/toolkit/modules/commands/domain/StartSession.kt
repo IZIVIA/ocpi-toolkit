@@ -29,5 +29,5 @@ data class StartSession(
     val locationId: CiString,
     val evseUid: CiString?,
     val connectorId: CiString?,
-    val authorizationReference: CiString?
+    val authorizationReference: CiString?,
 )

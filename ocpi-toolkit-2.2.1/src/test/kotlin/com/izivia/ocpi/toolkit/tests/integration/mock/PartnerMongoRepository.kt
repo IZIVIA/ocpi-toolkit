@@ -11,7 +11,7 @@ import com.mongodb.client.model.ReturnDocument
 import org.litote.kmongo.*
 
 class PartnerMongoRepository(
-    private val collection: MongoCollection<Partner>
+    private val collection: MongoCollection<Partner>,
 ) : PartnerRepository {
 
     override suspend fun savePartnerUrlForTokenA(tokenA: String, partnerUrl: String): String? =
@@ -19,13 +19,13 @@ class PartnerMongoRepository(
             .findOneAndUpdate(
                 Partner::tokenA eq tokenA,
                 set(Partner::url setTo partnerUrl),
-                FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+                FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER),
             )
             ?.url
 
     override suspend fun saveCredentialsRoles(
         partnerId: String,
-        credentialsRoles: List<CredentialRole>
+        credentialsRoles: List<CredentialRole>,
     ): List<CredentialRole> =
         credentialsRoles.also {
             collection
@@ -76,7 +76,7 @@ class PartnerMongoRepository(
         .findOne(Partner::serverToken eq credentialsServerToken)?.url
 
     override suspend fun getPartnerIdByCredentialsTokenA(credentialsTokenA: String): String? = collection.findOne(
-        Partner::tokenA eq credentialsTokenA
+        Partner::tokenA eq credentialsTokenA,
     )?.url
 
     override suspend fun getEndpoints(partnerId: String): List<Endpoint> = collection
@@ -95,8 +95,8 @@ class PartnerMongoRepository(
             .updateOne(
                 Partner::url eq partnerId,
                 combine(
-                    set(Partner::clientToken setTo null)
-                )
+                    set(Partner::clientToken setTo null),
+                ),
             )
             .matchedCount == 1L
 
@@ -105,8 +105,8 @@ class PartnerMongoRepository(
             .updateOne(
                 Partner::url eq partnerId,
                 combine(
-                    set(Partner::serverToken setTo null)
-                )
+                    set(Partner::serverToken setTo null),
+                ),
             )
             .matchedCount == 1L
 }

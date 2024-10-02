@@ -32,7 +32,7 @@ fun main() {
     val receiverServer = Http4kTransportServer(
         baseUrl = receiverUrl,
         port = receiverPort,
-        secureFilter = receiverPlatformRepository::checkToken
+        secureFilter = receiverPlatformRepository::checkToken,
     )
 
     val requiredOtherPartEndpoints = RequiredEndpoints(receiver = listOf(ModuleID.credentials))
@@ -47,21 +47,21 @@ fun main() {
                             role = Role.EMSP,
                             businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
                             partyId = "DEF",
-                            countryCode = "FR"
-                        )
+                            countryCode = "FR",
+                        ),
                     )
                 },
                 transportClientBuilder = Http4kTransportClientBuilder(),
                 serverVersionsUrlProvider = { receiverVersionsUrl },
-                requiredEndpoints = requiredOtherPartEndpoints
+                requiredEndpoints = requiredOtherPartEndpoints,
             ),
-            versionsRepository = receiverVersionsRepository
+            versionsRepository = receiverVersionsRepository,
         ).registerOn(receiverServer)
         VersionsServer(
             service = VersionsService(
                 repository = receiverVersionsRepository,
-                baseUrlProvider = { receiverUrl }
-            )
+                baseUrlProvider = { receiverUrl },
+            ),
         ).registerOn(receiverServer)
     }
     receiverServer.start()

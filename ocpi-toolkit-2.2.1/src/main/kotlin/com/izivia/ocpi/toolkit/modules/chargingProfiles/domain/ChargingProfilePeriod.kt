@@ -4,5 +4,5 @@ import java.math.BigDecimal
 
 data class ChargingProfilePeriod(
     val startPeriod: Int,
-    val limit: BigDecimal
+    val limit: BigDecimal,
 )

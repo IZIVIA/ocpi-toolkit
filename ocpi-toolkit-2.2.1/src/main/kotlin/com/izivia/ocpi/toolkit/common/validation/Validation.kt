@@ -8,7 +8,7 @@ import org.valiktor.constraints.Less
 import java.time.Instant
 
 data class ValidationContext(
-    val violations: MutableSet<ConstraintViolation> = mutableSetOf()
+    val violations: MutableSet<ConstraintViolation> = mutableSetOf(),
 )
 
 fun <T> validate(fn: ValidationContext.() -> T) = with(ValidationContext()) {
@@ -25,8 +25,8 @@ fun ValidationContext.validateLength(property: String, value: String, maxLength:
             DefaultConstraintViolation(
                 property = property,
                 value = value,
-                constraint = MaxLengthContraint(maxLength)
-            )
+                constraint = MaxLengthContraint(maxLength),
+            ),
         )
     }
 }
@@ -37,8 +37,8 @@ fun ValidationContext.validateDates(fromProperty: String, fromValue: Instant, to
             DefaultConstraintViolation(
                 property = fromProperty,
                 value = fromValue,
-                constraint = IsAfterContraint(toProperty, toValue)
-            )
+                constraint = IsAfterContraint(toProperty, toValue),
+            ),
         )
     }
 }
@@ -49,16 +49,16 @@ fun ValidationContext.validateInt(property: String, value: Int, min: Int?, max: 
             DefaultConstraintViolation(
                 property = property,
                 value = value,
-                constraint = Less(min)
-            )
+                constraint = Less(min),
+            ),
         )
     } else if (max != null && value > max) {
         violations.add(
             DefaultConstraintViolation(
                 property = property,
                 value = value,
-                constraint = Greater(max)
-            )
+                constraint = Greater(max),
+            ),
         )
     }
 }
@@ -69,8 +69,8 @@ fun ValidationContext.validateSame(property: String, value: String, reference: S
             DefaultConstraintViolation(
                 property = property,
                 value = value,
-                constraint = SameStringValueConstraint(reference)
-            )
+                constraint = SameStringValueConstraint(reference),
+            ),
         )
     }
 }

@@ -31,7 +31,7 @@ interface CredentialsInterface {
     suspend fun post(
         token: String,
         credentials: Credentials,
-        debugHeaders: Map<String, String>
+        debugHeaders: Map<String, String>,
     ): OcpiResponseBody<Credentials>
 
     /**
@@ -50,7 +50,7 @@ interface CredentialsInterface {
     suspend fun put(
         token: String,
         credentials: Credentials,
-        debugHeaders: Map<String, String>
+        debugHeaders: Map<String, String>,
     ): OcpiResponseBody<Credentials>
 
     /**

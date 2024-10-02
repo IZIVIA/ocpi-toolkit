@@ -39,7 +39,7 @@ interface LocationsCpoInterface {
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int = 0,
-        limit: Int?
+        limit: Int?,
     ): OcpiResponseBody<SearchResult<Location>>
 
     /**
@@ -61,6 +61,6 @@ interface LocationsCpoInterface {
     suspend fun getConnector(
         locationId: CiString,
         evseUid: CiString,
-        connectorId: CiString
+        connectorId: CiString,
     ): OcpiResponseBody<Connector?>
 }

@@ -190,5 +190,5 @@ enum class Iso639Alpha2 {
     yo,
     za,
     zh,
-    zu
+    zu,
 }

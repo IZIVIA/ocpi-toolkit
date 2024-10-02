@@ -34,20 +34,20 @@ fun main() {
     val senderServer = Http4kTransportServer(
         baseUrl = senderUrl,
         port = senderPort,
-        secureFilter = senderPlatformRepository::checkToken
+        secureFilter = senderPlatformRepository::checkToken,
     )
 
     runBlocking {
         VersionsServer(
             service = VersionsService(
                 repository = senderVersionsRepository,
-                baseUrlProvider = { senderUrl }
-            )
+                baseUrlProvider = { senderUrl },
+            ),
         ).registerOn(senderServer)
 
         senderVersionsRepository.addEndpoint(
             VersionNumber.V2_2_1,
-            Endpoint(ModuleID.credentials, InterfaceRole.SENDER, "$senderUrl/2.2.1/credentials")
+            Endpoint(ModuleID.credentials, InterfaceRole.SENDER, "$senderUrl/2.2.1/credentials"),
         )
     }
     senderServer.start()
@@ -63,13 +63,13 @@ fun main() {
                     role = Role.CPO,
                     businessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
                     partyId = "ABC",
-                    countryCode = "FR"
-                )
+                    countryCode = "FR",
+                ),
             )
         },
         partnerId = receiverVersionsUrl,
         transportClientBuilder = Http4kTransportClientBuilder(),
-        requiredEndpoints = RequiredEndpoints(receiver = listOf(ModuleID.credentials))
+        requiredEndpoints = RequiredEndpoints(receiver = listOf(ModuleID.credentials)),
     )
 
     runBlocking {

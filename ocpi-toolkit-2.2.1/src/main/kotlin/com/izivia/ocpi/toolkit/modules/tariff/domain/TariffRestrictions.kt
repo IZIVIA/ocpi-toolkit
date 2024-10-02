@@ -100,5 +100,5 @@ data class TariffRestrictions(
     val minDuration: Int? = null,
     val maxDuration: Int? = null,
     val dayOfWeek: List<DayOfWeek>? = null,
-    val reservation: ReservationRestrictionType? = null
+    val reservation: ReservationRestrictionType? = null,
 )

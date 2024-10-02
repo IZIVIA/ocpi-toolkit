@@ -36,9 +36,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         runBlocking {
             LocationsCpoServer(
                 LocationsCpoService(
-                    service = LocationsCpoMongoRepository(collection)
+                    service = LocationsCpoMongoRepository(collection),
                 ),
-                versionsRepository = InMemoryVersionsRepository()
+                versionsRepository = InMemoryVersionsRepository(),
             ).registerOn(server)
         }
         return server
@@ -55,9 +55,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             locations = (0 until numberOfLocations).map { index ->
                 validLocation.copy(
                     evses = listOf(validEvse.copy(connectors = listOf(validConnector))),
-                    lastUpdated = referenceDate.plusSeconds(3600L * index)
+                    lastUpdated = referenceDate.plusSeconds(3600L * index),
                 )
-            }
+            },
         )
         cpoServer.start()
 
@@ -69,7 +69,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             runBlocking {
                 it.saveEndpoints(
                     cpoServerVersionsUrl,
-                    versionDetailsCpo.getVersionDetails(VersionNumber.V2_2_1)!!.endpoints
+                    versionDetailsCpo.getVersionDetails(VersionNumber.V2_2_1)!!.endpoints,
                 )
             }
         }
@@ -77,7 +77,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         val locationsEmspClient = LocationsEmspClient(
             transportClientBuilder = Http4kTransportClientBuilder(),
             partnerId = cpoServerVersionsUrl,
-            partnerRepository = partnerRepo
+            partnerRepository = partnerRepo,
         )
 
         // Tests
@@ -90,7 +90,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
             toPartyId = "AAA",
             toCountryCode = "AA",
             fromPartyId = "BBB",
-            fromCountryCode = "BB"
+            fromCountryCode = "BB",
         )
 
         expectThat(
@@ -99,9 +99,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -176,9 +176,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -223,9 +223,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -270,9 +270,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -317,9 +317,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -364,9 +364,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -411,9 +411,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -458,9 +458,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -505,9 +505,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -547,9 +547,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                     dateFrom = dateFrom,
                     dateTo = dateTo,
                     offset = offset,
-                    limit = limit
+                    limit = limit,
                 )
-            }
+            },
         ) {
             get { statusCode }
                 .isEqualTo(OcpiStatus.SUCCESS.code)
@@ -578,10 +578,9 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                         .isEqualTo(numberOfLocations - 1)
                 }
                 .and {
-                    get { nextPageUrl }
-                        .isEqualTo(
-                            "${cpoServer.baseUrl}/2.2.1/locations?date_to=$dateTo&limit=$limit&offset=${offset + limit}"
-                        )
+                    get { nextPageUrl }.isEqualTo(
+                        "${cpoServer.baseUrl}/2.2.1/locations?date_to=$dateTo&limit=$limit&offset=${offset + limit}",
+                    )
                 }
         }
     }

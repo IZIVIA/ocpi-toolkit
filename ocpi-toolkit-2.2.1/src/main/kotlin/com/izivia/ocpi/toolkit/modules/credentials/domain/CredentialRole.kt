@@ -13,5 +13,5 @@ data class CredentialRole(
     val role: Role,
     val businessDetails: BusinessDetails,
     val partyId: CiString,
-    val countryCode: CiString
+    val countryCode: CiString,
 )

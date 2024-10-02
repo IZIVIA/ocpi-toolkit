@@ -45,9 +45,9 @@ class TokensCpoHttpPutTokenTest {
             defaultProfileType = ProfileType.GREEN,
             energyContract = EnergyContract(
                 supplierName = "Greenpeace Energy eG",
-                contractId = "0123456789"
+                contractId = "0123456789",
             ),
-            lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
+            lastUpdated = Instant.parse("2018-12-10T17:25:10Z"),
         )
         val slots = object {
             var token = slot<Token>()
@@ -63,7 +63,7 @@ class TokensCpoHttpPutTokenTest {
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.tokenUID),
-                    capture(slots.type)
+                    capture(slots.type),
                 )
             } coAnswers { token }
         }.buildServer()
@@ -74,8 +74,8 @@ class TokensCpoHttpPutTokenTest {
             buildHttpRequest(
                 HttpMethod.PUT,
                 "/tokens/DE/TNM/12345678905880/?type=RFID",
-                mapper.writeValueAsString(token)
-            )
+                mapper.writeValueAsString(token),
+            ),
         )
 
         // then
@@ -94,7 +94,7 @@ class TokensCpoHttpPutTokenTest {
                     "status_message": "Success",
                     "timestamp": "2015-06-30T21:59:59Z"
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -108,7 +108,7 @@ private fun TokensCpoRepository.buildServer(): TransportClient {
         TokensCpoServer(
             service = TokensCpoService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/tokens"
+            basePathOverride = "/tokens",
         ).registerOn(transportServer)
     }
 

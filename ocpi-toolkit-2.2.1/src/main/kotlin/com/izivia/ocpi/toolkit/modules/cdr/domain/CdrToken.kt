@@ -22,5 +22,5 @@ data class CdrToken(
     val partyId: CiString,
     val uid: CiString,
     val type: TokenType,
-    val contractId: CiString
+    val contractId: CiString,
 )

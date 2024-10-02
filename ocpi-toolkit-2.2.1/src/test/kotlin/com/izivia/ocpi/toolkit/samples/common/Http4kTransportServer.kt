@@ -17,7 +17,7 @@ import org.valiktor.ConstraintViolationException
 class Http4kTransportServer(
     val baseUrl: String,
     val port: Int,
-    val secureFilter: suspend (request: HttpRequest) -> Unit = { }
+    val secureFilter: suspend (request: HttpRequest) -> Unit = { },
 ) : TransportServer {
 
     private val serverRoutes: MutableList<RoutingHttpHandler> = mutableListOf()
@@ -30,7 +30,7 @@ class Http4kTransportServer(
         path: List<PathSegment>,
         queryParams: List<String>,
         filters: List<(request: HttpRequest) -> Unit>,
-        callback: suspend (request: HttpRequest) -> HttpResponse
+        callback: suspend (request: HttpRequest) -> HttpResponse,
     ) {
         val pathParams = path
             .filterIsInstance<VariablePathSegment>()
@@ -55,14 +55,14 @@ class Http4kTransportServer(
                         headers = req.headers
                             .filter { (_, value) -> value != null }
                             .associate { (key, value) -> key to value!! },
-                        body = req.bodyString()
+                        body = req.bodyString(),
                     )
                         .also { httpRequest ->
                             try {
                                 httpRequest.headers.validateMessageRoutingHeaders()
                             } catch (e: ConstraintViolationException) {
                                 throw OcpiClientInvalidParametersException(
-                                    message = "invalid message routing headers: " + e.toReadableString()
+                                    message = "invalid message routing headers: " + e.toReadableString(),
                                 )
                             }
                         }
@@ -94,7 +94,7 @@ class Http4kTransportServer(
                     exception.printStackTrace()
                     Response(Status.INTERNAL_SERVER_ERROR)
                 }
-            }
+            },
         )
     }
 
@@ -112,7 +112,7 @@ class Http4kTransportServer(
 
     private fun buildRouter() = DebuggingFilters.PrintRequestAndResponse()
         .then(
-            serverRoutes.reduce { a, b -> routes(a, b) }
+            serverRoutes.reduce { a, b -> routes(a, b) },
         )
 
     override fun stop() {

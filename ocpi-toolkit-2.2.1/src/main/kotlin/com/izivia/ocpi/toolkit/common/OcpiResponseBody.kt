@@ -28,7 +28,7 @@ data class OcpiResponseBody<T>(
     val data: T?,
     val statusCode: Int,
     val statusMessage: String?,
-    val timestamp: Instant
+    val timestamp: Instant,
 ) {
     companion object {
         // updating this function is done only for tests
@@ -40,14 +40,14 @@ data class OcpiResponseBody<T>(
             data = data,
             statusCode = OcpiStatus.SUCCESS.code,
             statusMessage = "Success",
-            timestamp = now()
+            timestamp = now(),
         )
 
         fun <T> invalid(message: String) = OcpiResponseBody<T>(
             data = null,
             statusCode = OcpiStatus.CLIENT_INVALID_PARAMETERS.code,
             statusMessage = message,
-            timestamp = now()
+            timestamp = now(),
         )
 
         suspend fun <T> of(data: suspend () -> T) =
@@ -80,7 +80,7 @@ fun OcpiResponseBody<SearchResult<*>>.getPaginatedHeaders(request: HttpRequest):
         listOfNotNull(
             nextPageOffset?.let { "Link" to "<${request.baseUrl}${request.path}$queries>; rel=\"next\"" },
             "X-Total-Count" to data.totalCount.toString(),
-            "X-Limit" to data.limit.toString()
+            "X-Limit" to data.limit.toString(),
         ).toMap()
     } else {
         emptyMap()
@@ -98,10 +98,10 @@ fun OcpiException.toHttpResponse(): HttpResponse =
                 data = null,
                 statusCode = ocpiStatus.code,
                 statusMessage = message,
-                timestamp = Instant.now()
-            )
+                timestamp = Instant.now(),
+            ),
         ),
-        headers = if (httpStatus == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap()
+        headers = if (httpStatus == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap(),
     )
 
 /**
@@ -141,18 +141,18 @@ suspend fun <T> HttpRequest.httpResponse(fn: suspend () -> OcpiResponseBody<T>):
                         data = (ocpiResponseBody.data as SearchResult<*>?)?.list,
                         statusCode = ocpiResponseBody.statusCode,
                         statusMessage = ocpiResponseBody.statusMessage,
-                        timestamp = ocpiResponseBody.timestamp
+                        timestamp = ocpiResponseBody.timestamp,
                     )
                 } else {
                     ocpiResponseBody
-                }
+                },
             ),
-            headers = baseHeaders
+            headers = baseHeaders,
         ).let {
             if (isPaginated) {
                 it.copy(
                     headers = it.headers + (ocpiResponseBody as OcpiResponseBody<SearchResult<*>>)
-                        .getPaginatedHeaders(request = this)
+                        .getPaginatedHeaders(request = this),
                 )
             } else {
                 it
@@ -165,14 +165,14 @@ suspend fun <T> HttpRequest.httpResponse(fn: suspend () -> OcpiResponseBody<T>):
         logger.error(e)
         HttpResponse(
             status = e.status,
-            headers = baseHeaders
+            headers = baseHeaders,
         )
     } catch (e: JsonProcessingException) {
         logger.error(e)
         HttpResponse(
             status = HttpStatus.BAD_REQUEST,
             headers = baseHeaders,
-            body = e.message
+            body = e.message,
         )
     }
 }

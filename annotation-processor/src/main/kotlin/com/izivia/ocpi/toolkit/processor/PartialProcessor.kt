@@ -11,7 +11,7 @@ import com.squareup.kotlinpoet.ksp.writeTo
 
 class PartialProcessor(
     private val codeGenerator: CodeGenerator,
-    private val logger: KSPLogger
+    private val logger: KSPLogger,
 ) : SymbolProcessor {
 
     private val toPartialMethodName = "toPartial"
@@ -31,7 +31,7 @@ class PartialProcessor(
                 .forEach { (input, output) ->
                     output.writeTo(
                         codeGenerator,
-                        Dependencies(true, input.containingFile!!)
+                        Dependencies(true, input.containingFile!!),
                     )
                 }
         }
@@ -46,7 +46,7 @@ class PartialProcessor(
             .toSet()
 
     private fun genPartialClasses(
-        partialAnnotatedClasses: Set<KSClassDeclaration>
+        partialAnnotatedClasses: Set<KSClassDeclaration>,
     ): List<Pair<KSClassDeclaration, FileSpec>> =
         partialAnnotatedClasses.map { classDeclaration ->
             val packageName = classDeclaration.packageName.asString()
@@ -83,7 +83,7 @@ class PartialProcessor(
                 ParameterSpec
                     .builder(
                         param.parameterName,
-                        param.type.copy(nullable = true)
+                        param.type.copy(nullable = true),
                     )
                     .build()
             }
@@ -93,7 +93,7 @@ class PartialProcessor(
                 PropertySpec
                     .builder(
                         param.parameterName,
-                        param.type.copy(nullable = true)
+                        param.type.copy(nullable = true),
                     )
                     .initializer(param.parameterName)
                     .build()
@@ -105,12 +105,12 @@ class PartialProcessor(
             .addKdoc(
                 "Partial representation of [${
                     classDescriptor.packageName.asString()
-                }.${classDescriptor.simpleName.asString()}]"
+                }.${classDescriptor.simpleName.asString()}]",
             )
             .primaryConstructor(
                 FunSpec.constructorBuilder()
                     .addParameters(partialClassConstructorParameters)
-                    .build()
+                    .build(),
             )
             .addProperties(partialClassProperties)
             .build()
@@ -137,7 +137,7 @@ class PartialProcessor(
                 | return ${className.toPartial()}(
                 |   $partialClassConstructorParameters
                 | )
-                """.trimMargin()
+                """.trimMargin(),
             )
             .build()
     }
@@ -169,16 +169,16 @@ class PartialProcessor(
         return FunSpec.builder(toPartialMethodName)
             .receiver(
                 ClassName("kotlin.collections", "List")
-                    .parameterizedBy(ClassName(packageName, className))
+                    .parameterizedBy(ClassName(packageName, className)),
             )
             .returns(
                 ClassName("kotlin.collections", "List")
-                    .parameterizedBy(ClassName(packageName, className.toPartial()))
+                    .parameterizedBy(ClassName(packageName, className.toPartial())),
             )
             .addCode(
                 """
                 | return mapNotNull { it.$toPartialMethodName() }
-                """.trimMargin()
+                """.trimMargin(),
             )
             .build()
     }
@@ -192,32 +192,32 @@ class PartialProcessor(
                     ClassName(
                         packageName = resolvedType.declaration.packageName.asString(),
                         simpleNames = listOf(
-                            resolvedType.declaration.simpleName.asString()
-                        )
+                            resolvedType.declaration.simpleName.asString(),
+                        ),
                     ).parameterizedBy(
                         resolvedType.arguments.map { generic ->
                             val genericResolved = generic.type!!.resolve()
                             ClassName(
                                 packageName = genericResolved.declaration.packageName.asString(),
                                 simpleNames = listOf(
-                                    genericResolved.declaration.simpleName.asString().wireWithExistingPartial()
-                                )
+                                    genericResolved.declaration.simpleName.asString().wireWithExistingPartial(),
+                                ),
                             )
-                        }
+                        },
                     )
                 } else {
                     ClassName(
                         packageName = resolvedType.declaration.packageName.asString(),
                         simpleNames = listOf(
-                            resolvedType.declaration.simpleName.asString().wireWithExistingPartial()
-                        )
+                            resolvedType.declaration.simpleName.asString().wireWithExistingPartial(),
+                        ),
                     )
                 }
 
                 FunctionParameter(
                     parameter.name?.asString() ?: throw IllegalStateException("null param name $parameter"),
                     resolvedType.isMarkedNullable,
-                    typeName
+                    typeName,
                 )
             }.toList()
         } else {
@@ -255,12 +255,12 @@ class PartialProcessor(
             | ----------
             | This code is generated AND MUST NOT BE EDITED
             | ----------
-            """.trimMargin()
+            """.trimMargin(),
         )
 
     data class FunctionParameter(
         val parameterName: String,
         val nullable: Boolean,
-        val type: TypeName
+        val type: TypeName,
     )
 }

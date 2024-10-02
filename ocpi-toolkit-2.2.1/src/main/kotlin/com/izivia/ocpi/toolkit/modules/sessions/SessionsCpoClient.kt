@@ -19,30 +19,30 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 class SessionsCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository
+    private val partnerRepository: PartnerRepository,
 ) : SessionsEmspInterface {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.sessions,
             partnerId = partnerId,
-            partnerRepository = partnerRepository
+            partnerRepository = partnerRepository,
         )
 
     override suspend fun getSession(
         countryCode: CiString,
         partyId: CiString,
-        sessionId: CiString
+        sessionId: CiString,
     ): OcpiResponseBody<Session?> =
         with(buildTransport()) {
             send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/$countryCode/$partyId/$sessionId"
+                    path = "/$countryCode/$partyId/$sessionId",
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
                 .parseBody()
         }
@@ -51,19 +51,19 @@ class SessionsCpoClient(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-        session: Session
+        session: Session,
     ): OcpiResponseBody<Session?> =
         with(buildTransport()) {
             send(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/$countryCode/$partyId/$sessionId",
-                    body = mapper.writeValueAsString(session)
+                    body = mapper.writeValueAsString(session),
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
                 .parseBody()
         }
@@ -72,19 +72,19 @@ class SessionsCpoClient(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-        session: SessionPartial
+        session: SessionPartial,
     ): OcpiResponseBody<Session?> =
         with(buildTransport()) {
             send(
                 HttpRequest(
                     method = HttpMethod.PATCH,
                     path = "/$countryCode/$partyId/$sessionId",
-                    body = mapper.writeValueAsString(session)
+                    body = mapper.writeValueAsString(session),
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
-                    correlationId = generateCorrelationId()
+                    correlationId = generateCorrelationId(),
                 )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId)
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
                 .parseBody()
         }

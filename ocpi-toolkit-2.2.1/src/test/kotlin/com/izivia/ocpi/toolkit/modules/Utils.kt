@@ -15,7 +15,7 @@ fun buildHttpRequest(httpMethod: HttpMethod, path: String, body: String? = null)
         method = httpMethod,
         path = it.path,
         queryParams = it.queries().toMap(),
-        body = body
+        body = body,
     )
 }
 

@@ -58,17 +58,17 @@ class LocationsCpoHttpGetLocationsTest {
                                         powerType = PowerType.AC_3_PHASE,
                                         maxVoltage = 220,
                                         maxAmperage = 16,
-                                        lastUpdated = Instant.parse("2019-07-01T12:12:11Z")
-                                    )
+                                        lastUpdated = Instant.parse("2019-07-01T12:12:11Z"),
+                                    ),
                                 ),
                                 parkingRestrictions = listOf(ParkingRestriction.CUSTOMERS),
-                                lastUpdated = Instant.parse("2019-07-01T12:12:11Z")
-                            )
+                                lastUpdated = Instant.parse("2019-07-01T12:12:11Z"),
+                            ),
                         ),
                         publish = true,
                         timeZone = "Europe/Amsterdam",
-                        lastUpdated = Instant.parse("2019-07-01T12:12:11Z")
-                    )
+                        lastUpdated = Instant.parse("2019-07-01T12:12:11Z"),
+                    ),
                 ).toSearchResult()
             }
         }.buildServer()
@@ -76,7 +76,7 @@ class LocationsCpoHttpGetLocationsTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.GET, "/locations/?date_from=2019-01-28T12:00:00Z&date_to=2019-01-29T12:00:00Z")
+            buildHttpRequest(HttpMethod.GET, "/locations/?date_from=2019-01-28T12:00:00Z&date_to=2019-01-29T12:00:00Z"),
         )
 
         // then
@@ -137,7 +137,7 @@ class LocationsCpoHttpGetLocationsTest {
   "status_message": "Success",
   "timestamp": "2015-06-30T21:59:59Z"
 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -151,7 +151,7 @@ private fun LocationsCpoRepository.buildServer(): TransportClient {
         LocationsCpoServer(
             service = LocationsCpoService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/locations"
+            basePathOverride = "/locations",
         ).registerOn(transportServer)
     }
 

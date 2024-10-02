@@ -18,5 +18,5 @@ import com.izivia.ocpi.toolkit.modules.types.DisplayText
 data class AdditionalGeoLocation(
     val latitude: String,
     val longitude: String,
-    val name: DisplayText?
+    val name: DisplayText?,
 )

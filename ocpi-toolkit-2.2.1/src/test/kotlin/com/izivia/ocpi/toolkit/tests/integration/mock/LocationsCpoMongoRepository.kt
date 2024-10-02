@@ -13,22 +13,22 @@ import org.litote.kmongo.lte
 import java.time.Instant
 
 class LocationsCpoMongoRepository(
-    private val collection: MongoCollection<Location>
+    private val collection: MongoCollection<Location>,
 ) : LocationsCpoRepository {
 
     override suspend fun getLocations(
         dateFrom: Instant?,
         dateTo: Instant?,
         offset: Int,
-        limit: Int?
+        limit: Int?,
     ): SearchResult<Location> =
         collection
             .run {
                 find(
                     and(
                         dateFrom?.let { Location::lastUpdated gte dateFrom },
-                        dateTo?.let { Location::lastUpdated lte dateTo }
-                    )
+                        dateTo?.let { Location::lastUpdated lte dateTo },
+                    ),
                 )
             }
             .toList()

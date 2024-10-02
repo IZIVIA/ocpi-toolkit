@@ -6,7 +6,7 @@ import com.izivia.ocpi.toolkit.modules.commands.domain.CommandResult
 interface CommandEmspInterface {
     suspend fun postCallbackStartSession(
         authorizationReference: String,
-        result: CommandResult
+        result: CommandResult,
     ): OcpiResponseBody<String>
 
     suspend fun postCallbackStopSession(sessionId: String, result: CommandResult): OcpiResponseBody<String>
@@ -19,6 +19,6 @@ interface CommandEmspInterface {
         locationId: String,
         evseId: String,
         connectorId: String,
-        result: CommandResult
+        result: CommandResult,
     ): OcpiResponseBody<String>
 }

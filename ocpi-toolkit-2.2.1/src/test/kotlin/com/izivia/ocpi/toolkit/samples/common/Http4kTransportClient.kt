@@ -13,7 +13,7 @@ var requestCounter = 1
 var correlationCounter = 1
 
 class Http4kTransportClient(
-    val client: HttpHandler
+    val client: HttpHandler,
 ) : TransportClient {
     override fun send(request: HttpRequest): HttpResponse {
         return client(request.toHttp4k()).let {
@@ -22,7 +22,7 @@ class Http4kTransportClient(
                 body = it.bodyString(),
                 headers = it.headers
                     .filter { (_, value) -> value != null }
-                    .associate { (key, value) -> key to value!! }
+                    .associate { (key, value) -> key to value!! },
             )
         }
     }
@@ -42,7 +42,7 @@ class Http4kTransportClient(
 fun HttpRequest.toHttp4k() =
     Request(
         method = Method.valueOf(method.name),
-        uri = path
+        uri = path,
     )
         .run {
             queryParams.toList().foldRight(this) { queryParam, r ->

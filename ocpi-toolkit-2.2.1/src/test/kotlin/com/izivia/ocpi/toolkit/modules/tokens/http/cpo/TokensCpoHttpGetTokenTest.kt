@@ -41,7 +41,7 @@ class TokensCpoHttpGetTokenTest {
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.tokenUID),
-                    capture(slots.type)
+                    capture(slots.type),
                 )
             } coAnswers {
                 Token(
@@ -59,9 +59,9 @@ class TokensCpoHttpGetTokenTest {
                     defaultProfileType = ProfileType.GREEN,
                     energyContract = EnergyContract(
                         supplierName = "Greenpeace Energy eG",
-                        contractId = "0123456789"
+                        contractId = "0123456789",
                     ),
-                    lastUpdated = Instant.parse("2018-12-10T17:25:10Z")
+                    lastUpdated = Instant.parse("2018-12-10T17:25:10Z"),
                 )
             }
         }.buildServer()
@@ -69,7 +69,7 @@ class TokensCpoHttpGetTokenTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.GET, "/tokens/DE/TNM/012345678/?type=RFID")
+            buildHttpRequest(HttpMethod.GET, "/tokens/DE/TNM/012345678/?type=RFID"),
         )
 
         // then
@@ -107,7 +107,7 @@ class TokensCpoHttpGetTokenTest {
                     "status_message": "Success",
                     "timestamp": "2015-06-30T21:59:59Z"
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }
@@ -121,7 +121,7 @@ private fun TokensCpoRepository.buildServer(): TransportClient {
         TokensCpoServer(
             service = TokensCpoService(repo),
             versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/tokens"
+            basePathOverride = "/tokens",
         ).registerOn(transportServer)
     }
 

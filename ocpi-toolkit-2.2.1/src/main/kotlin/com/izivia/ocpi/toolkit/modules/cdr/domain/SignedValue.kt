@@ -21,5 +21,5 @@ EncodingMethod field.
 data class SignedValue(
     val nature: CiString,
     val plainData: CiString,
-    val signedData: CiString
+    val signedData: CiString,
 )
