@@ -20,6 +20,6 @@ EncodingMethod field.
 @Partial
 data class SignedValue(
     val nature: CiString,
-    val plainData: CiString,
-    val signedData: CiString,
+    val plainData: String,
+    val signedData: String,
 )

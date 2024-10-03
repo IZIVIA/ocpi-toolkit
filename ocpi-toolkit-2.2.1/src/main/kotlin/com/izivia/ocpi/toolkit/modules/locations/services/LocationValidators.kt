@@ -195,45 +195,59 @@ fun ConnectorPartial.validate(): ConnectorPartial = validate(this) {
 fun Location.validate(): Location = validate(this) {
     toPartial().validate()
 }
+
 fun EnvironmentalImpact.validate(): EnvironmentalImpact = validate(this) {
     toPartial().validate()
 }
+
 fun EnergySource.validate(): EnergySource = validate(this) {
     toPartial().validate()
 }
+
 fun EnergyMix.validate(): EnergyMix = validate(this) {
     toPartial().validate()
 }
+
 fun ExceptionalPeriod.validate(): ExceptionalPeriod = validate(this) {
     toPartial().validate()
 }
+
 fun RegularHours.validate(): RegularHours = validate(this) {
     toPartial().validate()
 }
-fun Hours.validate(): Hours = validate(this) { hours ->
+
+fun Hours.validate(): Hours = validate(this) {
     toPartial().validate()
 }
+
 fun Image.validate(): Image = validate(this) {
     toPartial().validate()
 }
+
 fun BusinessDetails.validate(): BusinessDetails = validate(this) {
     toPartial().validate()
 }
+
 fun GeoLocation.validate(): GeoLocation = validate(this) {
     toPartial().validate()
 }
+
 fun AdditionalGeoLocation.validate(): AdditionalGeoLocation = validate(this) {
     toPartial().validate()
 }
+
 fun DisplayText.validate(): DisplayText = validate(this) {
     toPartial().validate()
 }
+
 fun StatusSchedule.validate(): StatusSchedule = validate(this) {
     toPartial().validate()
 }
+
 fun Evse.validate(): Evse = validate(this) {
     toPartial().validate()
 }
+
 fun Connector.validate(): Connector = validate(this) {
     toPartial().validate()
 }

@@ -34,7 +34,7 @@ fun CdrPartial.validate(): CdrPartial =
         validate(CdrPartial::totalParkingTime).isBigDecimalPositive()
         totalParkingCost?.validate()
         totalReservationCost?.validate()
-        validate(CdrPartial::remark).isPrintableAscii().hasMaxLengthOf(255)
+        validate(CdrPartial::remark).isPrintableUtf8().hasMaxLengthOf(255)
         validate(CdrPartial::invoiceReferenceId).isPrintableAscii().hasMaxLengthOf(39)
         // credit: nothing to validate
         validate(CdrPartial::creditReferenceId).isPrintableAscii().hasMaxLengthOf(39)

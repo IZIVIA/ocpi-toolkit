@@ -486,12 +486,17 @@ class LocationsValidatorTest {
     fun `BusinessDetails validator`() {
         expectCatching {
             validBusinessDetails.validate()
+            validBusinessDetails.copy(name = validUtf8String).validate()
             validBusinessDetails.copy(website = null).validate()
             validBusinessDetails.copy(logo = null).validate()
         }.isSuccess()
 
         expectCatching {
             validBusinessDetails.copy(name = generateRandomString(101)).validate()
+        }.isFailure()
+
+        expectCatching {
+            validBusinessDetails.copy(name = "with non-printable: \n").validate()
         }.isFailure()
 
         expectCatching {
