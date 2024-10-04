@@ -5,27 +5,27 @@ import com.izivia.ocpi.toolkit.modules.commands.domain.*
 
 interface CommandCpoInterface {
     suspend fun postStartSession(
-        partnerUrl: String,
+        partnerId: String,
         startSession: StartSession,
     ): OcpiResponseBody<CommandResponse>
 
     suspend fun postStopSession(
-        partnerUrl: String,
+        partnerId: String,
         stopSession: StopSession,
     ): OcpiResponseBody<CommandResponse>
 
     suspend fun postReserveNow(
-        partnerUrl: String,
+        partnerId: String,
         reserveNow: ReserveNow,
     ): OcpiResponseBody<CommandResponse>
 
     suspend fun postCancelReservation(
-        partnerUrl: String,
+        partnerId: String,
         cancelReservation: CancelReservation,
     ): OcpiResponseBody<CommandResponse>
 
     suspend fun postUnlockConnector(
-        partnerUrl: String,
+        partnerId: String,
         unlockConnector: UnlockConnector,
     ): OcpiResponseBody<CommandResponse>
 }
