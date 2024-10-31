@@ -61,16 +61,16 @@ open class CredentialsServerService(
             debugHeaders = debugHeaders,
         )
 
-        // Remove token A because it is useless from now on
-        partnerRepository.invalidateCredentialsTokenA(partnerId = partnerId)
-
         // Return Credentials objet to sender with the token C inside (which is for us the server token)
         getCredentials(
             serverToken = partnerRepository.saveCredentialsServerToken(
                 partnerId = partnerId,
                 credentialsServerToken = generateUUIDv4Token(),
             ),
-        )
+        ).also {
+            // Remove token A because it is useless from now on
+            partnerRepository.invalidateCredentialsTokenA(partnerId = partnerId)
+        }
     }
 
     override suspend fun put(
