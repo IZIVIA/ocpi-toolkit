@@ -65,7 +65,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 service = CredentialsServerService(
                     partnerRepository = receiverPlatformRepo,
                     credentialsRoleRepository = object : CredentialsRoleRepository {
-                        override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
+                        override suspend fun getCredentialsRoles(partnerId: String): List<CredentialRole> = listOf(
                             CredentialRole(
                                 role = Role.EMSP,
                                 businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
@@ -135,7 +135,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             clientPartnerRepository = PartnerMongoRepository(collection = senderServerSetupResult.partnerCollection),
             clientVersionsRepository = VersionsCacheRepository(baseUrl = senderServerSetupResult.transport.baseUrl),
             clientCredentialsRoleRepository = object : CredentialsRoleRepository {
-                override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
+                override suspend fun getCredentialsRoles(partnerId: String): List<CredentialRole> = listOf(
                     CredentialRole(
                         role = Role.CPO,
                         businessDetails = BusinessDetails(name = "Sender", website = null, logo = null),

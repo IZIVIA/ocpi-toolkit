@@ -24,6 +24,11 @@ open class CredentialsServerService(
     ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
         getCredentials(
             serverToken = token,
+            partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
+                ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)
+                ?: throw OcpiClientInvalidParametersException(
+                    "Invalid token ($token) - should be either a TokenA or a ServerToken",
+                ),
         )
     }
 
@@ -70,6 +75,7 @@ open class CredentialsServerService(
                 partnerId = partnerId,
                 credentialsServerToken = generateUUIDv4Token(),
             ),
+            partnerId = partnerId,
         )
     }
 
@@ -109,6 +115,7 @@ open class CredentialsServerService(
                 partnerId = partnerId,
                 credentialsServerToken = generateUUIDv4Token(),
             ),
+            partnerId = partnerId,
         )
     }
 
@@ -218,9 +225,9 @@ open class CredentialsServerService(
         partnerRepository.saveEndpoints(partnerId = partnerId, endpoints = versionDetail.endpoints)
     }
 
-    private suspend fun getCredentials(serverToken: String): Credentials = Credentials(
+    private suspend fun getCredentials(serverToken: String, partnerId: String): Credentials = Credentials(
         token = serverToken,
         url = serverVersionsUrlProvider(),
-        roles = credentialsRoleRepository.getCredentialsRoles(),
+        roles = credentialsRoleRepository.getCredentialsRoles(partnerId),
     )
 }

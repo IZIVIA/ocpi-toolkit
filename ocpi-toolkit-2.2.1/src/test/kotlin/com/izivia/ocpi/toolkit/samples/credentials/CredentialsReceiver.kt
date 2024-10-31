@@ -42,7 +42,7 @@ fun main() {
             service = CredentialsServerService(
                 partnerRepository = receiverPlatformRepository,
                 credentialsRoleRepository = object : CredentialsRoleRepository {
-                    override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
+                    override suspend fun getCredentialsRoles(partnerId: String): List<CredentialRole> = listOf(
                         CredentialRole(
                             role = Role.EMSP,
                             businessDetails = BusinessDetails(name = "Receiver", website = null, logo = null),
