@@ -99,7 +99,7 @@ open class CredentialsClientService(
             credentials = Credentials(
                 token = serverToken,
                 url = clientVersionsEndpointUrl,
-                roles = clientCredentialsRoleRepository.getCredentialsRoles(),
+                roles = clientCredentialsRoleRepository.getCredentialsRoles(partnerId),
             ),
             debugHeaders = emptyMap(),
         ).let {
@@ -148,7 +148,7 @@ open class CredentialsClientService(
             credentials = Credentials(
                 token = credentialsServerToken,
                 url = clientVersionsEndpointUrl,
-                roles = clientCredentialsRoleRepository.getCredentialsRoles(),
+                roles = clientCredentialsRoleRepository.getCredentialsRoles(partnerId),
             ),
             debugHeaders = emptyMap(),
         ).let {

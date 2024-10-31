@@ -58,7 +58,7 @@ fun main() {
         clientPartnerRepository = senderPlatformRepository,
         clientVersionsRepository = senderVersionsRepository,
         clientCredentialsRoleRepository = object : CredentialsRoleRepository {
-            override suspend fun getCredentialsRoles(): List<CredentialRole> = listOf(
+            override suspend fun getCredentialsRoles(partnerId: String): List<CredentialRole> = listOf(
                 CredentialRole(
                     role = Role.CPO,
                     businessDetails = BusinessDetails(name = "Sender", website = null, logo = null),
