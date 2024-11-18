@@ -19,14 +19,14 @@ open class TokensCpoService(
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType?,
-    ): OcpiResponseBody<Token> = OcpiResponseBody.of {
+    ): OcpiResponseBody<Token?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("tokenUid", tokenUid, 36)
         }
 
-        service.getToken(countryCode, partyId, tokenUid, type).validate()
+        service.getToken(countryCode, partyId, tokenUid, type)?.validate()
     }
 
     override suspend fun putToken(
@@ -46,7 +46,7 @@ open class TokensCpoService(
             validateSame("tokenUid", tokenUid, token.uid)
         }
 
-        service.putToken(token, countryCode, partyId, tokenUid, type).validate()
+        service.putToken(countryCode, partyId, tokenUid, type, token).validate()
     }
 
     override suspend fun patchToken(
@@ -63,6 +63,6 @@ open class TokensCpoService(
             validateLength("tokenUid", tokenUid, 36)
         }
 
-        service.patchToken(token, countryCode, partyId, tokenUid, type)?.validate()
+        service.patchToken(countryCode, partyId, tokenUid, type, token)?.validate()
     }
 }
