@@ -56,11 +56,11 @@ class TokensCpoHttpPatchTokenTest {
         val srv = mockk<TokensCpoRepository> {
             coEvery {
                 patchToken(
-                    capture(slots.token),
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.tokenUID),
                     capture(slots.type),
+                    capture(slots.token),
                 )
             } coAnswers { token }
         }.buildServer()
@@ -146,11 +146,11 @@ class TokensCpoHttpPatchTokenTest {
         val srv = mockk<TokensCpoRepository> {
             coEvery {
                 patchToken(
-                    capture(slots.token),
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.tokenUID),
                     capture(slots.type),
+                    capture(slots.token),
                 )
             } coAnswers { token }
         }.buildServer()

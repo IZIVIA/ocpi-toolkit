@@ -38,14 +38,13 @@ interface TokensCpoRepository {
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-    ): Token
+    ): Token?
 
     /**
      * PUT Method
      *
      * New or updated Token objects are pushed from the eMSP to the CPO
      *
-     * @param token (Request Body) New or updated Token object
      * @param countryCode (Request parameter) Country code of the eMSP sending this PUT request to the CPO system. This
      * SHALL be the same value as the country_code in the Token object being
      * pushed. max-length = 36
@@ -55,13 +54,14 @@ interface TokensCpoRepository {
      * @param tokenUid (Request parameter) Token.uid of the (new) Token object (to replace). max-length = 36
      * @param type (Request parameter) Token.type of the Token of the (new) Token object (to replace). Default if omitted:
      * RFID
+     * @param token (Request Body) New or updated Token object
      */
     suspend fun putToken(
-        token: Token,
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
+        token: Token,
     ): Token
 
     /**
@@ -72,7 +72,6 @@ interface TokensCpoRepository {
      *
      * Any request to the PATCH method SHALL contain the last_updated field.
      *
-     * @param token (Request Body) New or updated Token object
      * @param countryCode (Request parameter) Country code of the eMSP sending this PUT request to the CPO system. This
      * SHALL be the same value as the country_code in the Token object being
      * pushed. max-length = 36
@@ -82,12 +81,13 @@ interface TokensCpoRepository {
      * @param tokenUid (Request parameter) Token.uid of the (new) Token object (to replace). max-length = 36
      * @param type (Request parameter) Token.type of the Token of the (new) Token object (to replace). Default if omitted:
      * RFID
+     * @param token (Request Body) New or updated Token object
      */
     suspend fun patchToken(
-        token: TokenPartial,
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
+        token: TokenPartial,
     ): Token?
 }

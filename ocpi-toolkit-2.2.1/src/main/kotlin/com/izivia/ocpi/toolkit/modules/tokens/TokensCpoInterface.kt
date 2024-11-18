@@ -39,7 +39,7 @@ interface TokensCpoInterface {
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-    ): OcpiResponseBody<Token>
+    ): OcpiResponseBody<Token?>
 
     /**
      * PUT Method

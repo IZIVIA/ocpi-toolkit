@@ -59,11 +59,11 @@ class TokensCpoHttpPutTokenTest {
         val srv = mockk<TokensCpoRepository> {
             coEvery {
                 putToken(
-                    capture(slots.token),
                     capture(slots.countryCode),
                     capture(slots.partyId),
                     capture(slots.tokenUID),
                     capture(slots.type),
+                    capture(slots.token),
                 )
             } coAnswers { token }
         }.buildServer()
