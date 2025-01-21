@@ -205,7 +205,7 @@ open class CredentialsClientService(
 
         // Get available versions and pick latest mutual
         val latestMutualVersion = availableServerVersions
-            .sortedByDescending { clientVersion -> parseVersionNumber(clientVersion.version)!!.index }
+            .sortedByDescending { clientVersion -> parseVersionNumber(clientVersion.version)?.index ?: 0 }
             .firstOrNull { serverVersion ->
                 availableClientVersionNumbers
                     .any { clientVersionNumber -> serverVersion.version == clientVersionNumber.value }
