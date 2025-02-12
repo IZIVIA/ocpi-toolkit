@@ -17,11 +17,11 @@ class CommandCpoClient(
         responseUrl: String,
     ): OcpiResponseBody<Any> =
         transportClientBuilder
-            .build("")
+            .build(responseUrl)
             .send(
                 HttpRequest(
                     method = HttpMethod.POST,
-                    path = responseUrl,
+                    path = "",
                     body = mapper.writeValueAsString(commandResult),
                 )
                     .withRequiredHeaders(
