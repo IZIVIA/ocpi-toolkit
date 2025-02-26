@@ -31,4 +31,5 @@ val mapper: ObjectMapper = jacksonObjectMapper()
     .registerModule(
         SimpleModule()
             .addSerializer(Instant::class.java, OcpiInstantSerializer())
+            .addDeserializer(Instant::class.java, OcpiInstantDeserializer()),
     )
