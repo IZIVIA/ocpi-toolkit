@@ -92,7 +92,7 @@ class TokensCpoHttpPutTokenTest {
                 {
                     "status_code": 1000,
                     "status_message": "Success",
-                    "timestamp": "2015-06-30T21:59:59Z"
+                    "timestamp": "2015-06-30T21:59:59"
                 }
                 """.trimIndent(),
             )

@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import java.time.Instant
 
 val mapper: ObjectMapper = jacksonObjectMapper()
     .registerModule(
@@ -26,3 +28,7 @@ val mapper: ObjectMapper = jacksonObjectMapper()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .setSerializationInclusion(JsonInclude.Include.NON_NULL)
     .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+    .registerModule(
+        SimpleModule()
+            .addSerializer(Instant::class.java, OcpiInstantSerializer())
+    )
