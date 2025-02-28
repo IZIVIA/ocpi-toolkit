@@ -79,11 +79,11 @@ class LocationsCpoHttpGetConnectorTest {
                             "max_voltage": 220,
                             "max_amperage": 16,
                             "tariff_ids": ["11"],
-                            "last_updated": "2015-03-16T10:10:02Z"
+                            "last_updated": "2015-03-16T10:10:02"
                       },
                       "status_code": 1000,
                       "status_message": "Success",
-                      "timestamp": "2015-06-30T21:59:59Z"
+                      "timestamp": "2015-06-30T21:59:59"
                     }
                 """.trimIndent(),
             )

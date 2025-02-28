@@ -152,7 +152,7 @@ class LocationsCpoHttpGetLocationTest {
                                 "max_voltage": 220,
                                 "max_amperage": 16,
                                 "tariff_ids": ["11"],
-                                "last_updated": "2015-03-16T10:10:02Z"
+                                "last_updated": "2015-03-16T10:10:02"
                                 },
                                 {
                                 "id": "2",
@@ -162,12 +162,12 @@ class LocationsCpoHttpGetLocationTest {
                                 "max_voltage": 220,
                                 "max_amperage": 16,
                                 "tariff_ids": ["13"],
-                                "last_updated": "2015-03-18T08:12:01Z"
+                                "last_updated": "2015-03-18T08:12:01"
                                 }
                             ],
                             "physical_reference": "1",
                             "floor_level": "-1",
-                            "last_updated": "2015-06-28T08:12:01Z"
+                            "last_updated": "2015-06-28T08:12:01"
                             },
                             {
                             "uid": "3257",
@@ -185,23 +185,23 @@ class LocationsCpoHttpGetLocationTest {
                                 "max_voltage": 220,
                                 "max_amperage": 16,
                                 "tariff_ids": ["12"],
-                                "last_updated": "2015-06-29T20:39:09Z"
+                                "last_updated": "2015-06-29T20:39:09"
                                 }
                             ],
                             "physical_reference": "2",
                             "floor_level": "-2",
-                            "last_updated": "2015-06-29T20:39:09Z"
+                            "last_updated": "2015-06-29T20:39:09"
                             }
                         ],
                         "operator": {
                             "name": "BeCharged"
                         },
                         "time_zone": "Europe/Brussels",
-                        "last_updated": "2015-06-29T20:39:09Z"
+                        "last_updated": "2015-06-29T20:39:09"
                   },
                   "status_code": 1000,
                   "status_message": "Success",
-                  "timestamp": "2015-06-30T21:59:59Z"
+                  "timestamp": "2015-06-30T21:59:59"
                 }
                 """.trimIndent(),
             )

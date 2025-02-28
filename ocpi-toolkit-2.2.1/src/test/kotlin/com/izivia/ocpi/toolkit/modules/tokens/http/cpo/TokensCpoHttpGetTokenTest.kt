@@ -101,11 +101,11 @@ class TokensCpoHttpGetTokenTest {
                         "supplier_name": "Greenpeace Energy eG",
                         "contract_id": "0123456789"
                     },
-                    "last_updated": "2018-12-10T17:25:10Z"
+                    "last_updated": "2018-12-10T17:25:10"
                     },
                     "status_code": 1000,
                     "status_message": "Success",
-                    "timestamp": "2015-06-30T21:59:59Z"
+                    "timestamp": "2015-06-30T21:59:59"
                 }
                 """.trimIndent(),
             )
