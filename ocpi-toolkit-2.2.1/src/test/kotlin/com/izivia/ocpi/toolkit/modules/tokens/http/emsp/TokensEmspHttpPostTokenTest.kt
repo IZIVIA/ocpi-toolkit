@@ -98,12 +98,12 @@ class TokensEmspHttpPostTokenTest {
                             "supplier_name": "Greenpeace Energy eG",
                             "contract_id": "0123456789"
                         },
-                        "last_updated": "2018-12-10T17:25:10"
+                        "last_updated": "2018-12-10T17:25:10Z"
                     }
                     },
                     "status_code": 1000,
                     "status_message": "Success",
-                    "timestamp": "2015-06-30T21:59:59"
+                    "timestamp": "2015-06-30T21:59:59Z"
                 }
                 """.trimIndent(),
             )
@@ -192,12 +192,12 @@ class TokensEmspHttpPostTokenTest {
                             "supplier_name": "Greenpeace Energy eG",
                             "contract_id": "0123456789"
                         },
-                        "last_updated": "2018-12-10T17:25:10"
+                        "last_updated": "2018-12-10T17:25:10Z"
                     }
                     },
                     "status_code": 1000,
                     "status_message": "Success",
-                    "timestamp": "2015-06-30T21:59:59"
+                    "timestamp": "2015-06-30T21:59:59Z"
                 }
                 """.trimIndent(),
             )
