@@ -120,22 +120,22 @@ class LocationsCpoHttpGetLocationsTest {
               "power_type": "AC_3_PHASE",
               "max_voltage": 220,
               "max_amperage": 16,
-              "last_updated": "2019-07-01T12:12:11"
+              "last_updated": "2019-07-01T12:12:11Z"
             }
           ],
           "parking_restrictions": [
             "CUSTOMERS"
           ],
-          "last_updated": "2019-07-01T12:12:11"
+          "last_updated": "2019-07-01T12:12:11Z"
         }
       ],
       "time_zone": "Europe/Amsterdam",
-      "last_updated": "2019-07-01T12:12:11"
+      "last_updated": "2019-07-01T12:12:11Z"
     }
   ],
   "status_code": 1000,
   "status_message": "Success",
-  "timestamp": "2015-06-30T21:59:59"
+  "timestamp": "2015-06-30T21:59:59Z"
 }
                 """.trimIndent(),
             )

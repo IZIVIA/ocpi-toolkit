@@ -97,7 +97,7 @@ class LocationsCpoHttpGetEvseTest {
                                 "max_voltage": 220,
                                 "max_amperage": 16,
                                 "tariff_ids": ["11"],
-                                "last_updated": "2015-03-16T10:10:02"
+                                "last_updated": "2015-03-16T10:10:02Z"
                               },
                               {
                                 "id": "2",
@@ -107,16 +107,16 @@ class LocationsCpoHttpGetEvseTest {
                                 "max_voltage": 220,
                                 "max_amperage": 16,
                                 "tariff_ids": ["13"],
-                                "last_updated": "2015-03-18T08:12:01"
+                                "last_updated": "2015-03-18T08:12:01Z"
                               }
                         ],
                         "physical_reference": "1",
                         "floor_level": "-1",
-                        "last_updated": "2015-06-28T08:12:01"
+                        "last_updated": "2015-06-28T08:12:01Z"
                   },
                   "status_code": 1000,
                   "status_message": "Success",
-                  "timestamp": "2015-06-30T21:59:59"
+                  "timestamp": "2015-06-30T21:59:59Z"
                 }
                 """.trimIndent(),
             )
