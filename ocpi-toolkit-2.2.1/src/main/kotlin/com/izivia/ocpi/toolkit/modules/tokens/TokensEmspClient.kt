@@ -57,7 +57,7 @@ class TokensEmspClient(
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType?,
-    ): OcpiResponseBody<Token> =
+    ): OcpiResponseBody<TokenPartial> =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -82,7 +82,7 @@ class TokensEmspClient(
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType?,
-    ): OcpiResponseBody<Token?> =
+    ): OcpiResponseBody<TokenPartial?> =
         with(buildTransport()) {
             send(
                 HttpRequest(

@@ -63,7 +63,7 @@ interface TokensCpoInterface {
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-    ): OcpiResponseBody<Token>
+    ): OcpiResponseBody<TokenPartial>
 
     /**
      * PATCH Method
@@ -90,5 +90,5 @@ interface TokensCpoInterface {
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-    ): OcpiResponseBody<Token?>
+    ): OcpiResponseBody<TokenPartial?>
 }

@@ -9,6 +9,7 @@ import com.izivia.ocpi.toolkit.modules.tokens.TokensCpoInterface
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenPartial
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
+import com.izivia.ocpi.toolkit.modules.tokens.domain.toPartial
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensCpoRepository
 
 open class TokensCpoService(
@@ -35,7 +36,7 @@ open class TokensCpoService(
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType?,
-    ): OcpiResponseBody<Token> = OcpiResponseBody.of {
+    ): OcpiResponseBody<TokenPartial> = OcpiResponseBody.of {
         validate {
             token.validate()
             validateLength("countryCode", countryCode, 2)
@@ -46,7 +47,9 @@ open class TokensCpoService(
             validateSame("tokenUid", tokenUid, token.uid)
         }
 
-        service.putToken(countryCode, partyId, tokenUid, type, token).validate()
+        service.putToken(countryCode, partyId, tokenUid, type, token)
+            .toPartial()
+            .validate()
     }
 
     override suspend fun patchToken(
@@ -55,7 +58,7 @@ open class TokensCpoService(
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType?,
-    ): OcpiResponseBody<Token?> = OcpiResponseBody.of {
+    ): OcpiResponseBody<TokenPartial?> = OcpiResponseBody.of {
         validate {
             token.validate()
             validateLength("countryCode", countryCode, 2)
@@ -63,6 +66,8 @@ open class TokensCpoService(
             validateLength("tokenUid", tokenUid, 36)
         }
 
-        service.patchToken(countryCode, partyId, tokenUid, type, token)?.validate()
+        service.patchToken(countryCode, partyId, tokenUid, type, token)
+            ?.toPartial()
+            ?.validate()
     }
 }
