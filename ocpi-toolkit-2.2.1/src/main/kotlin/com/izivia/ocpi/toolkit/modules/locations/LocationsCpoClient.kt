@@ -93,7 +93,7 @@ class LocationsCpoClient(
         partyId: CiString,
         locationId: CiString,
         location: Location,
-    ): OcpiResponseBody<Location> = with(buildTransport()) {
+    ): OcpiResponseBody<LocationPartial> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
@@ -115,7 +115,7 @@ class LocationsCpoClient(
         locationId: CiString,
         evseUid: CiString,
         evse: Evse,
-    ): OcpiResponseBody<Evse> = with(buildTransport()) {
+    ): OcpiResponseBody<EvsePartial> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
@@ -138,7 +138,7 @@ class LocationsCpoClient(
         evseUid: CiString,
         connectorId: CiString,
         connector: Connector,
-    ): OcpiResponseBody<Connector> = with(buildTransport()) {
+    ): OcpiResponseBody<ConnectorPartial> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
@@ -159,7 +159,7 @@ class LocationsCpoClient(
         partyId: CiString,
         locationId: CiString,
         location: LocationPartial,
-    ): OcpiResponseBody<Location?> = with(buildTransport()) {
+    ): OcpiResponseBody<LocationPartial?> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
@@ -181,7 +181,7 @@ class LocationsCpoClient(
         locationId: CiString,
         evseUid: CiString,
         evse: EvsePartial,
-    ): OcpiResponseBody<Evse?> = with(buildTransport()) {
+    ): OcpiResponseBody<EvsePartial?> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
@@ -204,7 +204,7 @@ class LocationsCpoClient(
         evseUid: CiString,
         connectorId: CiString,
         connector: ConnectorPartial,
-    ): OcpiResponseBody<Connector?> = with(buildTransport()) {
+    ): OcpiResponseBody<ConnectorPartial?> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,

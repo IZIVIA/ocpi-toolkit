@@ -78,7 +78,7 @@ open class LocationsEmspService(
         partyId: CiString,
         locationId: CiString,
         location: Location,
-    ): OcpiResponseBody<Location> = OcpiResponseBody.of {
+    ): OcpiResponseBody<LocationPartial> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
@@ -91,6 +91,7 @@ open class LocationsEmspService(
 
         service
             .putLocation(countryCode = countryCode, partyId = partyId, locationId = locationId, location = location)
+            .toPartial()
             .validate()
     }
 
@@ -100,7 +101,7 @@ open class LocationsEmspService(
         locationId: CiString,
         evseUid: CiString,
         evse: Evse,
-    ): OcpiResponseBody<Evse> = OcpiResponseBody.of {
+    ): OcpiResponseBody<EvsePartial> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
@@ -118,6 +119,7 @@ open class LocationsEmspService(
                 evseUid = evseUid,
                 evse = evse,
             )
+            .toPartial()
             .validate()
     }
 
@@ -128,7 +130,7 @@ open class LocationsEmspService(
         evseUid: CiString,
         connectorId: CiString,
         connector: Connector,
-    ): OcpiResponseBody<Connector> = OcpiResponseBody.of {
+    ): OcpiResponseBody<ConnectorPartial> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
@@ -148,6 +150,7 @@ open class LocationsEmspService(
                 connectorId = connectorId,
                 connector = connector,
             )
+            .toPartial()
             .validate()
     }
 
@@ -156,7 +159,7 @@ open class LocationsEmspService(
         partyId: CiString,
         locationId: CiString,
         location: LocationPartial,
-    ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
+    ): OcpiResponseBody<LocationPartial?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
@@ -171,6 +174,7 @@ open class LocationsEmspService(
                 locationId = locationId,
                 location = location,
             )
+            ?.toPartial()
             ?.validate()
     }
 
@@ -180,7 +184,7 @@ open class LocationsEmspService(
         locationId: CiString,
         evseUid: CiString,
         evse: EvsePartial,
-    ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
+    ): OcpiResponseBody<EvsePartial?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
@@ -197,6 +201,7 @@ open class LocationsEmspService(
                 evseUid = evseUid,
                 evse = evse,
             )
+            ?.toPartial()
             ?.validate()
     }
 
@@ -207,7 +212,7 @@ open class LocationsEmspService(
         evseUid: CiString,
         connectorId: CiString,
         connector: ConnectorPartial,
-    ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
+    ): OcpiResponseBody<ConnectorPartial?> = OcpiResponseBody.of {
         validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
@@ -226,6 +231,7 @@ open class LocationsEmspService(
                 connectorId = connectorId,
                 connector = connector,
             )
+            ?.toPartial()
             ?.validate()
     }
 }
