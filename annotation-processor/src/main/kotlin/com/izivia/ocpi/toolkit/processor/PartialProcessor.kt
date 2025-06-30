@@ -2,7 +2,10 @@ package com.izivia.ocpi.toolkit.processor
 
 import com.google.devtools.ksp.getConstructors
 import com.google.devtools.ksp.processing.*
-import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.google.devtools.ksp.symbol.KSNode
 import com.google.devtools.ksp.validate
 import com.izivia.ocpi.toolkit.annotations.Partial
 import com.squareup.kotlinpoet.*
@@ -85,6 +88,7 @@ class PartialProcessor(
                         param.parameterName,
                         param.type.copy(nullable = true),
                     )
+                    .defaultValue("null")
                     .build()
             }
 
