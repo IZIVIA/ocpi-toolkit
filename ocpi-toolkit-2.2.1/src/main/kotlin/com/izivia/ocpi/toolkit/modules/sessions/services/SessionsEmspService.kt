@@ -8,6 +8,7 @@ import com.izivia.ocpi.toolkit.common.validation.validateSame
 import com.izivia.ocpi.toolkit.modules.sessions.SessionsEmspInterface
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
+import com.izivia.ocpi.toolkit.modules.sessions.domain.toPartial
 import com.izivia.ocpi.toolkit.modules.sessions.repositories.SessionsEmspRepository
 
 open class SessionsEmspService(
@@ -33,7 +34,7 @@ open class SessionsEmspService(
         partyId: CiString,
         sessionId: CiString,
         session: Session,
-    ): OcpiResponseBody<Session?> = OcpiResponseBody.of {
+    ): OcpiResponseBody<SessionPartial?> = OcpiResponseBody.of {
         validate {
             session.validate()
             validateLength("countryCode", countryCode, 2)
@@ -43,7 +44,9 @@ open class SessionsEmspService(
             validateSame("partyId", partyId, session.partyId)
             validateSame("sessionId", sessionId, session.id)
         }
-        service.putSession(countryCode, partyId, sessionId, session)?.validate()
+        service.putSession(countryCode, partyId, sessionId, session)
+            ?.toPartial()
+            ?.validate()
     }
 
     override suspend fun patchSession(
@@ -51,13 +54,15 @@ open class SessionsEmspService(
         partyId: CiString,
         sessionId: CiString,
         session: SessionPartial,
-    ): OcpiResponseBody<Session?> = OcpiResponseBody.of {
+    ): OcpiResponseBody<SessionPartial?> = OcpiResponseBody.of {
         validate {
             session.validate()
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("sessionId", sessionId, 36)
         }
-        service.patchSession(countryCode, partyId, sessionId, session)?.validate()
+        service.patchSession(countryCode, partyId, sessionId, session)
+            ?.toPartial()
+            ?.validate()
     }
 }

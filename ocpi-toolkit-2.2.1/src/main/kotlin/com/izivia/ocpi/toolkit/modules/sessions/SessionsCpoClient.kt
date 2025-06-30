@@ -52,7 +52,7 @@ class SessionsCpoClient(
         partyId: CiString,
         sessionId: CiString,
         session: Session,
-    ): OcpiResponseBody<Session?> =
+    ): OcpiResponseBody<SessionPartial?> =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -73,7 +73,7 @@ class SessionsCpoClient(
         partyId: CiString,
         sessionId: CiString,
         session: SessionPartial,
-    ): OcpiResponseBody<Session?> =
+    ): OcpiResponseBody<SessionPartial?> =
         with(buildTransport()) {
             send(
                 HttpRequest(

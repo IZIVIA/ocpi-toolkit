@@ -51,7 +51,7 @@ interface SessionsEmspInterface {
         partyId: CiString,
         sessionId: CiString,
         session: Session,
-    ): OcpiResponseBody<Session?>
+    ): OcpiResponseBody<SessionPartial?>
 
     /**
      * PATCH Method
@@ -75,5 +75,5 @@ interface SessionsEmspInterface {
         partyId: CiString,
         sessionId: CiString,
         session: SessionPartial,
-    ): OcpiResponseBody<Session?>
+    ): OcpiResponseBody<SessionPartial?>
 }
