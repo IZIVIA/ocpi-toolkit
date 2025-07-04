@@ -8,8 +8,11 @@ import com.izivia.ocpi.toolkit.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit.modules.locations.domain.ParkingType
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
-import strikt.assertions.isEqualTo
+import strikt.assertions.comparesEqualTo
 import java.time.Instant
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
 
 class MappersTest {
     data class InstantWrapper(
@@ -37,20 +40,31 @@ class MappersTest {
 
     @Test
     fun `should properly parse with and without Z`() {
-        val instantWithZ = "2025-03-05T10:37:42.42Z"
-        val instantWithoutZ = "2025-03-05T10:37:42.42"
+        val want = ZonedDateTime.of(2025, 3, 5, 10, 37, 42, 130_000_000, ZoneOffset.UTC).toInstant()
 
-        expectThat(
-            mapper.readValue<InstantWrapper>("""{"instant": "$instantWithZ"}"""),
-        ).isEqualTo(
-            InstantWrapper(Instant.parse(instantWithZ)),
-        )
+        listOf(
+            "2025-03-05T10:37:42.13Z",
+            "2025-03-05T10:37:42.13",
+            "2025-03-05T10:37:42.13+00:00",
+            "2025-03-05T11:37:42.13+01:00",
+            "2025-03-05T09:37:42.13-01:00",
+        ).forEach {
+            expectThat(
+                mapper.readValue<InstantWrapper>("""{"instant": "$it"}"""),
+            ).get { instant }.comparesEqualTo(want)
+        }
 
-        expectThat(
-            mapper.readValue<InstantWrapper>("""{"instant": "$instantWithoutZ"}"""),
-        ).isEqualTo(
-            InstantWrapper(Instant.parse(instantWithZ)),
-        )
+        listOf(
+            "2025-03-05T10:37:42Z",
+            "2025-03-05T10:37:42",
+            "2025-03-05T10:37:42+00:00",
+            "2025-03-05T11:37:42+01:00",
+            "2025-03-05T09:37:42-01:00",
+        ).forEach {
+            expectThat(
+                mapper.readValue<InstantWrapper>("""{"instant": "$it"}"""),
+            ).get { instant }.comparesEqualTo(want.truncatedTo(ChronoUnit.SECONDS))
+        }
     }
 }
 

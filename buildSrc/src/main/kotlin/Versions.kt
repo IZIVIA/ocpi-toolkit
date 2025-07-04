@@ -17,7 +17,7 @@ object Versions {
     const val logback = "1.4.14"
     const val junit = "5.10.1"
     const val http4k = "4.48.0.0"
-    const val strikt = "0.34.1"
+    const val strikt = "0.35.1"
     const val mockk = "1.13.8"
     const val testcontainers = "1.19.3"
     const val kmongo = "4.11.0"
