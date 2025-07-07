@@ -1,8 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.chargingProfiles
 
-import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
-import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.mapper
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.SetChargingProfile
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -35,9 +33,9 @@ class ChargingProfilesCpoServer(
             req.httpResponse {
                 service
                     .getActiveChargingProfile(
-                        sessionId = req.pathParams["sessionId"]!!,
-                        duration = req.queryParams["duration"]!!.toInt(),
-                        responseUrl = req.queryParams["response_url"]!!,
+                        sessionId = req.pathParam("sessionId"),
+                        duration = req.queryParamAsInt("duration"),
+                        responseUrl = req.queryParam("response_url"),
                     )
             }
         }
@@ -51,7 +49,7 @@ class ChargingProfilesCpoServer(
             req.httpResponse {
                 service
                     .putChargingProfile(
-                        sessionId = req.pathParams["sessionId"]!!,
+                        sessionId = req.pathParam("sessionId"),
                         setChargingProfile = mapper.readValue(req.body, SetChargingProfile::class.java),
                     )
             }
@@ -67,8 +65,8 @@ class ChargingProfilesCpoServer(
             req.httpResponse {
                 service
                     .deleteChargingProfile(
-                        sessionId = req.pathParams["sessionId"]!!,
-                        responseUrl = req.queryParams["response_url"]!!,
+                        sessionId = req.pathParam("sessionId"),
+                        responseUrl = req.queryParam("response_url"),
                     )
             }
         }

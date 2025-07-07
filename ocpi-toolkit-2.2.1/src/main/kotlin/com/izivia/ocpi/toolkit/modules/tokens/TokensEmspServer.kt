@@ -1,8 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.tokens
 
-import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
-import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.mapper
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
@@ -13,7 +11,6 @@ import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
-import java.time.Instant
 
 class TokensEmspServer(
     private val service: TokensEmspInterface,
@@ -35,15 +32,12 @@ class TokensEmspServer(
             queryParams = listOf("date_from", "date_to", "offset", "limit"),
         ) { req ->
             req.httpResponse {
-                val dateFrom = req.queryParams["date_from"]
-                val dateTo = req.queryParams["date_to"]
-
                 service
                     .getTokens(
-                        dateFrom = dateFrom?.let { Instant.parse(it) },
-                        dateTo = dateTo?.let { Instant.parse(it) },
-                        offset = req.queryParams["offset"]?.toInt() ?: 0,
-                        limit = req.queryParams["limit"]?.toInt(),
+                        dateFrom = req.optionalQueryParamAsInstant("date_from"),
+                        dateTo = req.optionalQueryParamAsInstant("date_to"),
+                        offset = req.optionalQueryParamAsInt("offset") ?: 0,
+                        limit = req.optionalQueryParamAsInt("limit"),
                     )
             }
         }
@@ -59,8 +53,8 @@ class TokensEmspServer(
         ) { req ->
             req.httpResponse {
                 service.postToken(
-                    tokenUid = req.pathParams["tokenUid"]!!,
-                    type = req.queryParams["type"]?.let { enumValueOf<TokenType>(it) } ?: TokenType.RFID,
+                    tokenUid = req.pathParam("tokenUid"),
+                    type = req.optionalQueryParamAs("type", TokenType::valueOf) ?: TokenType.RFID,
                     locationReferences = req.body
                         ?.takeIf { it.isNotBlank() } // During Test if client sent body = null, this reiceve body=""
                         ?.let { mapper.readValue(it, LocationReferences::class.java) },

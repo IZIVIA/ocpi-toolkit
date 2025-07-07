@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.commands
 import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
+import com.izivia.ocpi.toolkit.common.pathParam
 import com.izivia.ocpi.toolkit.modules.commands.domain.CommandResult
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -35,7 +36,7 @@ class CommandEmspServer(
         ) { req ->
             req.httpResponse {
                 service.postCallbackStartSession(
-                    req.pathParams["authRef"]!!,
+                    req.pathParam("authRef"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
@@ -50,7 +51,7 @@ class CommandEmspServer(
         ) { req ->
             req.httpResponse {
                 service.postCallbackStopSession(
-                    req.pathParams["sessionId"]!!,
+                    req.pathParam("sessionId"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
@@ -65,7 +66,7 @@ class CommandEmspServer(
         ) { req ->
             req.httpResponse {
                 service.postCallbackReserveNow(
-                    req.pathParams["reservationId"]!!,
+                    req.pathParam("reservationId"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
@@ -80,7 +81,7 @@ class CommandEmspServer(
         ) { req ->
             req.httpResponse {
                 service.postCallbackCancelReservation(
-                    req.pathParams["reservationId"]!!,
+                    req.pathParam("reservationId"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
@@ -97,9 +98,9 @@ class CommandEmspServer(
         ) { req ->
             req.httpResponse {
                 service.postCallbackUnlockConnector(
-                    req.pathParams["locationId"]!!,
-                    req.pathParams["evseId"]!!,
-                    req.pathParams["connectorId"]!!,
+                    req.pathParam("locationId"),
+                    req.pathParam("evseId"),
+                    req.pathParam("connectorId"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
