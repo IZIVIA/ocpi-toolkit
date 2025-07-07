@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
-import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
-import com.izivia.ocpi.toolkit.common.httpResponse
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
@@ -9,7 +8,6 @@ import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepo
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
-import java.time.Instant
 
 class LocationsCpoServer(
     private val service: LocationsCpoInterface,
@@ -30,15 +28,12 @@ class LocationsCpoServer(
             queryParams = listOf("date_from", "date_to", "offset", "limit"),
         ) { req ->
             req.httpResponse {
-                val dateFrom = req.queryParams["date_from"]
-                val dateTo = req.queryParams["date_to"]
-
                 service
                     .getLocations(
-                        dateFrom = dateFrom?.let { Instant.parse(it) },
-                        dateTo = dateTo?.let { Instant.parse(it) },
-                        offset = req.queryParams["offset"]?.toInt() ?: 0,
-                        limit = req.queryParams["limit"]?.toInt(),
+                        dateFrom = req.optionalQueryParamAsInstant("date_from"),
+                        dateTo = req.optionalQueryParamAsInstant("date_to"),
+                        offset = req.optionalQueryParamAsInt("offset") ?: 0,
+                        limit = req.optionalQueryParamAsInt("limit"),
                     )
             }
         }
@@ -52,7 +47,7 @@ class LocationsCpoServer(
             req.httpResponse {
                 service
                     .getLocation(
-                        locationId = req.pathParams["locationId"]!!,
+                        locationId = req.pathParam("locationId"),
                     )
             }
         }
@@ -67,8 +62,8 @@ class LocationsCpoServer(
             req.httpResponse {
                 service
                     .getEvse(
-                        locationId = req.pathParams["locationId"]!!,
-                        evseUid = req.pathParams["evseUid"]!!,
+                        locationId = req.pathParam("locationId"),
+                        evseUid = req.pathParam("evseUid"),
                     )
             }
         }
@@ -84,9 +79,9 @@ class LocationsCpoServer(
             req.httpResponse {
                 service
                     .getConnector(
-                        locationId = req.pathParams["locationId"]!!,
-                        evseUid = req.pathParams["evseUid"]!!,
-                        connectorId = req.pathParams["connectorId"]!!,
+                        locationId = req.pathParam("locationId"),
+                        evseUid = req.pathParam("evseUid"),
+                        connectorId = req.pathParam("connectorId"),
                     )
             }
         }

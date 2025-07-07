@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.sessions
 import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
+import com.izivia.ocpi.toolkit.common.pathParam
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
@@ -37,9 +38,9 @@ class SessionsEmspServer(
             req.httpResponse {
                 service
                     .getSession(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        sessionId = req.pathParams["sessionId"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        sessionId = req.pathParam("sessionId"),
                     )
             }
         }
@@ -55,9 +56,9 @@ class SessionsEmspServer(
             req.httpResponse {
                 service
                     .putSession(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        sessionId = req.pathParams["sessionId"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        sessionId = req.pathParam("sessionId"),
                         session = mapper.readValue(req.body, Session::class.java),
                     )
             }
@@ -74,9 +75,9 @@ class SessionsEmspServer(
             req.httpResponse {
                 service
                     .patchSession(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        sessionId = req.pathParams["sessionId"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        sessionId = req.pathParam("sessionId"),
                         session = mapper.readValue(req.body, SessionPartial::class.java),
                     )
             }

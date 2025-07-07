@@ -1,8 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.tokens
 
-import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
-import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.mapper
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenPartial
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
@@ -40,10 +38,10 @@ class TokensCpoServer(
             req.httpResponse {
                 service
                     .getToken(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        tokenUid = req.pathParams["tokenUid"]!!,
-                        type = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        tokenUid = req.pathParam("tokenUid"),
+                        type = req.optionalQueryParamAs("type", TokenType::valueOf) ?: TokenType.RFID,
                     )
             }
         }
@@ -61,10 +59,10 @@ class TokensCpoServer(
             req.httpResponse {
                 service
                     .putToken(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        tokenUid = req.pathParams["tokenUid"]!!,
-                        type = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        tokenUid = req.pathParam("tokenUid"),
+                        type = req.optionalQueryParamAs("type", TokenType::valueOf) ?: TokenType.RFID,
                         token = mapper.readValue(req.body, Token::class.java),
                     )
             }
@@ -82,10 +80,10 @@ class TokensCpoServer(
             req.httpResponse {
                 service
                     .patchToken(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        tokenUid = req.pathParams["tokenUid"]!!,
-                        type = req.queryParams["type"]?.run(TokenType::valueOf) ?: TokenType.RFID,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        tokenUid = req.pathParam("tokenUid"),
+                        type = req.optionalQueryParamAs("type", TokenType::valueOf) ?: TokenType.RFID,
                         token = mapper.readValue(req.body, TokenPartial::class.java),
                     )
             }

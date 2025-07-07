@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.cdr
 import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
+import com.izivia.ocpi.toolkit.common.pathParam
 import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -29,7 +30,7 @@ class CdrsEmspServer(
             path = basePathSegments + listOf(VariablePathSegment("cdrId")),
         ) { req ->
             req.httpResponse {
-                service.getCdr(param = req.pathParams["cdrId"]!!)
+                service.getCdr(param = req.pathParam("cdrId"))
             }
         }
 

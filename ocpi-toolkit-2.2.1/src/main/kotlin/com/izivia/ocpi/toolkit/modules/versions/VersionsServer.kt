@@ -2,6 +2,7 @@ package com.izivia.ocpi.toolkit.modules.versions
 
 import com.izivia.ocpi.toolkit.common.OcpiModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
+import com.izivia.ocpi.toolkit.common.pathParam
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
@@ -31,7 +32,7 @@ class VersionsServer(
         ) { req ->
             req.httpResponse {
                 service.getVersionDetails(
-                    versionNumber = req.pathParams["versionNumber"]!!,
+                    versionNumber = req.pathParam("versionNumber"),
                 )
             }
         }

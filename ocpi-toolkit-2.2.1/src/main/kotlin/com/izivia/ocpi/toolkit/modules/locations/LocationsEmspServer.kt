@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.locations
 import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.httpResponse
 import com.izivia.ocpi.toolkit.common.mapper
+import com.izivia.ocpi.toolkit.common.pathParam
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -36,9 +37,9 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .getLocation(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        locationId = req.pathParams["locationId"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        locationId = req.pathParam("locationId"),
                     )
             }
         }
@@ -55,10 +56,10 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .getEvse(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        locationId = req.pathParams["locationId"]!!,
-                        evseUid = req.pathParams["evseUid"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        locationId = req.pathParam("locationId"),
+                        evseUid = req.pathParam("evseUid"),
                     )
             }
         }
@@ -76,11 +77,11 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .getConnector(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        locationId = req.pathParams["locationId"]!!,
-                        evseUid = req.pathParams["evseUid"]!!,
-                        connectorId = req.pathParams["connectorId"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        locationId = req.pathParam("locationId"),
+                        evseUid = req.pathParam("evseUid"),
+                        connectorId = req.pathParam("connectorId"),
                     )
             }
         }
@@ -96,9 +97,9 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .putLocation(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        locationId = req.pathParams["locationId"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        locationId = req.pathParam("locationId"),
                         location = mapper.readValue(req.body, Location::class.java),
                     )
             }
@@ -116,10 +117,10 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .putEvse(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        locationId = req.pathParams["locationId"]!!,
-                        evseUid = req.pathParams["evseUid"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        locationId = req.pathParam("locationId"),
+                        evseUid = req.pathParam("evseUid"),
                         evse = mapper.readValue(req.body!!, Evse::class.java),
                     )
             }
@@ -138,11 +139,11 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .putConnector(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        locationId = req.pathParams["locationId"]!!,
-                        evseUid = req.pathParams["evseUid"]!!,
-                        connectorId = req.pathParams["connectorId"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        locationId = req.pathParam("locationId"),
+                        evseUid = req.pathParam("evseUid"),
+                        connectorId = req.pathParam("connectorId"),
                         connector = mapper.readValue(req.body!!, Connector::class.java),
                     )
             }
@@ -159,9 +160,9 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .patchLocation(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        locationId = req.pathParams["locationId"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        locationId = req.pathParam("locationId"),
                         location = mapper.readValue(req.body!!, LocationPartial::class.java),
                     )
             }
@@ -179,10 +180,10 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .patchEvse(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        locationId = req.pathParams["locationId"]!!,
-                        evseUid = req.pathParams["evseUid"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        locationId = req.pathParam("locationId"),
+                        evseUid = req.pathParam("evseUid"),
                         evse = mapper.readValue(req.body!!, EvsePartial::class.java),
                     )
             }
@@ -201,11 +202,11 @@ class LocationsEmspServer(
             req.httpResponse {
                 service
                     .patchConnector(
-                        countryCode = req.pathParams["countryCode"]!!,
-                        partyId = req.pathParams["partyId"]!!,
-                        locationId = req.pathParams["locationId"]!!,
-                        evseUid = req.pathParams["evseUid"]!!,
-                        connectorId = req.pathParams["connectorId"]!!,
+                        countryCode = req.pathParam("countryCode"),
+                        partyId = req.pathParam("partyId"),
+                        locationId = req.pathParam("locationId"),
+                        evseUid = req.pathParam("evseUid"),
+                        connectorId = req.pathParam("connectorId"),
                         connector = mapper.readValue(req.body!!, ConnectorPartial::class.java),
                     )
             }

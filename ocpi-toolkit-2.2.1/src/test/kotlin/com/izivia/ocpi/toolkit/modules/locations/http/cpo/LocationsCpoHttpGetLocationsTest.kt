@@ -1,6 +1,8 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.cpo
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
+import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
@@ -21,6 +23,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
 import java.time.Instant
 
 class LocationsCpoHttpGetLocationsTest {
@@ -139,6 +142,26 @@ class LocationsCpoHttpGetLocationsTest {
 }
                 """.trimIndent(),
             )
+        }
+    }
+
+    @Test
+    fun `should fail with OCPI Exception invalid parameter`() {
+        val srv = mockk<LocationsCpoRepository>().buildServer()
+        OcpiResponseBody.now = { Instant.parse("2015-06-30T21:59:59Z") }
+
+        // when
+        val resp: HttpResponse = srv.send(
+            buildHttpRequest(HttpMethod.GET, "/locations/?date_from=2019-01-28&date_to=2019-01-29T12:00:00Z"),
+        )
+
+        // then
+        expectThat(resp) {
+            get { status }.isEqualTo(HttpStatus.BAD_REQUEST) // unclear if this shouldn't be HTTP 200
+            get { body }.isNotNull().get { mapper.readValue<OcpiResponseBody<Unit>>(this) }.and {
+                get { statusCode }.isEqualTo(2001)
+                get { statusMessage }.isEqualTo("Invalid value for param 'date_from': '2019-01-28'")
+            }
         }
     }
 }
