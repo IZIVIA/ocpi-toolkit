@@ -4,4 +4,6 @@ data class HttpResponse(
     val status: HttpStatus,
     val body: String? = null,
     val headers: Map<String, String> = emptyMap(),
-)
+) {
+    fun withHeadersMixin(extraHeaders: Map<String, String>) = copy(headers = headers.plus(extraHeaders))
+}

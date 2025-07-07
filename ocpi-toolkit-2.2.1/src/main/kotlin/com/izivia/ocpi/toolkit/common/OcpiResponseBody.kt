@@ -27,7 +27,7 @@ import java.time.Instant
 data class OcpiResponseBody<T>(
     val data: T?,
     val statusCode: Int,
-    val statusMessage: String?,
+    val statusMessage: String? = null,
     val timestamp: Instant,
 ) {
     companion object {
