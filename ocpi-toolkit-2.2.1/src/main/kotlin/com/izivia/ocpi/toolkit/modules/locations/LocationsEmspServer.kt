@@ -1,9 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
-import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
-import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.mapper
-import com.izivia.ocpi.toolkit.common.pathParam
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -12,9 +9,11 @@ import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepo
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
+import java.time.Instant
 
 class LocationsEmspServer(
     private val service: LocationsEmspInterface,
+    private val timeProvider: TimeProvider = TimeProvider { Instant.now() },
     versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
@@ -34,7 +33,7 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .getLocation(
                         countryCode = req.pathParam("countryCode"),
@@ -53,7 +52,7 @@ class LocationsEmspServer(
                 VariablePathSegment("evseUid"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .getEvse(
                         countryCode = req.pathParam("countryCode"),
@@ -74,7 +73,7 @@ class LocationsEmspServer(
                 VariablePathSegment("connectorId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .getConnector(
                         countryCode = req.pathParam("countryCode"),
@@ -94,7 +93,7 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .putLocation(
                         countryCode = req.pathParam("countryCode"),
@@ -114,7 +113,7 @@ class LocationsEmspServer(
                 VariablePathSegment("evseUid"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .putEvse(
                         countryCode = req.pathParam("countryCode"),
@@ -136,7 +135,7 @@ class LocationsEmspServer(
                 VariablePathSegment("connectorId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .putConnector(
                         countryCode = req.pathParam("countryCode"),
@@ -157,7 +156,7 @@ class LocationsEmspServer(
                 VariablePathSegment("locationId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .patchLocation(
                         countryCode = req.pathParam("countryCode"),
@@ -177,7 +176,7 @@ class LocationsEmspServer(
                 VariablePathSegment("evseUid"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .patchEvse(
                         countryCode = req.pathParam("countryCode"),
@@ -199,7 +198,7 @@ class LocationsEmspServer(
                 VariablePathSegment("connectorId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .patchConnector(
                         countryCode = req.pathParam("countryCode"),

@@ -3,18 +3,16 @@ package com.izivia.ocpi.toolkit.common.validation
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.modules.types.DisplayTextPartial
 import com.izivia.ocpi.toolkit.modules.types.PricePartial
-import org.valiktor.Constraint
-import org.valiktor.ConstraintViolationException
-import org.valiktor.Validator
+import org.valiktor.*
 import org.valiktor.functions.isGreaterThanOrEqualTo
-import org.valiktor.validate
 import java.math.BigDecimal
 import java.net.URL
 import java.time.Instant
 import java.util.*
 
-fun ConstraintViolationException.toReadableString(): String =
-    constraintViolations.joinToString(", ") {
+fun ConstraintViolationException.toReadableString(): String = constraintViolations.toReadableString()
+fun Set<ConstraintViolation>.toReadableString(): String =
+    joinToString(", ") {
         "${it.constraint} violation on ${it.property}=${it.value}"
     }
 

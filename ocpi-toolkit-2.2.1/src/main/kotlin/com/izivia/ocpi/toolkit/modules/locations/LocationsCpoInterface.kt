@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.SearchResult
 import com.izivia.ocpi.toolkit.modules.locations.domain.Connector
 import com.izivia.ocpi.toolkit.modules.locations.domain.Evse
@@ -11,7 +10,7 @@ import java.time.Instant
 /**
  * CPO Interface
  *
- * - GET: Fetch a list locations, last updated between the {date_from} and {date_to} (paginated), or get a specific
+ * - GET: Fetch list of all available locations, last updated between the {date_from} and {date_to} (paginated), or get a specific
  * location, EVSE or Connector.
  * - POST: n/a
  * - PUT: n/a
@@ -40,18 +39,18 @@ interface LocationsCpoInterface {
         dateTo: Instant?,
         offset: Int = 0,
         limit: Int?,
-    ): OcpiResponseBody<SearchResult<Location>>
+    ): SearchResult<Location>
 
     /**
      * @param locationId String max-length = 36
      */
-    suspend fun getLocation(locationId: CiString): OcpiResponseBody<Location?>
+    suspend fun getLocation(locationId: CiString): Location?
 
     /**
      * @param locationId String max-length = 36
      * @param evseUid String? max-length = 36
      */
-    suspend fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?>
+    suspend fun getEvse(locationId: CiString, evseUid: CiString): Evse?
 
     /**
      * @param locationId String max-length = 36
@@ -62,5 +61,5 @@ interface LocationsCpoInterface {
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
-    ): OcpiResponseBody<Connector?>
+    ): Connector?
 }

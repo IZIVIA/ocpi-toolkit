@@ -5,6 +5,7 @@ import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
 import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspService
+import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspValidator
 import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.samples.common.validLocation
@@ -26,12 +27,12 @@ fun main() {
     )
 
     // We specify service for the validation service
-    val service = CacheLocationsEmspRepository()
+    val repository = CacheLocationsEmspRepository()
 
     // We implement callbacks for the server using the built-in service and our repository implementation
     runBlocking {
         LocationsEmspServer(
-            service = LocationsEmspService(service = service),
+            service = LocationsEmspValidator(LocationsEmspService(repository)),
             versionsRepository = InMemoryVersionsRepository(),
         ).registerOn(transportServer)
     }

@@ -5,21 +5,16 @@ import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
-import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
+import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoInterface
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
-import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
 import com.izivia.ocpi.toolkit.modules.toSearchResult
-import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
-import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
-import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -34,7 +29,7 @@ class LocationsCpoHttpGetLocationsTest {
             var dateFrom = slot<Instant>()
             var dateTo = slot<Instant>()
         }
-        val srv = mockk<LocationsCpoRepository> {
+        val srv = mockk<LocationsCpoInterface> {
             coEvery { getLocations(capture(slots.dateFrom), capture(slots.dateTo), any(), any()) } coAnswers {
                 listOf(
                     Location(
@@ -138,7 +133,7 @@ class LocationsCpoHttpGetLocationsTest {
   ],
   "status_code": 1000,
   "status_message": "Success",
-  "timestamp": "2015-06-30T21:59:59Z"
+  "timestamp": "$nowString"
 }
                 """.trimIndent(),
             )
@@ -164,19 +159,4 @@ class LocationsCpoHttpGetLocationsTest {
             }
         }
     }
-}
-
-private fun LocationsCpoRepository.buildServer(): TransportClient {
-    val transportServer = Http4kTransportServer("http://localhost:1234", 1234)
-
-    val repo = this
-    runBlocking {
-        LocationsCpoServer(
-            service = LocationsCpoService(repo),
-            versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/locations",
-        ).registerOn(transportServer)
-    }
-
-    return transportServer.initRouterAndBuildClient()
 }

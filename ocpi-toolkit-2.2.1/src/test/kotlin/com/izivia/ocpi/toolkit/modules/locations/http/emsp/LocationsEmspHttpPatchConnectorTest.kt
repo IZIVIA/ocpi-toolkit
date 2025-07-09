@@ -4,20 +4,14 @@ import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
-import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspServer
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
-import com.izivia.ocpi.toolkit.modules.locations.services.LocationsEmspService
-import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
-import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
-import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -97,19 +91,4 @@ class LocationsEmspHttpPatchConnectorTest {
             )
         }
     }
-}
-
-private fun LocationsEmspRepository.buildServer(): TransportClient {
-    val transportServer = Http4kTransportServer("http://localhost:1234", 1234)
-
-    val repo = this
-    runBlocking {
-        LocationsEmspServer(
-            service = LocationsEmspService(repo),
-            versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/locations",
-        ).registerOn(transportServer)
-    }
-
-    return transportServer.initRouterAndBuildClient()
 }
