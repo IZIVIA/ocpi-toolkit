@@ -44,8 +44,9 @@ private fun paginationHeaders(result: SearchResult<*>, request: HttpRequest): Ma
     ).toMap()
 }
 
-suspend fun <T> HttpRequest.respondObject(now: Instant, fn: suspend () -> T) = wrapResponse {
+suspend fun <T> HttpRequest.respondObject(now: Instant, fn: suspend () -> T?) = wrapResponse {
     val result = fn()
+        ?: throw OcpiObjectNotFoundException()
 
     HttpResponse(
         status = HttpStatus.OK,
