@@ -9,7 +9,7 @@ object Versions {
     // Used to build / gradle
     const val ksp = "1.9.20-1.0.14"
     const val kotlinPoet = "1.15.3"
-    const val nexus = "1.3.0"
+    const val nexus = "2.0.0"
     const val ktlintPlugin = "12.0.2"
     const val ktlint = "0.50.0"
 
