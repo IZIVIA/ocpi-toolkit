@@ -14,6 +14,11 @@ class OcpiResponseException(
 ) : Exception("Ocpi error: ${statusCode.toOcpiStatus()} $statusCode ($statusMessage)")
 
 // 2xxx: Client errors
+class OcpiObjectNotFoundException(
+    override val httpStatus: HttpStatus = HttpStatus.NOT_FOUND,
+    override val ocpiStatus: OcpiStatus = OcpiStatus.CLIENT_ERROR,
+) : OcpiException(HttpStatus.NOT_FOUND.label, httpStatus, ocpiStatus)
+
 class OcpiClientGenericException(
     message: String,
     override val httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,

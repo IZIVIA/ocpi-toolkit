@@ -269,9 +269,9 @@ fun HttpRequest.withUpdatedRequiredHeaders(
             .plus(Header.X_REQUEST_ID to generatedRequestId) // it replaces existing X_REQUEST_ID header
             .plus(
                 Header.X_CORRELATION_ID to (
-                    headers.getByNormalizedKey(Header.X_CORRELATION_ID)
-                        ?: "error - could not get ${Header.X_CORRELATION_ID} header"
-                    ),
+                        headers.getByNormalizedKey(Header.X_CORRELATION_ID)
+                            ?: "error - could not get ${Header.X_CORRELATION_ID} header"
+                        ),
             ),
     ).withContentTypeHeaderIfNeeded()
 
@@ -355,11 +355,11 @@ suspend fun PartnerRepository.checkToken(
      */
 
     val allowTokenA = httpRequest.path.contains(ModuleID.versions.name) ||
-        httpRequest.path.contains("/{versionNumber}") ||
-        httpRequest.path.contains(ModuleID.credentials.name)
+            httpRequest.path.contains("/{versionNumber}") ||
+            httpRequest.path.contains(ModuleID.credentials.name)
 
     val validToken = (allowTokenA && isCredentialsTokenAValid(token)) ||
-        isCredentialsServerTokenValid(token)
+            isCredentialsServerTokenValid(token)
 
     // 7. Credentials module
     // 7.2.3. PUT Method

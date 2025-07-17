@@ -1,12 +1,11 @@
 package com.izivia.ocpi.toolkit.tests.integration
 
 import com.izivia.ocpi.toolkit.common.Header
-import com.izivia.ocpi.toolkit.common.OcpiStatus
 import com.izivia.ocpi.toolkit.common.context.RequestMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspClient
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
-import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
+import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoValidator
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.*
@@ -25,7 +24,6 @@ import kotlin.math.min
 
 class LocationsIntegrationTest : BaseServerIntegrationTest() {
 
-    private val tokenC = UUID.randomUUID().toString()
     private var database: MongoDatabase? = null
 
     private fun setupCpoServer(locations: List<Location>): Http4kTransportServer {
@@ -35,7 +33,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         val server = buildTransportServer(DummyPartnerCacheRepository())
         runBlocking {
             LocationsCpoServer(
-                LocationsCpoService(
+                LocationsCpoValidator(
                     service = LocationsCpoMongoRepository(collection),
                 ),
                 versionsRepository = InMemoryVersionsRepository(),
@@ -103,41 +101,26 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             },
         ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+            get { list }
+                .isNotEmpty()
+                .hasSize(min(limit, numberOfLocations))
 
-            get { data }
-                .isNotNull()
-                .and {
-                    get { list }
-                        .isNotEmpty()
-                        .hasSize(min(limit, numberOfLocations))
-
-                    get { list }
-                        .first()
-                        .isA<Location>()
-                }
-                .and {
-                    get { limit }
-                        .isEqualTo(limit)
-                }
-                .and {
-                    get { offset }
-                        .isEqualTo(offset)
-                }
-                .and {
-                    get { totalCount }
-                        .isEqualTo(numberOfLocations)
-                }
-                .and {
-                    get { nextPageUrl }
-                        .isNull()
-                }
+            get { list }
+                .first()
+                .isA<Location>()
+            get { limit }
+                .isEqualTo(limit)
+            get { offset }
+                .isEqualTo(offset)
+            get { totalCount }
+                .isEqualTo(numberOfLocations)
+            get { nextPageUrl }
+                .isNull()
         }
 
         expectThat(cpoServer.requestHistory)
-            .hasSize(1)[0]
-            .and {
+            .hasSize(1)
+            .get { first() }.and {
                 get { first }.and {
                     // request
                     get { method }.isEqualTo(HttpMethod.GET)
@@ -180,36 +163,21 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             },
         ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+            get { list }
+                .isNotEmpty()
+                .hasSize(min(limit, numberOfLocations))
 
-            get { data }
-                .isNotNull()
-                .and {
-                    get { list }
-                        .isNotEmpty()
-                        .hasSize(min(limit, numberOfLocations))
-
-                    get { list }
-                        .first()
-                        .isA<Location>()
-                }
-                .and {
-                    get { limit }
-                        .isEqualTo(limit)
-                }
-                .and {
-                    get { offset }
-                        .isEqualTo(offset)
-                }
-                .and {
-                    get { totalCount }
-                        .isEqualTo(numberOfLocations)
-                }
-                .and {
-                    get { nextPageUrl }
-                        .isEqualTo("${cpoServer.baseUrl}/2.2.1/locations?limit=$limit&offset=${offset + limit}")
-                }
+            get { list }
+                .first()
+                .isA<Location>()
+            get { limit }
+                .isEqualTo(limit)
+            get { offset }
+                .isEqualTo(offset)
+            get { totalCount }
+                .isEqualTo(numberOfLocations)
+            get { nextPageUrl }
+                .isEqualTo("${cpoServer.baseUrl}/2.2.1/locations?limit=$limit&offset=${offset + limit}")
         }
 
         limit = 50
@@ -227,36 +195,21 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             },
         ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+            get { list }
+                .isNotEmpty()
+                .hasSize(min(limit, numberOfLocations))
 
-            get { data }
-                .isNotNull()
-                .and {
-                    get { list }
-                        .isNotEmpty()
-                        .hasSize(min(limit, numberOfLocations))
-
-                    get { list }
-                        .first()
-                        .isA<Location>()
-                }
-                .and {
-                    get { limit }
-                        .isEqualTo(limit)
-                }
-                .and {
-                    get { offset }
-                        .isEqualTo(offset)
-                }
-                .and {
-                    get { totalCount }
-                        .isEqualTo(numberOfLocations)
-                }
-                .and {
-                    get { nextPageUrl }
-                        .isEqualTo("${cpoServer.baseUrl}/2.2.1/locations?limit=$limit&offset=${offset + limit}")
-                }
+            get { list }
+                .first()
+                .isA<Location>()
+            get { limit }
+                .isEqualTo(limit)
+            get { offset }
+                .isEqualTo(offset)
+            get { totalCount }
+                .isEqualTo(numberOfLocations)
+            get { nextPageUrl }
+                .isEqualTo("${cpoServer.baseUrl}/2.2.1/locations?limit=$limit&offset=${offset + limit}")
         }
 
         limit = numberOfLocations + 1
@@ -274,36 +227,21 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             },
         ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+            get { list }
+                .isNotEmpty()
+                .hasSize(min(limit, numberOfLocations))
 
-            get { data }
-                .isNotNull()
-                .and {
-                    get { list }
-                        .isNotEmpty()
-                        .hasSize(min(limit, numberOfLocations))
-
-                    get { list }
-                        .first()
-                        .isA<Location>()
-                }
-                .and {
-                    get { limit }
-                        .isEqualTo(limit)
-                }
-                .and {
-                    get { offset }
-                        .isEqualTo(offset)
-                }
-                .and {
-                    get { totalCount }
-                        .isEqualTo(numberOfLocations)
-                }
-                .and {
-                    get { nextPageUrl }
-                        .isNull()
-                }
+            get { list }
+                .first()
+                .isA<Location>()
+            get { limit }
+                .isEqualTo(limit)
+            get { offset }
+                .isEqualTo(offset)
+            get { totalCount }
+                .isEqualTo(numberOfLocations)
+            get { nextPageUrl }
+                .isNull()
         }
 
         limit = numberOfLocations + 1
@@ -321,36 +259,21 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             },
         ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+            get { list }
+                .isNotEmpty()
+                .hasSize(min(limit, numberOfLocations))
 
-            get { data }
-                .isNotNull()
-                .and {
-                    get { list }
-                        .isNotEmpty()
-                        .hasSize(min(limit, numberOfLocations))
-
-                    get { list }
-                        .first()
-                        .isA<Location>()
-                }
-                .and {
-                    get { limit }
-                        .isEqualTo(limit)
-                }
-                .and {
-                    get { offset }
-                        .isEqualTo(offset)
-                }
-                .and {
-                    get { totalCount }
-                        .isEqualTo(numberOfLocations)
-                }
-                .and {
-                    get { nextPageUrl }
-                        .isNull()
-                }
+            get { list }
+                .first()
+                .isA<Location>()
+            get { limit }
+                .isEqualTo(limit)
+            get { offset }
+                .isEqualTo(offset)
+            get { totalCount }
+                .isEqualTo(numberOfLocations)
+            get { nextPageUrl }
+                .isNull()
         }
 
         limit = numberOfLocations + 1
@@ -368,36 +291,21 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             },
         ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+            get { list }
+                .isNotEmpty()
+                .hasSize(min(limit, numberOfLocations))
 
-            get { data }
-                .isNotNull()
-                .and {
-                    get { list }
-                        .isNotEmpty()
-                        .hasSize(min(limit, numberOfLocations))
-
-                    get { list }
-                        .first()
-                        .isA<Location>()
-                }
-                .and {
-                    get { limit }
-                        .isEqualTo(limit)
-                }
-                .and {
-                    get { offset }
-                        .isEqualTo(offset)
-                }
-                .and {
-                    get { totalCount }
-                        .isEqualTo(numberOfLocations)
-                }
-                .and {
-                    get { nextPageUrl }
-                        .isNull()
-                }
+            get { list }
+                .first()
+                .isA<Location>()
+            get { limit }
+                .isEqualTo(limit)
+            get { offset }
+                .isEqualTo(offset)
+            get { totalCount }
+                .isEqualTo(numberOfLocations)
+            get { nextPageUrl }
+                .isNull()
         }
 
         limit = numberOfLocations + 1
@@ -415,36 +323,21 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             },
         ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+            get { list }
+                .isNotEmpty()
+                .hasSize(1)
 
-            get { data }
-                .isNotNull()
-                .and {
-                    get { list }
-                        .isNotEmpty()
-                        .hasSize(1)
-
-                    get { list }
-                        .first()
-                        .isA<Location>()
-                }
-                .and {
-                    get { limit }
-                        .isEqualTo(limit)
-                }
-                .and {
-                    get { offset }
-                        .isEqualTo(offset)
-                }
-                .and {
-                    get { totalCount }
-                        .isEqualTo(1)
-                }
-                .and {
-                    get { nextPageUrl }
-                        .isNull()
-                }
+            get { list }
+                .first()
+                .isA<Location>()
+            get { limit }
+                .isEqualTo(limit)
+            get { offset }
+                .isEqualTo(offset)
+            get { totalCount }
+                .isEqualTo(1)
+            get { nextPageUrl }
+                .isNull()
         }
 
         limit = numberOfLocations + 1
@@ -462,36 +355,21 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             },
         ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+            get { list }
+                .isNotEmpty()
+                .hasSize(1)
 
-            get { data }
-                .isNotNull()
-                .and {
-                    get { list }
-                        .isNotEmpty()
-                        .hasSize(1)
-
-                    get { list }
-                        .first()
-                        .isA<Location>()
-                }
-                .and {
-                    get { limit }
-                        .isEqualTo(limit)
-                }
-                .and {
-                    get { offset }
-                        .isEqualTo(offset)
-                }
-                .and {
-                    get { totalCount }
-                        .isEqualTo(1)
-                }
-                .and {
-                    get { nextPageUrl }
-                        .isNull()
-                }
+            get { list }
+                .first()
+                .isA<Location>()
+            get { limit }
+                .isEqualTo(limit)
+            get { offset }
+                .isEqualTo(offset)
+            get { totalCount }
+                .isEqualTo(1)
+            get { nextPageUrl }
+                .isNull()
         }
 
         limit = numberOfLocations + 1
@@ -509,31 +387,16 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             },
         ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
-
-            get { data }
-                .isNotNull()
-                .and {
-                    get { list }
-                        .isEmpty()
-                }
-                .and {
-                    get { limit }
-                        .isEqualTo(limit)
-                }
-                .and {
-                    get { offset }
-                        .isEqualTo(offset)
-                }
-                .and {
-                    get { totalCount }
-                        .isEqualTo(1)
-                }
-                .and {
-                    get { nextPageUrl }
-                        .isNull()
-                }
+            get { list }
+                .isEmpty()
+            get { limit }
+                .isEqualTo(limit)
+            get { offset }
+                .isEqualTo(offset)
+            get { totalCount }
+                .isEqualTo(1)
+            get { nextPageUrl }
+                .isNull()
         }
 
         limit = 1
@@ -551,37 +414,22 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
                 )
             },
         ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+            get { list }
+                .isNotEmpty()
+                .hasSize(1)
 
-            get { data }
-                .isNotNull()
-                .and {
-                    get { list }
-                        .isNotEmpty()
-                        .hasSize(1)
-
-                    get { list }
-                        .first()
-                        .isA<Location>()
-                }
-                .and {
-                    get { limit }
-                        .isEqualTo(limit)
-                }
-                .and {
-                    get { offset }
-                        .isEqualTo(offset)
-                }
-                .and {
-                    get { totalCount }
-                        .isEqualTo(numberOfLocations - 1)
-                }
-                .and {
-                    get { nextPageUrl }.isEqualTo(
-                        "${cpoServer.baseUrl}/2.2.1/locations?date_to=$dateTo&limit=$limit&offset=${offset + limit}",
-                    )
-                }
+            get { list }
+                .first()
+                .isA<Location>()
+            get { limit }
+                .isEqualTo(limit)
+            get { offset }
+                .isEqualTo(offset)
+            get { totalCount }
+                .isEqualTo(numberOfLocations - 1)
+            get { nextPageUrl }.isEqualTo(
+                "${cpoServer.baseUrl}/2.2.1/locations?date_to=$dateTo&limit=$limit&offset=${offset + limit}",
+            )
         }
     }
 }
