@@ -26,3 +26,25 @@ suspend inline fun <reified T> getNextPage(
                 .parsePaginatedBody(previousResponse.data.offset)
         }
     }
+
+suspend inline fun <reified T> getNextPage(
+    transportClientBuilder: TransportClientBuilder,
+    partnerId: String,
+    partnerRepository: PartnerRepository,
+    previousResponse: SearchResult<T>,
+): SearchResult<T>? =
+    previousResponse.nextPageUrl?.let { nextPageUrl ->
+        with(transportClientBuilder.build(nextPageUrl)) {
+            send(
+                HttpRequest(
+                    method = HttpMethod.GET,
+                )
+                    .withRequiredHeaders(
+                        requestId = generateRequestId(),
+                        correlationId = generateCorrelationId(),
+                    )
+                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            )
+                .parseSearchResult(previousResponse.offset)
+        }
+    }

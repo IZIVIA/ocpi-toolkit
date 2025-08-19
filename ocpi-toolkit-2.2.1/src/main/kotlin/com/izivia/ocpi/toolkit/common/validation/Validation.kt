@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.common.validation
 
+import com.izivia.ocpi.toolkit.common.OcpiClientInvalidParametersException
 import org.valiktor.ConstraintViolation
 import org.valiktor.ConstraintViolationException
 import org.valiktor.DefaultConstraintViolation
@@ -10,6 +11,21 @@ import java.time.Instant
 data class ValidationContext(
     val violations: MutableSet<ConstraintViolation> = mutableSetOf(),
 )
+
+fun <T> validateParams(fn: ValidationContext.() -> T) = with(ValidationContext()) {
+    try {
+        fn()
+    } catch (e: ConstraintViolationException) {
+        // Partial validation will throw an exception
+        throw OcpiClientInvalidParametersException(e.toReadableString())
+    }
+
+    if (violations.isNotEmpty()) {
+        // while parameter validation errors are added to the context
+        // TODO unclear why we use different approach for partials and params
+        throw OcpiClientInvalidParametersException(violations.toReadableString())
+    }
+}
 
 fun <T> validate(fn: ValidationContext.() -> T) = with(ValidationContext()) {
     fn()
