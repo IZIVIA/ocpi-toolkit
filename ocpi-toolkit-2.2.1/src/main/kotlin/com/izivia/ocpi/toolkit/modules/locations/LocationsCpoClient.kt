@@ -32,7 +32,7 @@ class LocationsCpoClient(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
-    ): OcpiResponseBody<Location?> = with(buildTransport()) {
+    ): Location? = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.GET,
@@ -44,7 +44,7 @@ class LocationsCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseOptionalResult()
     }
 
     override suspend fun getEvse(
@@ -52,7 +52,7 @@ class LocationsCpoClient(
         partyId: CiString,
         locationId: CiString,
         evseUid: CiString,
-    ): OcpiResponseBody<Evse?> = with(buildTransport()) {
+    ): Evse? = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.GET,
@@ -64,7 +64,7 @@ class LocationsCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseOptionalResult()
     }
 
     override suspend fun getConnector(
@@ -73,7 +73,7 @@ class LocationsCpoClient(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
-    ): OcpiResponseBody<Connector?> = with(buildTransport()) {
+    ): Connector? = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.GET,
@@ -85,7 +85,7 @@ class LocationsCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseOptionalResult()
     }
 
     override suspend fun putLocation(
@@ -93,7 +93,7 @@ class LocationsCpoClient(
         partyId: CiString,
         locationId: CiString,
         location: Location,
-    ): OcpiResponseBody<LocationPartial> = with(buildTransport()) {
+    ): LocationPartial = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
@@ -106,7 +106,7 @@ class LocationsCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseResultOrNull() ?: LocationPartial()
     }
 
     override suspend fun putEvse(
@@ -115,7 +115,7 @@ class LocationsCpoClient(
         locationId: CiString,
         evseUid: CiString,
         evse: Evse,
-    ): OcpiResponseBody<EvsePartial> = with(buildTransport()) {
+    ): EvsePartial = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
@@ -128,7 +128,7 @@ class LocationsCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseResultOrNull() ?: EvsePartial()
     }
 
     override suspend fun putConnector(
@@ -138,7 +138,7 @@ class LocationsCpoClient(
         evseUid: CiString,
         connectorId: CiString,
         connector: Connector,
-    ): OcpiResponseBody<ConnectorPartial> = with(buildTransport()) {
+    ): ConnectorPartial = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
@@ -151,7 +151,7 @@ class LocationsCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseResultOrNull() ?: ConnectorPartial()
     }
 
     override suspend fun patchLocation(
@@ -159,7 +159,7 @@ class LocationsCpoClient(
         partyId: CiString,
         locationId: CiString,
         location: LocationPartial,
-    ): OcpiResponseBody<LocationPartial?> = with(buildTransport()) {
+    ): LocationPartial? = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
@@ -172,7 +172,7 @@ class LocationsCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseResultOrNull()
     }
 
     override suspend fun patchEvse(
@@ -181,7 +181,7 @@ class LocationsCpoClient(
         locationId: CiString,
         evseUid: CiString,
         evse: EvsePartial,
-    ): OcpiResponseBody<EvsePartial?> = with(buildTransport()) {
+    ): EvsePartial? = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
@@ -194,7 +194,7 @@ class LocationsCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseResultOrNull()
     }
 
     override suspend fun patchConnector(
@@ -204,7 +204,7 @@ class LocationsCpoClient(
         evseUid: CiString,
         connectorId: CiString,
         connector: ConnectorPartial,
-    ): OcpiResponseBody<ConnectorPartial?> = with(buildTransport()) {
+    ): ConnectorPartial? = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
@@ -217,6 +217,6 @@ class LocationsCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseResultOrNull()
     }
 }
