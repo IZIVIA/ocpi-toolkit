@@ -198,9 +198,6 @@ open class CredentialsClientService(
             partnerRepository = clientPartnerRepository,
         )
             .getVersions()
-            .let {
-                it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
-            }
         val availableClientVersionNumbers = clientVersionsRepository.getVersions()
 
         // Get available versions and pick latest mutual
@@ -224,9 +221,6 @@ open class CredentialsClientService(
             partnerRepository = clientPartnerRepository,
         )
             .getVersionDetails()
-            .let {
-                it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
-            }
 
         checkRequiredEndpoints(requiredEndpoints, versionDetails.endpoints)
 
