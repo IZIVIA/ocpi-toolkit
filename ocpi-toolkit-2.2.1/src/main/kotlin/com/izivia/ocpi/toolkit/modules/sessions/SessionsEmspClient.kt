@@ -35,7 +35,7 @@ class SessionsEmspClient(
         dateTo: Instant?,
         offset: Int,
         limit: Int?,
-    ): OcpiResponseBody<SearchResult<Session>> =
+    ): SearchResult<Session> =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -52,12 +52,12 @@ class SessionsEmspClient(
                 )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parsePaginatedBody(offset)
+                .parseSearchResult(offset)
         }
 
     suspend fun getSessionsNextPage(
-        previousResponse: OcpiResponseBody<SearchResult<Session>>,
-    ): OcpiResponseBody<SearchResult<Session>>? = getNextPage(
+        previousResponse: SearchResult<Session>,
+    ): SearchResult<Session>? = getNextPage(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
         partnerRepository = partnerRepository,
@@ -67,7 +67,7 @@ class SessionsEmspClient(
     override suspend fun putChargingPreferences(
         sessionId: CiString,
         chargingPreferences: ChargingPreferences,
-    ): OcpiResponseBody<ChargingPreferencesResponseType> =
+    ): ChargingPreferencesResponseType =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -80,6 +80,6 @@ class SessionsEmspClient(
                 )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseResult()
         }
 }

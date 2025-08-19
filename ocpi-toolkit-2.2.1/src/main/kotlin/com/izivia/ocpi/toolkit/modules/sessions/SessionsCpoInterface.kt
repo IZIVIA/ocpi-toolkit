@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.sessions
 
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.SearchResult
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferences
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferencesResponseType
@@ -38,7 +37,7 @@ interface SessionsCpoInterface {
         dateTo: Instant?,
         offset: Int = 0,
         limit: Int?,
-    ): OcpiResponseBody<SearchResult<Session>>
+    ): SearchResult<Session>
 
     /**
      * PUT Method
@@ -53,5 +52,5 @@ interface SessionsCpoInterface {
     suspend fun putChargingPreferences(
         sessionId: CiString,
         chargingPreferences: ChargingPreferences,
-    ): OcpiResponseBody<ChargingPreferencesResponseType>
+    ): ChargingPreferencesResponseType
 }
