@@ -27,7 +27,7 @@ class CdrsEmspClient(
         dateTo: Instant?,
         offset: Int,
         limit: Int?,
-    ): OcpiResponseBody<SearchResult<Cdr>> =
+    ): SearchResult<Cdr> =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -44,12 +44,12 @@ class CdrsEmspClient(
                 )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parsePaginatedBody(offset)
+                .parseSearchResult(offset)
         }
 
     suspend fun getCdrsNextPage(
-        previousResponse: OcpiResponseBody<SearchResult<Cdr>>,
-    ): OcpiResponseBody<SearchResult<Cdr>>? = getNextPage(
+        previousResponse: SearchResult<Cdr>,
+    ): SearchResult<Cdr>? = getNextPage(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
         partnerRepository = partnerRepository,

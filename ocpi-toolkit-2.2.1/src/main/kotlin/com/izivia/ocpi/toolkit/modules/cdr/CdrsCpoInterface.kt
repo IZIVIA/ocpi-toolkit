@@ -1,6 +1,5 @@
 package com.izivia.ocpi.toolkit.modules.cdr
 
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.SearchResult
 import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
 import java.time.Instant
@@ -38,5 +37,5 @@ interface CdrsCpoInterface {
         dateTo: Instant?,
         offset: Int = 0,
         limit: Int?,
-    ): OcpiResponseBody<SearchResult<Cdr>>
+    ): SearchResult<Cdr>
 }

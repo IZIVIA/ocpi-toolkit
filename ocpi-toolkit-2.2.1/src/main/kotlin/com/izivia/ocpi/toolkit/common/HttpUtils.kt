@@ -24,6 +24,7 @@ object Header {
     const val X_TOTAL_COUNT = "X-Total-Count"
     const val X_LIMIT = "X-Limit"
     const val LINK = "Link"
+    const val LOCATION = "Location"
     const val CONTENT_TYPE = "Content-Type"
     const val OCPI_TO_PARTY_ID = "OCPI-to-party-id"
     const val OCPI_TO_COUNTRY_CODE = "OCPI-to-country-code"
