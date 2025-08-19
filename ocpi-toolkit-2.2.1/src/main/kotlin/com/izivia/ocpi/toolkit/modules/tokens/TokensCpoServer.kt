@@ -11,9 +11,11 @@ import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepo
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
+import java.time.Instant
 
 class TokensCpoServer(
     private val service: TokensCpoInterface,
+    private val timeProvider: TimeProvider = TimeProvider { Instant.now() },
     versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
@@ -35,7 +37,7 @@ class TokensCpoServer(
             ),
             queryParams = listOf("type"),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .getToken(
                         countryCode = req.pathParam("countryCode"),
@@ -56,7 +58,7 @@ class TokensCpoServer(
             ),
             queryParams = listOf("type"),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .putToken(
                         countryCode = req.pathParam("countryCode"),
@@ -77,7 +79,7 @@ class TokensCpoServer(
             ),
             queryParams = listOf("type"),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .patchToken(
                         countryCode = req.pathParam("countryCode"),

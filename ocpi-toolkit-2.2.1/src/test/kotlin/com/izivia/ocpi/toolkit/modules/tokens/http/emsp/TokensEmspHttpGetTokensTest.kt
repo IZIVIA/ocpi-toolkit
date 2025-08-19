@@ -1,27 +1,20 @@
 package com.izivia.ocpi.toolkit.modules.tokens.http.emsp
 
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ProfileType
 import com.izivia.ocpi.toolkit.modules.toSearchResult
-import com.izivia.ocpi.toolkit.modules.tokens.TokensEmspServer
 import com.izivia.ocpi.toolkit.modules.tokens.domain.EnergyContract
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.domain.WhitelistType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensEmspRepository
-import com.izivia.ocpi.toolkit.modules.tokens.services.TokensEmspService
-import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
-import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
-import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -61,7 +54,6 @@ class TokensEmspHttpGetTokensTest {
                 ).toSearchResult()
             }
         }.buildServer()
-        OcpiResponseBody.now = { Instant.parse("2015-06-30T21:59:59Z") }
 
         // when
         val resp: HttpResponse = srv.send(
@@ -107,19 +99,4 @@ class TokensEmspHttpGetTokensTest {
             )
         }
     }
-}
-
-private fun TokensEmspRepository.buildServer(): TransportClient {
-    val transportServer = Http4kTransportServer("http://localhost:1234", 1234)
-
-    val repo = this
-    runBlocking {
-        TokensEmspServer(
-            service = TokensEmspService(repo),
-            versionsRepository = InMemoryVersionsRepository(),
-            basePathOverride = "/tokens",
-        ).registerOn(transportServer)
-    }
-
-    return transportServer.initRouterAndBuildClient()
 }

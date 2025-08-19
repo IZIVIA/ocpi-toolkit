@@ -36,7 +36,7 @@ class TokensCpoClient(
         dateTo: Instant?,
         offset: Int,
         limit: Int?,
-    ): OcpiResponseBody<SearchResult<Token>> =
+    ): SearchResult<Token> =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -54,12 +54,12 @@ class TokensCpoClient(
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parsePaginatedBody(offset)
+                .parseSearchResult(offset)
         }
 
     suspend fun getTokensNextPage(
-        previousResponse: OcpiResponseBody<SearchResult<Token>>,
-    ): OcpiResponseBody<SearchResult<Token>>? = getNextPage(
+        previousResponse: SearchResult<Token>,
+    ): SearchResult<Token>? = getNextPage(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
         partnerRepository = partnerRepository,
@@ -70,7 +70,7 @@ class TokensCpoClient(
         tokenUid: CiString,
         type: TokenType?,
         locationReferences: LocationReferences?,
-    ): OcpiResponseBody<AuthorizationInfo> =
+    ): AuthorizationInfo =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -84,6 +84,6 @@ class TokensCpoClient(
                         correlationId = generateCorrelationId(),
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
-            ).parseBody()
+            ).parseResult()
         }
 }

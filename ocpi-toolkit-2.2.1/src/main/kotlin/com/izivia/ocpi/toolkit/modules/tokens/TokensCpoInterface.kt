@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.tokens
 
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenPartial
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
@@ -39,7 +38,7 @@ interface TokensCpoInterface {
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-    ): OcpiResponseBody<Token?>
+    ): Token?
 
     /**
      * PUT Method
@@ -58,12 +57,12 @@ interface TokensCpoInterface {
      * RFID
      */
     suspend fun putToken(
-        token: Token,
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-    ): OcpiResponseBody<TokenPartial>
+        token: Token,
+    ): TokenPartial
 
     /**
      * PATCH Method
@@ -85,10 +84,10 @@ interface TokensCpoInterface {
      * RFID
      */
     suspend fun patchToken(
-        token: TokenPartial,
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
-    ): OcpiResponseBody<TokenPartial?>
+        token: TokenPartial,
+    ): TokenPartial?
 }

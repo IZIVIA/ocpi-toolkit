@@ -35,7 +35,7 @@ class TokensEmspClient(
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType?,
-    ): OcpiResponseBody<Token?> =
+    ): Token? =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -48,16 +48,16 @@ class TokensEmspClient(
                         correlationId = generateCorrelationId(),
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
-            ).parseBody()
+            ).parseOptionalResult()
         }
 
     override suspend fun putToken(
-        token: Token,
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType?,
-    ): OcpiResponseBody<TokenPartial> =
+        token: Token,
+    ): TokenPartial =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -73,16 +73,16 @@ class TokensEmspClient(
                         correlationId = generateCorrelationId(),
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
-            ).parseBody()
+            ).parseResultOrNull() ?: TokenPartial()
         }
 
     override suspend fun patchToken(
-        token: TokenPartial,
         countryCode: CiString,
         partyId: CiString,
         tokenUid: CiString,
         type: TokenType?,
-    ): OcpiResponseBody<TokenPartial?> =
+        token: TokenPartial,
+    ): TokenPartial? =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -98,6 +98,6 @@ class TokensEmspClient(
                         correlationId = generateCorrelationId(),
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
-            ).parseBody()
+            ).parseResultOrNull()
         }
 }
