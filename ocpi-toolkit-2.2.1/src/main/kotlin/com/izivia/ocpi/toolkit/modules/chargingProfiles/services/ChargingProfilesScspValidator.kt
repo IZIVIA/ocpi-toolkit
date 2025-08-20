@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.chargingProfiles.services
 
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.common.validation.validateParams
+import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.ChargingProfilesScspInterface
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfile
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfileResult
@@ -15,7 +15,7 @@ open class ChargingProfilesScspValidator(
         requestId: String,
         result: ActiveChargingProfileResult,
     ) {
-        validateParams {
+        validate {
             result.validate()
         }
 
@@ -27,7 +27,7 @@ open class ChargingProfilesScspValidator(
         requestId: String,
         result: ChargingProfileResult,
     ) {
-        validateParams {
+        validate {
             result.validate()
         }
 
@@ -39,7 +39,7 @@ open class ChargingProfilesScspValidator(
         requestId: String,
         result: ClearProfileResult,
     ) {
-        validateParams {
+        validate {
             result.validate()
         }
 
@@ -51,7 +51,7 @@ open class ChargingProfilesScspValidator(
         sessionId: CiString,
         activeChargingProfile: ActiveChargingProfile,
     ) {
-        validateParams {
+        validate {
             activeChargingProfile.validate()
         }
 

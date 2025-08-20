@@ -1,8 +1,8 @@
 package com.izivia.ocpi.toolkit.modules.sessions.services
 
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateLength
-import com.izivia.ocpi.toolkit.common.validation.validateParams
 import com.izivia.ocpi.toolkit.common.validation.validateSame
 import com.izivia.ocpi.toolkit.modules.sessions.SessionsEmspInterface
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
@@ -16,7 +16,7 @@ open class SessionsEmspValidator(
         partyId: CiString,
         sessionId: CiString,
     ): Session? {
-        validateParams {
+        validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("sessionId", sessionId, 36)
@@ -33,7 +33,7 @@ open class SessionsEmspValidator(
         sessionId: CiString,
         session: Session,
     ): SessionPartial {
-        validateParams {
+        validate {
             session.validate()
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
@@ -53,7 +53,7 @@ open class SessionsEmspValidator(
         sessionId: CiString,
         session: SessionPartial,
     ): SessionPartial? {
-        validateParams {
+        validate {
             session.validate()
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)

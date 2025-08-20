@@ -2,10 +2,10 @@ package com.izivia.ocpi.toolkit.modules.locations.services
 
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.SearchResult
+import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateDates
 import com.izivia.ocpi.toolkit.common.validation.validateInt
 import com.izivia.ocpi.toolkit.common.validation.validateLength
-import com.izivia.ocpi.toolkit.common.validation.validateParams
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoInterface
 import com.izivia.ocpi.toolkit.modules.locations.domain.Connector
 import com.izivia.ocpi.toolkit.modules.locations.domain.Evse
@@ -22,7 +22,7 @@ open class LocationsCpoValidator(
         offset: Int,
         limit: Int?,
     ): SearchResult<Location> {
-        validateParams {
+        validate {
             if (dateFrom != null && dateTo != null) validateDates("dateFrom", dateFrom, "dateTo", dateTo)
             if (limit != null) validateInt("limit", limit, 0, null)
             validateInt("offset", offset, 0, null)
@@ -38,7 +38,7 @@ open class LocationsCpoValidator(
     override suspend fun getLocation(
         locationId: CiString,
     ): Location? {
-        validateParams {
+        validate {
             validateLength("locationId", locationId, 36)
         }
 
@@ -51,7 +51,7 @@ open class LocationsCpoValidator(
         locationId: CiString,
         evseUid: CiString,
     ): Evse? {
-        validateParams {
+        validate {
             validateLength("locationId", locationId, 36)
             validateLength("evseUid", evseUid, 36)
         }
@@ -66,7 +66,7 @@ open class LocationsCpoValidator(
         evseUid: CiString,
         connectorId: CiString,
     ): Connector? {
-        validateParams {
+        validate {
             validateLength("locationId", locationId, 36)
             validateLength("evseUid", evseUid, 36)
             validateLength("connectorId", connectorId, 36)

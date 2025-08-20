@@ -2,9 +2,9 @@ package com.izivia.ocpi.toolkit.modules.chargingProfiles.services
 
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.URL
+import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateInt
 import com.izivia.ocpi.toolkit.common.validation.validateLength
-import com.izivia.ocpi.toolkit.common.validation.validateParams
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.ChargingProfilesCpoInterface
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileResponse
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.SetChargingProfile
@@ -18,7 +18,7 @@ open class ChargingProfilesCpoValidator(
         duration: Int,
         responseUrl: URL,
     ): ChargingProfileResponse {
-        validateParams {
+        validate {
             validateLength("sessionId", sessionId, 36)
             validateInt("duration", duration, 0, null)
             validateLength("response_url", responseUrl, 255)
@@ -31,7 +31,7 @@ open class ChargingProfilesCpoValidator(
         sessionId: CiString,
         setChargingProfile: SetChargingProfile,
     ): ChargingProfileResponse {
-        validateParams {
+        validate {
             validateLength("sessionId", sessionId, 36)
             setChargingProfile.validate()
         }
@@ -43,7 +43,7 @@ open class ChargingProfilesCpoValidator(
         sessionId: CiString,
         responseUrl: URL,
     ): ChargingProfileResponse {
-        validateParams {
+        validate {
             validateLength("sessionId", sessionId, 36)
             validateLength("response_url", responseUrl, 255)
         }

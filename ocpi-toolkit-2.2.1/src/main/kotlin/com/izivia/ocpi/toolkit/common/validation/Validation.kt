@@ -12,7 +12,7 @@ data class ValidationContext(
     val violations: MutableSet<ConstraintViolation> = mutableSetOf(),
 )
 
-fun <T> validateParams(fn: ValidationContext.() -> T) = with(ValidationContext()) {
+fun <T> validate(fn: ValidationContext.() -> T) = with(ValidationContext()) {
     try {
         fn()
     } catch (e: ConstraintViolationException) {
@@ -24,14 +24,6 @@ fun <T> validateParams(fn: ValidationContext.() -> T) = with(ValidationContext()
         // while parameter validation errors are added to the context
         // TODO unclear why we use different approach for partials and params
         throw OcpiClientInvalidParametersException(violations.toReadableString())
-    }
-}
-
-fun <T> validate(fn: ValidationContext.() -> T) = with(ValidationContext()) {
-    fn()
-
-    if (violations.isNotEmpty()) {
-        throw ConstraintViolationException(violations)
     }
 }
 

@@ -1,8 +1,8 @@
 package com.izivia.ocpi.toolkit.modules.locations.services
 
 import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateLength
-import com.izivia.ocpi.toolkit.common.validation.validateParams
 import com.izivia.ocpi.toolkit.common.validation.validateSame
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspInterface
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
@@ -16,7 +16,7 @@ open class LocationsEmspValidator(
         partyId: CiString,
         locationId: CiString,
     ): Location? {
-        validateParams {
+        validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
@@ -37,7 +37,7 @@ open class LocationsEmspValidator(
         locationId: CiString,
         evseUid: CiString,
     ): Evse? {
-        validateParams {
+        validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
@@ -56,7 +56,7 @@ open class LocationsEmspValidator(
         evseUid: CiString,
         connectorId: CiString,
     ): Connector? {
-        validateParams {
+        validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
@@ -81,7 +81,7 @@ open class LocationsEmspValidator(
         locationId: CiString,
         location: Location,
     ): LocationPartial {
-        validateParams {
+        validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
@@ -103,7 +103,7 @@ open class LocationsEmspValidator(
         evseUid: CiString,
         evse: Evse,
     ): EvsePartial {
-        validateParams {
+        validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
@@ -131,7 +131,7 @@ open class LocationsEmspValidator(
         connectorId: CiString,
         connector: Connector,
     ): ConnectorPartial {
-        validateParams {
+        validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
@@ -159,7 +159,7 @@ open class LocationsEmspValidator(
         locationId: CiString,
         location: LocationPartial,
     ): LocationPartial? {
-        validateParams {
+        validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
@@ -183,7 +183,7 @@ open class LocationsEmspValidator(
         evseUid: CiString,
         evse: EvsePartial,
     ): EvsePartial? {
-        validateParams {
+        validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
@@ -210,7 +210,7 @@ open class LocationsEmspValidator(
         connectorId: CiString,
         connector: ConnectorPartial,
     ): ConnectorPartial? {
-        validateParams {
+        validate {
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)

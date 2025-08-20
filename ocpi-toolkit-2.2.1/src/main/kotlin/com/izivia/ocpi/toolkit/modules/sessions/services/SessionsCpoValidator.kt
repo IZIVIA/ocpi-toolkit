@@ -2,10 +2,10 @@ package com.izivia.ocpi.toolkit.modules.sessions.services
 
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.SearchResult
+import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateDates
 import com.izivia.ocpi.toolkit.common.validation.validateInt
 import com.izivia.ocpi.toolkit.common.validation.validateLength
-import com.izivia.ocpi.toolkit.common.validation.validateParams
 import com.izivia.ocpi.toolkit.modules.sessions.SessionsCpoInterface
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferences
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferencesResponseType
@@ -22,7 +22,7 @@ open class SessionsCpoValidator(
         offset: Int,
         limit: Int?,
     ): SearchResult<Session> {
-        validateParams {
+        validate {
             if (dateTo != null) validateDates("dateFrom", dateFrom, "dateTo", dateTo)
             if (limit != null) validateInt("limit", limit, 0, null)
             validateInt("offset", offset, 0, null)
@@ -39,7 +39,7 @@ open class SessionsCpoValidator(
         sessionId: CiString,
         chargingPreferences: ChargingPreferences,
     ): ChargingPreferencesResponseType {
-        validateParams {
+        validate {
             validateLength("sessionId", sessionId, 36)
             chargingPreferences.validate()
         }
