@@ -31,7 +31,7 @@ class CommandEmspClient(
         evseId: CiString?,
         connectorId: CiString?,
         authorizationReference: CiString,
-    ): OcpiResponseBody<CommandResponse> =
+    ): CommandResponse =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -54,10 +54,10 @@ class CommandEmspClient(
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseResult()
         }
 
-    suspend fun postStopSession(sessionId: String): OcpiResponseBody<CommandResponse> =
+    suspend fun postStopSession(sessionId: String): CommandResponse =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -76,7 +76,7 @@ class CommandEmspClient(
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseResult()
         }
 
     suspend fun postReserveNow(
@@ -86,7 +86,7 @@ class CommandEmspClient(
         locationId: CiString,
         evseUid: CiString?,
         authorizationReference: CiString?,
-    ): OcpiResponseBody<CommandResponse> =
+    ): CommandResponse =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -110,10 +110,10 @@ class CommandEmspClient(
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseResult()
         }
 
-    suspend fun postCancelReservation(reservationId: CiString): OcpiResponseBody<CommandResponse> =
+    suspend fun postCancelReservation(reservationId: CiString): CommandResponse =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -132,14 +132,14 @@ class CommandEmspClient(
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseResult()
         }
 
     suspend fun postUnlockConnector(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
-    ): OcpiResponseBody<CommandResponse> =
+    ): CommandResponse =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -161,6 +161,6 @@ class CommandEmspClient(
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseResult()
         }
 }
