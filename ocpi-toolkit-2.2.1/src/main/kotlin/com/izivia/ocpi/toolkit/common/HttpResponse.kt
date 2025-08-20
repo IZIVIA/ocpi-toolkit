@@ -16,11 +16,15 @@ fun HttpStatus.success() = code == 200 || code == 201
  */
 inline fun <reified T> HttpResponse.parseSearchResult(offset: Int): SearchResult<T> {
     if (!status.success()) throw HttpException(status, status.name)
-    if (body.isNullOrBlank()) throw OcpiClientGenericException("missing obligatory body in response")
+    if (body.isNullOrBlank()) throw OcpiToolkitResponseParsingException("missing obligatory body in response")
 
-    val list = mapper.readValue(body, jacksonTypeRef<OcpiResponseBody<List<T>>>())
-        .also { it.maybeThrowOcpiException(status) }
-        .data ?: emptyList()
+    val list = runCatching { mapper.readValue(body, jacksonTypeRef<OcpiResponseBody<List<T>>>()) }
+        .onFailure { e ->
+            throw OcpiToolkitResponseParsingException("Response cannot be parsed: $body", e)
+        }
+        .getOrNull()
+        ?.also { it.maybeThrowOcpiException(status) }
+        ?.data ?: emptyList()
 
     return list.toSearchResult(
         totalCount = getHeader(Header.X_TOTAL_COUNT)?.toInt()
@@ -56,11 +60,15 @@ inline fun <reified T> HttpResponse.parseOptionalResult(): T? {
  */
 inline fun <reified T> HttpResponse.parseResultOrNull(): T? {
     if (!status.success()) throw HttpException(status, status.name)
-    if (body.isNullOrBlank()) throw OcpiClientGenericException("missing obligatory body in response")
+    if (body.isNullOrBlank()) throw OcpiToolkitResponseParsingException("missing obligatory body in response")
 
-    return mapper.readValue(body, jacksonTypeRef<OcpiResponseBody<T>>())
-        .also { it.maybeThrowOcpiException(status) }
-        .data
+    return runCatching { mapper.readValue(body, jacksonTypeRef<OcpiResponseBody<T>>()) }
+        .onFailure { e ->
+            throw OcpiToolkitResponseParsingException("Response cannot be parsed: $body", e)
+        }
+        .getOrNull()
+        ?.also { it.maybeThrowOcpiException(status) }
+        ?.data
 }
 
 inline fun <reified T> OcpiResponseBody<T>.maybeThrowOcpiException(httpStatus: HttpStatus = HttpStatus.OK) {

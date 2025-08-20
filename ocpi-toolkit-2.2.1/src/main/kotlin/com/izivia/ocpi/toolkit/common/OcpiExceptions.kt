@@ -9,11 +9,6 @@ open class OcpiException(
     val ocpiStatusCode: Int = ocpiStatus.code,
 ) : Exception(message)
 
-class OcpiResponseException(
-    val statusCode: Int,
-    val statusMessage: String,
-) : Exception("Ocpi error: ${statusCode.toOcpiStatus()} $statusCode ($statusMessage)")
-
 // 2xxx: Client errors
 class OcpiObjectNotFoundException(
     httpStatus: HttpStatus = HttpStatus.NOT_FOUND,
