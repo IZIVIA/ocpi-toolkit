@@ -26,7 +26,6 @@ import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
 import org.eclipse.jetty.client.HttpResponseException
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 import strikt.api.expectCatching
@@ -269,15 +268,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        expectThat(
-            assertThrows<OcpiResponseException> {
-                runBlocking {
-                    credentialsClientService.register()
-                }
-            },
-        ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SERVER_NO_MATCHING_ENDPOINTS.code)
+        expectThrows<OcpiException> {
+            runBlocking {
+                credentialsClientService.register()
+            }
+        }.and {
+            get { ocpiStatus }.isEqualTo(OcpiStatus.SERVER_NO_MATCHING_ENDPOINTS)
         }
     }
 

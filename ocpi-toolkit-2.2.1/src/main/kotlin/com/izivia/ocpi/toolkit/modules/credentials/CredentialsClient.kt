@@ -14,7 +14,7 @@ class CredentialsClient(
     private val transportClient: TransportClient,
 ) : CredentialsInterface {
 
-    override suspend fun get(token: String): OcpiResponseBody<Credentials> =
+    override suspend fun get(token: String): Credentials =
         transportClient
             .send(
                 HttpRequest(method = HttpMethod.GET)
@@ -24,13 +24,13 @@ class CredentialsClient(
                     )
                     .authenticate(token = token),
             )
-            .parseBody()
+            .parseResult()
 
     override suspend fun post(
         token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>,
-    ): OcpiResponseBody<Credentials> =
+    ): Credentials =
         transportClient
             .send(
                 HttpRequest(
@@ -43,13 +43,13 @@ class CredentialsClient(
                     )
                     .authenticate(token = token),
             )
-            .parseBody()
+            .parseResult()
 
     override suspend fun put(
         token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>,
-    ): OcpiResponseBody<Credentials> =
+    ): Credentials =
         transportClient
             .send(
                 HttpRequest(
@@ -62,9 +62,9 @@ class CredentialsClient(
                     )
                     .authenticate(token = token),
             )
-            .parseBody()
+            .parseResult()
 
-    override suspend fun delete(token: String): OcpiResponseBody<Credentials?> =
+    override suspend fun delete(token: String) {
         transportClient
             .send(
                 HttpRequest(method = HttpMethod.DELETE)
@@ -74,5 +74,6 @@ class CredentialsClient(
                     )
                     .authenticate(token = token),
             )
-            .parseBody()
+            .parseResultOrNull<Any>()
+    }
 }

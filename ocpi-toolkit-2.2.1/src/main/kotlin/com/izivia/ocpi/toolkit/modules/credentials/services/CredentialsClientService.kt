@@ -1,6 +1,9 @@
 package com.izivia.ocpi.toolkit.modules.credentials.services
 
-import com.izivia.ocpi.toolkit.common.*
+import com.izivia.ocpi.toolkit.common.OcpiClientGenericException
+import com.izivia.ocpi.toolkit.common.OcpiClientInvalidParametersException
+import com.izivia.ocpi.toolkit.common.OcpiServerUnsupportedVersionException
+import com.izivia.ocpi.toolkit.common.generateUUIDv4Token
 import com.izivia.ocpi.toolkit.modules.credentials.CredentialsClient
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
@@ -44,7 +47,6 @@ open class CredentialsClientService(
         ?.let { clientToken ->
             buildCredentialClient()
                 .get(token = clientToken)
-                .let { it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown") }
         }
         ?: throw OcpiClientGenericException(
             "Could not find CREDENTIALS_TOKEN_C associated with partner $partnerId",
@@ -102,9 +104,7 @@ open class CredentialsClientService(
                 roles = clientCredentialsRoleRepository.getCredentialsRoles(partnerId),
             ),
             debugHeaders = emptyMap(),
-        ).let {
-            it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
-        }
+        )
 
         // Save credentials roles of partner
         clientPartnerRepository.saveCredentialsRoles(
@@ -151,9 +151,7 @@ open class CredentialsClientService(
                 roles = clientCredentialsRoleRepository.getCredentialsRoles(partnerId),
             ),
             debugHeaders = emptyMap(),
-        ).let {
-            it.data ?: throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
-        }
+        )
 
         // Save credentials roles of partner
         clientPartnerRepository.saveCredentialsRoles(
@@ -180,11 +178,6 @@ open class CredentialsClientService(
                     // Only server token is invalidated. It means that the system can still send authenticated requests
                     // to the partner
                     clientPartnerRepository.invalidateCredentialsServerToken(partnerId = partnerId)
-                }
-                .also {
-                    if (it.statusCode != OcpiStatus.SUCCESS.code) {
-                        throw OcpiResponseException(it.statusCode, it.statusMessage ?: "unknown")
-                    }
                 }
         }
         ?: throw OcpiClientGenericException(

@@ -5,11 +5,12 @@ import com.izivia.ocpi.toolkit.modules.credentials.CredentialsInterface
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
-import com.izivia.ocpi.toolkit.modules.versions.domain.*
+import com.izivia.ocpi.toolkit.modules.versions.domain.Version
+import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
+import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
-import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 
 open class CredentialsServerService(
     private val partnerRepository: PartnerRepository,
@@ -21,8 +22,8 @@ open class CredentialsServerService(
 
     override suspend fun get(
         token: String,
-    ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
-        getCredentials(
+    ): Credentials {
+        return getCredentials(
             serverToken = token,
             partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
                 ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)
@@ -36,7 +37,7 @@ open class CredentialsServerService(
         token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>,
-    ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
+    ): Credentials {
         // A partner can use a valid serverToken on registration.
         // It can happen when a partner unregister, then registers with its clientToken (which is the serverToken
         // for us)
@@ -69,8 +70,8 @@ open class CredentialsServerService(
         // Remove token A because it is useless from now on
         partnerRepository.invalidateCredentialsTokenA(partnerId = partnerId)
 
-        // Return Credentials objet to sender with the token C inside (which is for us the server token)
-        getCredentials(
+        // Return Credentials object to sender with the token C inside (which is for us the server token)
+        return getCredentials(
             serverToken = partnerRepository.saveCredentialsServerToken(
                 partnerId = partnerId,
                 credentialsServerToken = generateUUIDv4Token(),
@@ -83,7 +84,7 @@ open class CredentialsServerService(
         token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>,
-    ): OcpiResponseBody<Credentials> = OcpiResponseBody.of {
+    ): Credentials {
         val partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
             // This line should not be reached when using the HttpUtils.kt PartnerRepository.checkToken
             // implementation of the toolkit, but is included for custom implementations.
@@ -110,7 +111,7 @@ open class CredentialsServerService(
         )
 
         // Return Credentials objet to sender with the updated token C inside (which is for us the server token)
-        getCredentials(
+        return getCredentials(
             serverToken = partnerRepository.saveCredentialsServerToken(
                 partnerId = partnerId,
                 credentialsServerToken = generateUUIDv4Token(),
@@ -121,7 +122,7 @@ open class CredentialsServerService(
 
     override suspend fun delete(
         token: String,
-    ): OcpiResponseBody<Credentials?> = OcpiResponseBody.of {
+    ) {
         partnerRepository
             .getPartnerIdByCredentialsServerToken(token)
             ?.also { partnerId ->
@@ -132,8 +133,6 @@ open class CredentialsServerService(
             // This line should not be reached when using the HttpUtils.kt PartnerRepository.checkToken
             // implementation of the toolkit, but is included for custom implementations.
             ?: throw OcpiClientMethodNotAllowedException()
-
-        null
     }
 
     private suspend fun findLatestMutualVersionAndStoreInformation(
@@ -143,7 +142,9 @@ open class CredentialsServerService(
     ) {
         val versions = transportClientBuilder
             .build(credentials.url)
-            .run {
+            .runCatching {
+                // we can not use VersionsClient::getVersions() without some refactoring
+                // regular clients require an established connect and make too many assumptions around headers
                 send(
                     HttpRequest(method = HttpMethod.GET)
                         .withUpdatedRequiredHeaders(
@@ -152,17 +153,7 @@ open class CredentialsServerService(
                         )
                         .authenticate(token = credentials.token),
                 )
-            }
-            .also {
-                if (it.status != HttpStatus.OK) {
-                    throw OcpiServerUnusableApiException(
-                        "Could not get version of sender, there was an error in the response code: " +
-                            "URL='${credentials.url}', HttpStatus=${it.status.code}",
-                    )
-                }
-            }
-            .runCatching {
-                this.parseBody<OcpiResponseBody<List<Version>>>()
+                    .parseResult<List<Version>>()
             }
             .onFailure {
                 throw OcpiServerUnusableApiException(
@@ -171,12 +162,6 @@ open class CredentialsServerService(
                 )
             }
             .getOrThrow()
-            .let {
-                it.data
-                    ?: throw OcpiServerUnusableApiException(
-                        "Could not get versions of sender, there was an error during the call: '${it.statusMessage}'",
-                    )
-            }
 
         val matchingVersion = versions.firstOrNull { it.version == VersionNumber.V2_2_1.value }
             ?: throw OcpiServerUnsupportedVersionException("Expected version 2.2.1 from $versions")
@@ -185,7 +170,7 @@ open class CredentialsServerService(
 
         val versionDetail = transportClientBuilder
             .build(matchingVersion.url)
-            .run {
+            .runCatching {
                 send(
                     HttpRequest(method = HttpMethod.GET)
                         .withUpdatedRequiredHeaders(
@@ -194,17 +179,7 @@ open class CredentialsServerService(
                         )
                         .authenticate(token = credentials.token),
                 )
-            }
-            .also {
-                if (it.status != HttpStatus.OK) {
-                    throw OcpiServerUnusableApiException(
-                        "Could not get version of sender, there was an error in the response code: " +
-                            "URL='${matchingVersion.url}', HttpStatus=${it.status.code}",
-                    )
-                }
-            }
-            .runCatching {
-                this.parseBody<OcpiResponseBody<VersionDetails>>()
+                    .parseResult<VersionDetails>()
             }
             .onFailure {
                 throw OcpiServerUnusableApiException(
@@ -213,12 +188,6 @@ open class CredentialsServerService(
                 )
             }
             .getOrThrow()
-            .let {
-                it.data
-                    ?: throw OcpiServerUnusableApiException(
-                        "Could not get version of sender, there was an error during the call: '${it.statusMessage}'",
-                    )
-            }
 
         checkRequiredEndpoints(requiredEndpoints, versionDetail.endpoints)
 
