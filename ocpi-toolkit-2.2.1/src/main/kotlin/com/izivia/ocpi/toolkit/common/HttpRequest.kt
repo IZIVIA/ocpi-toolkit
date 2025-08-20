@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.common
 
 import com.izivia.ocpi.toolkit.common.context.currentResponseMessageRoutingHeadersOrNull
+import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
@@ -85,6 +86,8 @@ private suspend fun HttpRequest.defaultHeadersOrErrorHandling(fn: suspend () -> 
     } catch (e: OcpiException) {
         logger.warn(e)
         e.toHttpResponse()
+    } catch (e: HttpException) {
+        HttpResponse(status = e.status)
     } catch (e: Exception) {
         // at this point, we should only encounter well-defined OcpiExceptions, or unhandled server errors
         // all other issues, like auth and json deserialization should have happened before
@@ -92,3 +95,21 @@ private suspend fun HttpRequest.defaultHeadersOrErrorHandling(fn: suspend () -> 
         OcpiServerGenericException("Generic server error").toHttpResponse()
     }.withHeadersMixin(baseHeaders)
 }
+
+/**
+ * Transforms an OcpiException to an HttpResponse. May be used in TransportServer implementation to handle
+ * OCPI exceptions.
+ */
+fun OcpiException.toHttpResponse(): HttpResponse =
+    HttpResponse(
+        status = httpStatus,
+        body = mapper.writeValueAsString(
+            OcpiResponseBody(
+                data = null,
+                statusCode = ocpiStatusCode,
+                statusMessage = message,
+                timestamp = Instant.now(),
+            ),
+        ),
+        headers = if (httpStatus == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap(),
+    )

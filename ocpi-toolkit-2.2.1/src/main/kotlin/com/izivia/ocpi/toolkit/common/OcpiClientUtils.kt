@@ -9,28 +9,6 @@ suspend inline fun <reified T> getNextPage(
     transportClientBuilder: TransportClientBuilder,
     partnerId: String,
     partnerRepository: PartnerRepository,
-    previousResponse: OcpiResponseBody<SearchResult<T>>,
-): OcpiResponseBody<SearchResult<T>>? =
-    previousResponse.data?.nextPageUrl?.let { nextPageUrl ->
-        with(transportClientBuilder.build(nextPageUrl)) {
-            send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                )
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
-            )
-                .parsePaginatedBody(previousResponse.data.offset)
-        }
-    }
-
-suspend inline fun <reified T> getNextPage(
-    transportClientBuilder: TransportClientBuilder,
-    partnerId: String,
-    partnerRepository: PartnerRepository,
     previousResponse: SearchResult<T>,
 ): SearchResult<T>? =
     previousResponse.nextPageUrl?.let { nextPageUrl ->
