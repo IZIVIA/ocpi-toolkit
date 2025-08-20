@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.chargingProfiles
 
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.URL
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileResponse
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.SetChargingProfile
@@ -37,7 +36,7 @@ interface ChargingProfilesCpoInterface {
         sessionId: CiString,
         duration: Int,
         responseUrl: URL,
-    ): OcpiResponseBody<ChargingProfileResponse>
+    ): ChargingProfileResponse
 
     /**
      * Creates a new ChargingProfile on a session, or replaces an existing ChargingProfile on the EVSE.
@@ -50,7 +49,7 @@ interface ChargingProfilesCpoInterface {
     suspend fun putChargingProfile(
         sessionId: CiString,
         setChargingProfile: SetChargingProfile,
-    ): OcpiResponseBody<ChargingProfileResponse>
+    ): ChargingProfileResponse
 
     /**
      * Clears the ChargingProfile set by the eMSP on the given session.
@@ -65,5 +64,5 @@ interface ChargingProfilesCpoInterface {
     suspend fun deleteChargingProfile(
         sessionId: CiString,
         responseUrl: URL,
-    ): OcpiResponseBody<ChargingProfileResponse>
+    ): ChargingProfileResponse
 }

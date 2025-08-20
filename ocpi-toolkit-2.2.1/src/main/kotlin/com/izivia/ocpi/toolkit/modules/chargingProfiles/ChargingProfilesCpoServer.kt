@@ -9,9 +9,11 @@ import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepo
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
+import java.time.Instant
 
 class ChargingProfilesCpoServer(
     private val service: ChargingProfilesCpoInterface,
+    private val timeProvider: TimeProvider = TimeProvider { Instant.now() },
     versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
@@ -30,7 +32,7 @@ class ChargingProfilesCpoServer(
             ),
             queryParams = listOf("duration", "response_url"),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .getActiveChargingProfile(
                         sessionId = req.pathParam("sessionId"),
@@ -46,7 +48,7 @@ class ChargingProfilesCpoServer(
                 VariablePathSegment("sessionId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .putChargingProfile(
                         sessionId = req.pathParam("sessionId"),
@@ -62,7 +64,7 @@ class ChargingProfilesCpoServer(
             ),
             queryParams = listOf("response_url"),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .deleteChargingProfile(
                         sessionId = req.pathParam("sessionId"),
