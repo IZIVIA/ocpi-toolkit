@@ -11,7 +11,7 @@ import java.time.Instant
 private val logger = LogManager.getLogger(HttpRequest::class.java)
 
 suspend fun <T> HttpRequest.respondSearchResult(now: Instant, fn: suspend () -> SearchResult<T>) =
-    defaultHeadersOrErrorHandling {
+    defaultHeadersOrErrorHandling(now) {
         val result = fn()
 
         HttpResponse(
@@ -49,13 +49,13 @@ suspend fun <T> HttpRequest.respondObject(now: Instant, fn: suspend () -> T?) =
     respondNullableObject(now) { fn() ?: throw OcpiObjectNotFoundException() }
 
 suspend fun HttpRequest.respondNothing(now: Instant, fn: suspend () -> Unit) =
-    respondNullableObject<Any>(now) {
+    respondNullableObject(now) {
         fn()
         null
     }
 
 private suspend fun <T> HttpRequest.respondNullableObject(now: Instant, fn: suspend () -> T?) =
-    defaultHeadersOrErrorHandling {
+    defaultHeadersOrErrorHandling(now) {
         val result = fn()
 
         // TODO we are supposed to respond with a 201 CREATED if this is a newly added object
@@ -74,7 +74,10 @@ private suspend fun <T> HttpRequest.respondNullableObject(now: Instant, fn: susp
         )
     }
 
-private suspend fun HttpRequest.defaultHeadersOrErrorHandling(fn: suspend () -> HttpResponse): HttpResponse {
+private suspend fun HttpRequest.defaultHeadersOrErrorHandling(
+    now: Instant,
+    fn: suspend () -> HttpResponse,
+): HttpResponse {
     val baseHeaders = buildMap {
         put(Header.CONTENT_TYPE, ContentType.APPLICATION_JSON)
         putAll(getDebugHeaders())
@@ -85,14 +88,14 @@ private suspend fun HttpRequest.defaultHeadersOrErrorHandling(fn: suspend () -> 
         fn()
     } catch (e: OcpiException) {
         logger.warn(e)
-        e.toHttpResponse()
+        e.toHttpResponse(now)
     } catch (e: HttpException) {
         HttpResponse(status = e.status)
     } catch (e: Exception) {
         // at this point, we should only encounter well-defined OcpiExceptions, or unhandled server errors
         // all other issues, like auth and json deserialization should have happened before
         logger.error(e)
-        OcpiServerGenericException("Generic server error").toHttpResponse()
+        OcpiServerGenericException("Generic server error").toHttpResponse(now)
     }.withHeadersMixin(baseHeaders)
 }
 
@@ -100,7 +103,7 @@ private suspend fun HttpRequest.defaultHeadersOrErrorHandling(fn: suspend () -> 
  * Transforms an OcpiException to an HttpResponse. May be used in TransportServer implementation to handle
  * OCPI exceptions.
  */
-fun OcpiException.toHttpResponse(): HttpResponse =
+fun OcpiException.toHttpResponse(now: Instant): HttpResponse =
     HttpResponse(
         status = httpStatus,
         body = mapper.writeValueAsString(
@@ -108,7 +111,7 @@ fun OcpiException.toHttpResponse(): HttpResponse =
                 data = null,
                 statusCode = ocpiStatusCode,
                 statusMessage = message,
-                timestamp = Instant.now(),
+                timestamp = now,
             ),
         ),
         headers = if (httpStatus == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap(),

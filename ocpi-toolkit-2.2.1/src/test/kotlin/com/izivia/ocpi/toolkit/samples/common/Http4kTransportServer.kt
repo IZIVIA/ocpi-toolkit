@@ -16,6 +16,7 @@ import org.http4k.server.Http4kServer
 import org.http4k.server.Netty
 import org.http4k.server.asServer
 import org.valiktor.ConstraintViolationException
+import java.time.Instant
 
 class Http4kTransportServer(
     val baseUrl: String,
@@ -87,7 +88,7 @@ class Http4kTransportServer(
                             httpResponse.toHttp4kResponse()
                         }
                 } catch (ocpiException: OcpiException) {
-                    ocpiException.toHttpResponse().toHttp4kResponse()
+                    ocpiException.toHttpResponse(Instant.now()).toHttp4kResponse()
                 } catch (httpException: HttpException) {
                     Response(Status(httpException.status.code, httpException.reason))
                 } catch (exception: Exception) {
