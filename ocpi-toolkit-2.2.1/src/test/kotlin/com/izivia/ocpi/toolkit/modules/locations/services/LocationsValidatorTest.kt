@@ -74,6 +74,8 @@ class LocationsValidatorTest {
             failTC("country invalid format") { validLocation.copy(country = "fra") },
             failTC("timezone too long") { validLocation.copy(timeZone = generateRandomString(256)) },
             failTC("timezone invalid format") { validLocation.copy(timeZone = "EuropeOslo") },
+            failTC("parking type invalid") { validLocation.copy(parkingType = ParkingType.OTHER) },
+            failTC("facilities contains invalid") { validLocation.copy(facilities = listOf(Facility.OTHER)) },
         ),
     )
 
@@ -94,6 +96,10 @@ class LocationsValidatorTest {
             failTC("uid too long") { validEvse.copy(uid = generateRandomString(40)) },
             failTC("floor level too long") { validEvse.copy(floorLevel = generateRandomString(5)) },
             failTC("physical reference too long") { validEvse.copy(physicalReference = generateRandomString(17)) },
+            failTC("capabilities contains invalid") { validEvse.copy(capabilities = listOf(Capability.OTHER)) },
+            failTC("parkingRestrictions invalid") {
+                validEvse.copy(parkingRestrictions = listOf(ParkingRestriction.OTHER))
+            },
         ),
     )
 
@@ -108,6 +114,7 @@ class LocationsValidatorTest {
             failTC("max amperage negative") { validConnector.copy(maxAmperage = -1) },
             failTC("tariff id too long") { validConnector.copy(tariffIds = listOf(generateRandomString(37))) },
             failTC("invalid terms and conditions URL") { validConnector.copy(termsAndConditions = "not an url") },
+            failTC("invalid connector type") { validConnector.copy(standard = ConnectorType.OTHER) },
         ),
     )
 
