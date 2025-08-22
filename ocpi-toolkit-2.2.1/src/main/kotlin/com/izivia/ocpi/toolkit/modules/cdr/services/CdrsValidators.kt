@@ -54,7 +54,8 @@ private fun CdrLocation.validate() = validate(this) {
     validate(CdrLocation::evseUid).isPrintableAscii().hasMaxLengthOf(36)
     validate(CdrLocation::evseId).isPrintableAscii().hasMaxLengthOf(48)
     validate(CdrLocation::connectorId).isPrintableAscii().hasMaxLengthOf(36)
-    // connectorStandard: nothing to validate
+    // connectorStandard: we do not validate the type, as most likely we filtered those connectors already
+    //                    and we want to avoid billing issues
     // connectorFormat: nothing to validate
     // connectorPowerType: nothing to validate
 }

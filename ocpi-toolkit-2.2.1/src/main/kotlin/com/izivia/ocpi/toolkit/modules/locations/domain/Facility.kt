@@ -1,5 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
+
 enum class Facility {
     /**
      * A hotel.
@@ -100,4 +102,11 @@ enum class Facility {
      * Wifi or other type of internet available.
      */
     WIFI,
+
+    /**
+     * Placeholder entry serving as default value if we can not match with any other.
+     * Avoids failing deserialization on invalid entries.
+     */
+    @JsonEnumDefaultValue
+    OTHER,
 }

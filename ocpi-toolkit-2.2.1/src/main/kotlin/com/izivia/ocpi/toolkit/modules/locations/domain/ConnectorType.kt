@@ -1,5 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue
+
 /**
  * The socket or plug standard of the charging point.
  */
@@ -203,4 +205,11 @@ enum class ConnectorType {
      * Tesla Connector "Model-S"-type (oval, 5 pin)
      */
     TESLA_S,
+
+    /**
+     * Placeholder entry serving as default value if we can not match with any other.
+     * Avoids failing deserialization on invalid entries.
+     */
+    @JsonEnumDefaultValue
+    OTHER,
 }

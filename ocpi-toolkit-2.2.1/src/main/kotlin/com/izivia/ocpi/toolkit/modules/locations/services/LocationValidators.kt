@@ -6,9 +6,7 @@ import com.izivia.ocpi.toolkit.modules.types.DisplayText
 import com.izivia.ocpi.toolkit.modules.types.toPartial
 import org.valiktor.DefaultConstraintViolation
 import org.valiktor.constraints.Greater
-import org.valiktor.functions.isGreaterThanOrEqualTo
-import org.valiktor.functions.isLessThanOrEqualTo
-import org.valiktor.functions.isNotEmpty
+import org.valiktor.functions.*
 import org.valiktor.validate
 import java.math.BigDecimal
 
@@ -26,13 +24,14 @@ fun LocationPartial.validate(): LocationPartial = validate(this) {
     validate(LocationPartial::country).isCountryCode(caseSensitive = true, alpha2 = false)
     coordinates?.validate()
     relatedLocations?.forEach { it.validate() }
+    validate(LocationPartial::parkingType).isNotEqualTo(ParkingType.OTHER)
     // parkingType: nothing to validate
     evses?.forEach { it.validate() }
     directions?.forEach { it.validate() }
     operator?.validate()
     suboperator?.validate()
     owner?.validate()
-    // facilities: nothing to validate
+    validate(LocationPartial::facilities).doesNotContain(Facility.OTHER)
     validate(LocationPartial::timeZone).isTimeZone()
     openingTimes?.validate()
     // chargingWhenClosed: nothing to validate
@@ -150,21 +149,21 @@ fun EvsePartial.validate(): EvsePartial = validate(this) {
     validate(EvsePartial::evseId).isEvseId()
     // status: nothing to validate
     statusSchedule?.forEach { it.validate() }
-    // capabilities: nothing to validate
+    validate(EvsePartial::capabilities).doesNotContain(Capability.OTHER)
     validate(EvsePartial::connectors).isNotEmpty()
     connectors?.forEach { it.validate() }
     validate(EvsePartial::floorLevel).isPrintableUtf8().hasMaxLengthOf(4)
     coordinates?.validate()
     validate(EvsePartial::physicalReference).isPrintableUtf8().hasMaxLengthOf(16)
     directions?.forEach { it.validate() }
-    // parkingRestrictions: nothing to validate
+    validate(EvsePartial::parkingRestrictions).doesNotContain(ParkingRestriction.OTHER)
     images?.forEach { it.validate() }
     // lastUpdated: nothing to validate
 }
 
 fun ConnectorPartial.validate(): ConnectorPartial = validate(this) {
     validate(ConnectorPartial::id).isPrintableAscii().hasMaxLengthOf(36)
-    // standard: nothing to validate
+    validate(ConnectorPartial::standard).isNotEqualTo(ConnectorType.OTHER)
     // format: nothing to validate
     // powerType: nothing to validate
     validate(ConnectorPartial::maxVoltage).isGreaterThanOrEqualTo(0)
