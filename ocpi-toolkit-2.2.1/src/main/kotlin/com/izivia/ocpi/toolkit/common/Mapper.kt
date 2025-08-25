@@ -26,6 +26,7 @@ val mapper: ObjectMapper = jacksonObjectMapper()
     .registerModule(JavaTimeModule())
     .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
     .setSerializationInclusion(JsonInclude.Include.NON_NULL)
     .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
     .registerModule(
