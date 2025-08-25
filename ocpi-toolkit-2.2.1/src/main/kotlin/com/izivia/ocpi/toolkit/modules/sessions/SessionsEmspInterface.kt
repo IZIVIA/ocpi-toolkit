@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.sessions
 
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 
@@ -28,7 +27,7 @@ interface SessionsEmspInterface {
      * @param sessionId (max-length 36) id of the Session object to get from the eMSP’s system.
      * @return Session Requested Session object.
      */
-    suspend fun getSession(countryCode: CiString, partyId: CiString, sessionId: CiString): OcpiResponseBody<Session?>
+    suspend fun getSession(countryCode: CiString, partyId: CiString, sessionId: CiString): Session?
 
     /**
      * PUT Method
@@ -51,7 +50,7 @@ interface SessionsEmspInterface {
         partyId: CiString,
         sessionId: CiString,
         session: Session,
-    ): OcpiResponseBody<SessionPartial?>
+    ): SessionPartial
 
     /**
      * PATCH Method
@@ -75,5 +74,5 @@ interface SessionsEmspInterface {
         partyId: CiString,
         sessionId: CiString,
         session: SessionPartial,
-    ): OcpiResponseBody<SessionPartial?>
+    ): SessionPartial?
 }

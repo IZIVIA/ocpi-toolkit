@@ -27,7 +27,7 @@ class CdrsCpoClient(
             partnerRepository = partnerRepository,
         )
 
-    override suspend fun getCdr(param: URL): OcpiResponseBody<Cdr?> =
+    override suspend fun getCdr(param: URL): Cdr? =
         with(transportClientBuilder.build(param)) {
             send(
                 HttpRequest(
@@ -39,10 +39,10 @@ class CdrsCpoClient(
                 )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseOptionalResult()
         }
 
-    override suspend fun postCdr(cdr: Cdr): OcpiResponseBody<URL?> =
+    override suspend fun postCdr(cdr: Cdr): URL? =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -54,6 +54,11 @@ class CdrsCpoClient(
                 )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .also {
+                    // this will check response for errors and throw exceptions where applicable
+                    it.parseResultOrNull<URL?>()
+                }
+                // https://github.com/ocpi/ocpi/blob/v2.2.1-d2/mod_cdrs.asciidoc#response-headers
+                .getHeader(Header.LOCATION)
         }
 }

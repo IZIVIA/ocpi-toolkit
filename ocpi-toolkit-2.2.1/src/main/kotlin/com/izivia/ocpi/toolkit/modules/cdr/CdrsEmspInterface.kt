@@ -1,6 +1,5 @@
 package com.izivia.ocpi.toolkit.modules.cdr
 
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.URL
 import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
 
@@ -28,7 +27,7 @@ interface CdrsEmspInterface<T> {
      *
      * @return Cdr Requested Cdr object.
      */
-    suspend fun getCdr(param: T): OcpiResponseBody<Cdr?>
+    suspend fun getCdr(param: T): Cdr?
 
     /**
      * POST Method
@@ -40,5 +39,5 @@ interface CdrsEmspInterface<T> {
      * @param cdr New CDR object.
      * @return The response should contain the URL to the just created CDR object in the eMSP’s system.
      */
-    suspend fun postCdr(cdr: Cdr): OcpiResponseBody<URL?>
+    suspend fun postCdr(cdr: Cdr): URL?
 }

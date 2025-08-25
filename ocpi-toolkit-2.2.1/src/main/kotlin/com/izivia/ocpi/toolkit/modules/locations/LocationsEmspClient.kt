@@ -36,7 +36,7 @@ class LocationsEmspClient(
         dateTo: Instant?,
         offset: Int,
         limit: Int?,
-    ): OcpiResponseBody<SearchResult<Location>> = with(buildTransport()) {
+    ): SearchResult<Location> = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.GET,
@@ -53,19 +53,19 @@ class LocationsEmspClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parsePaginatedBody(offset)
+            .parseSearchResult(offset)
     }
 
     suspend fun getLocationsNextPage(
-        previousResponse: OcpiResponseBody<SearchResult<Location>>,
-    ): OcpiResponseBody<SearchResult<Location>>? = getNextPage(
+        previousResponse: SearchResult<Location>,
+    ): SearchResult<Location>? = getNextPage(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
         partnerRepository = partnerRepository,
         previousResponse = previousResponse,
     )
 
-    override suspend fun getLocation(locationId: CiString): OcpiResponseBody<Location?> = with(buildTransport()) {
+    override suspend fun getLocation(locationId: CiString): Location? = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.GET,
@@ -77,10 +77,10 @@ class LocationsEmspClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseOptionalResult()
     }
 
-    override suspend fun getEvse(locationId: CiString, evseUid: CiString): OcpiResponseBody<Evse?> =
+    override suspend fun getEvse(locationId: CiString, evseUid: CiString): Evse? =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -93,14 +93,14 @@ class LocationsEmspClient(
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseOptionalResult()
         }
 
     override suspend fun getConnector(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
-    ): OcpiResponseBody<Connector?> = with(buildTransport()) {
+    ): Connector? = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.GET,
@@ -112,6 +112,6 @@ class LocationsEmspClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseBody()
+            .parseOptionalResult()
     }
 }

@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 
 /**
@@ -34,7 +33,7 @@ interface LocationsEmspInterface {
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
-    ): OcpiResponseBody<Location?>
+    ): Location?
 
     /**
      * If the CPO wants to check the status of a Location, EVSE or Connector object in the eMSP system, it might GET the
@@ -52,7 +51,7 @@ interface LocationsEmspInterface {
         partyId: CiString,
         locationId: CiString,
         evseUid: CiString,
-    ): OcpiResponseBody<Evse?>
+    ): Evse?
 
     /**
      * If the CPO wants to check the status of a Location, EVSE or Connector object in the eMSP system, it might GET the
@@ -72,7 +71,7 @@ interface LocationsEmspInterface {
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
-    ): OcpiResponseBody<Connector?>
+    ): Connector?
 
     /**
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
@@ -88,7 +87,7 @@ interface LocationsEmspInterface {
         partyId: CiString,
         locationId: CiString,
         location: Location,
-    ): OcpiResponseBody<LocationPartial>
+    ): LocationPartial
 
     /**
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
@@ -106,7 +105,7 @@ interface LocationsEmspInterface {
         locationId: CiString,
         evseUid: CiString,
         evse: Evse,
-    ): OcpiResponseBody<EvsePartial>
+    ): EvsePartial
 
     /**
      * The CPO pushes available Location/EVSE or Connector objects to the eMSP. PUT is used to send new Location objects
@@ -126,7 +125,7 @@ interface LocationsEmspInterface {
         evseUid: CiString,
         connectorId: CiString,
         connector: Connector,
-    ): OcpiResponseBody<ConnectorPartial>
+    ): ConnectorPartial
 
     /**
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
@@ -141,7 +140,7 @@ interface LocationsEmspInterface {
         partyId: CiString,
         locationId: CiString,
         location: LocationPartial,
-    ): OcpiResponseBody<LocationPartial?>
+    ): LocationPartial?
 
     /**
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
@@ -158,7 +157,7 @@ interface LocationsEmspInterface {
         locationId: CiString,
         evseUid: CiString,
         evse: EvsePartial,
-    ): OcpiResponseBody<EvsePartial?>
+    ): EvsePartial?
 
     /**
      * Same as the PUT method, but only the fields/objects that have to be updated have to be present, other
@@ -177,5 +176,5 @@ interface LocationsEmspInterface {
         evseUid: CiString,
         connectorId: CiString,
         connector: ConnectorPartial,
-    ): OcpiResponseBody<ConnectorPartial?>
+    ): ConnectorPartial?
 }

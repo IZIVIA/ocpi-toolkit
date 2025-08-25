@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.tokens
 
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.SearchResult
 import com.izivia.ocpi.toolkit.modules.tokens.domain.AuthorizationInfo
 import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
@@ -46,7 +45,7 @@ interface TokensEmspInterface {
         dateTo: Instant?,
         offset: Int = 0,
         limit: Int?,
-    ): OcpiResponseBody<SearchResult<Token>>
+    ): SearchResult<Token>
 
     /**
      * POST Method
@@ -79,5 +78,5 @@ interface TokensEmspInterface {
         tokenUid: CiString,
         type: TokenType? = TokenType.RFID,
         locationReferences: LocationReferences? = null,
-    ): OcpiResponseBody<AuthorizationInfo>
+    ): AuthorizationInfo
 }

@@ -32,7 +32,7 @@ class SessionsCpoClient(
         countryCode: CiString,
         partyId: CiString,
         sessionId: CiString,
-    ): OcpiResponseBody<Session?> =
+    ): Session? =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -44,7 +44,7 @@ class SessionsCpoClient(
                 )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseOptionalResult()
         }
 
     override suspend fun putSession(
@@ -52,7 +52,7 @@ class SessionsCpoClient(
         partyId: CiString,
         sessionId: CiString,
         session: Session,
-    ): OcpiResponseBody<SessionPartial?> =
+    ): SessionPartial =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -65,7 +65,7 @@ class SessionsCpoClient(
                 )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseResultOrNull() ?: SessionPartial()
         }
 
     override suspend fun patchSession(
@@ -73,7 +73,7 @@ class SessionsCpoClient(
         partyId: CiString,
         sessionId: CiString,
         session: SessionPartial,
-    ): OcpiResponseBody<SessionPartial?> =
+    ): SessionPartial? =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -86,6 +86,6 @@ class SessionsCpoClient(
                 )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parseBody()
+                .parseResultOrNull()
         }
 }

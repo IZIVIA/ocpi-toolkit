@@ -26,10 +26,10 @@ import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
 import org.eclipse.jetty.client.HttpResponseException
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 import strikt.api.expectCatching
+import strikt.api.expectDoesNotThrow
 import strikt.api.expectThat
 import strikt.api.expectThrows
 import strikt.assertions.*
@@ -231,20 +231,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 versionsClient.getVersions()
             },
         ) {
-            get { data }
-                .isNotNull()
-                .isNotEmpty()
-                .isEqualTo(
-                    listOf(
-                        Version(
-                            version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1",
-                        ),
+            isNotEmpty()
+            isEqualTo(
+                listOf(
+                    Version(
+                        version = VersionNumber.V2_2_1.value,
+                        url = "${receiverServer.transport.baseUrl}/2.2.1",
                     ),
-                )
-
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+                ),
+            )
         }
     }
 
@@ -273,15 +268,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         receiverServer.transport.start()
         senderServer.transport.start()
 
-        expectThat(
-            assertThrows<OcpiResponseException> {
-                runBlocking {
-                    credentialsClientService.register()
-                }
-            },
-        ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SERVER_NO_MATCHING_ENDPOINTS.code)
+        expectThrows<OcpiException> {
+            runBlocking {
+                credentialsClientService.register()
+            }
+        }.and {
+            get { ocpiStatus }.isEqualTo(OcpiStatus.SERVER_NO_MATCHING_ENDPOINTS)
         }
     }
 
@@ -452,20 +444,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         expectThat(
             versionsClient.getVersions(),
         ) {
-            get { data }
-                .isNotNull()
-                .isNotEmpty()
-                .isEqualTo(
-                    listOf(
-                        Version(
-                            version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1",
-                        ),
+            isNotEmpty()
+            isEqualTo(
+                listOf(
+                    Version(
+                        version = VersionNumber.V2_2_1.value,
+                        url = "${receiverServer.transport.baseUrl}/2.2.1",
                     ),
-                )
-
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+                ),
+            )
         }
     }
 
@@ -509,20 +496,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 senderVersionsClient.getVersions()
             },
         ) {
-            get { data }
-                .isNotNull()
-                .isNotEmpty()
-                .isEqualTo(
-                    listOf(
-                        Version(
-                            version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1",
-                        ),
+            isNotEmpty()
+            isEqualTo(
+                listOf(
+                    Version(
+                        version = VersionNumber.V2_2_1.value,
+                        url = "${receiverServer.transport.baseUrl}/2.2.1",
                     ),
-                )
-
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+                ),
+            )
         }
 
         // Sender unregisters, so ...
@@ -549,20 +531,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 receiverVersionsClient.getVersions()
             },
         ) {
-            get { data }
-                .isNotNull()
-                .isNotEmpty()
-                .isEqualTo(
-                    listOf(
-                        Version(
-                            version = VersionNumber.V2_2_1.value,
-                            url = "${senderServer.transport.baseUrl}/2.2.1",
-                        ),
+            isNotEmpty()
+            isEqualTo(
+                listOf(
+                    Version(
+                        version = VersionNumber.V2_2_1.value,
+                        url = "${senderServer.transport.baseUrl}/2.2.1",
                     ),
-                )
-
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+                ),
+            )
         }
 
         // ... and sender can obviously still send requests
@@ -571,20 +548,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 senderVersionsClient.getVersions()
             },
         ) {
-            get { data }
-                .isNotNull()
-                .isNotEmpty()
-                .isEqualTo(
-                    listOf(
-                        Version(
-                            version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1",
-                        ),
+            isNotEmpty()
+            isEqualTo(
+                listOf(
+                    Version(
+                        version = VersionNumber.V2_2_1.value,
+                        url = "${receiverServer.transport.baseUrl}/2.2.1",
                     ),
-                )
-
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+                ),
+            )
         }
     }
 
@@ -626,20 +598,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 senderVersionsClient.getVersions()
             },
         ) {
-            get { data }
-                .isNotNull()
-                .isNotEmpty()
-                .isEqualTo(
-                    listOf(
-                        Version(
-                            version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1",
-                        ),
+            isNotEmpty()
+            isEqualTo(
+                listOf(
+                    Version(
+                        version = VersionNumber.V2_2_1.value,
+                        url = "${receiverServer.transport.baseUrl}/2.2.1",
                     ),
-                )
-
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+                ),
+            )
         }
 
         expectThat(
@@ -657,20 +624,15 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
                 senderVersionsClient.getVersions()
             },
         ) {
-            get { data }
-                .isNotNull()
-                .isNotEmpty()
-                .isEqualTo(
-                    listOf(
-                        Version(
-                            version = VersionNumber.V2_2_1.value,
-                            url = "${receiverServer.transport.baseUrl}/2.2.1",
-                        ),
+            isNotEmpty()
+            isEqualTo(
+                listOf(
+                    Version(
+                        version = VersionNumber.V2_2_1.value,
+                        url = "${receiverServer.transport.baseUrl}/2.2.1",
                     ),
-                )
-
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+                ),
+            )
         }
 
         // Sender unregisters, so ...
@@ -687,13 +649,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
 
         // ... and sender should still be able to call receiver
-        expectThat(
+        expectDoesNotThrow {
             runBlocking {
                 senderVersionsClient.getVersions()
-            },
-        ) {
-            get { statusCode }
-                .isEqualTo(OcpiStatus.SUCCESS.code)
+            }
         }
     }
 }

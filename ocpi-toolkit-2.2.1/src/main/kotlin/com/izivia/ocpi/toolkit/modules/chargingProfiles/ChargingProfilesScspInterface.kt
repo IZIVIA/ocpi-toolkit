@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.chargingProfiles
 
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfile
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfileResult
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileResult
@@ -29,20 +28,20 @@ interface ChargingProfilesScspInterface {
     suspend fun postCallbackActiveChargingProfile(
         requestId: String,
         result: ActiveChargingProfileResult,
-    ): OcpiResponseBody<Any>
+    )
 
     suspend fun postCallbackChargingProfile(
         requestId: String,
         result: ChargingProfileResult,
-    ): OcpiResponseBody<Any>
+    )
 
     suspend fun postCallbackClearProfile(
         requestId: String,
         result: ClearProfileResult,
-    ): OcpiResponseBody<Any>
+    )
 
     suspend fun putActiveChargingProfile(
         sessionId: CiString,
         activeChargingProfile: ActiveChargingProfile,
-    ): OcpiResponseBody<Any>
+    )
 }

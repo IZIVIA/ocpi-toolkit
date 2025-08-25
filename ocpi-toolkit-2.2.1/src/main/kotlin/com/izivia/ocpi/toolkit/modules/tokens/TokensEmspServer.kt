@@ -11,9 +11,11 @@ import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
+import java.time.Instant
 
 class TokensEmspServer(
     private val service: TokensEmspInterface,
+    private val timeProvider: TimeProvider = TimeProvider { Instant.now() },
     versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
@@ -31,7 +33,7 @@ class TokensEmspServer(
             path = basePathSegments,
             queryParams = listOf("date_from", "date_to", "offset", "limit"),
         ) { req ->
-            req.httpResponse {
+            req.respondSearchResult(timeProvider.now()) {
                 service
                     .getTokens(
                         dateFrom = req.optionalQueryParamAsInstant("date_from"),
@@ -51,7 +53,7 @@ class TokensEmspServer(
             ),
             queryParams = listOf("type"),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service.postToken(
                     tokenUid = req.pathParam("tokenUid"),
                     type = req.optionalQueryParamAs("type", TokenType::valueOf) ?: TokenType.RFID,

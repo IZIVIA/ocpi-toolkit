@@ -7,7 +7,7 @@ import com.izivia.ocpi.toolkit.modules.locations.domain.Connector
 import com.izivia.ocpi.toolkit.modules.locations.domain.Evse
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
-import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoService
+import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoValidator
 import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import kotlinx.coroutines.runBlocking
@@ -29,12 +29,12 @@ fun main() {
     )
 
     // We specify service for the validation service
-    val service = CacheLocationsCpoRepository()
+    val repository = CacheLocationsCpoRepository()
 
     // We implement callbacks for the server using the built-in service and our service implementation
     runBlocking {
         LocationsCpoServer(
-            service = LocationsCpoService(service = service),
+            service = LocationsCpoValidator(repository),
             versionsRepository = InMemoryVersionsRepository(),
         ).registerOn(transportServer)
     }

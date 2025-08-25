@@ -1,6 +1,5 @@
 package com.izivia.ocpi.toolkit.modules.versions.services
 
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.common.OcpiServerUnsupportedVersionException
 import com.izivia.ocpi.toolkit.modules.versions.VersionsInterface
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
@@ -15,8 +14,8 @@ open class VersionsService(
     val versionDetailsBasePath: String = "",
 ) : VersionsInterface {
 
-    override suspend fun getVersions(): OcpiResponseBody<List<Version>> = OcpiResponseBody.of {
-        repository.getVersions().map {
+    override suspend fun getVersions(): List<Version> {
+        return repository.getVersions().map {
             Version(
                 version = it.value,
                 url = "${baseUrlProvider()}$versionDetailsBasePath/${it.value}",
@@ -26,8 +25,8 @@ open class VersionsService(
 
     suspend fun getVersionDetails(
         versionNumber: String,
-    ): OcpiResponseBody<VersionDetails> = OcpiResponseBody.of {
-        parseVersionNumber(versionNumber)
+    ): VersionDetails {
+        return parseVersionNumber(versionNumber)
             ?.let { parsedVersionNumber ->
                 repository.getVersionDetails(parsedVersionNumber)
             }

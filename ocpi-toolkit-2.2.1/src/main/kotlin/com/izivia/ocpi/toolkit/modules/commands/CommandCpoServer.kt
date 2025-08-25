@@ -1,9 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.commands
 
-import com.izivia.ocpi.toolkit.common.HttpAuthInterface
-import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
-import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.mapper
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.commands.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -12,10 +9,12 @@ import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepo
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import java.time.Instant
 
 class CommandCpoServer(
     private val httpAuth: HttpAuthInterface,
     private val service: CommandCpoInterface,
+    private val timeProvider: TimeProvider = TimeProvider { Instant.now() },
     versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
@@ -34,7 +33,7 @@ class CommandCpoServer(
             val senderPlatformId = httpAuth.partnerIdFromRequest(req)
             val startSession = mapper.readValue(req.body, StartSession::class.java)
 
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service.postStartSession(senderPlatformId, startSession)
             }
         }
@@ -46,7 +45,7 @@ class CommandCpoServer(
             val senderPlatformUrl = httpAuth.partnerIdFromRequest(req)
             val stopSession = mapper.readValue(req.body, StopSession::class.java)
 
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service.postStopSession(senderPlatformUrl, stopSession = stopSession)
             }
         }
@@ -58,7 +57,7 @@ class CommandCpoServer(
             val senderPlatformUrl = httpAuth.partnerIdFromRequest(req)
             val reserveNow = mapper.readValue(req.body, ReserveNow::class.java)
 
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service.postReserveNow(senderPlatformUrl, reserveNow)
             }
         }
@@ -70,7 +69,7 @@ class CommandCpoServer(
             val senderPlatformUrl = httpAuth.partnerIdFromRequest(req)
             val cancelReservation = mapper.readValue(req.body, CancelReservation::class.java)
 
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service.postCancelReservation(senderPlatformUrl, cancelReservation)
             }
         }
@@ -82,7 +81,7 @@ class CommandCpoServer(
             val senderPlatformUrl = httpAuth.partnerIdFromRequest(req)
             val unlockConnector = mapper.readValue(req.body, UnlockConnector::class.java)
 
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service.postUnlockConnector(senderPlatformUrl, unlockConnector)
             }
         }

@@ -9,10 +9,8 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepositor
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
-import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
-import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 
 /**
  * Send calls to the SCSP
@@ -42,7 +40,7 @@ class ChargingProfilesCpoClient(
     suspend fun postCallbackActiveChargingProfile(
         responseUrl: String,
         result: ActiveChargingProfileResult,
-    ): OcpiResponseBody<Any> = with(buildCallbackTransport()) {
+    ) = with(buildCallbackTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.POST,
@@ -55,16 +53,13 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .also {
-                if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")
-            }
-            .parseBody()
+            .parseResultOrNull<Any>()
     }
 
     suspend fun postCallbackChargingProfile(
         responseUrl: String,
         result: ChargingProfileResult,
-    ): OcpiResponseBody<Any> = with(buildCallbackTransport()) {
+    ) = with(buildCallbackTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.POST,
@@ -77,16 +72,13 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .also {
-                if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")
-            }
-            .parseBody()
+            .parseResultOrNull<Any>()
     }
 
     suspend fun postCallbackClearProfile(
         responseUrl: String,
         result: ClearProfileResult,
-    ): OcpiResponseBody<Any> = with(buildCallbackTransport()) {
+    ) = with(buildCallbackTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.POST,
@@ -99,16 +91,13 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .also {
-                if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")
-            }
-            .parseBody()
+            .parseResultOrNull<Any>()
     }
 
     suspend fun putActiveChargingProfile(
         sessionId: CiString,
         activeChargingProfile: ActiveChargingProfile,
-    ): OcpiResponseBody<Any> = with(buildTransport()) {
+    ) = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
@@ -121,9 +110,6 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .also {
-                if (it.status != HttpStatus.OK) throw HttpException(it.status, "status should be ${HttpStatus.OK}")
-            }
-            .parseBody()
+            .parseResultOrNull<Any>()
     }
 }

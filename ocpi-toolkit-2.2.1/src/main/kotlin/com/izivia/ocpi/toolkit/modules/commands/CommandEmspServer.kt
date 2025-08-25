@@ -1,9 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.commands
 
-import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
-import com.izivia.ocpi.toolkit.common.httpResponse
-import com.izivia.ocpi.toolkit.common.mapper
-import com.izivia.ocpi.toolkit.common.pathParam
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.commands.domain.CommandResult
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -13,9 +10,11 @@ import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
+import java.time.Instant
 
 class CommandEmspServer(
     private val service: CommandEmspInterface,
+    private val timeProvider: TimeProvider = TimeProvider { Instant.now() },
     versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
@@ -34,7 +33,7 @@ class CommandEmspServer(
                 VariablePathSegment("authRef"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondNothing(timeProvider.now()) {
                 service.postCallbackStartSession(
                     req.pathParam("authRef"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
@@ -49,7 +48,7 @@ class CommandEmspServer(
                 VariablePathSegment("sessionId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondNothing(timeProvider.now()) {
                 service.postCallbackStopSession(
                     req.pathParam("sessionId"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
@@ -64,7 +63,7 @@ class CommandEmspServer(
                 VariablePathSegment("reservationId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondNothing(timeProvider.now()) {
                 service.postCallbackReserveNow(
                     req.pathParam("reservationId"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
@@ -79,7 +78,7 @@ class CommandEmspServer(
                 VariablePathSegment("reservationId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondNothing(timeProvider.now()) {
                 service.postCallbackCancelReservation(
                     req.pathParam("reservationId"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
@@ -96,7 +95,7 @@ class CommandEmspServer(
                 VariablePathSegment("connectorId"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondNothing(timeProvider.now()) {
                 service.postCallbackUnlockConnector(
                     req.pathParam("locationId"),
                     req.pathParam("evseId"),

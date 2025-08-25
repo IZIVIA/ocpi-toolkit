@@ -10,9 +10,11 @@ import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
+import java.time.Instant
 
 class SessionsCpoServer(
     private val service: SessionsCpoInterface,
+    private val timeProvider: TimeProvider = TimeProvider { Instant.now() },
     versionsRepository: MutableVersionsRepository? = null,
     basePathOverride: String? = null,
 ) : OcpiSelfRegisteringModuleServer(
@@ -29,7 +31,7 @@ class SessionsCpoServer(
             path = basePathSegments,
             queryParams = listOf("date_from", "date_to", "offset", "limit"),
         ) { req ->
-            req.httpResponse {
+            req.respondSearchResult(timeProvider.now()) {
                 service
                     .getSessions(
                         dateFrom = req.queryParamAsInstant("date_from"),
@@ -47,7 +49,7 @@ class SessionsCpoServer(
                 FixedPathSegment("charging_preferences"),
             ),
         ) { req ->
-            req.httpResponse {
+            req.respondObject(timeProvider.now()) {
                 service
                     .putChargingPreferences(
                         sessionId = req.pathParam("sessionId"),

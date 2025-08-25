@@ -1,6 +1,5 @@
 package com.izivia.ocpi.toolkit.modules.credentials
 
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 
 /**
@@ -14,7 +13,7 @@ interface CredentialsInterface {
      * contains the credentials object to access the server’s platform. This credentials object also contains extra
      * information about the server such as its business details.
      */
-    suspend fun get(token: String): OcpiResponseBody<Credentials>
+    suspend fun get(token: String): Credentials
 
     /**
      * Provides the server with credentials to access the client's system. This credentials object also contains extra
@@ -32,7 +31,7 @@ interface CredentialsInterface {
         token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>,
-    ): OcpiResponseBody<Credentials>
+    ): Credentials
 
     /**
      * Provides the server with updated credentials to access the client’s system. This credentials object also contains
@@ -51,7 +50,7 @@ interface CredentialsInterface {
         token: String,
         credentials: Credentials,
         debugHeaders: Map<String, String>,
-    ): OcpiResponseBody<Credentials>
+    ): Credentials
 
     /**
      * Informs the server that its credentials to access the client’s system are now invalid and can no longer be used.
@@ -59,5 +58,5 @@ interface CredentialsInterface {
      *
      * This method MUST return a HTTP status code 405: method not allowed if the client has not been registered before.
      */
-    suspend fun delete(token: String): OcpiResponseBody<Credentials?>
+    suspend fun delete(token: String)
 }

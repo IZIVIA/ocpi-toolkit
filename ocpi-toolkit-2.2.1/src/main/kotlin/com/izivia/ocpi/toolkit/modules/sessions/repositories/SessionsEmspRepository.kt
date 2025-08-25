@@ -46,7 +46,7 @@ interface SessionsEmspRepository {
      * @param session New or updated Session object.
      * @return Session New or updated Session object.
      */
-    suspend fun putSession(countryCode: CiString, partyId: CiString, sessionId: CiString, session: Session): Session?
+    suspend fun putSession(countryCode: CiString, partyId: CiString, sessionId: CiString, session: Session): Session
 
     /**
      * PATCH Method

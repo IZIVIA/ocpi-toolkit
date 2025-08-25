@@ -8,11 +8,15 @@ import com.izivia.ocpi.toolkit.transport.domain.*
 import kotlinx.coroutines.runBlocking
 import org.http4k.core.*
 import org.http4k.filter.DebuggingFilters
-import org.http4k.routing.*
+import org.http4k.routing.RoutingHttpHandler
+import org.http4k.routing.bind
+import org.http4k.routing.path
+import org.http4k.routing.routes
 import org.http4k.server.Http4kServer
 import org.http4k.server.Netty
 import org.http4k.server.asServer
 import org.valiktor.ConstraintViolationException
+import java.time.Instant
 
 class Http4kTransportServer(
     val baseUrl: String,
@@ -81,16 +85,15 @@ class Http4kTransportServer(
                         }
                         .let { (httpRequest, httpResponse) ->
                             requestHistory.add(httpRequest to httpResponse)
-
-                            Response(Status(httpResponse.status.code, null))
-                                .body(httpResponse.body ?: "")
-                                .headers(httpResponse.headers.toList())
+                            httpResponse.toHttp4kResponse()
                         }
                 } catch (ocpiException: OcpiException) {
-                    ocpiException.toHttpResponse().toHttp4kResponse()
+                    ocpiException.toHttpResponse(Instant.now()).toHttp4kResponse()
                 } catch (httpException: HttpException) {
                     Response(Status(httpException.status.code, httpException.reason))
                 } catch (exception: Exception) {
+                    // this should only be reachable if there is an error in the server implementation
+                    // ocpi layer should have handled all exceptions already
                     exception.printStackTrace()
                     Response(Status.INTERNAL_SERVER_ERROR)
                 }

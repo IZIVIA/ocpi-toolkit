@@ -1,6 +1,9 @@
 package com.izivia.ocpi.toolkit.modules.versions
 
-import com.izivia.ocpi.toolkit.common.*
+import com.izivia.ocpi.toolkit.common.OcpiToolkitUnknownEndpointException
+import com.izivia.ocpi.toolkit.common.authenticate
+import com.izivia.ocpi.toolkit.common.parseResult
+import com.izivia.ocpi.toolkit.common.withRequiredHeaders
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
@@ -19,7 +22,7 @@ class VersionDetailsClient(
     private val partnerRepository: PartnerRepository,
 ) : VersionDetailsInterface {
 
-    override suspend fun getVersionDetails(): OcpiResponseBody<VersionDetails> =
+    override suspend fun getVersionDetails(): VersionDetails =
         with(
             transportClientBuilder
                 .build(
@@ -41,6 +44,6 @@ class VersionDetailsClient(
                         allowTokenA = true,
                     ),
             )
-                .parseBody()
+                .parseResult()
         }
 }

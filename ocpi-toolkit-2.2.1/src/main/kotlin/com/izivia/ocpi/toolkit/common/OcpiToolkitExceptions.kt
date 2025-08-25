@@ -1,8 +1,10 @@
 package com.izivia.ocpi.toolkit.common
 
+open class OcpiToolkitException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+
 class OcpiToolkitUnknownEndpointException(
     endpointName: String,
-) : Exception(
+) : OcpiToolkitException(
     """
         Endpoint '$endpointName' is unknown. Make sure you registered (credentialClient#register) first. During
         registration process, the available endpoints are saved in partnerRepository to be used later on. If you
@@ -11,14 +13,15 @@ class OcpiToolkitUnknownEndpointException(
 )
 
 class OcpiToolkitResponseParsingException(
-    urlCalled: String,
-    cause: Throwable,
-) : Exception(
-    "Response cannot be parsed. URL='$urlCalled', error='${cause.message}'",
+    message: String,
+    cause: Throwable? = null,
+) : OcpiToolkitException(
+    message,
+    cause,
 )
 
 class OcpiToolkitMissingRequiredResponseHeaderException(
     header: String,
-) : Exception(
+) : OcpiToolkitException(
     """Required header "$header" not found in the response from the server""",
 )

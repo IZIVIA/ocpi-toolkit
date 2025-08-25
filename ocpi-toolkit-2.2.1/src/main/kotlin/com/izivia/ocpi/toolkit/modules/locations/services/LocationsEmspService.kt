@@ -1,32 +1,21 @@
 package com.izivia.ocpi.toolkit.modules.locations.services
 
 import com.izivia.ocpi.toolkit.common.CiString
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
-import com.izivia.ocpi.toolkit.common.validation.validate
-import com.izivia.ocpi.toolkit.common.validation.validateLength
-import com.izivia.ocpi.toolkit.common.validation.validateSame
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspInterface
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
 
 open class LocationsEmspService(
-    private val service: LocationsEmspRepository,
+    private val repository: LocationsEmspRepository,
 ) : LocationsEmspInterface {
 
     override suspend fun getLocation(
         countryCode: CiString,
         partyId: CiString,
         locationId: CiString,
-    ): OcpiResponseBody<Location?> = OcpiResponseBody.of {
-        validate {
-            validateLength("countryCode", countryCode, 2)
-            validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 36)
-        }
-
-        service
+    ): Location? {
+        return repository
             .getLocation(countryCode = countryCode, partyId = partyId, locationId = locationId)
-            ?.validate()
     }
 
     override suspend fun getEvse(
@@ -34,17 +23,9 @@ open class LocationsEmspService(
         partyId: CiString,
         locationId: CiString,
         evseUid: CiString,
-    ): OcpiResponseBody<Evse?> = OcpiResponseBody.of {
-        validate {
-            validateLength("countryCode", countryCode, 2)
-            validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 36)
-            validateLength("evseUid", evseUid, 36)
-        }
-
-        service
+    ): Evse? {
+        return repository
             .getEvse(countryCode = countryCode, partyId = partyId, locationId = locationId, evseUid = evseUid)
-            ?.validate()
     }
 
     override suspend fun getConnector(
@@ -53,16 +34,8 @@ open class LocationsEmspService(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
-    ): OcpiResponseBody<Connector?> = OcpiResponseBody.of {
-        validate {
-            validateLength("countryCode", countryCode, 2)
-            validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 36)
-            validateLength("evseUid", evseUid, 36)
-            validateLength("connectorId", connectorId, 36)
-        }
-
-        service
+    ): Connector? {
+        return repository
             .getConnector(
                 countryCode = countryCode,
                 partyId = partyId,
@@ -70,7 +43,6 @@ open class LocationsEmspService(
                 evseUid = evseUid,
                 connectorId = connectorId,
             )
-            ?.validate()
     }
 
     override suspend fun putLocation(
@@ -78,21 +50,10 @@ open class LocationsEmspService(
         partyId: CiString,
         locationId: CiString,
         location: Location,
-    ): OcpiResponseBody<LocationPartial> = OcpiResponseBody.of {
-        validate {
-            validateLength("countryCode", countryCode, 2)
-            validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 36)
-            validateSame("countryCode", countryCode, location.countryCode)
-            validateSame("partyId", partyId, location.partyId)
-            validateSame("locationId", locationId, location.id)
-            location.validate()
-        }
-
-        service
+    ): LocationPartial {
+        return repository
             .putLocation(countryCode = countryCode, partyId = partyId, locationId = locationId, location = location)
             .toPartial()
-            .validate()
     }
 
     override suspend fun putEvse(
@@ -101,17 +62,8 @@ open class LocationsEmspService(
         locationId: CiString,
         evseUid: CiString,
         evse: Evse,
-    ): OcpiResponseBody<EvsePartial> = OcpiResponseBody.of {
-        validate {
-            validateLength("countryCode", countryCode, 2)
-            validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 36)
-            validateLength("evseUid", evseUid, 36)
-            validateSame("evseUid", evseUid, evse.uid)
-            evse.validate()
-        }
-
-        service
+    ): EvsePartial {
+        return repository
             .putEvse(
                 countryCode = countryCode,
                 partyId = partyId,
@@ -120,7 +72,6 @@ open class LocationsEmspService(
                 evse = evse,
             )
             .toPartial()
-            .validate()
     }
 
     override suspend fun putConnector(
@@ -130,18 +81,8 @@ open class LocationsEmspService(
         evseUid: CiString,
         connectorId: CiString,
         connector: Connector,
-    ): OcpiResponseBody<ConnectorPartial> = OcpiResponseBody.of {
-        validate {
-            validateLength("countryCode", countryCode, 2)
-            validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 36)
-            validateLength("evseUid", evseUid, 36)
-            validateLength("connectorId", connectorId, 36)
-            validateSame("connectorId", connectorId, connector.id)
-            connector.validate()
-        }
-
-        service
+    ): ConnectorPartial {
+        return repository
             .putConnector(
                 countryCode = countryCode,
                 partyId = partyId,
@@ -151,7 +92,6 @@ open class LocationsEmspService(
                 connector = connector,
             )
             .toPartial()
-            .validate()
     }
 
     override suspend fun patchLocation(
@@ -159,15 +99,8 @@ open class LocationsEmspService(
         partyId: CiString,
         locationId: CiString,
         location: LocationPartial,
-    ): OcpiResponseBody<LocationPartial?> = OcpiResponseBody.of {
-        validate {
-            validateLength("countryCode", countryCode, 2)
-            validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 36)
-            location.validate()
-        }
-
-        service
+    ): LocationPartial? {
+        return repository
             .patchLocation(
                 countryCode = countryCode,
                 partyId = partyId,
@@ -175,7 +108,6 @@ open class LocationsEmspService(
                 location = location,
             )
             ?.toPartial()
-            ?.validate()
     }
 
     override suspend fun patchEvse(
@@ -184,16 +116,8 @@ open class LocationsEmspService(
         locationId: CiString,
         evseUid: CiString,
         evse: EvsePartial,
-    ): OcpiResponseBody<EvsePartial?> = OcpiResponseBody.of {
-        validate {
-            validateLength("countryCode", countryCode, 2)
-            validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 36)
-            validateLength("evseUid", evseUid, 36)
-            evse.validate()
-        }
-
-        service
+    ): EvsePartial? {
+        return repository
             .patchEvse(
                 countryCode = countryCode,
                 partyId = partyId,
@@ -202,7 +126,6 @@ open class LocationsEmspService(
                 evse = evse,
             )
             ?.toPartial()
-            ?.validate()
     }
 
     override suspend fun patchConnector(
@@ -212,17 +135,8 @@ open class LocationsEmspService(
         evseUid: CiString,
         connectorId: CiString,
         connector: ConnectorPartial,
-    ): OcpiResponseBody<ConnectorPartial?> = OcpiResponseBody.of {
-        validate {
-            validateLength("countryCode", countryCode, 2)
-            validateLength("partyId", partyId, 3)
-            validateLength("locationId", locationId, 36)
-            validateLength("evseUid", evseUid, 36)
-            validateLength("connectorId", connectorId, 36)
-            connector.validate()
-        }
-
-        service
+    ): ConnectorPartial? {
+        return repository
             .patchConnector(
                 countryCode = countryCode,
                 partyId = partyId,
@@ -232,6 +146,5 @@ open class LocationsEmspService(
                 connector = connector,
             )
             ?.toPartial()
-            ?.validate()
     }
 }

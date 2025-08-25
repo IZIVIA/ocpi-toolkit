@@ -15,7 +15,7 @@ class CommandCpoClient(
         commandResult: CommandResult,
         partnerId: String,
         responseUrl: String,
-    ): OcpiResponseBody<Any> =
+    ) =
         transportClientBuilder
             .build(responseUrl)
             .send(
@@ -29,5 +29,5 @@ class CommandCpoClient(
                         correlationId = generateUUIDv4Token(),
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
-            ).parseBody()
+            ).parseResultOrNull<Any>()
 }

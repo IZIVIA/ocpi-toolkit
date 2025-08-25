@@ -80,6 +80,11 @@ enum class OcpiStatus(val code: Int) {
      * Connection problem (receiving party is not connected)
      */
     HUB_CONNECTION_PROBLEM(4003),
+
+    /**
+     * Used when status code in response is unknown, most likely a custom code
+     */
+    UNKNOWN(9999),
 }
 
-fun Int.toOcpiStatus(): OcpiStatus? = OcpiStatus.values().firstOrNull { it.code == this }
+fun Int.toOcpiStatus(): OcpiStatus = OcpiStatus.values().firstOrNull { it.code == this } ?: OcpiStatus.UNKNOWN

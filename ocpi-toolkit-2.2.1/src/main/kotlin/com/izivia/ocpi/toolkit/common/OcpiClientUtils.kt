@@ -9,9 +9,9 @@ suspend inline fun <reified T> getNextPage(
     transportClientBuilder: TransportClientBuilder,
     partnerId: String,
     partnerRepository: PartnerRepository,
-    previousResponse: OcpiResponseBody<SearchResult<T>>,
-): OcpiResponseBody<SearchResult<T>>? =
-    previousResponse.data?.nextPageUrl?.let { nextPageUrl ->
+    previousResponse: SearchResult<T>,
+): SearchResult<T>? =
+    previousResponse.nextPageUrl?.let { nextPageUrl ->
         with(transportClientBuilder.build(nextPageUrl)) {
             send(
                 HttpRequest(
@@ -23,6 +23,6 @@ suspend inline fun <reified T> getNextPage(
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
             )
-                .parsePaginatedBody(previousResponse.data.offset)
+                .parseSearchResult(previousResponse.offset)
         }
     }
