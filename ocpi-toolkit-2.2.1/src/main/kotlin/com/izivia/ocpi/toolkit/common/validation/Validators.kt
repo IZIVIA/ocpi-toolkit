@@ -197,9 +197,11 @@ fun <E> Validator<E>.Property<BigDecimal?>.isBigDecimalPositive() = this.isGreat
 
 fun <E> Validator<E>.Property<Int?>.isIntPositive() = this.isGreaterThanOrEqualTo(0)
 
-fun PricePartial.validate(): PricePartial = validate(this) {
-    validate(PricePartial::exclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
-    validate(PricePartial::inclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
+fun PricePartial.validate(allowNegative: Boolean = false): PricePartial = validate(this) {
+    if (!allowNegative) {
+        validate(PricePartial::exclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
+        validate(PricePartial::inclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
+    }
 }
 
 fun DisplayTextPartial.validate(): DisplayTextPartial = validate(this) {

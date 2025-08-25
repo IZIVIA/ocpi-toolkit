@@ -25,7 +25,7 @@ fun CdrPartial.validate(): CdrPartial =
         tariffs?.forEach { tariff -> tariff.validate() }
         chargingPeriods?.forEach { chargingPeriod -> chargingPeriod.validate() }
         signedData?.validate()
-        totalCost?.validate()
+        totalCost?.validate(credit ?: false)
         totalFixedCost?.validate()
         validate(CdrPartial::totalEnergy).isBigDecimalPositive()
         totalEnergyCost?.validate()
