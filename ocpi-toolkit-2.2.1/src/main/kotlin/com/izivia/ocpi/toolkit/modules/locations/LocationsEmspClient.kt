@@ -5,6 +5,7 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepositor
 import com.izivia.ocpi.toolkit.modules.locations.domain.Connector
 import com.izivia.ocpi.toolkit.modules.locations.domain.Evse
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
+import com.izivia.ocpi.toolkit.modules.locations.domain.LocationPartial
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
@@ -22,6 +23,7 @@ class LocationsEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
     private val partnerRepository: PartnerRepository,
+    private val ignoreInvalidListEntry: Boolean = false,
 ) : LocationsCpoInterface {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
@@ -52,17 +54,23 @@ class LocationsEmspClient(
                     correlationId = generateCorrelationId(),
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
-        )
-            .parseSearchResult(offset)
+        ).let { res ->
+            if (ignoreInvalidListEntry) {
+                res.parseSearchResultIgnoringInvalid<Location, LocationPartial>(offset)
+            } else {
+                res.parseSearchResult<Location>(offset)
+            }
+        }
     }
 
     suspend fun getLocationsNextPage(
         previousResponse: SearchResult<Location>,
-    ): SearchResult<Location>? = getNextPage(
+    ): SearchResult<Location>? = getNextPage<Location, LocationPartial>(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
         partnerRepository = partnerRepository,
         previousResponse = previousResponse,
+        ignoreInvalidListEntry = ignoreInvalidListEntry,
     )
 
     override suspend fun getLocation(locationId: CiString): Location? = with(buildTransport()) {

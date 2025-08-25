@@ -5,6 +5,7 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepositor
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferences
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferencesResponseType
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
+import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
@@ -22,6 +23,7 @@ class SessionsEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
     private val partnerRepository: PartnerRepository,
+    private val ignoreInvalidListEntry: Boolean = false,
 ) : SessionsCpoInterface {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
@@ -51,17 +53,23 @@ class SessionsEmspClient(
                     correlationId = generateCorrelationId(),
                 )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
-            )
-                .parseSearchResult(offset)
+            ).let { res ->
+                if (ignoreInvalidListEntry) {
+                    res.parseSearchResultIgnoringInvalid<Session, SessionPartial>(offset)
+                } else {
+                    res.parseSearchResult<Session>(offset)
+                }
+            }
         }
 
     suspend fun getSessionsNextPage(
         previousResponse: SearchResult<Session>,
-    ): SearchResult<Session>? = getNextPage(
+    ): SearchResult<Session>? = getNextPage<Session, SessionPartial>(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
         partnerRepository = partnerRepository,
         previousResponse = previousResponse,
+        ignoreInvalidListEntry = ignoreInvalidListEntry,
     )
 
     override suspend fun putChargingPreferences(

@@ -2,19 +2,24 @@ package com.izivia.ocpi.toolkit.modules.cdr
 
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
+import com.izivia.ocpi.toolkit.modules.cdr.domain.CdrPartial
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import org.apache.logging.log4j.LogManager
 import java.time.Instant
 
 class CdrsEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
     private val partnerRepository: PartnerRepository,
+    private val ignoreInvalidListEntry: Boolean = false,
 ) : CdrsCpoInterface {
+    private val logger = LogManager.getLogger(CdrsEmspClient::class.java)
+
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
             module = ModuleID.cdrs,
@@ -43,16 +48,22 @@ class CdrsEmspClient(
                     correlationId = generateCorrelationId(),
                 )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
-            )
-                .parseSearchResult(offset)
+            ).let { res ->
+                if (ignoreInvalidListEntry) {
+                    res.parseSearchResultIgnoringInvalid<Cdr, CdrPartial>(offset)
+                } else {
+                    res.parseSearchResult<Cdr>(offset)
+                }
+            }
         }
 
     suspend fun getCdrsNextPage(
         previousResponse: SearchResult<Cdr>,
-    ): SearchResult<Cdr>? = getNextPage(
+    ): SearchResult<Cdr>? = getNextPage<Cdr, CdrPartial>(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
         partnerRepository = partnerRepository,
         previousResponse = previousResponse,
+        ignoreInvalidListEntry = ignoreInvalidListEntry,
     )
 }

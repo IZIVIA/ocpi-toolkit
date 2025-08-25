@@ -2,10 +2,7 @@ package com.izivia.ocpi.toolkit.modules.tokens
 
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
-import com.izivia.ocpi.toolkit.modules.tokens.domain.AuthorizationInfo
-import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
-import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
-import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
+import com.izivia.ocpi.toolkit.modules.tokens.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
@@ -23,6 +20,7 @@ class TokensCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
     private val partnerRepository: PartnerRepository,
+    private val ignoreInvalidListEntry: Boolean = false,
 ) : TokensEmspInterface {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
@@ -53,17 +51,23 @@ class TokensCpoClient(
                         correlationId = generateCorrelationId(),
                     )
                     .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
-            )
-                .parseSearchResult(offset)
+            ).let { res ->
+                if (ignoreInvalidListEntry) {
+                    res.parseSearchResultIgnoringInvalid<Token, TokenPartial>(offset)
+                } else {
+                    res.parseSearchResult<Token>(offset)
+                }
+            }
         }
 
     suspend fun getTokensNextPage(
         previousResponse: SearchResult<Token>,
-    ): SearchResult<Token>? = getNextPage(
+    ): SearchResult<Token>? = getNextPage<Token, TokenPartial>(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
         partnerRepository = partnerRepository,
         previousResponse = previousResponse,
+        ignoreInvalidListEntry = ignoreInvalidListEntry,
     )
 
     override suspend fun postToken(

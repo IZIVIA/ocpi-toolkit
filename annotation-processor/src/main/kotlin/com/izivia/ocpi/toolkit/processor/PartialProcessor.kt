@@ -18,6 +18,7 @@ class PartialProcessor(
 ) : SymbolProcessor {
 
     private val toPartialMethodName = "toPartial"
+    private val toDomainMethodName = "toOcpiDomain"
     private val partialClasses: MutableList<KSClassDeclaration> = mutableListOf()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -59,23 +60,35 @@ class PartialProcessor(
             val partialClassType = buildPartialDataClassType(classDeclaration, partialClassName)
             val partialBuilderFun = buildPartialDataClassBuilderFunction(classDeclaration)
             val partialListBuilderFun = buildPartialDataClassListBuilderFunction(classDeclaration)
+            val domainListBuilderFun = buildDomainFromPartialListFunction(classDeclaration)
 
             logger.info("Generate $packageName.$partialClassName")
 
             classDeclaration to FileSpec
                 .builder(packageName, partialClassName)
                 .generateComments()
+                .addImport("com.izivia.ocpi.toolkit.common", "OcpiClientInvalidParametersException")
                 .addType(partialClassType)
                 .addFunction(partialBuilderFun)
                 .addFunction(partialListBuilderFun)
+                .addFunction(domainListBuilderFun)
                 .apply {
                     getParameterTypesOutsidePackage(partialClassType, packageName)
                         .forEach { addImport(it.packageName, toPartialMethodName) }
+
+                    // Add imports for toDomainMethodName for external partial types
+                    getParameterTypesOutsidePackage(partialClassType, packageName)
+                        .forEach { addImport(it.packageName, toDomainMethodName) }
                 }
                 .build()
         }
 
-    private fun buildPartialDataClassType(classDescriptor: KSClassDeclaration, partialClassName: String): TypeSpec {
+    private fun buildPartialDataClassType(
+        classDescriptor: KSClassDeclaration,
+        partialClassName: String,
+    ): TypeSpec {
+        val packageName = classDescriptor.packageName.asString()
+        val className = classDescriptor.simpleName.asString()
         val baseClassConstructorParameters = classDescriptor
             .getConstructors()
             .first()
@@ -103,13 +116,17 @@ class PartialProcessor(
                     .build()
             }
 
+        val toDomainFunction = buildToDomainMemberFunction(classDescriptor)
+
         return TypeSpec
             .classBuilder(partialClassName)
             .addModifiers(KModifier.DATA)
+            .addSuperinterface(
+                ClassName("com.izivia.ocpi.toolkit.common", "Partial")
+                    .parameterizedBy(ClassName(packageName, className)),
+            )
             .addKdoc(
-                "Partial representation of [${
-                    classDescriptor.packageName.asString()
-                }.${classDescriptor.simpleName.asString()}]",
+                "Partial representation of [$packageName.$className]",
             )
             .primaryConstructor(
                 FunSpec.constructorBuilder()
@@ -117,6 +134,7 @@ class PartialProcessor(
                     .build(),
             )
             .addProperties(partialClassProperties)
+            .addFunction(toDomainFunction)
             .build()
     }
 
@@ -125,7 +143,7 @@ class PartialProcessor(
         val className = classDescriptor.simpleName.asString()
         val baseClassConstructorParameters = classDescriptor.getConstructors().first().getFunctionParameters()
         val partialClassConstructorParameters = baseClassConstructorParameters
-            .joinToString(separator = ",\n  ") { param ->
+            .joinToString(separator = ",\n    ") { param ->
                 "${param.parameterName} = ${
                     findPartialClassByName(param.type.asString()!!.toBase())
                         ?.let {
@@ -139,8 +157,86 @@ class PartialProcessor(
             .addCode(
                 """
                 | return ${className.toPartial()}(
-                |   $partialClassConstructorParameters
+                |    $partialClassConstructorParameters
                 | )
+                """.trimMargin(),
+            )
+            .build()
+    }
+
+    private fun buildToDomainMemberFunction(classDescriptor: KSClassDeclaration): FunSpec {
+        val packageName = classDescriptor.packageName.asString()
+        val className = classDescriptor.simpleName.asString()
+        val baseClassConstructorParameters = classDescriptor.getConstructors().first().getFunctionParameters()
+
+        val funSpecBuilder = FunSpec.builder(toDomainMethodName)
+            .addModifiers(KModifier.OVERRIDE)
+            .returns(ClassName(packageName, className))
+
+        // we have to use text templates, as processor would otherwise start inserting newlines in random places
+        funSpecBuilder.addCode("return %T(\n", ClassName(packageName, className))
+
+        baseClassConstructorParameters.forEach { param ->
+            val paramName = param.parameterName
+            val baseTypeName = param.type.asString()!!.toBase()
+            val hasPartialClass = findPartialClassByName(baseTypeName) != null
+
+            when {
+                param.nullable -> {
+                    if (hasPartialClass) {
+                        funSpecBuilder.addCode("  %L = %L?.%L()", paramName, paramName, toDomainMethodName)
+                    } else {
+                        funSpecBuilder.addCode("  %L = %L", paramName, paramName)
+                    }
+                }
+
+                else -> {
+                    val exceptionMessage = "missing $className.$paramName"
+                    if (hasPartialClass) {
+                        funSpecBuilder.addCode(
+                            "  %L = %L?.%L()\n    ?: throw %T(%S)",
+                            paramName,
+                            paramName,
+                            toDomainMethodName,
+                            ClassName("com.izivia.ocpi.toolkit.common", "OcpiClientInvalidParametersException"),
+                            exceptionMessage,
+                        )
+                    } else {
+                        funSpecBuilder.addCode(
+                            "  %L = %L\n    ?: throw %T(%S)",
+                            paramName,
+                            paramName,
+                            ClassName("com.izivia.ocpi.toolkit.common", "OcpiClientInvalidParametersException"),
+                            exceptionMessage,
+                        )
+                    }
+                }
+            }
+
+            funSpecBuilder.addCode(",\n")
+        }
+
+        funSpecBuilder.addCode(")")
+
+        return funSpecBuilder.build()
+    }
+
+    private fun buildDomainFromPartialListFunction(classDescriptor: KSClassDeclaration): FunSpec {
+        val packageName = classDescriptor.packageName.asString()
+        val className = classDescriptor.simpleName.asString()
+        val partialClassName = className.toPartial()
+        return FunSpec.builder(toDomainMethodName)
+            .receiver(
+                ClassName("kotlin.collections", "List")
+                    .parameterizedBy(ClassName(packageName, partialClassName)),
+            )
+            .returns(
+                ClassName("kotlin.collections", "List")
+                    .parameterizedBy(ClassName(packageName, className)),
+            )
+            .addCode(
+                """
+                | return map { it.$toDomainMethodName() }
                 """.trimMargin(),
             )
             .build()

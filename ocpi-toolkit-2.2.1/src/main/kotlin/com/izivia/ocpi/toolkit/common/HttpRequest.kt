@@ -40,8 +40,8 @@ private fun paginationHeaders(result: SearchResult<*>, request: HttpRequest): Ma
 
     return listOfNotNull(
         nextPageOffset?.let { "Link" to "<${request.baseUrl}${request.path}$queries>; rel=\"next\"" },
-        "X-Total-Count" to result.totalCount.toString(),
-        "X-Limit" to result.limit.toString(),
+        Header.X_TOTAL_COUNT to result.totalCount.toString(),
+        Header.X_LIMIT to result.limit.toString(),
     ).toMap()
 }
 
