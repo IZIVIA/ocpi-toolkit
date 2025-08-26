@@ -30,12 +30,12 @@ class CommandEmspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment("START_SESSION/callback"),
-                VariablePathSegment("authRef"),
+                VariablePathSegment("callbackReference"),
             ),
         ) { req ->
             req.respondNothing(timeProvider.now()) {
                 service.postCallbackStartSession(
-                    req.pathParam("authRef"),
+                    req.pathParam("callbackReference"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
@@ -45,12 +45,12 @@ class CommandEmspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment("STOP_SESSION/callback"),
-                VariablePathSegment("sessionId"),
+                VariablePathSegment("callbackReference"),
             ),
         ) { req ->
             req.respondNothing(timeProvider.now()) {
                 service.postCallbackStopSession(
-                    req.pathParam("sessionId"),
+                    req.pathParam("callbackReference"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
@@ -60,12 +60,12 @@ class CommandEmspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment("RESERVE_NOW/callback"),
-                VariablePathSegment("reservationId"),
+                VariablePathSegment("callbackReference"),
             ),
         ) { req ->
             req.respondNothing(timeProvider.now()) {
                 service.postCallbackReserveNow(
-                    req.pathParam("reservationId"),
+                    req.pathParam("callbackReference"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
@@ -75,12 +75,12 @@ class CommandEmspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment("CANCEL_RESERVATION/callback"),
-                VariablePathSegment("reservationId"),
+                VariablePathSegment("callbackReference"),
             ),
         ) { req ->
             req.respondNothing(timeProvider.now()) {
                 service.postCallbackCancelReservation(
-                    req.pathParam("reservationId"),
+                    req.pathParam("callbackReference"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }
@@ -90,16 +90,12 @@ class CommandEmspServer(
             method = HttpMethod.POST,
             path = basePathSegments + listOf(
                 FixedPathSegment("UNLOCK_CONNECTOR/callback"),
-                VariablePathSegment("locationId"),
-                VariablePathSegment("evseId"),
-                VariablePathSegment("connectorId"),
+                VariablePathSegment("callbackReference"),
             ),
         ) { req ->
             req.respondNothing(timeProvider.now()) {
                 service.postCallbackUnlockConnector(
-                    req.pathParam("locationId"),
-                    req.pathParam("evseId"),
-                    req.pathParam("connectorId"),
+                    req.pathParam("callbackReference"),
                     result = mapper.readValue(req.body, CommandResult::class.java),
                 )
             }

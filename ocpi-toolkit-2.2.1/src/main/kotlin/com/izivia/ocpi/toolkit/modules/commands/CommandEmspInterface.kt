@@ -4,29 +4,27 @@ import com.izivia.ocpi.toolkit.modules.commands.domain.CommandResult
 
 interface CommandEmspInterface {
     suspend fun postCallbackStartSession(
-        authorizationReference: String,
+        callbackReference: String,
         result: CommandResult,
     )
 
     suspend fun postCallbackStopSession(
-        sessionId: String,
+        callbackReference: String,
         result: CommandResult,
     )
 
     suspend fun postCallbackReserveNow(
-        reservationId: String,
+        callbackReference: String,
         result: CommandResult,
     )
 
     suspend fun postCallbackCancelReservation(
-        reservationId: String,
+        callbackReference: String,
         result: CommandResult,
     )
 
     suspend fun postCallbackUnlockConnector(
-        locationId: String,
-        evseId: String,
-        connectorId: String,
+        callbackReference: String,
         result: CommandResult,
     )
 }
