@@ -5,6 +5,7 @@ import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoInterface
 import com.izivia.ocpi.toolkit.modules.locations.mock.locationsCpoRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
+import strikt.api.expectDoesNotThrow
 import strikt.api.expectThat
 import strikt.api.expectThrows
 import strikt.assertions.isEqualTo
@@ -82,200 +83,147 @@ class LocationsCpoServiceTest {
             get { limit }.isEqualTo(0)
         }
     }
-//
-//    @Test
-//    fun getLocationParamsValidationTest() {
-//        service = LocationsCpoValidator(service = locationsCpoRepository(emptyList()))
-//
-//
-//        val str3chars = "abc"
-//        val str36chars = "abababababababababababababababababab"
-//        val str37chars = "ababababababababababababababababababa"
-//
-//        expectThat(runBlocking { service.getLocation(locationId = str3chars) }) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.SUCCESS.code)
-//        }
-//
-//        expectThat(runBlocking { service.getLocation(locationId = str36chars) }) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.SUCCESS.code)
-//        }
-//
-//        expectThat(runBlocking { service.getLocation(locationId = str37chars) }) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-//        }
-//    }
-//
-//    @Test
-//    fun getEvseParamsValidationTest() {
-//        service = LocationsCpoService(repo = locationsCpoRepository(emptyList()))
-//
-//        val str3chars = "abc"
-//        val str36chars = "abababababababababababababababababab"
-//        val str37chars = "ababababababababababababababababababa"
-//
-//        expectThat(runBlocking { service.getEvse(locationId = str3chars, evseUid = str3chars) }) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.SUCCESS.code)
-//        }
-//
-//        expectThat(runBlocking { service.getEvse(locationId = str36chars, evseUid = str3chars) }) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.SUCCESS.code)
-//        }
-//
-//        expectThat(runBlocking { service.getEvse(locationId = str37chars, evseUid = str3chars) }) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-//        }
-//
-//        expectThat(runBlocking { service.getEvse(locationId = str3chars, evseUid = str3chars) }) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.SUCCESS.code)
-//        }
-//
-//        expectThat(runBlocking { service.getEvse(locationId = str3chars, evseUid = str36chars) }) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.SUCCESS.code)
-//        }
-//
-//        expectThat(runBlocking { service.getEvse(locationId = str3chars, evseUid = str37chars) }) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-//        }
-//
-//        expectThat(runBlocking { service.getEvse(locationId = str37chars, evseUid = str37chars) }) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-//        }
-//    }
-//
-//    @Test
-//    fun getConnectorParamsValidationTest() {
-//        service =
-//            LocationsCpoService(repo = locationsCpoRepository(emptyList()))
-//
-//        val str3chars = "abc"
-//        val str36chars = "abababababababababababababababababab"
-//        val str37chars = "ababababababababababababababababababa"
-//
-//        expectThat(
-//            runBlocking {
-//                service.getConnector(
-//                    locationId = str3chars,
-//                    evseUid = str3chars,
-//                    connectorId = str3chars,
-//                )
-//            },
-//        ) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.SUCCESS.code)
-//        }
-//
-//        expectThat(
-//            runBlocking {
-//                service.getConnector(
-//                    locationId = str36chars,
-//                    evseUid = str3chars,
-//                    connectorId = str3chars,
-//                )
-//            },
-//        ) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.SUCCESS.code)
-//        }
-//
-//        expectThat(
-//            runBlocking {
-//                service.getConnector(
-//                    locationId = str37chars,
-//                    evseUid = str3chars,
-//                    connectorId = str3chars,
-//                )
-//            },
-//        ) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-//        }
-//
-//        expectThat(
-//            runBlocking {
-//                service.getConnector(
-//                    locationId = str3chars,
-//                    evseUid = str3chars,
-//                    connectorId = str3chars,
-//                )
-//            },
-//        ) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.SUCCESS.code)
-//        }
-//
-//        expectThat(
-//            runBlocking {
-//                service.getConnector(
-//                    locationId = str3chars,
-//                    evseUid = str36chars,
-//                    connectorId = str3chars,
-//                )
-//            },
-//        ) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.SUCCESS.code)
-//        }
-//
-//        expectThat(
-//            runBlocking {
-//                service.getConnector(
-//                    locationId = str3chars,
-//                    evseUid = str37chars,
-//                    connectorId = str3chars,
-//                )
-//            },
-//        ) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-//        }
-//
-//        expectThat(
-//            runBlocking {
-//                service.getConnector(
-//                    locationId = str37chars,
-//                    evseUid = str37chars,
-//                    connectorId = str3chars,
-//                )
-//            },
-//        ) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-//        }
-//
-//        expectThat(
-//            runBlocking {
-//                service.getConnector(
-//                    locationId = str3chars,
-//                    evseUid = str3chars,
-//                    connectorId = str37chars,
-//                )
-//            },
-//        ) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-//        }
-//
-//        expectThat(
-//            runBlocking {
-//                service.getConnector(
-//                    locationId = str37chars,
-//                    evseUid = str37chars,
-//                    connectorId = str37chars,
-//                )
-//            },
-//        ) {
-//            get { statusCode }
-//                .isEqualTo(OcpiStatus.CLIENT_INVALID_PARAMETERS.code)
-//        }
-//    }
+
+    @Test
+    fun getLocationParamsValidationTest() {
+        service = LocationsCpoValidator(service = locationsCpoRepository(emptyList()))
+
+        val str3chars = "abc"
+        val str36chars = "abababababababababababababababababab"
+        val str37chars = "ababababababababababababababababababa"
+
+        expectDoesNotThrow {
+            runBlocking { service.getLocation(locationId = str3chars) }
+        }
+
+        expectDoesNotThrow {
+            runBlocking { service.getLocation(locationId = str36chars) }
+        }
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking { service.getLocation(locationId = str37chars) }
+        }
+    }
+
+    @Test
+    fun getEvseParamsValidationTest() {
+        service = LocationsCpoValidator(service = locationsCpoRepository(emptyList()))
+
+        val str3chars = "abc"
+        val str36chars = "abababababababababababababababababab"
+        val str37chars = "ababababababababababababababababababa"
+
+        expectDoesNotThrow {
+            runBlocking { service.getEvse(locationId = str3chars, evseUid = str3chars) }
+        }
+
+        expectDoesNotThrow {
+            runBlocking { service.getEvse(locationId = str36chars, evseUid = str3chars) }
+        }
+
+        expectDoesNotThrow {
+            runBlocking { service.getEvse(locationId = str3chars, evseUid = str36chars) }
+        }
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking { service.getEvse(locationId = str37chars, evseUid = str3chars) }
+        }
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking { service.getEvse(locationId = str3chars, evseUid = str37chars) }
+        }
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking { service.getEvse(locationId = str37chars, evseUid = str37chars) }
+        }
+    }
+
+    @Test
+    fun getConnectorParamsValidationTest() {
+        service = LocationsCpoValidator(service = locationsCpoRepository(emptyList()))
+
+        val str3chars = "abc"
+        val str36chars = "abababababababababababababababababab"
+        val str37chars = "ababababababababababababababababababa"
+
+        expectDoesNotThrow {
+            runBlocking {
+                service.getConnector(
+                    locationId = str3chars,
+                    evseUid = str3chars,
+                    connectorId = str3chars,
+                )
+            }
+        }
+
+        expectDoesNotThrow {
+            runBlocking {
+                service.getConnector(
+                    locationId = str36chars,
+                    evseUid = str3chars,
+                    connectorId = str3chars,
+                )
+            }
+        }
+
+        expectDoesNotThrow {
+            runBlocking {
+                service.getConnector(
+                    locationId = str3chars,
+                    evseUid = str36chars,
+                    connectorId = str3chars,
+                )
+            }
+        }
+
+        expectDoesNotThrow {
+            runBlocking {
+                service.getConnector(
+                    locationId = str3chars,
+                    evseUid = str3chars,
+                    connectorId = str36chars,
+                )
+            }
+        }
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking {
+                service.getConnector(
+                    locationId = str37chars,
+                    evseUid = str3chars,
+                    connectorId = str3chars,
+                )
+            }
+        }
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking {
+                service.getConnector(
+                    locationId = str3chars,
+                    evseUid = str37chars,
+                    connectorId = str3chars,
+                )
+            }
+        }
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking {
+                service.getConnector(
+                    locationId = str3chars,
+                    evseUid = str3chars,
+                    connectorId = str37chars,
+                )
+            }
+        }
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking {
+                service.getConnector(
+                    locationId = str37chars,
+                    evseUid = str37chars,
+                    connectorId = str37chars,
+                )
+            }
+        }
+    }
 }
