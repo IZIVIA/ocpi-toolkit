@@ -31,6 +31,7 @@ class CommandEmspClient(
         evseId: CiString?,
         connectorId: CiString?,
         authorizationReference: CiString,
+        callbackReference: String = authorizationReference,
     ): CommandResponse =
         with(buildTransport()) {
             send(
@@ -39,7 +40,7 @@ class CommandEmspClient(
                     path = "/START_SESSION",
                     body = mapper.writeValueAsString(
                         StartSession(
-                            responseUrl = "$callbackBaseUrl/START_SESSION/callback/$authorizationReference",
+                            responseUrl = "$callbackBaseUrl/START_SESSION/callback/$callbackReference",
                             token = token,
                             locationId = locationId,
                             evseUid = evseId,
@@ -57,7 +58,10 @@ class CommandEmspClient(
                 .parseResult()
         }
 
-    suspend fun postStopSession(sessionId: String): CommandResponse =
+    suspend fun postStopSession(
+        sessionId: CiString,
+        callbackReference: String = sessionId,
+    ): CommandResponse =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -65,7 +69,7 @@ class CommandEmspClient(
                     path = "/STOP_SESSION",
                     body = mapper.writeValueAsString(
                         StopSession(
-                            responseUrl = "$callbackBaseUrl/STOP_SESSION/callback/$sessionId",
+                            responseUrl = "$callbackBaseUrl/STOP_SESSION/callback/$callbackReference",
                             sessionId = sessionId,
                         ),
                     ),
@@ -86,6 +90,7 @@ class CommandEmspClient(
         locationId: CiString,
         evseUid: CiString?,
         authorizationReference: CiString?,
+        callbackReference: String = reservationId,
     ): CommandResponse =
         with(buildTransport()) {
             send(
@@ -94,7 +99,7 @@ class CommandEmspClient(
                     path = "/RESERVE_NOW",
                     body = mapper.writeValueAsString(
                         ReserveNow(
-                            responseUrl = "$callbackBaseUrl/RESERVE_NOW/callback/$reservationId",
+                            responseUrl = "$callbackBaseUrl/RESERVE_NOW/callback/$callbackReference",
                             token = token,
                             expiryDate = expiryDate,
                             reservationId = reservationId,
@@ -113,7 +118,10 @@ class CommandEmspClient(
                 .parseResult()
         }
 
-    suspend fun postCancelReservation(reservationId: CiString): CommandResponse =
+    suspend fun postCancelReservation(
+        reservationId: CiString,
+        callbackReference: String = reservationId,
+    ): CommandResponse =
         with(buildTransport()) {
             send(
                 HttpRequest(
@@ -121,7 +129,7 @@ class CommandEmspClient(
                     path = "/CANCEL_RESERVATION",
                     body = mapper.writeValueAsString(
                         CancelReservation(
-                            responseUrl = "$callbackBaseUrl/CANCEL_RESERVATION/callback/$reservationId",
+                            responseUrl = "$callbackBaseUrl/CANCEL_RESERVATION/callback/$callbackReference",
                             reservationId = reservationId,
                         ),
                     ),
@@ -139,6 +147,7 @@ class CommandEmspClient(
         locationId: CiString,
         evseUid: CiString,
         connectorId: CiString,
+        callbackReference: String,
     ): CommandResponse =
         with(buildTransport()) {
             send(
@@ -147,8 +156,7 @@ class CommandEmspClient(
                     path = "/UNLOCK_CONNECTOR",
                     body = mapper.writeValueAsString(
                         UnlockConnector(
-                            responseUrl =
-                            "$callbackBaseUrl/UNLOCK_CONNECTOR/callback/$locationId/$evseUid/$connectorId",
+                            responseUrl = "$callbackBaseUrl/UNLOCK_CONNECTOR/callback/$callbackReference",
                             locationId = locationId,
                             evseUid = evseUid,
                             connectorId = connectorId,
