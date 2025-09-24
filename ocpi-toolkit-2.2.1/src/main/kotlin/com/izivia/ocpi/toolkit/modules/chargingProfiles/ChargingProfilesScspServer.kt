@@ -2,7 +2,6 @@ package com.izivia.ocpi.toolkit.modules.chargingProfiles
 
 import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.TimeProvider
-import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.common.respondNothing
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfile
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfileResult
@@ -12,6 +11,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
+import com.izivia.ocpi.toolkit.serialization.deserializeObject
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -50,7 +51,7 @@ class ChargingProfilesScspServer(
                 service
                     .postCallbackActiveChargingProfile(
                         requestId = req.pathParams["requestId"].orEmpty(),
-                        result = mapper.readValue(req.body, ActiveChargingProfileResult::class.java),
+                        result = mapper.deserializeObject<ActiveChargingProfileResult>(req.body),
                     )
             }
         }
@@ -66,7 +67,7 @@ class ChargingProfilesScspServer(
                 service
                     .postCallbackChargingProfile(
                         requestId = req.pathParams["requestId"].orEmpty(),
-                        result = mapper.readValue(req.body, ChargingProfileResult::class.java),
+                        result = mapper.deserializeObject<ChargingProfileResult>(req.body),
                     )
             }
         }
@@ -82,7 +83,7 @@ class ChargingProfilesScspServer(
                 service
                     .postCallbackClearProfile(
                         requestId = req.pathParams["requestId"].orEmpty(),
-                        result = mapper.readValue(req.body, ClearProfileResult::class.java),
+                        result = mapper.deserializeObject<ClearProfileResult>(req.body),
                     )
             }
         }
@@ -98,7 +99,7 @@ class ChargingProfilesScspServer(
                 service
                     .putActiveChargingProfile(
                         sessionId = req.pathParams["sessionId"].orEmpty(),
-                        activeChargingProfile = mapper.readValue(req.body, ActiveChargingProfile::class.java),
+                        activeChargingProfile = mapper.deserializeObject<ActiveChargingProfile>(req.body),
                     )
             }
         }

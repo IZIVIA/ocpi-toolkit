@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.versions
 import com.izivia.ocpi.toolkit.common.OcpiModuleServer
 import com.izivia.ocpi.toolkit.common.TimeProvider
 import com.izivia.ocpi.toolkit.common.pathParam
+import com.izivia.ocpi.toolkit.common.respondList
 import com.izivia.ocpi.toolkit.common.respondObject
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.transport.TransportServer
@@ -21,7 +22,7 @@ class VersionsServer(
             method = HttpMethod.GET,
             path = listOf(FixedPathSegment(service.versionsBasePath)),
         ) { req ->
-            req.respondObject(timeProvider.now()) {
+            req.respondList(timeProvider.now()) {
                 service.getVersions()
             }
         }

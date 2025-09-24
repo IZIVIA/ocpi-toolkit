@@ -1,6 +1,5 @@
 package com.izivia.ocpi.toolkit.modules.tokens.http.cpo
 
-import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ProfileType
@@ -9,6 +8,8 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.domain.WhitelistType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensCpoRepository
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
@@ -18,6 +19,7 @@ import io.mockk.slot
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
 import java.time.Instant
 
 class TokensCpoHttpPutTokenTest {
@@ -66,7 +68,7 @@ class TokensCpoHttpPutTokenTest {
             buildHttpRequest(
                 HttpMethod.PUT,
                 "/tokens/DE/TNM/12345678905880/?type=RFID",
-                mapper.writeValueAsString(token),
+                mapper.serializeObject(token),
             ),
         )
 
@@ -79,7 +81,7 @@ class TokensCpoHttpPutTokenTest {
         }
         expectThat(resp) {
             get { status }.isEqualTo(HttpStatus.OK)
-            get { body }.isJsonEqualTo(
+            get { body }.isNotNull().isJsonEqualTo(
                 """
                 {
                     "status_code": 1000,

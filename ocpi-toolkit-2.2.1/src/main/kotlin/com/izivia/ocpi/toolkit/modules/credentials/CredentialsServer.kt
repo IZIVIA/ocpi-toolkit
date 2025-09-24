@@ -7,6 +7,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
+import com.izivia.ocpi.toolkit.serialization.deserializeObject
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import java.time.Instant
@@ -44,7 +46,7 @@ class CredentialsServer(
             req.respondObject(timeProvider.now()) {
                 service.post(
                     token = req.parseAuthorizationHeader(),
-                    credentials = mapper.readValue(req.body!!, Credentials::class.java),
+                    credentials = mapper.deserializeObject<Credentials>(req.body!!),
                     debugHeaders = req.getDebugHeaders(),
                 )
             }
@@ -57,7 +59,7 @@ class CredentialsServer(
             req.respondObject(timeProvider.now()) {
                 service.put(
                     token = req.parseAuthorizationHeader(),
-                    credentials = mapper.readValue(req.body!!, Credentials::class.java),
+                    credentials = mapper.deserializeObject<Credentials>(req.body!!),
                     debugHeaders = req.getDebugHeaders(),
                 )
             }

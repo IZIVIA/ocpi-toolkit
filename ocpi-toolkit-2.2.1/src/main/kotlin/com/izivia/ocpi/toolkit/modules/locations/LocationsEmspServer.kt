@@ -6,6 +6,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
+import com.izivia.ocpi.toolkit.serialization.deserializeObject
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
@@ -99,7 +101,7 @@ class LocationsEmspServer(
                         countryCode = req.pathParam("countryCode"),
                         partyId = req.pathParam("partyId"),
                         locationId = req.pathParam("locationId"),
-                        location = mapper.readValue(req.body, Location::class.java),
+                        location = mapper.deserializeObject<Location>(req.body),
                     )
             }
         }
@@ -120,7 +122,7 @@ class LocationsEmspServer(
                         partyId = req.pathParam("partyId"),
                         locationId = req.pathParam("locationId"),
                         evseUid = req.pathParam("evseUid"),
-                        evse = mapper.readValue(req.body!!, Evse::class.java),
+                        evse = mapper.deserializeObject<Evse>(req.body!!),
                     )
             }
         }
@@ -143,7 +145,7 @@ class LocationsEmspServer(
                         locationId = req.pathParam("locationId"),
                         evseUid = req.pathParam("evseUid"),
                         connectorId = req.pathParam("connectorId"),
-                        connector = mapper.readValue(req.body!!, Connector::class.java),
+                        connector = mapper.deserializeObject<Connector>(req.body!!),
                     )
             }
         }
@@ -162,7 +164,7 @@ class LocationsEmspServer(
                         countryCode = req.pathParam("countryCode"),
                         partyId = req.pathParam("partyId"),
                         locationId = req.pathParam("locationId"),
-                        location = mapper.readValue(req.body!!, LocationPartial::class.java),
+                        location = mapper.deserializeObject<LocationPartial>(req.body!!),
                     )
             }
         }
@@ -183,7 +185,7 @@ class LocationsEmspServer(
                         partyId = req.pathParam("partyId"),
                         locationId = req.pathParam("locationId"),
                         evseUid = req.pathParam("evseUid"),
-                        evse = mapper.readValue(req.body!!, EvsePartial::class.java),
+                        evse = mapper.deserializeObject<EvsePartial>(req.body!!),
                     )
             }
         }
@@ -206,7 +208,7 @@ class LocationsEmspServer(
                         locationId = req.pathParam("locationId"),
                         evseUid = req.pathParam("evseUid"),
                         connectorId = req.pathParam("connectorId"),
-                        connector = mapper.readValue(req.body!!, ConnectorPartial::class.java),
+                        connector = mapper.deserializeObject<ConnectorPartial>(req.body!!),
                     )
             }
         }

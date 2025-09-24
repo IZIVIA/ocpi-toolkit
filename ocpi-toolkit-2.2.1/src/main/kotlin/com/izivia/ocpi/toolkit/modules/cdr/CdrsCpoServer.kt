@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.cdr
 
 import com.izivia.ocpi.toolkit.common.*
+import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
@@ -27,7 +28,7 @@ class CdrsCpoServer(
             path = basePathSegments,
             queryParams = listOf("date_from", "date_to", "offset", "limit"),
         ) { req ->
-            req.respondSearchResult(timeProvider.now()) {
+            req.respondSearchResult<Cdr>(timeProvider.now()) {
                 service
                     .getCdrs(
                         dateFrom = req.optionalQueryParamAsInstant("date_from"),

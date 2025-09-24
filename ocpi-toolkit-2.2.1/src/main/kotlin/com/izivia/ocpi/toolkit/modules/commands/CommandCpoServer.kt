@@ -6,6 +6,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
+import com.izivia.ocpi.toolkit.serialization.deserializeObject
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -31,7 +33,7 @@ class CommandCpoServer(
             path = basePathSegments + FixedPathSegment("START_SESSION"),
         ) { req ->
             val senderPlatformId = httpAuth.partnerIdFromRequest(req)
-            val startSession = mapper.readValue(req.body, StartSession::class.java)
+            val startSession = mapper.deserializeObject<StartSession>(req.body)
 
             req.respondObject(timeProvider.now()) {
                 service.postStartSession(senderPlatformId, startSession)
@@ -43,7 +45,7 @@ class CommandCpoServer(
             path = basePathSegments + FixedPathSegment("STOP_SESSION"),
         ) { req ->
             val senderPlatformUrl = httpAuth.partnerIdFromRequest(req)
-            val stopSession = mapper.readValue(req.body, StopSession::class.java)
+            val stopSession = mapper.deserializeObject<StopSession>(req.body)
 
             req.respondObject(timeProvider.now()) {
                 service.postStopSession(senderPlatformUrl, stopSession = stopSession)
@@ -55,7 +57,7 @@ class CommandCpoServer(
             path = basePathSegments + FixedPathSegment("RESERVE_NOW"),
         ) { req ->
             val senderPlatformUrl = httpAuth.partnerIdFromRequest(req)
-            val reserveNow = mapper.readValue(req.body, ReserveNow::class.java)
+            val reserveNow = mapper.deserializeObject<ReserveNow>(req.body)
 
             req.respondObject(timeProvider.now()) {
                 service.postReserveNow(senderPlatformUrl, reserveNow)
@@ -67,7 +69,7 @@ class CommandCpoServer(
             path = basePathSegments + FixedPathSegment("CANCEL_RESERVATION"),
         ) { req ->
             val senderPlatformUrl = httpAuth.partnerIdFromRequest(req)
-            val cancelReservation = mapper.readValue(req.body, CancelReservation::class.java)
+            val cancelReservation = mapper.deserializeObject<CancelReservation>(req.body)
 
             req.respondObject(timeProvider.now()) {
                 service.postCancelReservation(senderPlatformUrl, cancelReservation)
@@ -79,7 +81,7 @@ class CommandCpoServer(
             path = basePathSegments + FixedPathSegment("UNLOCK_CONNECTOR"),
         ) { req ->
             val senderPlatformUrl = httpAuth.partnerIdFromRequest(req)
-            val unlockConnector = mapper.readValue(req.body, UnlockConnector::class.java)
+            val unlockConnector = mapper.deserializeObject<UnlockConnector>(req.body)
 
             req.respondObject(timeProvider.now()) {
                 service.postUnlockConnector(senderPlatformUrl, unlockConnector)

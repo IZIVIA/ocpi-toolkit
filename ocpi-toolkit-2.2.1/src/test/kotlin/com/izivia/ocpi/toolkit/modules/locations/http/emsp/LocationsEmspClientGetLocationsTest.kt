@@ -9,6 +9,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportClient
 import com.izivia.ocpi.toolkit.samples.common.validLocation
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeOcpiResponse
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import io.mockk.coEvery
@@ -86,7 +88,7 @@ class LocationsEmspClientGetLocationsTest {
 private fun mockSearchResult(data: List<*>) =
     MockHttpTransportClientBuilder { _: Request ->
         Response(httpStatus.OK).body(
-            mapper.writeValueAsString(
+            mapper.serializeOcpiResponse(
                 OcpiResponseBody(
                     data = data,
                     statusCode = OcpiStatus.SUCCESS.code,

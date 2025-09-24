@@ -7,8 +7,8 @@ import io.json.compare.CompareMode
 import io.json.compare.JSONCompare
 import org.http4k.core.Uri
 import org.http4k.core.queries
+import strikt.api.Assertion
 import strikt.api.DescribeableBuilder
-import strikt.assertions.isNotNull
 
 fun buildHttpRequest(httpMethod: HttpMethod, path: String, body: String? = null): HttpRequest = Uri.of(path).let {
     HttpRequest(
@@ -19,10 +19,16 @@ fun buildHttpRequest(httpMethod: HttpMethod, path: String, body: String? = null)
     )
 }
 
-fun DescribeableBuilder<String?>.isJsonEqualTo(str: String) {
-    isNotNull()
-    JSONCompare.assertMatches(str, this.subject, setOf(CompareMode.REGEX_DISABLED))
+fun DescribeableBuilder<String>.isJsonEqualTo(str: String) {
+    assertJsonEquals(str, this.subject)
 }
+
+fun Assertion.Builder<String>.isJsonEqualTo(str: String) {
+    assertJsonEquals(str, this.subject)
+}
+
+private fun assertJsonEquals(expected: String, actual: String) =
+    JSONCompare.assertMatches(expected, actual, setOf(CompareMode.REGEX_DISABLED))
 
 fun <E> List<E>.toSearchResult(limit: Int = 50, offset: Int = 0) =
     SearchResult(this.subList(offset, Math.min(offset + limit, size)), size, limit, offset, null)

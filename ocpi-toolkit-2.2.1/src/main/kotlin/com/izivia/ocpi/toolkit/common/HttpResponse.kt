@@ -1,6 +1,8 @@
 package com.izivia.ocpi.toolkit.common
 
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.izivia.ocpi.toolkit.serialization.deserializeOcpiResponse
+import com.izivia.ocpi.toolkit.serialization.deserializeOcpiResponseList
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
@@ -43,7 +45,7 @@ inline fun <reified T> HttpResponse.parseSearchResult(offset: Int): SearchResult
     if (!status.success()) throw HttpException(status, status.name)
     if (body.isNullOrBlank()) throw OcpiToolkitResponseParsingException("missing obligatory body in response")
 
-    val list = runCatching { mapper.readValue(body, jacksonTypeRef<OcpiResponseBody<List<T>>>()) }
+    val list = runCatching { mapper.deserializeOcpiResponseList<T>(body) }
         .onFailure { e ->
             throw OcpiToolkitResponseParsingException("Response cannot be parsed: $body", e)
         }
@@ -70,6 +72,10 @@ inline fun <reified T> HttpResponse.parseResult(): T {
     return parseResultOrNull() ?: throw OcpiClientGenericException("missing obligatory data in response")
 }
 
+inline fun <reified T> HttpResponse.parseResultList(): List<T> {
+    return parseResultListOrNull<T>() ?: throw OcpiClientGenericException("missing obligatory data in response")
+}
+
 /**
  * Parse body of an object GET request, automatically handling HTTP 404 NOT FOUND errors.
  * Any error information contained in HTTP request or OcpiResponseBody gets converted into Exceptions.
@@ -77,6 +83,19 @@ inline fun <reified T> HttpResponse.parseResult(): T {
 inline fun <reified T> HttpResponse.parseOptionalResult(): T? {
     if (status == HttpStatus.NOT_FOUND) return null
     return parseResultOrNull()
+}
+
+inline fun <reified T> HttpResponse.parseResultListOrNull(): List<T>? {
+    if (!status.success()) throw HttpException(status, status.name)
+    if (body.isNullOrBlank()) throw OcpiToolkitResponseParsingException("missing obligatory body in response")
+
+    return runCatching { mapper.deserializeOcpiResponseList<T>(body) }
+        .onFailure { e ->
+            throw OcpiToolkitResponseParsingException("Response cannot be parsed: $body", e)
+        }
+        .getOrNull()
+        ?.also { it.maybeThrowOcpiException(status) }
+        ?.data
 }
 
 /**
@@ -87,7 +106,7 @@ inline fun <reified T> HttpResponse.parseResultOrNull(): T? {
     if (!status.success()) throw HttpException(status, status.name)
     if (body.isNullOrBlank()) throw OcpiToolkitResponseParsingException("missing obligatory body in response")
 
-    return runCatching { mapper.readValue(body, jacksonTypeRef<OcpiResponseBody<T>>()) }
+    return runCatching { mapper.deserializeOcpiResponse<T>(body) }
         .onFailure { e ->
             throw OcpiToolkitResponseParsingException("Response cannot be parsed: $body", e)
         }

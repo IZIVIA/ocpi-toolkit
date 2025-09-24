@@ -4,6 +4,8 @@ import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -98,7 +100,7 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.PUT,
                 path = "/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(location),
+                body = mapper.serializeObject(location),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -120,7 +122,7 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.PUT,
                 path = "/$countryCode/$partyId/$locationId/$evseUid",
-                body = mapper.writeValueAsString(evse),
+                body = mapper.serializeObject(evse),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -143,7 +145,7 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.PUT,
                 path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
-                body = mapper.writeValueAsString(connector),
+                body = mapper.serializeObject(connector),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -164,7 +166,7 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.PATCH,
                 path = "/$countryCode/$partyId/$locationId",
-                body = mapper.writeValueAsString(location),
+                body = mapper.serializeObject(location),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -186,7 +188,7 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.PATCH,
                 path = "/$countryCode/$partyId/$locationId/$evseUid",
-                body = mapper.writeValueAsString(evse),
+                body = mapper.serializeObject(evse),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -209,7 +211,7 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.PATCH,
                 path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
-                body = mapper.writeValueAsString(connector),
+                body = mapper.serializeObject(connector),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),

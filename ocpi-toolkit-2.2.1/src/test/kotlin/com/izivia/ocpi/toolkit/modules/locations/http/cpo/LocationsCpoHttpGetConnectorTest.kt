@@ -16,6 +16,7 @@ import io.mockk.slot
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
 import java.time.Instant
 
 class LocationsCpoHttpGetConnectorTest {
@@ -61,7 +62,7 @@ class LocationsCpoHttpGetConnectorTest {
         }
         expectThat(resp) {
             get { status }.isEqualTo(HttpStatus.OK)
-            get { body }.isJsonEqualTo(
+            get { body }.isNotNull().isJsonEqualTo(
                 """
                     {
                       "data": {

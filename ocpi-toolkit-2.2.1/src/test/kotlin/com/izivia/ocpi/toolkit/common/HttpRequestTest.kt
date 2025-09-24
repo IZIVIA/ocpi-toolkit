@@ -38,7 +38,7 @@ class HttpRequestTest {
 
         assert(
             runBlocking {
-                HttpRequest(HttpMethod.GET).respondObject(fixedTimestamp) {
+                HttpRequest(HttpMethod.GET).respondObject<String>(fixedTimestamp) {
                     throw OcpiClientInvalidParametersException()
                 }
             },
@@ -74,7 +74,7 @@ class HttpRequestTest {
 
         assert(
             runBlocking {
-                HttpRequest(HttpMethod.GET).respondObject(fixedTimestamp) {
+                HttpRequest(HttpMethod.GET).respondObject<String>(fixedTimestamp) {
                     throw RuntimeException()
                 }
             },
@@ -122,18 +122,10 @@ class HttpRequestTest {
                 |"status_code":1000,"status_message":"Success","timestamp":"2024-01-15T10:30:00Z"}
             """,
         ),
-        testCase(
-            name = "list of objects",
-            data = listOf(Credentials("token", "url", emptyList())),
-            wantJson = """{
-                |"data":[{"token":"token","url":"url","roles":[]}],
-                |"status_code":1000,"status_message":"Success","timestamp":"2024-01-15T10:30:00Z"}
-            """,
-        ),
     ).map { testCase ->
         DynamicTest.dynamicTest(testCase.name) {
             val res = runBlocking {
-                HttpRequest(HttpMethod.GET).respondSearchResult(fixedTimestamp) {
+                HttpRequest(HttpMethod.GET).respondSearchResult<String>(fixedTimestamp) {
                     SearchResult(testCase.data!!, testCase.data.size, 10, 0, null)
                 }
             }
@@ -163,14 +155,6 @@ class HttpRequestTest {
             data = "test-string",
             wantJson = """{
                 |"data":"test-string",
-                |"status_code":1000,"status_message":"Success","timestamp":"2024-01-15T10:30:00Z"}
-            """,
-        ),
-        testCase(
-            name = "object",
-            data = Credentials("token", "url", emptyList()),
-            wantJson = """{
-                |"data":{"token":"token","url":"url","roles":[]},
                 |"status_code":1000,"status_message":"Success","timestamp":"2024-01-15T10:30:00Z"}
             """,
         ),

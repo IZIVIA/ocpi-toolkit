@@ -6,6 +6,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
+import com.izivia.ocpi.toolkit.serialization.deserializeObject
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -53,7 +55,7 @@ class SessionsCpoServer(
                 service
                     .putChargingPreferences(
                         sessionId = req.pathParam("sessionId"),
-                        chargingPreferences = mapper.readValue(req.body, ChargingPreferences::class.java),
+                        chargingPreferences = mapper.deserializeObject<ChargingPreferences>(req.body),
                     )
             }
         }

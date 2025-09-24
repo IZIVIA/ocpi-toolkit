@@ -1,10 +1,11 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.emsp
 
-import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
@@ -14,6 +15,7 @@ import io.mockk.slot
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
 import java.time.Instant
 
 class LocationsEmspHttpPatchLocationTest {
@@ -139,7 +141,7 @@ class LocationsEmspHttpPatchLocationTest {
             lastUpdated = null,
         )
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1", mapper.writeValueAsString(location)),
+            buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1", mapper.serializeObject(location)),
         )
 
         // then
@@ -150,7 +152,7 @@ class LocationsEmspHttpPatchLocationTest {
         }
         expectThat(resp) {
             get { status }.isEqualTo(HttpStatus.OK)
-            get { body }.isJsonEqualTo(
+            get { body }.isNotNull().isJsonEqualTo(
                 """
                 {
                   "status_code": 1000,

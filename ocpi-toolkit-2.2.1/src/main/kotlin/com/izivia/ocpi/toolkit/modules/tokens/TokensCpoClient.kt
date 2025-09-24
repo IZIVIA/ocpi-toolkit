@@ -4,6 +4,8 @@ import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.tokens.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -81,7 +83,7 @@ class TokensCpoClient(
                     method = HttpMethod.POST,
                     path = "/$tokenUid/authorize",
                     queryParams = listOfNotNull(type?.let { "type" to type.toString() }).toMap(),
-                    body = locationReferences.run(mapper::writeValueAsString),
+                    body = locationReferences.run(mapper::serializeObject),
                 )
                     .withRequiredHeaders(
                         requestId = generateRequestId(),

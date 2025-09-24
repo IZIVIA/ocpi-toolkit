@@ -1,6 +1,9 @@
 package com.izivia.ocpi.toolkit.common
 
 import com.izivia.ocpi.toolkit.common.context.currentResponseMessageRoutingHeadersOrNull
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeOcpiResponse
+import com.izivia.ocpi.toolkit.serialization.serializeOcpiResponseList
 import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
@@ -10,13 +13,16 @@ import java.time.Instant
 
 private val logger = LogManager.getLogger(HttpRequest::class.java)
 
-suspend fun <T> HttpRequest.respondSearchResult(now: Instant, fn: suspend () -> SearchResult<T>) =
+suspend inline fun <reified T> HttpRequest.respondSearchResult(
+    now: Instant,
+    crossinline fn: suspend () -> SearchResult<T>,
+) =
     defaultHeadersOrErrorHandling(now) {
         val result = fn()
 
         HttpResponse(
             status = HttpStatus.OK,
-            body = mapper.writeValueAsString(
+            body = mapper.serializeOcpiResponseList<T>(
                 OcpiResponseBody(
                     data = result.list,
                     statusCode = OcpiStatus.SUCCESS.code,
@@ -28,7 +34,7 @@ suspend fun <T> HttpRequest.respondSearchResult(now: Instant, fn: suspend () -> 
         )
     }
 
-private fun paginationHeaders(result: SearchResult<*>, request: HttpRequest): Map<String, String> {
+fun paginationHeaders(result: SearchResult<*>, request: HttpRequest): Map<String, String> {
     val nextPageOffset = (result.offset + result.limit).takeIf { it <= result.totalCount }
 
     val queries = request
@@ -45,16 +51,22 @@ private fun paginationHeaders(result: SearchResult<*>, request: HttpRequest): Ma
     ).toMap()
 }
 
-suspend fun <T> HttpRequest.respondObject(now: Instant, fn: suspend () -> T?) =
+suspend inline fun <reified T> HttpRequest.respondList(now: Instant, crossinline fn: suspend () -> List<T>?) =
+    respondNullableList(now) { fn() ?: throw OcpiObjectNotFoundException() }
+
+suspend inline fun <reified T> HttpRequest.respondObject(now: Instant, crossinline fn: suspend () -> T?) =
     respondNullableObject(now) { fn() ?: throw OcpiObjectNotFoundException() }
 
 suspend fun HttpRequest.respondNothing(now: Instant, fn: suspend () -> Unit) =
-    respondNullableObject(now) {
+    respondNullableObject<String>(now) {
         fn()
         null
     }
 
-private suspend fun <T> HttpRequest.respondNullableObject(now: Instant, fn: suspend () -> T?) =
+suspend inline fun <reified T> HttpRequest.respondNullableList(
+    now: Instant,
+    crossinline fn: suspend () -> List<T>?,
+) =
     defaultHeadersOrErrorHandling(now) {
         val result = fn()
 
@@ -63,7 +75,7 @@ private suspend fun <T> HttpRequest.respondNullableObject(now: Instant, fn: susp
         //      https://github.com/IZIVIA/ocpi-toolkit/issues/65
         HttpResponse(
             status = HttpStatus.OK,
-            body = mapper.writeValueAsString(
+            body = mapper.serializeOcpiResponseList<T>(
                 OcpiResponseBody(
                     data = result,
                     statusCode = OcpiStatus.SUCCESS.code,
@@ -74,7 +86,30 @@ private suspend fun <T> HttpRequest.respondNullableObject(now: Instant, fn: susp
         )
     }
 
-private suspend fun HttpRequest.defaultHeadersOrErrorHandling(
+suspend inline fun <reified T> HttpRequest.respondNullableObject(
+    now: Instant,
+    crossinline fn: suspend () -> T?,
+) =
+    defaultHeadersOrErrorHandling(now) {
+        val result = fn()
+
+        // TODO we are supposed to respond with a 201 CREATED if this is a newly added object
+        //      https://github.com/ocpi/ocpi/blob/v2.2.1-d2/status_codes.asciidoc
+        //      https://github.com/IZIVIA/ocpi-toolkit/issues/65
+        HttpResponse(
+            status = HttpStatus.OK,
+            body = mapper.serializeOcpiResponse<T>(
+                OcpiResponseBody(
+                    data = result,
+                    statusCode = OcpiStatus.SUCCESS.code,
+                    statusMessage = "Success",
+                    timestamp = now,
+                ),
+            ),
+        )
+    }
+
+suspend fun HttpRequest.defaultHeadersOrErrorHandling(
     now: Instant,
     fn: suspend () -> HttpResponse,
 ): HttpResponse {
@@ -106,7 +141,7 @@ private suspend fun HttpRequest.defaultHeadersOrErrorHandling(
 fun OcpiException.toHttpResponse(now: Instant): HttpResponse =
     HttpResponse(
         status = httpStatus,
-        body = mapper.writeValueAsString(
+        body = mapper.serializeOcpiResponse<String>(
             OcpiResponseBody(
                 data = null,
                 statusCode = ocpiStatusCode,

@@ -2,11 +2,14 @@ package com.izivia.ocpi.toolkit.modules.tokens
 
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.tokens.domain.LocationReferences
+import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
+import com.izivia.ocpi.toolkit.serialization.deserializeObject
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -33,7 +36,7 @@ class TokensEmspServer(
             path = basePathSegments,
             queryParams = listOf("date_from", "date_to", "offset", "limit"),
         ) { req ->
-            req.respondSearchResult(timeProvider.now()) {
+            req.respondSearchResult<Token>(timeProvider.now()) {
                 service
                     .getTokens(
                         dateFrom = req.optionalQueryParamAsInstant("date_from"),
@@ -59,7 +62,7 @@ class TokensEmspServer(
                     type = req.optionalQueryParamAs("type", TokenType::valueOf) ?: TokenType.RFID,
                     locationReferences = req.body
                         ?.takeIf { it.isNotBlank() } // During Test if client sent body = null, this reiceve body=""
-                        ?.let { mapper.readValue(it, LocationReferences::class.java) },
+                        ?.let { mapper.deserializeObject<LocationReferences>(it) },
                 )
             }
         }

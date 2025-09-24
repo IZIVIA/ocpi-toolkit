@@ -18,6 +18,7 @@ import io.mockk.slot
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
 import java.time.Instant
 
 class TokensEmspHttpGetTokensTest {
@@ -69,7 +70,7 @@ class TokensEmspHttpGetTokensTest {
             get { status }.isEqualTo(HttpStatus.OK)
             get { headers["X-Total-Count"] }.isEqualTo("1")
             get { headers["X-Limit"] }.isEqualTo("50")
-            get { body }.isJsonEqualTo(
+            get { body }.isNotNull().isJsonEqualTo(
                 """
                 {
                 "data" : [ {

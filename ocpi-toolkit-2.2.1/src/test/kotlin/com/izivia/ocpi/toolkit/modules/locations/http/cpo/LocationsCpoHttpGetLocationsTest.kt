@@ -1,14 +1,13 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.cpo
 
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.izivia.ocpi.toolkit.common.OcpiResponseBody
-import com.izivia.ocpi.toolkit.common.mapper
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoInterface
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import com.izivia.ocpi.toolkit.modules.toSearchResult
+import com.izivia.ocpi.toolkit.serialization.deserializeOcpiResponse
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
@@ -85,7 +84,7 @@ class LocationsCpoHttpGetLocationsTest {
             get { status }.isEqualTo(HttpStatus.OK)
             get { headers["X-Total-Count"] }.isEqualTo("1")
             get { headers["X-Limit"] }.isEqualTo("50")
-            get { body }.isJsonEqualTo(
+            get { body }.isNotNull().isJsonEqualTo(
                 """
 {
   "data": [
@@ -151,7 +150,7 @@ class LocationsCpoHttpGetLocationsTest {
         // then
         expectThat(resp) {
             get { status }.isEqualTo(HttpStatus.BAD_REQUEST) // unclear if this shouldn't be HTTP 200
-            get { body }.isNotNull().get { mapper.readValue<OcpiResponseBody<Unit>>(this) }.and {
+            get { body }.isNotNull().get { mapper.deserializeOcpiResponse<String>(this) }.and {
                 get { statusCode }.isEqualTo(2001)
                 get { statusMessage }.isEqualTo("Invalid value for param 'date_from': '2019-01-28'")
             }
