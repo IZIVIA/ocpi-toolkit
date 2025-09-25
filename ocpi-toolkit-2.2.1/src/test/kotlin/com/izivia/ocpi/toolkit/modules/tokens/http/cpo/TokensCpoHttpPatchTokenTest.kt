@@ -1,10 +1,12 @@
 package com.izivia.ocpi.toolkit.modules.tokens.http.cpo
 
+import com.izivia.ocpi.toolkit.common.TestWithSerializerProviders
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ProfileType
 import com.izivia.ocpi.toolkit.modules.tokens.domain.*
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensCpoRepository
+import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -13,15 +15,18 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
 import java.time.Instant
 
-class TokensCpoHttpPatchTokenTest {
-    @Test
-    fun `should patch token`() {
+class TokensCpoHttpPatchTokenTest : TestWithSerializerProviders {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should patch token`(serializer: OcpiSerializer) {
+        mapper = serializer
         val token = Token(
             countryCode = "DE",
             partyId = "TNM",
@@ -86,8 +91,10 @@ class TokensCpoHttpPatchTokenTest {
         }
     }
 
-    @Test
-    fun `should patch partial token`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should patch partial token`(serializer: OcpiSerializer) {
+        mapper = serializer
         val token = Token(
             countryCode = "DE",
             partyId = "TNM",

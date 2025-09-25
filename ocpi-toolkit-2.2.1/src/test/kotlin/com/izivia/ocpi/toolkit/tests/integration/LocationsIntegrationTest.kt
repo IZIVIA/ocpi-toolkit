@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.tests.integration
 
 import com.izivia.ocpi.toolkit.common.Header
+import com.izivia.ocpi.toolkit.common.TestWithSerializerProviders
 import com.izivia.ocpi.toolkit.common.context.RequestMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspClient
@@ -9,12 +10,15 @@ import com.izivia.ocpi.toolkit.modules.locations.services.LocationsCpoValidator
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.samples.common.*
+import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
 import com.izivia.ocpi.toolkit.tests.integration.mock.LocationsCpoMongoRepository
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import org.litote.kmongo.getCollection
 import strikt.api.expectThat
 import strikt.assertions.*
@@ -22,7 +26,7 @@ import java.time.Instant
 import java.util.*
 import kotlin.math.min
 
-class LocationsIntegrationTest : BaseServerIntegrationTest() {
+class LocationsIntegrationTest : BaseServerIntegrationTest(), TestWithSerializerProviders {
 
     private var database: MongoDatabase? = null
 
@@ -42,8 +46,10 @@ class LocationsIntegrationTest : BaseServerIntegrationTest() {
         return server
     }
 
-    @Test
-    fun `getLocations test (paginated)`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `getLocations test (paginated)`(serializer: OcpiSerializer) {
+        mapper = serializer
         // Start CPO server with dummy data
         val numberOfLocations = 500
         val referenceDate = Instant.parse("2022-04-28T09:00:00.000Z")

@@ -1,10 +1,12 @@
 package com.izivia.ocpi.toolkit.modules.tokens.http.emsp
 
+import com.izivia.ocpi.toolkit.common.TestWithSerializerProviders
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ProfileType
 import com.izivia.ocpi.toolkit.modules.tokens.domain.*
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensEmspRepository
+import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -14,14 +16,18 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
 import java.time.Instant
 
-class TokensEmspHttpPostTokenTest {
-    @Test
-    fun `should post token with empty location reference`() {
+class TokensEmspHttpPostTokenTest : TestWithSerializerProviders {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should post token with empty location reference`(serializer: OcpiSerializer) {
+        mapper = serializer
         val slots = object {
             var tokenUID = slot<String>()
             var type = slot<TokenType>()

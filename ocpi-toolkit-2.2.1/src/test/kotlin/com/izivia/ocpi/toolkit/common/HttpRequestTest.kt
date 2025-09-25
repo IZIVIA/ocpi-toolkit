@@ -1,23 +1,30 @@
 package com.izivia.ocpi.toolkit.common
 
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
+import com.izivia.ocpi.toolkit.serialization.OcpiSerializationRegistry
+import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.DynamicTest
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNull
 import java.time.Instant
 
-class HttpRequestTest {
+class HttpRequestTest : TestWithSerializerProviders {
     private val fixedTimestamp = Instant.parse("2024-01-15T10:30:00Z")
 
-    @Test
-    fun `consistent response for OcpiException`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `consistent response for OcpiException`(serializer: OcpiSerializer) {
+        mapper = serializer
+
         val wantJson = """
             {"status_code":2001,"status_message":"Invalid or missing parameters","timestamp":"2024-01-15T10:30:00Z"}
         """.trimIndent()
@@ -53,8 +60,11 @@ class HttpRequestTest {
         )
     }
 
-    @Test
-    fun `consistently respond to Exception`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `consistently respond to Exception`(serializer: OcpiSerializer) {
+        mapper = serializer
+
         val wantJson =
             """{"status_code":3000,"status_message":"Generic server error","timestamp":"2024-01-15T10:30:00Z"}"""
         val assert = { res: HttpResponse ->
@@ -122,8 +132,9 @@ class HttpRequestTest {
                 |"status_code":1000,"status_message":"Success","timestamp":"2024-01-15T10:30:00Z"}
             """,
         ),
-    ).map { testCase ->
+    ).flatten().map { testCase ->
         DynamicTest.dynamicTest(testCase.name) {
+            mapper = testCase.serializer
             val res = runBlocking {
                 HttpRequest(HttpMethod.GET).respondSearchResult<String>(fixedTimestamp) {
                     SearchResult(testCase.data!!, testCase.data.size, 10, 0, null)
@@ -158,8 +169,9 @@ class HttpRequestTest {
                 |"status_code":1000,"status_message":"Success","timestamp":"2024-01-15T10:30:00Z"}
             """,
         ),
-    ).map { testCase ->
+    ).flatten().map { testCase ->
         DynamicTest.dynamicTest(testCase.name) {
+            mapper = testCase.serializer
             val res = runBlocking {
                 HttpRequest(HttpMethod.GET).respondObject(fixedTimestamp) {
                     testCase.data
@@ -195,8 +207,9 @@ class HttpRequestTest {
             data = Credentials("token", "url", emptyList()),
             wantJson = """{"status_code":1000,"status_message":"Success","timestamp":"2024-01-15T10:30:00Z"}""",
         ),
-    ).map { testCase ->
+    ).flatten().map { testCase ->
         DynamicTest.dynamicTest(testCase.name) {
+            mapper = testCase.serializer
             val res = runBlocking {
                 HttpRequest(HttpMethod.GET).respondNothing(fixedTimestamp) {
                     testCase.data
@@ -220,6 +233,7 @@ class HttpRequestTest {
         val data: T?,
         val wantJson: String?,
         val wantHttpStatus: Int,
+        val serializer: OcpiSerializer,
     )
 
     private fun <T> testCase(
@@ -227,10 +241,13 @@ class HttpRequestTest {
         data: T?,
         wantJson: String,
         wantHttpStatus: Int = 200,
-    ) = TestCase(
-        name = name,
-        data = data,
-        wantJson = wantJson.trimMargin().lines().joinToString(""),
-        wantHttpStatus = wantHttpStatus,
-    )
+    ) = OcpiSerializationRegistry.serializers.map {
+        TestCase(
+            name = "$name (${it.name})",
+            data = data,
+            wantJson = wantJson.trimMargin().lines().joinToString(""),
+            wantHttpStatus = wantHttpStatus,
+            serializer = it,
+        )
+    }
 }

@@ -1,11 +1,13 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.cpo
 
+import com.izivia.ocpi.toolkit.common.TestWithSerializerProviders
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoInterface
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsCpoRepository
 import com.izivia.ocpi.toolkit.modules.toSearchResult
+import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
 import com.izivia.ocpi.toolkit.serialization.deserializeOcpiResponse
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -15,14 +17,18 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
 import java.time.Instant
 
-class LocationsCpoHttpGetLocationsTest {
-    @Test
-    fun `should list locations`() {
+class LocationsCpoHttpGetLocationsTest : TestWithSerializerProviders {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should list locations`(serializer: OcpiSerializer) {
+        mapper = serializer
         // given
         val slots = object {
             var dateFrom = slot<Instant>()
