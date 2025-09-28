@@ -19,12 +19,12 @@ import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
 import com.izivia.ocpi.toolkit.tests.integration.mock.PartnerMongoRepository
+import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
-import org.eclipse.jetty.client.HttpResponseException
 import org.junit.jupiter.api.Test
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
@@ -34,7 +34,6 @@ import strikt.api.expectThat
 import strikt.api.expectThrows
 import strikt.assertions.*
 import java.util.*
-import java.util.concurrent.ExecutionException
 
 class CredentialsIntegrationTests : BaseServerIntegrationTest() {
 
@@ -170,7 +169,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         // Fails because the senders does not know the TOKEN_A to send with the request
         expectCatching {
             credentialsClientService.register()
-        }.isFailure().isA<OcpiClientInvalidParametersException>()
+        }
+            .isFailure()
+            .isA<OcpiClientInvalidParametersException>()
 
         receiverServer.partnerCollection.deleteOne(Partner::url eq senderServer.versionsEndpoint)
         senderServer.partnerCollection.insertOne(Partner(url = receiverServer.versionsEndpoint, tokenA = tokenA))
@@ -180,10 +181,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             credentialsClientService.register()
         }
             .isFailure()
-            .isA<ExecutionException>()
-            .get { this.cause }
-            .isA<HttpResponseException>()
-            .get { this.response.status }
+            .isA<HttpException>()
+            .get { status.code }
             .isEqualTo(HttpStatus.UNAUTHORIZED.code)
 
         receiverServer.partnerCollection.deleteOne(Partner::url eq senderServer.versionsEndpoint)
@@ -199,10 +198,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             credentialsClientService.register()
         }
             .isFailure()
-            .isA<ExecutionException>()
-            .get { this.cause }
-            .isA<HttpResponseException>()
-            .get { this.response.status }
+            .isA<HttpException>()
+            .get { status.code }
             .isEqualTo(HttpStatus.UNAUTHORIZED.code)
     }
 

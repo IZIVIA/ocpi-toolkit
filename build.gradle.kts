@@ -1,5 +1,7 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 buildscript {
     dependencies {
@@ -29,23 +31,29 @@ allprojects {
 }
 
 subprojects {
-    tasks.withType<KotlinCompile>().all {
-        kotlinOptions {
-            jvmTarget = "17"
-            freeCompilerArgs = listOf("-Xjsr305=strict", "-Xopt-in=kotlin.RequiresOptIn")
-            languageVersion = "1.8"
-            apiVersion = "1.8"
-        }
+    apply {
+        plugin("java")
+        plugin("org.jetbrains.kotlin.jvm")
+        plugin("org.jlleitschuh.gradle.ktlint")
     }
 
     tasks.withType<Test> {
         useJUnitPlatform()
     }
 
-    apply {
-        plugin("java")
-        plugin("org.jetbrains.kotlin.jvm")
-        plugin("org.jlleitschuh.gradle.ktlint")
+    tasks.named<KotlinJvmCompile>("compileKotlin"){
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget(Versions.jvm)
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            languageVersion = KotlinVersion.KOTLIN_2_2
+            apiVersion = KotlinVersion.KOTLIN_2_2
+        }
+    }
+
+    configure<JavaPluginExtension> {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(Versions.jvm))
+        }
     }
 
     configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
