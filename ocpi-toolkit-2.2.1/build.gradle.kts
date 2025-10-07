@@ -23,7 +23,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junit}")
     testImplementation("io.strikt:strikt-core:${Versions.strikt}")
-    testImplementation("com.github.fslev:json-compare:${Versions.jsonCompare}")
+    testImplementation("io.github.deblockt:json-diff:${Versions.jsonDiff}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
 
     testImplementation("org.testcontainers:testcontainers:${Versions.testcontainers}")

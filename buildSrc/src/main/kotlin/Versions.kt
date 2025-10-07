@@ -22,5 +22,5 @@ object Versions {
     const val mockk = "1.14.5"
     const val testcontainers = "1.21.3"
     const val kmongo = "5.5.1"
-    const val jsonCompare = "7.1"
+    const val jsonDiff = "1.1.0"
 }

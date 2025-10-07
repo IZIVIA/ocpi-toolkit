@@ -11,7 +11,6 @@ import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
-import io.json.compare.CompareMode
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
@@ -96,12 +95,12 @@ class LocationsEmspHttpPutEvseTest : TestWithSerializerProviders {
             get { body }.isNotNull().isJsonEqualTo(
                 """
                 {
+                  "data":{"uid":"3256","evse_id":"BE*BEC*E041503001","status":"AVAILABLE","capabilities":["RESERVABLE"],"connectors":[{"id":"1","standard":"IEC_62196_T2","format":"CABLE","power_type":"AC_3_PHASE","max_voltage":220,"max_amperage":16,"tariff_ids":["11"],"last_updated":"2015-03-16T10:10:02Z"},{"id":"2","standard":"IEC_62196_T2","format":"SOCKET","power_type":"AC_3_PHASE","max_voltage":220,"max_amperage":16,"tariff_ids":["13"],"last_updated":"2015-03-18T08:12:01Z"}],"floor_level":"-1","physical_reference":"1","last_updated":"2015-06-28T08:12:01Z"},
                   "status_code": 1000,
                   "status_message": "Success",
                   "timestamp": "2015-06-30T21:59:59Z"
                 }
                 """.trimIndent(),
-                CompareMode.REGEX_DISABLED,
             )
         }
     }
