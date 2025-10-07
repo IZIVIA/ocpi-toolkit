@@ -1,1 +1,2 @@
 com.izivia.ocpi.toolkit.processor.PartialProcessorProvider
+com.izivia.ocpi.toolkit.processor.GenerateSerializerProcessorProvider
