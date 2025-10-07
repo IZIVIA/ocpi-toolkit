@@ -32,6 +32,7 @@ dependencies {
     testImplementation("org.litote.kmongo:kmongo:${Versions.kmongo}")
 
     testImplementation(project(":integrations:ocpi-toolkit-2.2.1-jackson"))
+    testImplementation(project(":integrations:ocpi-toolkit-2.2.1-kotlinx-serialization"))
     testRuntimeOnly("ch.qos.logback:logback-classic:${Versions.logback}")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
