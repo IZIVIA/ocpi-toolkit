@@ -44,9 +44,10 @@ tasks.test {
     }
 }
 
-sourceSets.main {
-    // new way to use buildDir: https://docs.gradle.org/current/userguide/upgrading_version_8.html#deprecations_3
-    kotlin.srcDirs("${layout.buildDirectory.get().asFile.absolutePath}/generated/ksp")
+kotlin {
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin")
+    }
 }
 
 java {
