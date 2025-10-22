@@ -4,7 +4,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.parseHttpStatus
-import org.http4k.client.JettyClient
+import org.http4k.client.OkHttp
 import org.http4k.core.*
 import org.http4k.filter.ClientFilters
 
@@ -35,7 +35,9 @@ class Http4kTransportClient(
 
     companion object {
         operator fun invoke(baseUrl: String) =
-            Http4kTransportClient(ClientFilters.SetBaseUriFrom(Uri.of(baseUrl)).then(JettyClient()))
+            Http4kTransportClient(
+                ClientFilters.SetBaseUriFrom(Uri.of(baseUrl)).then(OkHttp()),
+            )
     }
 }
 

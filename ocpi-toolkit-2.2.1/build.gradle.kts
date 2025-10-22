@@ -19,13 +19,13 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
 
     testImplementation(http4k("core"))
-    testImplementation(http4k("contract"))
-    testImplementation(http4k("client-jetty"))
+    testImplementation(http4k("api-openapi"))
+    testImplementation(http4k("client-okhttp"))
     testImplementation(http4k("server-netty"))
 
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junit}")
     testImplementation("io.strikt:strikt-core:${Versions.strikt}")
-    testImplementation("com.github.fslev:json-compare:6.10")
+    testImplementation("com.github.fslev:json-compare:${Versions.jsonCompare}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
 
     testImplementation("org.testcontainers:testcontainers:${Versions.testcontainers}")
@@ -34,6 +34,7 @@ dependencies {
     testImplementation("org.litote.kmongo:kmongo:${Versions.kmongo}")
 
     testRuntimeOnly("ch.qos.logback:logback-classic:${Versions.logback}")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.test {
