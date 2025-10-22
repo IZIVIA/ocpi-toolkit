@@ -23,7 +23,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junit}")
     testImplementation("io.strikt:strikt-core:${Versions.strikt}")
-    testImplementation("com.github.fslev:json-compare:${Versions.jsonCompare}")
+    testImplementation("io.github.deblockt:json-diff:${Versions.jsonDiff}")
     testImplementation("io.mockk:mockk:${Versions.mockk}")
 
     testImplementation("org.testcontainers:testcontainers:${Versions.testcontainers}")
@@ -32,6 +32,7 @@ dependencies {
     testImplementation("org.litote.kmongo:kmongo:${Versions.kmongo}")
 
     testImplementation(project(":integrations:ocpi-toolkit-2.2.1-jackson"))
+    testImplementation(project(":integrations:ocpi-toolkit-2.2.1-kotlinx-serialization"))
     testRuntimeOnly("ch.qos.logback:logback-classic:${Versions.logback}")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -43,9 +44,10 @@ tasks.test {
     }
 }
 
-sourceSets.main {
-    // new way to use buildDir: https://docs.gradle.org/current/userguide/upgrading_version_8.html#deprecations_3
-    kotlin.srcDirs("${layout.buildDirectory.get().asFile.absolutePath}/generated/ksp")
+kotlin {
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin")
+    }
 }
 
 java {

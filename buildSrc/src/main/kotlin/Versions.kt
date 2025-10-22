@@ -14,6 +14,10 @@ object Versions {
     const val ktlintPlugin = "12.0.2"
     const val ktlint = "0.50.0"
 
+    // Used for kotlinx.serialization integration
+    const val kotlinxSerializationPlugin = "2.2.0"
+    const val kotlinxSerializationDependency = "1.9.0"
+
     // Used only for tests
     const val logback = "1.5.6"
     const val junit = "5.13.4"
@@ -22,5 +26,5 @@ object Versions {
     const val mockk = "1.14.5"
     const val testcontainers = "1.21.3"
     const val kmongo = "5.5.1"
-    const val jsonCompare = "7.1"
+    const val jsonDiff = "1.1.0"
 }
