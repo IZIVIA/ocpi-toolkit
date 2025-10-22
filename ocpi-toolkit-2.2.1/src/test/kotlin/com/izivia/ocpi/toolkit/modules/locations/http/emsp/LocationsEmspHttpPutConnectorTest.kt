@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations.http.emsp
 
-import com.izivia.ocpi.toolkit.common.mapper
+import com.izivia.ocpi.toolkit.common.TestWithSerializerProviders
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.locations.domain.Connector
@@ -8,20 +8,28 @@ import com.izivia.ocpi.toolkit.modules.locations.domain.ConnectorFormat
 import com.izivia.ocpi.toolkit.modules.locations.domain.ConnectorType
 import com.izivia.ocpi.toolkit.modules.locations.domain.PowerType
 import com.izivia.ocpi.toolkit.modules.locations.repositories.LocationsEmspRepository
+import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import io.json.compare.CompareMode
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
 import java.time.Instant
 
-class LocationsEmspHttpPutConnectorTest {
-    @Test
-    fun `should put connector`() {
+class LocationsEmspHttpPutConnectorTest : TestWithSerializerProviders {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should put connector`(serializer: OcpiSerializer) {
+        mapper = serializer
         val slots = object {
             var countryCode = slot<String>()
             var partyId = slot<String>()
@@ -57,7 +65,7 @@ class LocationsEmspHttpPutConnectorTest {
 
         // when
         val resp: HttpResponse = srv.send(
-            buildHttpRequest(HttpMethod.PUT, "/locations/BE/BEC/LOC1/3256/1", mapper.writeValueAsString(connector)),
+            buildHttpRequest(HttpMethod.PUT, "/locations/BE/BEC/LOC1/3256/1", mapper.serializeObject(connector)),
         )
 
         // then
@@ -70,7 +78,7 @@ class LocationsEmspHttpPutConnectorTest {
         }
         expectThat(resp) {
             get { status }.isEqualTo(HttpStatus.OK)
-            get { body }.isJsonEqualTo(
+            get { body }.isNotNull().isJsonEqualTo(
                 """
                     {
                       "status_code": 1000,
@@ -78,6 +86,7 @@ class LocationsEmspHttpPutConnectorTest {
                       "timestamp": "2015-06-30T21:59:59Z"
                     }
                 """.trimIndent(),
+                CompareMode.REGEX_DISABLED,
             )
         }
     }

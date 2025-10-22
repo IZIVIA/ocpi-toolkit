@@ -5,6 +5,8 @@ import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepositor
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -58,7 +60,7 @@ class SessionsCpoClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/$countryCode/$partyId/$sessionId",
-                    body = mapper.writeValueAsString(session),
+                    body = mapper.serializeObject(session),
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId(),
@@ -79,7 +81,7 @@ class SessionsCpoClient(
                 HttpRequest(
                     method = HttpMethod.PATCH,
                     path = "/$countryCode/$partyId/$sessionId",
-                    body = mapper.writeValueAsString(session),
+                    body = mapper.serializeObject(session),
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId(),

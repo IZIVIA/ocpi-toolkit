@@ -1,4 +1,4 @@
-package com.izivia.ocpi.toolkit.common
+package com.izivia.ocpi.toolkit.integrations.jackson
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext

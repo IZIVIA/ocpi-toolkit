@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
 import com.izivia.ocpi.toolkit.common.*
+import com.izivia.ocpi.toolkit.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
@@ -29,7 +30,7 @@ class LocationsCpoServer(
             path = basePathSegments,
             queryParams = listOf("date_from", "date_to", "offset", "limit"),
         ) { req ->
-            req.respondSearchResult(timeProvider.now()) {
+            req.respondSearchResult<Location>(timeProvider.now()) {
                 service.getLocations(
                     dateFrom = req.optionalQueryParamAsInstant("date_from"),
                     dateTo = req.optionalQueryParamAsInstant("date_to"),

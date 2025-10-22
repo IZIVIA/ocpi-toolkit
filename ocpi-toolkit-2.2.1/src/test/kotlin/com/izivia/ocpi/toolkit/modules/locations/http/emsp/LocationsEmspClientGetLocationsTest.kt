@@ -3,12 +3,16 @@ package com.izivia.ocpi.toolkit.modules.locations.http.emsp
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspClient
+import com.izivia.ocpi.toolkit.modules.locations.domain.LocationPartial
 import com.izivia.ocpi.toolkit.modules.locations.domain.toPartial
 import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportClient
 import com.izivia.ocpi.toolkit.samples.common.validLocation
+import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeOcpiResponseList
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import io.mockk.coEvery
@@ -17,14 +21,15 @@ import kotlinx.coroutines.runBlocking
 import org.http4k.core.HttpHandler
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import strikt.api.expectThat
 import strikt.api.expectThrows
 import strikt.assertions.hasSize
 import java.time.Instant
 import org.http4k.core.Status.Companion as httpStatus
 
-class LocationsEmspClientGetLocationsTest {
+class LocationsEmspClientGetLocationsTest : TestWithSerializerProviders {
     private val mockPartnerRepository = mockk<PartnerRepository> {
         coEvery { getEndpoints(any()) } coAnswers {
             listOf(Endpoint(ModuleID.locations, InterfaceRole.SENDER, ""))
@@ -36,10 +41,15 @@ class LocationsEmspClientGetLocationsTest {
         id = null,
     )
 
-    @Test
-    fun `ignore invalid locations`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `ignore invalid locations`(serializer: OcpiSerializer) {
+        mapper = serializer
+
         val client = LocationsEmspClient(
-            transportClientBuilder = mockSearchResult(listOf(invalidLocation, validLocation, invalidLocation)),
+            transportClientBuilder = mockSearchResult<LocationPartial>(
+                listOf(invalidLocation, validLocation.toPartial(), invalidLocation),
+            ),
             partnerId = "irrelevant",
             partnerRepository = mockPartnerRepository,
             ignoreInvalidListEntry = true,
@@ -52,10 +62,14 @@ class LocationsEmspClientGetLocationsTest {
         }
     }
 
-    @Test
-    fun `fail on invalid location`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `fail on invalid location`(serializer: OcpiSerializer) {
+        mapper = serializer
         val client = LocationsEmspClient(
-            transportClientBuilder = mockSearchResult(listOf(validLocation, invalidLocation)),
+            transportClientBuilder = mockSearchResult<LocationPartial>(
+                listOf(validLocation.toPartial(), invalidLocation),
+            ),
             partnerId = "irrelevant",
             partnerRepository = mockPartnerRepository,
         )
@@ -67,8 +81,10 @@ class LocationsEmspClientGetLocationsTest {
         }
     }
 
-    @Test
-    fun `retrieve valid locations`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `retrieve valid locations`(serializer: OcpiSerializer) {
+        mapper = serializer
         val client = LocationsEmspClient(
             transportClientBuilder = mockSearchResult(listOf(validLocation, validLocation)),
             partnerId = "irrelevant",
@@ -83,10 +99,10 @@ class LocationsEmspClientGetLocationsTest {
     }
 }
 
-private fun mockSearchResult(data: List<*>) =
+private inline fun <reified T> mockSearchResult(data: List<T>) =
     MockHttpTransportClientBuilder { _: Request ->
         Response(httpStatus.OK).body(
-            mapper.writeValueAsString(
+            mapper.serializeOcpiResponseList<T>(
                 OcpiResponseBody(
                     data = data,
                     statusCode = OcpiStatus.SUCCESS.code,

@@ -153,7 +153,7 @@ open class CredentialsServerService(
                         )
                         .authenticate(token = credentials.token),
                 )
-                    .parseResult<List<Version>>()
+                    .parseResultList<Version>()
             }
             .onFailure {
                 throw OcpiServerUnusableApiException(

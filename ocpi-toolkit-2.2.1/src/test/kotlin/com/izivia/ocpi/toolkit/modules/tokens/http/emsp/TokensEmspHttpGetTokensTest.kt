@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.tokens.http.emsp
 
+import com.izivia.ocpi.toolkit.common.TestWithSerializerProviders
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ProfileType
@@ -9,20 +10,26 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.tokens.domain.WhitelistType
 import com.izivia.ocpi.toolkit.modules.tokens.repositories.TokensEmspRepository
+import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
 import java.time.Instant
 
-class TokensEmspHttpGetTokensTest {
-    @Test
-    fun `should list tokens`() {
+class TokensEmspHttpGetTokensTest : TestWithSerializerProviders {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should list tokens`(serializer: OcpiSerializer) {
+        mapper = serializer
         val slots = object {
             var dateFrom = slot<Instant>()
             var dateTo = slot<Instant>()
@@ -69,7 +76,7 @@ class TokensEmspHttpGetTokensTest {
             get { status }.isEqualTo(HttpStatus.OK)
             get { headers["X-Total-Count"] }.isEqualTo("1")
             get { headers["X-Limit"] }.isEqualTo("50")
-            get { body }.isJsonEqualTo(
+            get { body }.isNotNull().isJsonEqualTo(
                 """
                 {
                 "data" : [ {

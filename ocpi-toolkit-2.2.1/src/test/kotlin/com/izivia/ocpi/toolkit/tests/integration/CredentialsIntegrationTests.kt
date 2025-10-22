@@ -17,6 +17,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.InMemoryVersionsRepository
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.samples.common.*
+import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
 import com.izivia.ocpi.toolkit.tests.integration.mock.PartnerMongoRepository
 import com.izivia.ocpi.toolkit.transport.domain.HttpException
@@ -25,7 +27,8 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 import strikt.api.expectCatching
@@ -35,7 +38,7 @@ import strikt.api.expectThrows
 import strikt.assertions.*
 import java.util.*
 
-class CredentialsIntegrationTests : BaseServerIntegrationTest() {
+class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSerializerProviders {
 
     data class ServerSetupResult(
         val transport: Http4kTransportServer,
@@ -149,8 +152,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         )
     }
 
-    @Test
-    fun `should not properly run registration because wrong setup of token A`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should not properly run registration because wrong setup of token A`(serializer: OcpiSerializer) {
+        mapper = serializer
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
@@ -203,8 +208,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
             .isEqualTo(HttpStatus.UNAUTHORIZED.code)
     }
 
-    @Test
-    fun `should access versions module properly with token A and return right errors when needed`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should access versions module properly with token A and return right errors when needed`(
+        serializer: OcpiSerializer,
+    ) {
+        mapper = serializer
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
@@ -240,8 +249,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
     }
 
-    @Test
-    fun `should not properly run registration process because required endpoints are missing`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should not properly run registration process because required endpoints are missing`(
+        serializer: OcpiSerializer,
+    ) {
+        mapper = serializer
         val receiverServer = setupReceiver(
             RequiredEndpoints(
                 receiver = listOf(ModuleID.credentials, ModuleID.locations),
@@ -274,8 +287,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
     }
 
-    @Test
-    fun `should properly run registration process then correct get credentials from receiver`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should properly run registration process then correct get credentials from receiver`(
+        serializer: OcpiSerializer,
+    ) {
+        mapper = serializer
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
@@ -409,8 +426,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         ).isEqualTo(credentials)
     }
 
-    @Test
-    fun `should properly run registration process then run update properly`() = runBlocking {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should properly run registration process then run update properly`(
+        serializer: OcpiSerializer,
+    ) = runBlocking {
+        mapper = serializer
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
@@ -453,8 +474,12 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
     }
 
-    @Test
-    fun `should properly run registration process then delete credentials properly then re-register`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should properly run registration process then delete credentials properly then re-register`(
+        serializer: OcpiSerializer,
+    ) {
+        mapper = serializer
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 
@@ -557,8 +582,10 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest() {
         }
     }
 
-    @Test
-    fun `should properly run registration process then get, update, delete properly`() {
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should properly run registration process then get, update, delete properly`(serializer: OcpiSerializer) {
+        mapper = serializer
         val receiverServer = setupReceiver()
         val senderServer = setupSender()
 

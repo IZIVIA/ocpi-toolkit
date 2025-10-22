@@ -6,6 +6,8 @@ import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenPartial
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -63,7 +65,7 @@ class TokensEmspClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/$countryCode/$partyId/$tokenUid",
-                    body = mapper.writeValueAsString(token),
+                    body = mapper.serializeObject(token),
                     queryParams = listOfNotNull(
                         type?.let { "type" to type.toString() },
                     ).toMap(),
@@ -88,7 +90,7 @@ class TokensEmspClient(
                 HttpRequest(
                     method = HttpMethod.PATCH,
                     path = "/$countryCode/$partyId/$tokenUid",
-                    body = mapper.writeValueAsString(token),
+                    body = mapper.serializeObject(token),
                     queryParams = listOfNotNull(
                         type?.let { "type" to type.toString() },
                     ).toMap(),

@@ -5,6 +5,8 @@ import com.izivia.ocpi.toolkit.modules.commands.domain.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -38,7 +40,7 @@ class CommandEmspClient(
                 HttpRequest(
                     method = HttpMethod.POST,
                     path = "/START_SESSION",
-                    body = mapper.writeValueAsString(
+                    body = mapper.serializeObject(
                         StartSession(
                             responseUrl = "$callbackBaseUrl/START_SESSION/callback/$callbackReference",
                             token = token,
@@ -67,7 +69,7 @@ class CommandEmspClient(
                 HttpRequest(
                     method = HttpMethod.POST,
                     path = "/STOP_SESSION",
-                    body = mapper.writeValueAsString(
+                    body = mapper.serializeObject(
                         StopSession(
                             responseUrl = "$callbackBaseUrl/STOP_SESSION/callback/$callbackReference",
                             sessionId = sessionId,
@@ -97,7 +99,7 @@ class CommandEmspClient(
                 HttpRequest(
                     method = HttpMethod.POST,
                     path = "/RESERVE_NOW",
-                    body = mapper.writeValueAsString(
+                    body = mapper.serializeObject(
                         ReserveNow(
                             responseUrl = "$callbackBaseUrl/RESERVE_NOW/callback/$callbackReference",
                             token = token,
@@ -127,7 +129,7 @@ class CommandEmspClient(
                 HttpRequest(
                     method = HttpMethod.POST,
                     path = "/CANCEL_RESERVATION",
-                    body = mapper.writeValueAsString(
+                    body = mapper.serializeObject(
                         CancelReservation(
                             responseUrl = "$callbackBaseUrl/CANCEL_RESERVATION/callback/$callbackReference",
                             reservationId = reservationId,
@@ -154,7 +156,7 @@ class CommandEmspClient(
                 HttpRequest(
                     method = HttpMethod.POST,
                     path = "/UNLOCK_CONNECTOR",
-                    body = mapper.writeValueAsString(
+                    body = mapper.serializeObject(
                         UnlockConnector(
                             responseUrl = "$callbackBaseUrl/UNLOCK_CONNECTOR/callback/$callbackReference",
                             locationId = locationId,

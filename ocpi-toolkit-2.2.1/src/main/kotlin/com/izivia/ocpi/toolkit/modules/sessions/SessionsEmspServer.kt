@@ -7,6 +7,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
+import com.izivia.ocpi.toolkit.serialization.deserializeObject
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
@@ -58,7 +60,7 @@ class SessionsEmspServer(
                         countryCode = req.pathParam("countryCode"),
                         partyId = req.pathParam("partyId"),
                         sessionId = req.pathParam("sessionId"),
-                        session = mapper.readValue(req.body, Session::class.java),
+                        session = mapper.deserializeObject<Session>(req.body),
                     )
             }
         }
@@ -77,7 +79,7 @@ class SessionsEmspServer(
                         countryCode = req.pathParam("countryCode"),
                         partyId = req.pathParam("partyId"),
                         sessionId = req.pathParam("sessionId"),
-                        session = mapper.readValue(req.body, SessionPartial::class.java),
+                        session = mapper.deserializeObject<SessionPartial>(req.body),
                     )
             }
         }

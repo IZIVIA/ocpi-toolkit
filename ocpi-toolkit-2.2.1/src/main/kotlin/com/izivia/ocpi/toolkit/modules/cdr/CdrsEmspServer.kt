@@ -6,6 +6,7 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
@@ -40,7 +41,7 @@ class CdrsEmspServer(
             val url = runCatching {
                 service
                     .postCdr(
-                        cdr = mapper.readValue(req.body, Cdr::class.java),
+                        cdr = mapper.deserializeObject(req.body, Cdr::class.java),
                     )
             }
             req.respondNothing(timeProvider.now()) { url.getOrThrow() }

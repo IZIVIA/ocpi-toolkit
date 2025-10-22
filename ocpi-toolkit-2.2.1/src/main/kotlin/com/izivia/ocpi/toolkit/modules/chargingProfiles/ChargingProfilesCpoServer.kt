@@ -6,6 +6,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
+import com.izivia.ocpi.toolkit.serialization.deserializeObject
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
@@ -52,7 +54,7 @@ class ChargingProfilesCpoServer(
                 service
                     .putChargingProfile(
                         sessionId = req.pathParam("sessionId"),
-                        setChargingProfile = mapper.readValue(req.body, SetChargingProfile::class.java),
+                        setChargingProfile = mapper.deserializeObject<SetChargingProfile>(req.body),
                     )
             }
         }

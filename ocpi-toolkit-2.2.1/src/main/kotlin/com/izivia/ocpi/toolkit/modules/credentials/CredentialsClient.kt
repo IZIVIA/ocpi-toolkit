@@ -2,6 +2,8 @@ package com.izivia.ocpi.toolkit.modules.credentials
 
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
@@ -35,7 +37,7 @@ class CredentialsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.POST,
-                    body = mapper.writeValueAsString(credentials),
+                    body = mapper.serializeObject(credentials),
                 )
                     .withRequiredHeaders(
                         requestId = transportClient.generateRequestId(),
@@ -54,7 +56,7 @@ class CredentialsClient(
             .send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    body = mapper.writeValueAsString(credentials),
+                    body = mapper.serializeObject(credentials),
                 )
                     .withRequiredHeaders(
                         requestId = transportClient.generateRequestId(),
@@ -74,6 +76,6 @@ class CredentialsClient(
                     )
                     .authenticate(token = token),
             )
-            .parseResultOrNull<Any>()
+            .parseResultOrNull<String>()
     }
 }

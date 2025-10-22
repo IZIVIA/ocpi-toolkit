@@ -8,6 +8,8 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.MutableVersionsRepository
+import com.izivia.ocpi.toolkit.serialization.deserializeObject
+import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
@@ -65,7 +67,7 @@ class TokensCpoServer(
                         partyId = req.pathParam("partyId"),
                         tokenUid = req.pathParam("tokenUid"),
                         type = req.optionalQueryParamAs("type", TokenType::valueOf) ?: TokenType.RFID,
-                        token = mapper.readValue(req.body, Token::class.java),
+                        token = mapper.deserializeObject<Token>(req.body),
                     )
             }
         }
@@ -86,7 +88,7 @@ class TokensCpoServer(
                         partyId = req.pathParam("partyId"),
                         tokenUid = req.pathParam("tokenUid"),
                         type = req.optionalQueryParamAs("type", TokenType::valueOf) ?: TokenType.RFID,
-                        token = mapper.readValue(req.body, TokenPartial::class.java),
+                        token = mapper.deserializeObject<TokenPartial>(req.body),
                     )
             }
         }

@@ -1,7 +1,5 @@
 package com.izivia.ocpi.toolkit.modules.locations.domain
 
-import com.fasterxml.jackson.annotation.JsonSetter
-import com.fasterxml.jackson.annotation.Nulls
 import com.izivia.ocpi.toolkit.annotations.Partial
 import com.izivia.ocpi.toolkit.common.CiString
 import java.time.Instant
@@ -38,7 +36,6 @@ data class Connector(
     val maxVoltage: Int,
     val maxAmperage: Int,
     val maxElectricPower: Int? = null,
-    @JsonSetter(contentNulls = Nulls.SKIP)
     val tariffIds: List<CiString>? = null,
     val termsAndConditions: String? = null,
     val lastUpdated: Instant,

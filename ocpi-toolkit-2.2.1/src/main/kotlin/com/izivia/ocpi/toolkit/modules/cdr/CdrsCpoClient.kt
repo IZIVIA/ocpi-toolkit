@@ -4,6 +4,8 @@ import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -47,7 +49,7 @@ class CdrsCpoClient(
             send(
                 HttpRequest(
                     method = HttpMethod.POST,
-                    body = mapper.writeValueAsString(cdr),
+                    body = mapper.serializeObject(cdr),
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId(),

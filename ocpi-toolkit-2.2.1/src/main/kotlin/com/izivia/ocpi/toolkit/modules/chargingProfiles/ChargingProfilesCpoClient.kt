@@ -7,6 +7,8 @@ import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileRe
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ClearProfileResult
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -45,7 +47,7 @@ class ChargingProfilesCpoClient(
             HttpRequest(
                 method = HttpMethod.POST,
                 path = responseUrl,
-                body = mapper.writeValueAsString(result),
+                body = mapper.serializeObject(result),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -53,7 +55,7 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseResultOrNull<Any>()
+            .parseResultOrNull<String>()
     }
 
     suspend fun postCallbackChargingProfile(
@@ -64,7 +66,7 @@ class ChargingProfilesCpoClient(
             HttpRequest(
                 method = HttpMethod.POST,
                 path = responseUrl,
-                body = mapper.writeValueAsString(result),
+                body = mapper.serializeObject(result),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -72,7 +74,7 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseResultOrNull<Any>()
+            .parseResultOrNull<String>()
     }
 
     suspend fun postCallbackClearProfile(
@@ -83,7 +85,7 @@ class ChargingProfilesCpoClient(
             HttpRequest(
                 method = HttpMethod.POST,
                 path = responseUrl,
-                body = mapper.writeValueAsString(result),
+                body = mapper.serializeObject(result),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -91,7 +93,7 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseResultOrNull<Any>()
+            .parseResultOrNull<String>()
     }
 
     suspend fun putActiveChargingProfile(
@@ -102,7 +104,7 @@ class ChargingProfilesCpoClient(
             HttpRequest(
                 method = HttpMethod.PUT,
                 path = "/$sessionId",
-                body = mapper.writeValueAsString(activeChargingProfile),
+                body = mapper.serializeObject(activeChargingProfile),
             )
                 .withRequiredHeaders(
                     requestId = generateRequestId(),
@@ -110,6 +112,6 @@ class ChargingProfilesCpoClient(
                 )
                 .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
         )
-            .parseResultOrNull<Any>()
+            .parseResultOrNull<String>()
     }
 }

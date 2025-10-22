@@ -7,6 +7,8 @@ import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferencesRespon
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -81,7 +83,7 @@ class SessionsEmspClient(
                 HttpRequest(
                     method = HttpMethod.PUT,
                     path = "/$sessionId/charging_preferences",
-                    body = mapper.writeValueAsString(chargingPreferences),
+                    body = mapper.serializeObject(chargingPreferences),
                 ).withRequiredHeaders(
                     requestId = generateRequestId(),
                     correlationId = generateCorrelationId(),

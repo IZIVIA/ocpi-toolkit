@@ -6,6 +6,8 @@ import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileRe
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.SetChargingProfile
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
+import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -58,7 +60,7 @@ class ChargingProfilesScspClient(
             HttpRequest(
                 method = HttpMethod.PUT,
                 path = "/$sessionId",
-                body = mapper.writeValueAsString(
+                body = mapper.serializeObject(
                     SetChargingProfile(
                         chargingProfile = chargingProfile,
                         responseUrl = "$callbackBaseUrl/" +
