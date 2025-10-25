@@ -31,7 +31,7 @@ publishing {
             from(components["java"])
 
             pom {
-                name.set("OCPI 2.2.1 kotlinx.kotlinx-serialization")
+                name.set("OCPI 2.2.1 kotlinx serialization")
                 artifactId = "ocpi-2-2-1-kotlinx-serialization"
                 description.set("Kotlinx Serialization serializers for OCPI data classes")
             }

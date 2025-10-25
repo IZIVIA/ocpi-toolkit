@@ -20,7 +20,7 @@ publishing {
             from(components["java"])
 
             pom {
-                name.set("OCPI 2.2.1 kotlinx.jackson")
+                name.set("OCPI 2.2.1 jackson serialization")
                 artifactId = "ocpi-2-2-1-jackson"
                 description.set("Jackson serializers for OCPI data classes")
             }
