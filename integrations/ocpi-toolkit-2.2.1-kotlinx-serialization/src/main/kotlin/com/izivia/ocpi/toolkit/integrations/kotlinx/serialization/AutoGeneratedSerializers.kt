@@ -10,6 +10,7 @@ import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.*
 import com.izivia.ocpi.toolkit.modules.commands.domain.*
 import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
+import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ClientInfo
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferences
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferencesPartial
@@ -135,6 +136,9 @@ import java.time.Instant
         DisplayTextPartial::class,
         Price::class,
         PricePartial::class,
+
+        // HubClientInfo
+        ClientInfo::class,
     ],
     customClassSerializers = [
         // Built-in types

@@ -7,6 +7,8 @@ import com.izivia.ocpi.toolkit.modules.commands.domain.*
 import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Role
+import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ClientInfo
+import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ConnectionStatus
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ProfileType
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
@@ -474,6 +476,14 @@ object MappingData {
                 url = "url",
             ),
         ),
+    )
+
+    val clientInfo = ClientInfo(
+        partyId = "ABC",
+        countryCode = "DE",
+        role = Role.CPO,
+        status = ConnectionStatus.OFFLINE,
+        lastUpdated = timestamp,
     )
 
     fun <T> ocpiResponseBody(data: T) = OcpiResponseBody(

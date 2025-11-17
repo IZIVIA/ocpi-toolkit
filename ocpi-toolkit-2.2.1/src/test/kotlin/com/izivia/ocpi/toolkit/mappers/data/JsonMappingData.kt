@@ -611,6 +611,16 @@ object JsonMappingData {
         }
     """.trimIndent()
 
+    val clientInfo = """
+        {
+          "party_id": "ABC",
+          "country_code": "DE",
+          "role": "CPO",
+          "status": "OFFLINE",
+          "last_updated": "2025-01-02T13:45:59.708Z"
+        }
+    """.trimIndent()
+
     fun ocpiResponseBody(data: String) = """
         {
           "data" : $data,
