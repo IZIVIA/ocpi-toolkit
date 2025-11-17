@@ -12,6 +12,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
 import com.izivia.ocpi.toolkit.integrations.jackson.mixins.*
+import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ConnectionStatus
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
 import java.time.Instant
@@ -46,6 +47,7 @@ class JacksonOcpiSerializer : OcpiSerializer() {
         .addMixIn(ParkingRestriction::class.java, ParkingRestrictionMixin::class.java)
         .addMixIn(ParkingType::class.java, ParkingTypeMixin::class.java)
         .addMixIn(Connector::class.java, ConnectorMixin::class.java)
+        .addMixIn(ConnectionStatus::class.java, ConnectionStatusMixin::class.java)
 
     override val name: String = "jackson"
 

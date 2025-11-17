@@ -31,3 +31,8 @@ enum class ParkingTypeMixin {
     @JsonEnumDefaultValue
     OTHER,
 }
+
+enum class ConnectionStatusMixin {
+    @JsonEnumDefaultValue
+    OTHER,
+}
