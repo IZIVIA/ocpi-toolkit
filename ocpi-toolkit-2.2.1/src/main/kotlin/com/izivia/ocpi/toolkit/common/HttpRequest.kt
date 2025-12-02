@@ -122,14 +122,14 @@ suspend fun HttpRequest.defaultHeadersOrErrorHandling(
     return try {
         fn()
     } catch (e: OcpiException) {
-        logger.warn(e)
+        logger.warn("could not handle request", e)
         e.toHttpResponse(now)
     } catch (e: HttpException) {
         HttpResponse(status = e.status)
     } catch (e: Exception) {
         // at this point, we should only encounter well-defined OcpiExceptions, or unhandled server errors
         // all other issues, like auth and json deserialization should have happened before
-        logger.error(e)
+        logger.error("could not handle request", e)
         OcpiServerGenericException("Generic server error").toHttpResponse(now)
     }.withHeadersMixin(baseHeaders)
 }
