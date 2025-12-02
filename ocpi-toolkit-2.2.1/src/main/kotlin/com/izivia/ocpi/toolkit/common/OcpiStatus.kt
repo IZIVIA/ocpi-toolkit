@@ -85,6 +85,9 @@ enum class OcpiStatus(val code: Int) {
      * Used when status code in response is unknown, most likely a custom code
      */
     UNKNOWN(9999),
+    ;
+
+    fun isSuccess(): Boolean = code in 1000..1999
 }
 
 fun Int.toOcpiStatus(): OcpiStatus = OcpiStatus.values().firstOrNull { it.code == this } ?: OcpiStatus.UNKNOWN
