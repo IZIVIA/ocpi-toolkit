@@ -2,11 +2,12 @@ package com.izivia.ocpi.toolkit.modules.tariff.services
 
 import com.izivia.ocpi.toolkit.common.validation.*
 import com.izivia.ocpi.toolkit.modules.locations.services.validate
-import com.izivia.ocpi.toolkit.modules.tariff.domain.PriceComponentPartial
-import com.izivia.ocpi.toolkit.modules.tariff.domain.TariffElementPartial
-import com.izivia.ocpi.toolkit.modules.tariff.domain.TariffPartial
-import com.izivia.ocpi.toolkit.modules.tariff.domain.TariffRestrictionsPartial
+import com.izivia.ocpi.toolkit.modules.tariff.domain.*
 import org.valiktor.validate
+
+fun Tariff.validate(): Tariff = validate(this) {
+    toPartial().validate()
+}
 
 fun TariffPartial.validate(): TariffPartial = validate(this) {
     validate(TariffPartial::countryCode).isCountryCode(caseSensitive = false, alpha2 = true)
