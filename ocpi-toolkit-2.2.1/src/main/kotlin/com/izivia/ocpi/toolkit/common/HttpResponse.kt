@@ -41,27 +41,17 @@ inline fun <reified T, reified P : Partial<T>> HttpResponse.parseSearchResultIgn
  * information. Any error information contained in HTTP request or OCPI body gets converted into Exceptions.
  * @param offset
  */
-inline fun <reified T> HttpResponse.parseSearchResult(offset: Int): SearchResult<T> {
-    if (!status.success()) throw HttpException(status, status.name)
-    if (body.isNullOrBlank()) throw OcpiToolkitResponseParsingException("missing obligatory body in response")
-
-    val list = runCatching { mapper.deserializeOcpiResponseList<T>(body) }
-        .onFailure { e ->
-            throw OcpiToolkitResponseParsingException("Response cannot be parsed: $body", e)
-        }
-        .getOrNull()
-        ?.also { it.maybeThrowOcpiException(status) }
-        ?.data ?: emptyList()
-
-    return list.toSearchResult(
-        totalCount = getHeader(Header.X_TOTAL_COUNT)?.toInt()
-            ?: throw OcpiToolkitMissingRequiredResponseHeaderException(Header.X_TOTAL_COUNT),
-        limit = getHeader(Header.X_LIMIT)?.toInt()
-            ?: throw OcpiToolkitMissingRequiredResponseHeaderException(Header.X_LIMIT),
-        offset = offset,
-        nextPageUrl = getHeader(Header.LINK)?.split("<")?.elementAtOrNull(1)?.split(">")?.first(),
-    )
-}
+inline fun <reified T> HttpResponse.parseSearchResult(offset: Int): SearchResult<T> =
+    parseOcpiResponseBodyAndHandleErrors { mapper.deserializeOcpiResponseList<T>(body) }
+        .orEmpty()
+        .toSearchResult(
+            totalCount = getHeader(Header.X_TOTAL_COUNT)?.toInt()
+                ?: throw OcpiToolkitMissingRequiredResponseHeaderException(Header.X_TOTAL_COUNT),
+            limit = getHeader(Header.X_LIMIT)?.toInt()
+                ?: throw OcpiToolkitMissingRequiredResponseHeaderException(Header.X_LIMIT),
+            offset = offset,
+            nextPageUrl = getHeader(Header.LINK)?.split("<")?.elementAtOrNull(1)?.split(">")?.first(),
+        )
 
 /**
  * Parse body of a request that should contain data, usually POST commands.
@@ -85,43 +75,52 @@ inline fun <reified T> HttpResponse.parseOptionalResult(): T? {
     return parseResultOrNull()
 }
 
-inline fun <reified T> HttpResponse.parseResultListOrNull(): List<T>? {
-    if (!status.success()) throw HttpException(status, status.name)
-    if (body.isNullOrBlank()) throw OcpiToolkitResponseParsingException("missing obligatory body in response")
+inline fun <reified T> HttpResponse.parseResultListOrNull(): List<T>? =
+    parseOcpiResponseBodyAndHandleErrors { mapper.deserializeOcpiResponseList<T>(body) }
 
-    return runCatching { mapper.deserializeOcpiResponseList<T>(body) }
-        .onFailure { e ->
-            throw OcpiToolkitResponseParsingException("Response cannot be parsed: $body", e)
-        }
-        .getOrNull()
-        ?.also { it.maybeThrowOcpiException(status) }
-        ?.data
-}
+inline fun <reified T> HttpResponse.parseResultOrNull(): T? =
+    parseOcpiResponseBodyAndHandleErrors { mapper.deserializeOcpiResponse<T>(it) }
 
 /**
  * Parse body of a request that might contain data, like PUT/PATCH calls.
  * Any error information contained in HTTP request or OcpiResponseBody gets converted into Exceptions.
  */
-inline fun <reified T> HttpResponse.parseResultOrNull(): T? {
-    if (!status.success()) throw HttpException(status, status.name)
-    if (body.isNullOrBlank()) throw OcpiToolkitResponseParsingException("missing obligatory body in response")
+inline fun <reified T> HttpResponse.parseOcpiResponseBodyAndHandleErrors(
+    deserializeFn: (String?) -> OcpiResponseBody<T>,
+): T? {
+    if (!status.success()) {
+        // We know there was an error, so an exception must be thrown, we will try to throw an OcpiException if the
+        // error is formatted as an OCPI error
+        runCatching { deserializeFn(body) }
+            .getOrElse {
+                // If deserialization fails, it means that the response is probably not an OCPI error (if it is, it is
+                // incorrectly formatted, so we read it as a regular HttpException)
+                throw HttpException(status, status.name)
+            }
+            .throwOcpiException(status)
+    }
 
-    return runCatching { mapper.deserializeOcpiResponse<T>(body) }
-        .onFailure { e ->
+    // We know the message is a success, so it must be formatted as an OCPI response, so we can safely throw an
+    // exception if it is not the case
+    return runCatching { deserializeFn(body) }
+        .getOrElse { e ->
             throw OcpiToolkitResponseParsingException("Response cannot be parsed: $body", e)
         }
-        .getOrNull()
-        ?.also { it.maybeThrowOcpiException(status) }
-        ?.data
+        .also { parsedOcpiResponse ->
+            // who knows, maybe the partner responded with 200 or 201, but the OCPI payload is an error, in that case
+            // throw the error
+            if (!parsedOcpiResponse.statusCode.toOcpiStatus().isSuccess()) {
+                parsedOcpiResponse.throwOcpiException(status)
+            }
+        }
+        .data
 }
 
-inline fun <reified T> OcpiResponseBody<T>.maybeThrowOcpiException(httpStatus: HttpStatus = HttpStatus.OK) {
-    if (statusCode != OcpiStatus.SUCCESS.code) {
-        throw OcpiException(
-            httpStatus = httpStatus,
-            ocpiStatus = statusCode.toOcpiStatus(),
-            ocpiStatusCode = statusCode,
-            message = statusMessage ?: "",
-        )
-    }
+inline fun <reified T> OcpiResponseBody<T>.throwOcpiException(httpStatus: HttpStatus) {
+    throw OcpiException(
+        httpStatus = httpStatus,
+        ocpiStatus = statusCode.toOcpiStatus(),
+        ocpiStatusCode = statusCode,
+        message = statusMessage.orEmpty(),
+    )
 }
