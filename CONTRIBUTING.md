@@ -53,7 +53,7 @@ which alternatives do not work for you.
 You must never report security related issues, vulnerabilities
 or bugs including sensitive information to the issue tracker,
 or elsewhere in public. Instead sensitive bugs must be sent by
-email to `lilian@gallon.dev`.
+email to `gallon.lilian@gmail.com`.
 
 - Open an [Issue](/issues/new). (Since we can't be sure at this
 point whether it is a bug or not, we ask you not to talk about a
