@@ -6,6 +6,9 @@ plugins {
 }
 
 dependencies {
+    implementation("dev.gallon:konstruct:${Versions.konstruct}")
+    ksp("dev.gallon:konstruct:${Versions.konstruct}")
+
     internal(project(":annotation-processor"))
     ksp(project(":annotation-processor"))
 
