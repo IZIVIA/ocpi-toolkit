@@ -17,6 +17,7 @@ object Versions {
     // Used for kotlinx.serialization integration
     const val kotlinxSerializationPlugin = "2.2.0"
     const val kotlinxSerializationDependency = "1.9.0"
+    const val konstruct = "1.0.0"
 
     // Used only for tests
     const val logback = "1.5.6"

@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.integrations.kotlinx.serialization
 
 import com.izivia.ocpi.toolkit.common.OcpiResponseBody
-import com.izivia.ocpi.toolkit.integrations.kotlinx.serialization.generated.generatedSerializersModule
 import com.izivia.ocpi.toolkit.integrations.kotlinx.serialization.serializers.*
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
@@ -14,6 +13,11 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import java.math.BigDecimal
 import java.time.Instant
+import dev.gallon.konstruct.generated.ocpiSerializersModule as generatedOcpiSerializersModule
+
+// By doing this, the generated serializers module is exposed by the OCPI lib and not konstruct lib (which would be
+// weird for any user of the ocpi lib)
+val ocpiSerializersModule = generatedOcpiSerializersModule
 
 @Suppress("UNCHECKED_CAST")
 @OptIn(ExperimentalSerializationApi::class)
@@ -33,7 +37,7 @@ class KotlinxOcpiSerialization : OcpiSerializer() {
 
         serializersModule = SerializersModule {
             // Ocpi domain (generated)
-            include(generatedSerializersModule)
+            include(ocpiSerializersModule)
 
             // Primitives
             contextual(BigDecimal::class, BigDecimalSerializer)
