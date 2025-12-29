@@ -1,99 +1,139 @@
 # Ocpi Toolkit
 
-![CI](https://img.shields.io/github/actions/workflow/status/izivia/ocpi-toolkit/ci.yml?style=for-the-badge) ![Latest Release](https://img.shields.io/github/v/tag/izivia/ocpi-toolkit?style=for-the-badge&label=latest%20version)
+![CI](https://img.shields.io/github/actions/workflow/status/izivia/ocpi-toolkit/ci.yml?style=flat-square) ![Maven Central](https://img.shields.io/maven-central/v/com.izivia/ocpi-2-2-1?style=flat-square&filter=!1.1) ![License](https://img.shields.io/github/license/izivia/ocpi-toolkit?style=flat-square)
 
-Open Charge Point Interface (OCPI) kotlin library.
+**The reference Kotlin library for implementing the OCPI (Open Charge Point Interface) protocol.**
 
-> ⚠️ Currently in active development. Not ready for production yet. See https://github.com/IZIVIA/ocpi-toolkit/issues/33 for details.
+This toolkit provides a complete implementation of the **business logic** and **validation rules** of OCPI, leaving you free to choose your technical stack for transport (HTTP frameworks, databases).
 
-## Setup
+Why use it?
+*   **Compliant**: Rigorously implements OCPI 2.2.1 standard. Currently used in production.
+*   **Flexible**: Agnostic of HTTP framework (Spring, Ktor, Http4k...) and persistence.
+*   **Robust**: Automatic handling of validations and protocol error cases.
 
-In your `build.gradle.kts`, add:
+---
 
-```kts
+## Quick Install
+
+Simply add the dependency via Gradle:
+
+```kotlin
 dependencies {
-    implementation("com.izivia:ocpi-2-2-1:0.0.15")
-    implementation("com.izivia:ocpi-transport:0.0.15")
+    implementation("com.izivia:ocpi-2-2-1:LATEST_VERSION")
+    implementation("com.izivia:ocpi-transport:LATEST_VERSION")
+
+    // If you want to use Kotlinx Serialization
+    implementation("com.izivia:ocpi-2-2-1-kotlinx-serialization:LATEST_VERSION")
+    // If you want to use Jackson
+    implementation("com.izivia:ocpi-2-2-1-jackson:LATEST_VERSION")
 }
 ```
 
-To see all available artifacts, go to: https://central.sonatype.com/search?namespace=com.izivia&q=ocpi
+> See all available versions on [Maven Central](https://central.sonatype.com/search?namespace=com.izivia&q=ocpi).
 
-## Usage
+---
 
-**You have the following updated code samples in [ocpi-toolkit-2.2.1/src/test](https://github.com/IZIVIA/ocpi-toolkit/tree/main/ocpi-toolkit-2.2.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples).**
+## Quick Start
 
-### Server (CPO or eMSP)
+Start an OCPI server in 5 minutes.
 
-Examples:
-- [Http4kTransportServer](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/Http4kTransportServer.kt): `TransportServer` implementation example
-- [PartnerMongoRepository](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/tests/integration/mock/PartnerMongoRepository.kt): `PartnerRepository` implementation example
-- [VersionsCacheRepository](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/VersionsCacheRepository.kt): `VersionsRepository` implementation example
-- [VersionDetailsCacheRepository](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/VersionDetailsCacheRepository.kt): `VersionsDetailsRepository` implementation example
-
-**Common code (CPO / eMSP):**
+> **Note**: `TransportServer` is an interface you must implement (or use an existing implementation like in our samples) to bind the toolkit to your preferred HTTP server.
 
 ```kotlin
-// PartnerMongoRepository is an implementation of PartnerRepository using mongo
-// It will be used to store information about partners with whom the server is communicating:
-// A partner has: Tokens (A, serverToken, clientToken), Endpoints, Versions, Roles
-// You can see an  example in the list above
-val partnerRepository = PartnerMongoRepository(
-    collection = mongoDatabase.getCollection<Location>(config.partnerCollection)
-)
+// 1. Instantiate your transport server (fictional example here)
+val server = MyTransportServer(port = 8080, baseUrl = "http://localhost:8080")
 
-// Http4kTransportServer is an implementation of TransportServer using htt4k. You have to code your own implementation.
-// It defines the HTTP server, and how to handle requests.
-// You can see an  example in the list above
-val server = Http4kTransportServer(
-    baseUrl = config.baseUrl, // Example: http://localhost:8080, only used for pagination
-    port = config.port, // Example: 8080, used to know on which port the server will run
-    secureFilter = senderPartnerRepository::checkToken // The filter called on secured routes
-)
-
-// VersionsCacheRepository is an implementation of VersionsRepository
-// It defines which OCPI version the server support, and the endpoints associated with it
-// You can see an  example in the list above
+// 2. Configure the repository for versions (OCPI support)
 val versionsRepository = VersionsCacheRepository()
 
-// VersionDetailsCacheRepository is an implementation of VersionDetailRepository
-// It defines the available modules (and their endpoint) for the given version
-// You can see an  example in the list above
-val versionDetailsRepository = VersionDetailsCacheRepository()
-
-// Required: defines /versions endpoint
+// 3. Mount the "Versions" module (OCPI entry point)
 VersionsServer(
     validationService = VersionsValidationService(
         repository = versionsRepository
     )
 ).registerOn(server)
 
-// Required: defines /2.1.1, /2.2.1, whatever version endpoint
-VersionDetailsServer(
-    validationService = VersionDetailsValidationService(
-        repository = versionDetailsRepository
-    )
-).registerOn(server)
+// 4. Start!
+server.start()
+```
 
-// Required: defines /{version}/credentials endpoint for any client to register following OCPI protocol
+---
+
+## Core Concepts
+
+`ocpi-toolkit` follows a "**Bring Your Own Infrastructure**" philosophy:
+
+1.  **Toolkit** (What we provide): Controllers, data validation, OCPI logic, DTOs.
+2.  **Infrastructure** (What you provide):
+    *   `TransportServer` / `TransportClient`: How to send/receive HTTP.
+    *   `Repositories`: How to store data (Mongo, SQL, In-Memory...).
+
+---
+
+## Usage Examples
+
+### 1. Credentials Handshake (Registration)
+
+OCPI requires a handshake process where two platforms exchange tokens to start communicating.
+
+#### As a Receiver (Server)
+
+If you want to allow other platforms to register with you (e.g. you are a CPO allowing eMSPs to connect):
+
+```kotlin
+// 1. Service handling the logic
+val credentialsService = CredentialsServerService(
+    partnerRepository = partnerRepository,
+    credentialsRoleRepository = object : CredentialsRoleRepository { ... }, // Define your role
+    transportClientBuilder = Http4kTransportClientBuilder(),
+    serverVersionsUrlProvider = { "https://myserver.com/versions" }
+)
+
+// 2. Register the module on the server
 CredentialsServer(
-    service = CredentialsServerService(
-        partnerRepository = partnerRepository,
-        credentialsRoleRepository = object : CredentialsRoleRepository { ... },
-        transportClientBuilder = Http4kTransportClientBuilder(),
-        serverVersionsUrl = { versionsUrl }
-    )
+    service = credentialsService
 ).registerOn(server)
 ```
 
-**CPO code:**
+Now, any partner with a valid `TOKEN_A` (that you gave them out-of-band) can perform the handshake against your server.
+
+#### As a Sender (Client)
+
+If you want to register with another platform (e.g. you are an eMSP connecting to a CPO):
 
 ```kotlin
-// LocationsCpoMongoService is an implementation of LocationsCpoService
-// Used to know how to retrieve locations
-val locationsService = LocationsCpoMongoService()
+// 1. Setup the service
+val credentialsClientService = CredentialsClientService(
+    clientVersionsEndpointUrl = "https://myserver.com/versions",
+    clientPartnerRepository = partnerRepository,
+    clientVersionsRepository = versionsRepository,
+    clientCredentialsRoleRepository = object : CredentialsRoleRepository { ... },
+    partnerId = "PARTNER_ID", // The ID of the partner you want to connect to (in your local DB)
+    transportClientBuilder = Http4kTransportClientBuilder()
+)
 
-// Defines /{version}/locations endpoint for any registered client to retrieve locations
+// 2. Perform the handshake
+// This will:
+// - Use TOKEN_A (stored in DB) to authenticate
+// - Exchange versions
+// - Generate TOKEN_B and send it to receiver
+// - Receive TOKEN_C and store it
+credentialsClientService.register()
+```
+
+### 2. Server Side (CPO): Exposing Charging Points
+
+Complete example to expose your charging stations.
+
+```kotlin
+// Repositories (implement the interfaces provided by the toolkit)
+val partnerRepository = MyPartnerRepository() // Stores partner credentials
+val locationsService = LocationsCpoMongoService() // Your logic to retrieve locations
+
+// HTTP Server
+val server = Http4kTransportServer(port = 8080, baseUrl = "http://myserver.com")
+
+// Configure Locations module (CPO)
 LocationsCpoServer(
     transportServer = server,
     service = LocationsCpoValidationService(
@@ -102,127 +142,69 @@ LocationsCpoServer(
     partnerRepository = partnerRepository
 ).registerOn(server)
 
-// Once that all the modules are defined, you need to start the server
 server.start()
 ```
 
-**eMSP code:**
+### 3. Client Side (eMSP): Retrieving Charging Points
+
+Example to connect to a CPO and list their stations.
 
 ```kotlin
-// LocationsEmspMongoService is an implementation of LocationsEmspService
-// Used to know how to read / create / update / delete locations
-val locationsService = LocationsEmspMongoService()
-
-// Defines /{version}/locations endpoint for any registered client to retrieve locations (and also create / update /
-// delete)
-LocationsEmspServer(
-    service = LocationsEmspValidationService(
-        service = LocationsApiClient(
-            channel = chargingInfrastructureChannel
-        )
-    )
-).registerOn(server)
-
-// Once that all the modules are defined, you need to start the server
-server.start()
-```
-
-**Optional arguments**
-
-It is possible to change the default path of a module using `basePath` argument:
-
-```kotlin
-LocationsEmspServer(
-    service = service,
-    basePath = "/2.1.1/cpo/locations"
-).registerOn(server)
-```
-
-Make sure that `VersionDetailsRepository` points to the right endpoint (in that case `/2.1.1/cpo/locations`)
-for the `locations` module.
-
-### Client
-
-Examples:
-- [Http4kTransportClient](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/Http4kTransportClient.kt): `TransportClient` implementation example
-- [Http4kTransportClientBuilder](ocpi-toolkit-2.1.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples/common/Http4kTransportClientBuilder.kt): `TransportClientBuilder` implementation example
-
-> **Note:** Since you need to register to communicate with a server (CPO or eMSP), to use the client, you must have a
-> server defined with version & versionDetails modules. During registration, the receiver will make requests to these
-> endpoints to retrieve the latest available version between the two servers. Note that if you strictly follow the OCPI
-> protocol, you must also have a credentials module set. We don't enforce that in the lib.
-
-**Common (registration)**
-
-```kotlin
-// sender: the one that wants to register
-// receiver: the one that receives the registration request
-
-// PartnerMongoRepository is an implementation of PartnerRepository using mongo
-// It will be used to store information about partners with whom the client is communicating:
-// A partner has: Tokens (A, B, C), Endpoints, Versions
-// You can see an  example in the list above
-val senderPartnerRepository = PartnerMongoRepository(
-    collection = mongoDatabase.getCollection<Location>(config.partnerCollection)
-)
-
-// VersionsCacheRepository is an implementation of VersionsRepository
-// It defines which OCPI version the client supports, and the endpoints associated with it
-// You can see an  example in the list above
-val senderVersionsRepository = VersionsCacheRepository()
-
-// Will be sent during registration for the receiver to use to request what versions the sender supports
-val senderVersionsEndpoint = "https://sender.com/versions"
-
-// Will be the first endpoint used by the sender to perform the registration process:
-// - First it retrieves the available versions, it picks the latest
-// - Then it retrieves the details of that version
-// - Finally it requests a registration on the credentials module of the receiver
-val receiverVersionsEndpoint = "https://receiver.com/versions"
-
-// Http4kTransportClientBuilder is used to build a transport client during runtime to make all the
-// registration process for you. You can do everything manually, but it's recommended to use CredentialsClientService.
-
-val credentialsClientService = CredentialsClientService(
-    clientVersionsEndpointUrl = senderVersionsEndpint,
-    partnerRepository = senderPartnerRepository,
-    clientVersionsRepository = senderVersionsRepository,
-    credentialsRoleRepository = object : CredentialsRoleRepository { ... },
-    serverVersionsUrlProvider = { receiverVersionsEndpoint },
-    transportClientBuilder = Http4kTransportClientBuilder()
-)
-
-credentialsClientService.register()
-```
-
-**Communicating with an eMSP**
-
-```kotlin
-// Now that the CPO is registered with the eMSP, all the information (tokens & endpoints) is stored in
-// partnerRepository. It is now possible to access the locations module of the eMSP using LocationsCpoClient.
-
+// Client for the Locations module
 val locationsCpoClient = LocationsCpoClient(
     transportClientBuilder = Http4kTransportClientBuilder(),
-    serverVersionsEndpointUrl = "https://emsp.com/versions", // Used as ID for the partner (to retrieve information)
-    partnerRepository = partnerRepository
+    serverVersionsEndpointUrl = "https://cpo.com/versions", // CPO entry point
+    partnerRepository = MyPartnerRepository()
 )
 
-// Example on how to get a specific location
-locationsCpoClient.getLocation(countryCode = "fr", partyId = "abc", locationId = "location1")
+// Calling a business method (auth & transport handled transparently)
+val location = locationsCpoClient.getLocation(
+    countryCode = "fr",
+    partyId = "abc",
+    locationId = "loc123"
+)
+println("Retrieved location: ${location}")
 ```
 
-**Communicating with a CPO**
+### 4. Implementing Transport
+
+To use the toolkit, you must implement the `TransportServer` interface. Here is what it might look like with an imaginary framework:
 
 ```kotlin
-// Now that the eMSP is registered with the CPO, all the information (tokens & endpoints) is stored in
-// partnerRepository. It is now possible to access the locations module of the CPO using LocationsEmspClient.
+class MyTransportServer(val port: Int) : TransportServer {
+    override fun start() {
+        // Start your real web server here
+        MyWebServer.listen(port)
+    }
 
-val locationsEmspClient = LocationsEmspClient(
-    transportClientBuilder = Http4kTransportClientBuilder(),
-    serverVersionsEndpointUrl = "https://cpo.com/versions",
-    partnerRepository = partnerRepository
-)
-
-// Example on how to get a specific location
-locationsEmspClient.getLocation(locationId = "location1")
+    override fun handle(
+        method: HttpMethod,
+        path: List<PathSegment>,
+        queryParams: List<String>,
+        filters: List<(request: HttpRequest) -> Unit>,
+        callback: suspend (request: HttpRequest) -> HttpResponse
+    ) {
+        // Bind toolkit routes to your framework
+        MyWebServer.route(method, path) { req ->
+            // Convert request and call toolkit callback
+            val toolkitReq = HttpRequest(...)
+            val toolkitRes = callback(toolkitReq)
+            return toolkitRes.toFrameworkResponse()
+        }
+    }
+    // ... other methods
+}
 ```
+
+> Complete examples with **Http4k** are available in the folder `ocpi-toolkit-2.2.1/src/test/kotlin/com/izivia/ocpi/toolkit/samples`.
+
+---
+
+## Contributing
+
+Contributions are welcome!
+Check out our [Contribution Guide](CONTRIBUTING.md) to get started.
+
+## License
+
+This project is licensed under the [MIT](LICENSE) license.
