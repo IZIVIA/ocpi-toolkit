@@ -6,11 +6,11 @@ import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferences
 import com.izivia.ocpi.toolkit.modules.sessions.domain.ChargingPreferencesResponseType
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import java.time.Instant
@@ -29,9 +29,9 @@ class SessionsEmspClient(
 ) : SessionsCpoInterface {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
-            module = ModuleID.sessions,
             partnerId = partnerId,
-            partnerRepository = partnerRepository,
+            module = ModuleID.sessions,
+            role = InterfaceRole.SENDER,
         )
 
     override suspend fun getSessions(

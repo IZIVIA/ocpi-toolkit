@@ -1,9 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.credentials.services
 
-import com.izivia.ocpi.toolkit.common.OcpiClientGenericException
-import com.izivia.ocpi.toolkit.common.OcpiClientInvalidParametersException
-import com.izivia.ocpi.toolkit.common.OcpiServerUnsupportedVersionException
-import com.izivia.ocpi.toolkit.common.generateUUIDv4Token
+import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.CredentialsClient
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
@@ -14,7 +11,6 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.modules.versions.domain.parseVersionNumber
 import com.izivia.ocpi.toolkit.modules.versions.repositories.VersionsRepository
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 
 /**
  * Automates authentification process

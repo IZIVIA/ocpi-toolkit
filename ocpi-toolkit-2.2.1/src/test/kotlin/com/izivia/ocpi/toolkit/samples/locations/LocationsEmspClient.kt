@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.samples.locations
 
+import com.izivia.ocpi.toolkit.modules.credentials.services.PartnerProvider
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspClient
 import com.izivia.ocpi.toolkit.samples.common.Http4kTransportClientBuilder
 import kotlinx.coroutines.runBlocking
@@ -10,7 +11,7 @@ import kotlinx.coroutines.runBlocking
 fun main() {
     // We instantiate the clients that we want to use
     val locationsEmspClient = LocationsEmspClient(
-        transportClientBuilder = Http4kTransportClientBuilder(),
+        transportClientBuilder = Http4kTransportClientBuilder(PartnerProvider(DUMMY_PLATFORM_REPOSITORY)),
         partnerId = cpoServerVersionsUrl,
         partnerRepository = DUMMY_PLATFORM_REPOSITORY,
     )

@@ -5,7 +5,6 @@ import com.izivia.ocpi.toolkit.modules.commands.domain.CommandResult
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeObject
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 

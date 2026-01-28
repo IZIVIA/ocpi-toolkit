@@ -25,6 +25,11 @@ class VersionsCacheRepository(
                     role = InterfaceRole.RECEIVER,
                     url = "$baseUrl/${VersionNumber.V2_2_1.value}/locations",
                 ),
+                Endpoint(
+                    identifier = ModuleID.locations,
+                    role = InterfaceRole.SENDER,
+                    url = "$baseUrl/${VersionNumber.V2_2_1.value}/locations",
+                ),
             ),
         ).takeIf { versionNumber.value == it.version }
 }

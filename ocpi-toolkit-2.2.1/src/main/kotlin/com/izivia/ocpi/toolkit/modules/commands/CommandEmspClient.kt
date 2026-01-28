@@ -4,11 +4,11 @@ import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.commands.domain.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import java.time.Instant
@@ -22,9 +22,9 @@ class CommandEmspClient(
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
-            module = ModuleID.commands,
             partnerId = partnerId,
-            partnerRepository = partnerRepository,
+            module = ModuleID.commands,
+            role = InterfaceRole.RECEIVER,
         )
 
     suspend fun postStartSession(
