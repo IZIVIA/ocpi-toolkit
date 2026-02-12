@@ -12,8 +12,6 @@ import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateLength
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
-import com.izivia.ocpi.toolkit.transport.TransportClient
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.*
 import java.util.*
 
@@ -77,12 +75,12 @@ suspend fun PartnerRepository.buildAuthorizationHeader(
     if (allowTokenA) {
         getCredentialsClientToken(partnerId = partnerId)
             ?: getCredentialsTokenA(partnerId = partnerId)
-            ?: throw throw OcpiClientUnknownTokenException(
+            ?: throw OcpiClientUnknownTokenException(
                 "Could not find token A or client token associated with partner $partnerId",
             )
     } else {
         getCredentialsClientToken(partnerId = partnerId)
-            ?: throw throw OcpiClientUnknownTokenException(
+            ?: throw OcpiClientUnknownTokenException(
                 "Could not find client token associated with partner $partnerId",
             )
     }
@@ -348,14 +346,3 @@ suspend fun PartnerRepository.checkToken(
         throw HttpException(HttpStatus.UNAUTHORIZED, "Invalid server token (token A allowed: $allowTokenA)")
     }
 }
-
-suspend fun TransportClientBuilder.buildFor(
-    module: ModuleID,
-    partnerId: String,
-    partnerRepository: PartnerRepository,
-): TransportClient =
-    partnerRepository
-        .getEndpoints(partnerId = partnerId)
-        .find { it.identifier == module }
-        ?.let { build(baseUrl = it.url) }
-        ?: throw OcpiToolkitUnknownEndpointException(endpointName = module.name)

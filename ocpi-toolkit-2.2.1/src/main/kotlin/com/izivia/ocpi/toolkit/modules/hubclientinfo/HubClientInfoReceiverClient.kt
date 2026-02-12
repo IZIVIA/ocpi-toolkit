@@ -3,9 +3,9 @@ package com.izivia.ocpi.toolkit.modules.hubclientinfo
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ClientInfo
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import java.time.Instant
@@ -18,9 +18,9 @@ class HubClientInfoReceiverClient(
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
-            module = ModuleID.hubclientinfo,
             partnerId = partnerId,
-            partnerRepository = partnerRepository,
+            module = ModuleID.hubclientinfo,
+            role = InterfaceRole.SENDER,
         )
 
     override suspend fun getAll(

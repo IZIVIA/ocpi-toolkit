@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.tests.integration
 import com.izivia.ocpi.toolkit.common.Header
 import com.izivia.ocpi.toolkit.common.TestWithSerializerProviders
 import com.izivia.ocpi.toolkit.common.context.RequestMessageRoutingHeaders
+import com.izivia.ocpi.toolkit.modules.credentials.services.PartnerProvider
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspClient
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
@@ -79,7 +80,7 @@ class LocationsIntegrationTest : BaseServerIntegrationTest(), TestWithSerializer
         }
 
         val locationsEmspClient = LocationsEmspClient(
-            transportClientBuilder = Http4kTransportClientBuilder(),
+            transportClientBuilder = Http4kTransportClientBuilder(PartnerProvider(partnerRepo)),
             partnerId = cpoServerVersionsUrl,
             partnerRepository = partnerRepo,
         )
