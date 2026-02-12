@@ -1,7 +1,8 @@
 package com.izivia.ocpi.toolkit.modules.hubclientinfo
 
-import com.izivia.ocpi.toolkit.common.*
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
+import com.izivia.ocpi.toolkit.common.TransportClientBuilder
+import com.izivia.ocpi.toolkit.common.parseOptionalResult
+import com.izivia.ocpi.toolkit.common.parseResultOrNull
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ClientInfo
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -14,7 +15,6 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 class HubClientInfoSenderClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
 ) : HubClientInfoReceiverInterface {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
@@ -33,12 +33,7 @@ class HubClientInfoSenderClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/$countryCode/$partyId",
-                )
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             )
                 .parseOptionalResult()
         }
@@ -54,12 +49,7 @@ class HubClientInfoSenderClient(
                     method = HttpMethod.PUT,
                     path = "/$countryCode/$partyId",
                     body = mapper.serializeObject(clientInfo),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             )
                 .parseResultOrNull<Any>()
         }

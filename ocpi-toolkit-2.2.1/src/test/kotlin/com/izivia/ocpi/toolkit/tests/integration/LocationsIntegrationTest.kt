@@ -2,7 +2,6 @@ package com.izivia.ocpi.toolkit.tests.integration
 
 import com.izivia.ocpi.toolkit.common.Header
 import com.izivia.ocpi.toolkit.common.TestWithSerializerProviders
-import com.izivia.ocpi.toolkit.common.context.RequestMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.modules.credentials.services.PartnerProvider
 import com.izivia.ocpi.toolkit.modules.locations.LocationsCpoServer
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspClient
@@ -15,6 +14,7 @@ import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.tests.integration.common.BaseServerIntegrationTest
 import com.izivia.ocpi.toolkit.tests.integration.mock.LocationsCpoMongoRepository
+import com.izivia.ocpi.toolkit.transport.context.RequestMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
@@ -82,7 +82,6 @@ class LocationsIntegrationTest : BaseServerIntegrationTest(), TestWithSerializer
         val locationsEmspClient = LocationsEmspClient(
             transportClientBuilder = Http4kTransportClientBuilder(PartnerProvider(partnerRepo)),
             partnerId = cpoServerVersionsUrl,
-            partnerRepository = partnerRepo,
         )
 
         // Tests

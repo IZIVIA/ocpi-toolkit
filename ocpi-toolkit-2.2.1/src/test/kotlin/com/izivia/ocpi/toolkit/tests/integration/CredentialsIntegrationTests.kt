@@ -26,6 +26,7 @@ import com.izivia.ocpi.toolkit.tests.integration.mock.PartnerMongoRepository
 import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import com.izivia.ocpi.toolkit.transport.encodeBase64
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import kotlinx.coroutines.runBlocking
@@ -237,7 +238,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
         // We don't need to register, we will use TOKEN_A for our requests
 
         val versionsClient = VersionsClient(
-            transportClientBuilder = Http4kTransportClientBuilder(receiverServer.partnerProvider),
+            transportClientBuilder = Http4kTransportClientBuilder(senderServer.partnerProvider),
             partnerId = receiverServer.versionsEndpoint,
             partnerRepository = senderServer.partnerRepository,
         )

@@ -2,7 +2,6 @@ package com.izivia.ocpi.toolkit.modules.cdr
 
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.serialization.mapper
@@ -15,12 +14,10 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
  * Sends calls to an eMSP server
  * @property transportClientBuilder used to build transport client
  * @property partnerId used to know which partner to communicate with
- * @property partnerRepository used to get information about the partner (endpoint, token)
  */
 class CdrsCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
 ) : CdrsEmspInterface<URL> {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
@@ -30,16 +27,12 @@ class CdrsCpoClient(
         )
 
     override suspend fun getCdr(param: URL): Cdr? =
-        with(transportClientBuilder.build(param)) {
+        with(transportClientBuilder.buildFor(partnerId, param)) {
             send(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/",
-                ).withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             )
                 .parseOptionalResult()
         }
@@ -50,11 +43,7 @@ class CdrsCpoClient(
                 HttpRequest(
                     method = HttpMethod.POST,
                     body = mapper.serializeObject(cdr),
-                ).withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             )
                 .also {
                     // this will check response for errors and throw exceptions where applicable

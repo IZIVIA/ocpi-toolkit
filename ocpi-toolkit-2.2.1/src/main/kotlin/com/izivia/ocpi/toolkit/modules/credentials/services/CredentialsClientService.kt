@@ -92,7 +92,7 @@ open class CredentialsClientService(
         )
 
         // Initiate registration process
-        val credentials = buildCredentialClient().post(
+        val credentials = buildCredentialClient(allowTokenA = true).post(
             token = credentialsTokenA,
             credentials = Credentials(
                 token = serverToken,
@@ -225,15 +225,17 @@ open class CredentialsClientService(
         .takeIf { it.isNotEmpty() }
         ?: findLatestMutualVersionAndSaveInformation()
 
-    private suspend fun buildCredentialClient(): CredentialsClient = CredentialsClient(
+    private suspend fun buildCredentialClient(allowTokenA: Boolean = false): CredentialsClient = CredentialsClient(
         transportClient = transportClientBuilder
-            .build(
+            .buildFor(
+                partnerId = partnerId,
                 baseUrl = getOrFindEndpoints()
                     .find { it.identifier == ModuleID.credentials }
                     ?.url
                     ?: throw OcpiServerUnsupportedVersionException(
                         "No credentials endpoint for $partnerId",
                     ),
+                allowTokenA = allowTokenA,
             ),
     )
 }

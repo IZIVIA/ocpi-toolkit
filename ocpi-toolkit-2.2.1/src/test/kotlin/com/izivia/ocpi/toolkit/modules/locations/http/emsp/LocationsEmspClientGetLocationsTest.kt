@@ -50,7 +50,6 @@ class LocationsEmspClientGetLocationsTest : TestWithSerializerProviders {
                 listOf(invalidLocation, validLocation.toPartial(), invalidLocation),
             ),
             partnerId = "irrelevant",
-            partnerRepository = mockPartnerRepository,
             ignoreInvalidListEntry = true,
         )
 
@@ -70,7 +69,6 @@ class LocationsEmspClientGetLocationsTest : TestWithSerializerProviders {
                 listOf(validLocation.toPartial(), invalidLocation),
             ),
             partnerId = "irrelevant",
-            partnerRepository = mockPartnerRepository,
         )
 
         runBlocking {
@@ -87,7 +85,6 @@ class LocationsEmspClientGetLocationsTest : TestWithSerializerProviders {
         val client = LocationsEmspClient(
             transportClientBuilder = mockSearchResult(listOf(validLocation, validLocation)),
             partnerId = "irrelevant",
-            partnerRepository = mockPartnerRepository,
         )
 
         runBlocking {
@@ -120,14 +117,28 @@ private inline fun <reified T> mockSearchResult(data: List<T>) =
 class MockHttpTransportClientBuilder(
     private val handler: HttpHandler,
 ) : TransportClientBuilder {
+
     override suspend fun buildFor(
         partnerId: String,
         module: ModuleID,
         role: InterfaceRole,
+        allowTokenA: Boolean,
     ): TransportClient {
-        return build("")
+        return Http4kTransportClient(handler)
     }
 
-    override fun build(baseUrl: String): TransportClient =
-        Http4kTransportClient(handler)
+    override suspend fun buildFor(
+        partnerId: String,
+        baseUrl: String,
+        allowTokenA: Boolean,
+    ): TransportClient {
+        return Http4kTransportClient(handler)
+    }
+
+    override suspend fun build(
+        baseUrl: String,
+        authToken: String,
+    ): TransportClient {
+        return Http4kTransportClient(handler)
+    }
 }

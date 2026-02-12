@@ -1,11 +1,12 @@
 package com.izivia.ocpi.toolkit.modules.chargingProfiles
 
-import com.izivia.ocpi.toolkit.common.*
+import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.TransportClientBuilder
+import com.izivia.ocpi.toolkit.common.parseResultOrNull
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfile
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfileResult
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileResult
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ClearProfileResult
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.serialization.mapper
@@ -19,18 +20,16 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
  *
  * @property transportClientBuilder used to build transport client
  * @property partnerId used to know which partner to communicate with
- * @property partnerRepository used to get information about the partner (endpoint, token)
  * @property callbackBaseUrl used to build the callback URL sent to the other partner
  */
 class ChargingProfilesCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
     private val callbackBaseUrl: String,
 ) {
 
-    private fun buildCallbackTransport(): TransportClient =
-        transportClientBuilder.build(callbackBaseUrl)
+    private suspend fun buildCallbackTransport(): TransportClient =
+        transportClientBuilder.buildFor(partnerId, callbackBaseUrl)
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
@@ -48,12 +47,7 @@ class ChargingProfilesCpoClient(
                 method = HttpMethod.POST,
                 path = responseUrl,
                 body = mapper.serializeObject(result),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResultOrNull<String>()
     }
@@ -67,12 +61,7 @@ class ChargingProfilesCpoClient(
                 method = HttpMethod.POST,
                 path = responseUrl,
                 body = mapper.serializeObject(result),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResultOrNull<String>()
     }
@@ -86,12 +75,7 @@ class ChargingProfilesCpoClient(
                 method = HttpMethod.POST,
                 path = responseUrl,
                 body = mapper.serializeObject(result),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResultOrNull<String>()
     }
@@ -105,12 +89,7 @@ class ChargingProfilesCpoClient(
                 method = HttpMethod.PUT,
                 path = "/$sessionId",
                 body = mapper.serializeObject(activeChargingProfile),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResultOrNull<String>()
     }

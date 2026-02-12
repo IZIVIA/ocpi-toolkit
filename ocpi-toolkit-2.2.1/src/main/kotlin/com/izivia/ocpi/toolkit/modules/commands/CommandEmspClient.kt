@@ -1,8 +1,9 @@
 package com.izivia.ocpi.toolkit.modules.commands
 
-import com.izivia.ocpi.toolkit.common.*
+import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.TransportClientBuilder
+import com.izivia.ocpi.toolkit.common.parseResult
 import com.izivia.ocpi.toolkit.modules.commands.domain.*
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -16,7 +17,6 @@ import java.time.Instant
 class CommandEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
     private val callbackBaseUrl: String,
 ) {
 
@@ -50,12 +50,7 @@ class CommandEmspClient(
                             authorizationReference = authorizationReference,
                         ),
                     ),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateUUIDv4Token(),
-                        correlationId = generateUUIDv4Token(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             )
                 .parseResult()
         }
@@ -75,12 +70,7 @@ class CommandEmspClient(
                             sessionId = sessionId,
                         ),
                     ),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateUUIDv4Token(),
-                        correlationId = generateUUIDv4Token(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             )
                 .parseResult()
         }
@@ -110,12 +100,7 @@ class CommandEmspClient(
                             authorizationReference = authorizationReference,
                         ),
                     ),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateUUIDv4Token(),
-                        correlationId = generateUUIDv4Token(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             )
                 .parseResult()
         }
@@ -135,12 +120,7 @@ class CommandEmspClient(
                             reservationId = reservationId,
                         ),
                     ),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateUUIDv4Token(),
-                        correlationId = generateUUIDv4Token(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             )
                 .parseResult()
         }
@@ -164,12 +144,7 @@ class CommandEmspClient(
                             connectorId = connectorId,
                         ),
                     ),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateUUIDv4Token(),
-                        correlationId = generateUUIDv4Token(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             )
                 .parseResult()
         }

@@ -1,7 +1,9 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
-import com.izivia.ocpi.toolkit.common.*
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
+import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.TransportClientBuilder
+import com.izivia.ocpi.toolkit.common.parseOptionalResult
+import com.izivia.ocpi.toolkit.common.parseResultOrNull
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -15,12 +17,10 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
  * Sends calls to an eMSP server
  * @property transportClientBuilder used to build transport client
  * @property partnerId used to know which partner to communicate with
- * @property partnerRepository used to get information about the partner (endpoint, token)
  */
 class LocationsCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
 ) : LocationsEmspInterface {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
@@ -39,12 +39,7 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.GET,
                 path = "/$countryCode/$partyId/$locationId",
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseOptionalResult()
     }
@@ -59,12 +54,7 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.GET,
                 path = "/$countryCode/$partyId/$locationId/$evseUid",
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseOptionalResult()
     }
@@ -80,12 +70,7 @@ class LocationsCpoClient(
             HttpRequest(
                 method = HttpMethod.GET,
                 path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseOptionalResult()
     }
@@ -101,12 +86,7 @@ class LocationsCpoClient(
                 method = HttpMethod.PUT,
                 path = "/$countryCode/$partyId/$locationId",
                 body = mapper.serializeObject(location),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResultOrNull() ?: LocationPartial()
     }
@@ -123,12 +103,7 @@ class LocationsCpoClient(
                 method = HttpMethod.PUT,
                 path = "/$countryCode/$partyId/$locationId/$evseUid",
                 body = mapper.serializeObject(evse),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResultOrNull() ?: EvsePartial()
     }
@@ -146,12 +121,7 @@ class LocationsCpoClient(
                 method = HttpMethod.PUT,
                 path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
                 body = mapper.serializeObject(connector),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResultOrNull() ?: ConnectorPartial()
     }
@@ -167,12 +137,7 @@ class LocationsCpoClient(
                 method = HttpMethod.PATCH,
                 path = "/$countryCode/$partyId/$locationId",
                 body = mapper.serializeObject(location),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResultOrNull()
     }
@@ -189,12 +154,7 @@ class LocationsCpoClient(
                 method = HttpMethod.PATCH,
                 path = "/$countryCode/$partyId/$locationId/$evseUid",
                 body = mapper.serializeObject(evse),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResultOrNull()
     }
@@ -212,12 +172,7 @@ class LocationsCpoClient(
                 method = HttpMethod.PATCH,
                 path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
                 body = mapper.serializeObject(connector),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResultOrNull()
     }

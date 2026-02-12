@@ -1,6 +1,8 @@
 package com.izivia.ocpi.toolkit.modules.versions
 
-import com.izivia.ocpi.toolkit.common.*
+import com.izivia.ocpi.toolkit.common.OcpiToolkitUnknownEndpointException
+import com.izivia.ocpi.toolkit.common.TransportClientBuilder
+import com.izivia.ocpi.toolkit.common.parseResultList
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -21,23 +23,16 @@ class VersionsClient(
     override suspend fun getVersions(): List<Version> =
         with(
             transportClientBuilder
-                .build(
+                .buildFor(
+                    partnerId = partnerId,
                     baseUrl = partnerRepository
                         .getPartnerUrl(partnerId = partnerId)
                         ?: throw OcpiToolkitUnknownEndpointException("version with no url"),
+                    allowTokenA = true,
                 ),
         ) {
             send(
-                HttpRequest(method = HttpMethod.GET)
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(
-                        partnerRepository = partnerRepository,
-                        partnerId = partnerId,
-                        allowTokenA = true,
-                    ),
+                HttpRequest(method = HttpMethod.GET),
             )
                 .parseResultList<Version>()
         }

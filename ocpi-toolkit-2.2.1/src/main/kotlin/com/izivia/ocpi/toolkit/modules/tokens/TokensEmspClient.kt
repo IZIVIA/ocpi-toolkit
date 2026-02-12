@@ -1,7 +1,9 @@
 package com.izivia.ocpi.toolkit.modules.tokens
 
-import com.izivia.ocpi.toolkit.common.*
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
+import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.TransportClientBuilder
+import com.izivia.ocpi.toolkit.common.parseOptionalResult
+import com.izivia.ocpi.toolkit.common.parseResultOrNull
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenPartial
 import com.izivia.ocpi.toolkit.modules.tokens.domain.TokenType
@@ -17,12 +19,10 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
  * Sends calls to the CPO
  * @property transportClientBuilder used to build transport client
  * @property partnerId used to know which partner to communicate with
- * @property partnerRepository used to get information about the partner (endpoint, token)
  */
 class TokensEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
 ) : TokensCpoInterface {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
@@ -44,12 +44,7 @@ class TokensEmspClient(
                     method = HttpMethod.GET,
                     path = "/$countryCode/$partyId/$tokenUid",
                     queryParams = listOfNotNull(type?.let { "type" to type.toString() }).toMap(),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             ).parseOptionalResult()
         }
 
@@ -69,12 +64,7 @@ class TokensEmspClient(
                     queryParams = listOfNotNull(
                         type?.let { "type" to type.toString() },
                     ).toMap(),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             ).parseResultOrNull() ?: TokenPartial()
         }
 
@@ -94,12 +84,7 @@ class TokensEmspClient(
                     queryParams = listOfNotNull(
                         type?.let { "type" to type.toString() },
                     ).toMap(),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             ).parseResultOrNull()
         }
 }

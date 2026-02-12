@@ -1,7 +1,8 @@
 package com.izivia.ocpi.toolkit.modules.hubclientinfo
 
-import com.izivia.ocpi.toolkit.common.*
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
+import com.izivia.ocpi.toolkit.common.SearchResult
+import com.izivia.ocpi.toolkit.common.TransportClientBuilder
+import com.izivia.ocpi.toolkit.common.parseSearchResult
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ClientInfo
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -13,7 +14,6 @@ import java.time.Instant
 class HubClientInfoReceiverClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
 ) : HubClientInfoSenderInterface {
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
@@ -38,12 +38,7 @@ class HubClientInfoReceiverClient(
                     "offset" to offset.toString(),
                     limit?.let { "limit" to limit.toString() },
                 ).toMap(),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseSearchResult(offset)
     }

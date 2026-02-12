@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.locations
 
 import com.izivia.ocpi.toolkit.common.*
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.locations.domain.Connector
 import com.izivia.ocpi.toolkit.modules.locations.domain.Evse
 import com.izivia.ocpi.toolkit.modules.locations.domain.Location
@@ -17,12 +16,10 @@ import java.time.Instant
  * Sends calls to the CPO
  * @property transportClientBuilder used to build transport client
  * @property partnerId used to know which partner to communicate with
- * @property partnerRepository used to get information about the partner (endpoint, token)
  */
 class LocationsEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
     private val ignoreInvalidListEntry: Boolean = false,
 ) : LocationsCpoInterface {
 
@@ -48,12 +45,7 @@ class LocationsEmspClient(
                     "offset" to offset.toString(),
                     limit?.let { "limit" to limit.toString() },
                 ).toMap(),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         ).let { res ->
             if (ignoreInvalidListEntry) {
                 res.parseSearchResultIgnoringInvalid<Location, LocationPartial>(offset)
@@ -68,7 +60,6 @@ class LocationsEmspClient(
     ): SearchResult<Location>? = getNextPage<Location, LocationPartial>(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
-        partnerRepository = partnerRepository,
         previousResponse = previousResponse,
         ignoreInvalidListEntry = ignoreInvalidListEntry,
     )
@@ -78,12 +69,7 @@ class LocationsEmspClient(
             HttpRequest(
                 method = HttpMethod.GET,
                 path = "/$locationId",
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseOptionalResult()
     }
@@ -94,12 +80,7 @@ class LocationsEmspClient(
                 HttpRequest(
                     method = HttpMethod.GET,
                     path = "/$locationId/$evseUid",
-                )
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             )
                 .parseOptionalResult()
         }
@@ -113,12 +94,7 @@ class LocationsEmspClient(
             HttpRequest(
                 method = HttpMethod.GET,
                 path = "/$locationId/$evseUid/$connectorId",
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseOptionalResult()
     }

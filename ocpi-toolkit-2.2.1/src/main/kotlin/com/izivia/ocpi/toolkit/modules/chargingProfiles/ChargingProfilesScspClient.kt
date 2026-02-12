@@ -1,10 +1,12 @@
 package com.izivia.ocpi.toolkit.modules.chargingProfiles
 
-import com.izivia.ocpi.toolkit.common.*
+import com.izivia.ocpi.toolkit.common.CiString
+import com.izivia.ocpi.toolkit.common.TransportClientBuilder
+import com.izivia.ocpi.toolkit.common.URL
+import com.izivia.ocpi.toolkit.common.parseResult
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfile
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileResponse
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.SetChargingProfile
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.serialization.mapper
@@ -16,7 +18,6 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 class ChargingProfilesScspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
     private val callbackBaseUrl: URL,
 ) {
 
@@ -41,12 +42,7 @@ class ChargingProfilesScspClient(
                     "response_url" to "$callbackBaseUrl/" +
                         "${ChargingProfilesScspServer.ACTIVE_CHARGING_PROFILE_CALLBACK_URL}/$requestId",
                 ),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResult()
     }
@@ -67,12 +63,7 @@ class ChargingProfilesScspClient(
                             "${ChargingProfilesScspServer.CHARGING_PROFILE_CALLBACK_URL}/$requestId",
                     ),
                 ),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResult()
     }
@@ -89,12 +80,7 @@ class ChargingProfilesScspClient(
                     "response_url" to "$callbackBaseUrl/" +
                         "${ChargingProfilesScspServer.CLEAR_PROFILE_CALLBACK_URL}/$requestId",
                 ),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         )
             .parseResult()
     }

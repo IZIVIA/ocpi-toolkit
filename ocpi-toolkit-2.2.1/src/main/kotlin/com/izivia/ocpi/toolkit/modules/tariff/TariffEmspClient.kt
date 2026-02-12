@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.tariff
 
 import com.izivia.ocpi.toolkit.common.*
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.tariff.domain.Tariff
 import com.izivia.ocpi.toolkit.modules.tariff.domain.TariffPartial
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
@@ -14,7 +13,6 @@ import java.time.Instant
 class TariffEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
     private val ignoreInvalidListEntry: Boolean = false,
 ) : TariffCpoInterface {
 
@@ -40,12 +38,7 @@ class TariffEmspClient(
                     "offset" to offset.toString(),
                     limit?.let { "limit" to limit.toString() },
                 ).toMap(),
-            )
-                .withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+            ),
         ).let { res ->
             if (ignoreInvalidListEntry) {
                 res.parseSearchResultIgnoringInvalid<Tariff, TariffPartial>(offset)
@@ -60,7 +53,6 @@ class TariffEmspClient(
     ): SearchResult<Tariff>? = getNextPage<Tariff, TariffPartial>(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
-        partnerRepository = partnerRepository,
         previousResponse = previousResponse,
         ignoreInvalidListEntry = ignoreInvalidListEntry,
     )
