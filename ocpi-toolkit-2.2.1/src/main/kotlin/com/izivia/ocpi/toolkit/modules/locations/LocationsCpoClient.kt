@@ -3,11 +3,11 @@ package com.izivia.ocpi.toolkit.modules.locations
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
@@ -25,9 +25,9 @@ class LocationsCpoClient(
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
-            module = ModuleID.locations,
             partnerId = partnerId,
-            partnerRepository = partnerRepository,
+            module = ModuleID.locations,
+            role = InterfaceRole.RECEIVER,
         )
 
     override suspend fun getLocation(

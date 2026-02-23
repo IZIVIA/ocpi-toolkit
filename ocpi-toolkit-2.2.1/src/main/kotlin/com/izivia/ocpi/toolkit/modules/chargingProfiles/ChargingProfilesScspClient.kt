@@ -5,11 +5,11 @@ import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfile
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileResponse
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.SetChargingProfile
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
@@ -22,9 +22,9 @@ class ChargingProfilesScspClient(
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
-            module = ModuleID.chargingprofiles,
             partnerId = partnerId,
-            partnerRepository = partnerRepository,
+            module = ModuleID.chargingprofiles,
+            role = InterfaceRole.RECEIVER,
         )
 
     suspend fun getActiveChargingProfile(

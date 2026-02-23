@@ -6,6 +6,7 @@ import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Role
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
+import com.izivia.ocpi.toolkit.modules.credentials.services.PartnerProvider
 import com.izivia.ocpi.toolkit.modules.credentials.services.RequiredEndpoints
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
@@ -51,7 +52,7 @@ fun main() {
                         ),
                     )
                 },
-                transportClientBuilder = Http4kTransportClientBuilder(),
+                transportClientBuilder = Http4kTransportClientBuilder(PartnerProvider(receiverPlatformRepository)),
                 serverVersionsUrlProvider = { receiverVersionsUrl },
                 requiredEndpoints = requiredOtherPartEndpoints,
             ),

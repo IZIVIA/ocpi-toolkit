@@ -3,11 +3,11 @@ package com.izivia.ocpi.toolkit.modules.cdr
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.TransportClient
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
@@ -24,9 +24,9 @@ class CdrsCpoClient(
 ) : CdrsEmspInterface<URL> {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
-            module = ModuleID.cdrs,
             partnerId = partnerId,
-            partnerRepository = partnerRepository,
+            module = ModuleID.cdrs,
+            role = InterfaceRole.RECEIVER,
         )
 
     override suspend fun getCdr(param: URL): Cdr? =

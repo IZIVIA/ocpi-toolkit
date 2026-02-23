@@ -5,8 +5,10 @@ import com.izivia.ocpi.toolkit.modules.credentials.CredentialsServer
 import com.izivia.ocpi.toolkit.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Role
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.CredentialsRoleRepository
+import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsClientService
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
+import com.izivia.ocpi.toolkit.modules.credentials.services.PartnerProvider
 import com.izivia.ocpi.toolkit.modules.credentials.services.RequiredEndpoints
 import com.izivia.ocpi.toolkit.modules.locations.domain.BusinessDetails
 import com.izivia.ocpi.toolkit.modules.versions.VersionsClient
@@ -43,6 +45,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
     data class ServerSetupResult(
         val transport: Http4kTransportServer,
         val partnerCollection: MongoCollection<Partner>,
+        val partnerRepository: PartnerRepository,
+        val partnerProvider: PartnerProvider,
         val versionsEndpoint: String,
     )
 
@@ -59,6 +63,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
 
         // Setup receiver (only server)
         val receiverPlatformRepo = PartnerMongoRepository(collection = receiverPartnerCollection)
+        val receiverPartnerProvider = PartnerProvider(receiverPlatformRepo)
         val receiverServer = buildTransportServer(receiverPlatformRepo)
         val receiverServerVersionsUrl = "${receiverServer.baseUrl}/versions"
         val receiverVersionsCacheRepository = InMemoryVersionsRepository()
@@ -76,7 +81,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
                             ),
                         )
                     },
-                    transportClientBuilder = Http4kTransportClientBuilder(),
+                    transportClientBuilder = Http4kTransportClientBuilder(receiverPartnerProvider),
                     serverVersionsUrlProvider = { receiverServerVersionsUrl },
                     requiredEndpoints = requiredEndpoints,
                 ),
@@ -93,6 +98,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
         return ServerSetupResult(
             transport = receiverServer,
             partnerCollection = receiverPartnerCollection,
+            partnerRepository = receiverPlatformRepo,
+            partnerProvider = receiverPartnerProvider,
             versionsEndpoint = receiverServerVersionsUrl,
         )
     }
@@ -101,13 +108,14 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
         if (database == null) database = buildDBClient().getDatabase("ocpi-2-2-1-tests")
         val senderPartnerCollection = database!!
             .getCollection<Partner>("sender-server-${UUID.randomUUID()}")
+        val senderPartnerRepository = PartnerMongoRepository(collection = senderPartnerCollection)
 
         // Reset spy variables
         requestCounter = 1
         correlationCounter = 1
 
         // Setup sender (server)
-        val senderServer = buildTransportServer(PartnerMongoRepository(collection = senderPartnerCollection))
+        val senderServer = buildTransportServer(senderPartnerRepository)
         val senderServerVersionsUrl = "${senderServer.baseUrl}/versions"
 
         runBlocking {
@@ -122,6 +130,8 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
         return ServerSetupResult(
             transport = senderServer,
             partnerCollection = senderPartnerCollection,
+            partnerRepository = senderPartnerRepository,
+            partnerProvider = PartnerProvider(senderPartnerRepository),
             versionsEndpoint = senderServerVersionsUrl,
         )
     }
@@ -134,7 +144,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
         // Setup sender (client)
         return CredentialsClientService(
             clientVersionsEndpointUrl = senderServerSetupResult.versionsEndpoint,
-            clientPartnerRepository = PartnerMongoRepository(collection = senderServerSetupResult.partnerCollection),
+            clientPartnerRepository = senderServerSetupResult.partnerRepository,
             clientVersionsRepository = VersionsCacheRepository(baseUrl = senderServerSetupResult.transport.baseUrl),
             clientCredentialsRoleRepository = object : CredentialsRoleRepository {
                 override suspend fun getCredentialsRoles(partnerId: String): List<CredentialRole> = listOf(
@@ -147,7 +157,7 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
                 )
             },
             partnerId = receiverServerSetupResult.versionsEndpoint,
-            transportClientBuilder = Http4kTransportClientBuilder(),
+            transportClientBuilder = Http4kTransportClientBuilder(senderServerSetupResult.partnerProvider),
             requiredEndpoints = requiredEndpoints,
         )
     }
@@ -227,9 +237,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
         // We don't need to register, we will use TOKEN_A for our requests
 
         val versionsClient = VersionsClient(
-            transportClientBuilder = Http4kTransportClientBuilder(),
+            transportClientBuilder = Http4kTransportClientBuilder(receiverServer.partnerProvider),
             partnerId = receiverServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection),
+            partnerRepository = senderServer.partnerRepository,
         )
 
         expectThat(
@@ -454,9 +464,9 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
         credentialsClientService.update()
 
         val versionsClient = VersionsClient(
-            transportClientBuilder = Http4kTransportClientBuilder(),
+            transportClientBuilder = Http4kTransportClientBuilder(senderServer.partnerProvider),
             partnerId = receiverServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection),
+            partnerRepository = senderServer.partnerRepository,
         )
 
         expectThat(
@@ -503,14 +513,14 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
         }
 
         val senderVersionsClient = VersionsClient(
-            transportClientBuilder = Http4kTransportClientBuilder(),
+            transportClientBuilder = Http4kTransportClientBuilder(senderServer.partnerProvider),
             partnerId = receiverServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection),
+            partnerRepository = senderServer.partnerRepository,
         )
         val receiverVersionsClient = VersionsClient(
-            transportClientBuilder = Http4kTransportClientBuilder(),
+            transportClientBuilder = Http4kTransportClientBuilder(receiverServer.partnerProvider),
             partnerId = senderServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = receiverServer.partnerCollection),
+            partnerRepository = receiverServer.partnerRepository,
         )
 
         expectThat(
@@ -607,14 +617,14 @@ class CredentialsIntegrationTests : BaseServerIntegrationTest(), TestWithSeriali
         val credentialsAfterRegistration = runBlocking { senderCredentialsClientService.register() }
 
         val senderVersionsClient = VersionsClient(
-            transportClientBuilder = Http4kTransportClientBuilder(),
+            transportClientBuilder = Http4kTransportClientBuilder(senderServer.partnerProvider),
             partnerId = receiverServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = senderServer.partnerCollection),
+            partnerRepository = senderServer.partnerRepository,
         )
         val receiverVersionsClient = VersionsClient(
-            transportClientBuilder = Http4kTransportClientBuilder(),
+            transportClientBuilder = Http4kTransportClientBuilder(receiverServer.partnerProvider),
             partnerId = senderServer.versionsEndpoint,
-            partnerRepository = PartnerMongoRepository(collection = receiverServer.partnerCollection),
+            partnerRepository = receiverServer.partnerRepository,
         )
 
         expectThat(

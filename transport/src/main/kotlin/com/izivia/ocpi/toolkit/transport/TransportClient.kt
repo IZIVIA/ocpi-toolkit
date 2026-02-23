@@ -24,7 +24,3 @@ interface TransportClient {
      */
     suspend fun generateRequestId(): String = UUID.randomUUID().toString()
 }
-
-interface TransportClientBuilder {
-    fun build(baseUrl: String): TransportClient
-}

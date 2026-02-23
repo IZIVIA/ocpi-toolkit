@@ -14,7 +14,6 @@ import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeOcpiResponseList
 import com.izivia.ocpi.toolkit.transport.TransportClient
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -121,6 +120,14 @@ private inline fun <reified T> mockSearchResult(data: List<T>) =
 class MockHttpTransportClientBuilder(
     private val handler: HttpHandler,
 ) : TransportClientBuilder {
+    override suspend fun buildFor(
+        partnerId: String,
+        module: ModuleID,
+        role: InterfaceRole,
+    ): TransportClient {
+        return build("")
+    }
+
     override fun build(baseUrl: String): TransportClient =
         Http4kTransportClient(handler)
 }

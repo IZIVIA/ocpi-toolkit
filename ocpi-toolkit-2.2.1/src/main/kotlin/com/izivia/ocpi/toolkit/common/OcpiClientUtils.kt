@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.common
 
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 

@@ -4,12 +4,11 @@ import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
 import com.izivia.ocpi.toolkit.modules.cdr.domain.CdrPartial
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
+import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
-import com.izivia.ocpi.toolkit.transport.TransportClientBuilder
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
-import org.apache.logging.log4j.LogManager
 import java.time.Instant
 
 class CdrsEmspClient(
@@ -18,13 +17,12 @@ class CdrsEmspClient(
     private val partnerRepository: PartnerRepository,
     private val ignoreInvalidListEntry: Boolean = false,
 ) : CdrsCpoInterface {
-    private val logger = LogManager.getLogger(CdrsEmspClient::class.java)
 
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
         .buildFor(
-            module = ModuleID.cdrs,
             partnerId = partnerId,
-            partnerRepository = partnerRepository,
+            module = ModuleID.cdrs,
+            role = InterfaceRole.SENDER,
         )
 
     override suspend fun getCdrs(
