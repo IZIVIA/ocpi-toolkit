@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.tokens
 
 import com.izivia.ocpi.toolkit.common.*
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.tokens.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -16,12 +15,10 @@ import java.time.Instant
  * Sends calls to an eMSP server
  * @property transportClientBuilder used to build transport client
  * @property partnerId used to know which partner to communicate with
- * @property partnerRepository used to get information about the partner (endpoint, token)
  */
 class TokensCpoClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
     private val ignoreInvalidListEntry: Boolean = false,
 ) : TokensEmspInterface {
     private suspend fun buildTransport(): TransportClient = transportClientBuilder
@@ -47,12 +44,7 @@ class TokensCpoClient(
                         "offset" to offset.toString(),
                         limit?.let { "limit" to limit.toString() },
                     ).toMap(),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             ).let { res ->
                 if (ignoreInvalidListEntry) {
                     res.parseSearchResultIgnoringInvalid<Token, TokenPartial>(offset)
@@ -67,7 +59,6 @@ class TokensCpoClient(
     ): SearchResult<Token>? = getNextPage<Token, TokenPartial>(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
-        partnerRepository = partnerRepository,
         previousResponse = previousResponse,
         ignoreInvalidListEntry = ignoreInvalidListEntry,
     )
@@ -84,12 +75,7 @@ class TokensCpoClient(
                     path = "/$tokenUid/authorize",
                     queryParams = listOfNotNull(type?.let { "type" to type.toString() }).toMap(),
                     body = locationReferences.run(mapper::serializeObject),
-                )
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             ).parseResult()
         }
 }

@@ -13,7 +13,6 @@ fun main() {
     val locationsCpoClient = LocationsCpoClient(
         transportClientBuilder = Http4kTransportClientBuilder(PartnerProvider(DUMMY_PLATFORM_REPOSITORY)),
         partnerId = emspServerVersionsUrl,
-        partnerRepository = DUMMY_PLATFORM_REPOSITORY,
     )
 
     // We can use it

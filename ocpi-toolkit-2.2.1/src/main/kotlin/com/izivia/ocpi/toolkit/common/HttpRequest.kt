@@ -1,9 +1,9 @@
 package com.izivia.ocpi.toolkit.common
 
-import com.izivia.ocpi.toolkit.common.context.currentResponseMessageRoutingHeadersOrNull
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeOcpiResponse
 import com.izivia.ocpi.toolkit.serialization.serializeOcpiResponseList
+import com.izivia.ocpi.toolkit.transport.context.currentResponseMessageRoutingHeadersOrNull
 import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse

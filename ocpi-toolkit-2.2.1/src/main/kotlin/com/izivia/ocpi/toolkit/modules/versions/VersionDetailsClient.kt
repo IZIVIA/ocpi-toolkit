@@ -1,6 +1,8 @@
 package com.izivia.ocpi.toolkit.modules.versions
 
-import com.izivia.ocpi.toolkit.common.*
+import com.izivia.ocpi.toolkit.common.OcpiToolkitUnknownEndpointException
+import com.izivia.ocpi.toolkit.common.TransportClientBuilder
+import com.izivia.ocpi.toolkit.common.parseResult
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -21,24 +23,17 @@ class VersionDetailsClient(
     override suspend fun getVersionDetails(): VersionDetails =
         with(
             transportClientBuilder
-                .build(
+                .buildFor(
+                    partnerId = partnerId,
                     baseUrl = partnerRepository
                         .getVersion(partnerId = partnerId)
                         ?.url
                         ?: throw OcpiToolkitUnknownEndpointException("version details"),
+                    allowTokenA = true,
                 ),
         ) {
             send(
-                HttpRequest(method = HttpMethod.GET)
-                    .withRequiredHeaders(
-                        requestId = generateRequestId(),
-                        correlationId = generateCorrelationId(),
-                    )
-                    .authenticate(
-                        partnerRepository = partnerRepository,
-                        partnerId = partnerId,
-                        allowTokenA = true,
-                    ),
+                HttpRequest(method = HttpMethod.GET),
             )
                 .parseResult()
         }

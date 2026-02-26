@@ -3,7 +3,6 @@ package com.izivia.ocpi.toolkit.modules.cdr
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.modules.cdr.domain.Cdr
 import com.izivia.ocpi.toolkit.modules.cdr.domain.CdrPartial
-import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.TransportClient
@@ -14,7 +13,6 @@ import java.time.Instant
 class CdrsEmspClient(
     private val transportClientBuilder: TransportClientBuilder,
     private val partnerId: String,
-    private val partnerRepository: PartnerRepository,
     private val ignoreInvalidListEntry: Boolean = false,
 ) : CdrsCpoInterface {
 
@@ -41,11 +39,7 @@ class CdrsEmspClient(
                         "offset" to offset.toString(),
                         limit?.let { "limit" to it.toString() },
                     ).toMap(),
-                ).withRequiredHeaders(
-                    requestId = generateRequestId(),
-                    correlationId = generateCorrelationId(),
-                )
-                    .authenticate(partnerRepository = partnerRepository, partnerId = partnerId),
+                ),
             ).let { res ->
                 if (ignoreInvalidListEntry) {
                     res.parseSearchResultIgnoringInvalid<Cdr, CdrPartial>(offset)
@@ -60,7 +54,6 @@ class CdrsEmspClient(
     ): SearchResult<Cdr>? = getNextPage<Cdr, CdrPartial>(
         transportClientBuilder = transportClientBuilder,
         partnerId = partnerId,
-        partnerRepository = partnerRepository,
         previousResponse = previousResponse,
         ignoreInvalidListEntry = ignoreInvalidListEntry,
     )

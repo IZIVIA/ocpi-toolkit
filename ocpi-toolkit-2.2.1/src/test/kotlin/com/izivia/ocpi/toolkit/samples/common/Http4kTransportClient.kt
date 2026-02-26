@@ -1,6 +1,7 @@
 package com.izivia.ocpi.toolkit.samples.common
 
-import com.izivia.ocpi.toolkit.transport.TransportClient
+import com.izivia.ocpi.toolkit.transport.AbstractTransportClient
+import com.izivia.ocpi.toolkit.transport.domain.HttpHeaders
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.parseHttpStatus
@@ -13,9 +14,10 @@ var requestCounter = 1
 var correlationCounter = 1
 
 class Http4kTransportClient(
+    authToken: String,
     val client: HttpHandler,
-) : TransportClient {
-    override fun send(request: HttpRequest): HttpResponse {
+) : AbstractTransportClient(authToken) {
+    override suspend fun doSend(request: HttpRequest): HttpResponse {
         return client(request.toHttp4k()).let {
             HttpResponse(
                 status = parseHttpStatus(it.status.code),
@@ -27,15 +29,21 @@ class Http4kTransportClient(
         }
     }
 
-    override suspend fun generateCorrelationId(): String = "corr-id-$correlationCounter"
-        .also { correlationCounter += 1 }
+    override suspend fun generateCorrelationId(request: HttpRequest): String =
+        request.getHeader(HttpHeaders.X_CORRELATION_ID) ?: "corr-id-${correlationCounter++}"
 
-    override suspend fun generateRequestId(): String = "req-id-$requestCounter"
-        .also { requestCounter += 1 }
+    override suspend fun generateRequestId(): String = "req-id-${requestCounter++}"
 
     companion object {
+        operator fun invoke(client: HttpHandler) =
+            Http4kTransportClient(
+                authToken = "*",
+                client = client,
+            )
+
         operator fun invoke(baseUrl: String) =
             Http4kTransportClient(
+                authToken = "*",
                 ClientFilters.SetBaseUriFrom(Uri.of(baseUrl)).then(OkHttp()),
             )
     }
