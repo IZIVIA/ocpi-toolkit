@@ -152,33 +152,37 @@ private fun List<Facility>.ensureCompatibleFacility() = filter { it != Facility.
 private fun List<ParkingRestriction>.ensureCompatibleParkingRestriction() = filter { it != ParkingRestriction.OTHER }
 
 private fun GeoLocation.ensureCompatible() = copy(
-    latitude = latitude.ensureScale(7),
-    longitude = longitude.ensureScale(7),
+    latitude = latitude.ensureScale(5, 7),
+    longitude = longitude.ensureScale(5, 7),
 )
 
 private fun GeoLocationPartial.ensureCompatible() = copy(
-    latitude = latitude?.ensureScale(7),
-    longitude = longitude?.ensureScale(7),
+    latitude = latitude?.ensureScale(5, 7),
+    longitude = longitude?.ensureScale(5, 7),
 )
 
 private fun AdditionalGeoLocation.ensureCompatible() = copy(
-    latitude = latitude.ensureScale(7),
-    longitude = longitude.ensureScale(7),
+    latitude = latitude.ensureScale(5, 7),
+    longitude = longitude.ensureScale(5, 7),
 )
 
 private fun AdditionalGeoLocationPartial.ensureCompatible() = copy(
-    latitude = latitude?.ensureScale(7),
-    longitude = longitude?.ensureScale(7),
+    latitude = latitude?.ensureScale(5, 7),
+    longitude = longitude?.ensureScale(5, 7),
 )
 
-private fun String.ensureScale(scale: Int) = try {
-    BigDecimal(this).ensureScale(scale).toString()
-} catch (e: NumberFormatException) {
+private fun String.ensureScale(minScale: Int, maxScale: Int) = try {
+    BigDecimal(this).ensureScale(minScale, maxScale).toPlainString()
+} catch (_: NumberFormatException) {
     // fall through to validator
     this
 }
 
-private fun BigDecimal.ensureScale(maxScale: Int) =
-    takeIf { scale() > maxScale }
-        ?.setScale(maxScale, RoundingMode.HALF_UP)
-        ?: this
+private fun BigDecimal.ensureScale(minScale: Int, maxScale: Int) =
+    if (scale() > maxScale) {
+        setScale(maxScale, RoundingMode.HALF_UP)
+    } else if (scale() < minScale) {
+        setScale(minScale, RoundingMode.UNNECESSARY)
+    } else {
+        this
+    }
