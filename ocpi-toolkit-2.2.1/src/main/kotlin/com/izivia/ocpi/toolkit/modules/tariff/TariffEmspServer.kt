@@ -2,6 +2,7 @@ package com.izivia.ocpi.toolkit.modules.tariff
 
 import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.TimeProvider
+import com.izivia.ocpi.toolkit.common.pathParam
 import com.izivia.ocpi.toolkit.common.respondNothing
 import com.izivia.ocpi.toolkit.common.respondObject
 import com.izivia.ocpi.toolkit.modules.tariff.domain.Tariff
@@ -41,9 +42,9 @@ class TariffEmspServer(
             req.respondObject(timeProvider.now()) {
                 service
                     .getTariff(
-                        countryCode = req.pathParams["country_code"]!!,
-                        partyId = req.pathParams["party_id"]!!,
-                        tariffId = req.pathParams["tariff_id"]!!,
+                        countryCode = req.pathParam("country_code"),
+                        partyId = req.pathParam("party_id"),
+                        tariffId = req.pathParam("tariff_id"),
                     )
             }
         }
@@ -59,9 +60,9 @@ class TariffEmspServer(
             req.respondObject(timeProvider.now()) {
                 service
                     .putTariff(
-                        countryCode = req.pathParams["country_code"]!!,
-                        partyId = req.pathParams["party_id"]!!,
-                        tariffId = req.pathParams["tariff_id"]!!,
+                        countryCode = req.pathParam("country_code"),
+                        partyId = req.pathParam("party_id"),
+                        tariffId = req.pathParam("tariff_id"),
                         tariff = mapper.deserializeObject<Tariff>(req.body),
                     )
             }
@@ -78,9 +79,9 @@ class TariffEmspServer(
             req.respondNothing(timeProvider.now()) {
                 service
                     .deleteTariff(
-                        countryCode = req.pathParams["country_code"]!!,
-                        partyId = req.pathParams["party_id"]!!,
-                        tariffId = req.pathParams["tariff_id"]!!,
+                        countryCode = req.pathParam("country_code"),
+                        partyId = req.pathParam("party_id"),
+                        tariffId = req.pathParam("tariff_id"),
                     )
             }
         }
