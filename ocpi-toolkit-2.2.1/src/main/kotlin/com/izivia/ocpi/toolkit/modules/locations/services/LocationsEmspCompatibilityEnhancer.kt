@@ -179,6 +179,10 @@ private fun String.ensureScale(minScale: Int, maxScale: Int) = try {
 }
 
 private fun BigDecimal.ensureScale(minScale: Int, maxScale: Int) =
-    if ( scale() > maxScale ) setScale(maxScale, RoundingMode.HALF_UP)
-    else if ( scale() < minScale ) setScale(minScale, RoundingMode.UNNECESSARY)
-    else this
+    if (scale() > maxScale) {
+        setScale(maxScale, RoundingMode.HALF_UP)
+    } else if (scale() < minScale) {
+        setScale(minScale, RoundingMode.UNNECESSARY)
+    } else {
+        this
+    }
