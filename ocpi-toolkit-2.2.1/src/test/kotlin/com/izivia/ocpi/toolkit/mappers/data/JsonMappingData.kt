@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.mappers.data
 
 object JsonMappingData {
-    fun connector(tariffIds: String = "[\"tariffId\"]", connectorType: String = "\"IEC_62196_T2\"") = """
+    fun connector(tariffIds: String? = "[\"tariffId\"]", connectorType: String = "\"IEC_62196_T2\"") = """
         {
           "id" : "id",
           "standard" : $connectorType,
@@ -10,7 +10,7 @@ object JsonMappingData {
           "max_voltage" : 220,
           "max_amperage" : 16,
           "max_electric_power" : 7000,
-          "tariff_ids" : $tariffIds,
+          ${if (tariffIds != null) "\"tariff_ids\" : $tariffIds," else ""}
           "terms_and_conditions" : "termsAndConditions",
           "last_updated" : "2025-01-02T13:45:59.708Z"
         }

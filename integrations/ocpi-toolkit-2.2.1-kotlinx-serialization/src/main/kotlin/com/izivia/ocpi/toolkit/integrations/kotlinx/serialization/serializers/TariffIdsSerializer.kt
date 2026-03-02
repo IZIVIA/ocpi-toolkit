@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.integrations.kotlinx.serialization.serializers
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.ListSerializer
@@ -23,21 +24,22 @@ class SkipNullsListSerializer<T>(
         listSerializer.serialize(encoder, value)
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun deserialize(decoder: Decoder): List<T>? {
+        if (!decoder.decodeNotNullMark()) return decoder.decodeNull()
+
         val jsonDecoder = decoder as? JsonDecoder
             ?: return listSerializer.deserialize(decoder)
 
         return when (val jsonElement = jsonDecoder.decodeJsonElement()) {
-            is JsonNull -> null
-            is JsonArray -> {
+            is JsonArray ->
                 jsonElement
                     .filterNot { it is JsonNull }
                     .map { element ->
                         jsonDecoder.json.decodeFromJsonElement(elementSerializer, element)
                     }
-            }
 
-            else -> throw SerializationException("Expected array or null for List")
+            else -> throw SerializationException("Expected array for List")
         }
     }
 }

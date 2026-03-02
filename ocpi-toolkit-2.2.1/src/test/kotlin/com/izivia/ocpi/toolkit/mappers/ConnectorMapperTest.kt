@@ -21,4 +21,26 @@ class ConnectorMapperTest : TestWithSerializerProviders {
             ),
         ).isEqualTo(MappingData.connector)
     }
+
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should deserialize Connector with null tariffIds when tariff_ids field is absent`(serializer: OcpiSerializer) {
+        expectThat(
+            serializer.deserializeObject<Connector>(
+                JsonMappingData.connector(tariffIds = null),
+            ),
+        ).isEqualTo(MappingData.connector.copy(tariffIds = null))
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should deserialize Connector with null tariffIds when tariff_ids is explicitly null`(
+        serializer: OcpiSerializer,
+    ) {
+        expectThat(
+            serializer.deserializeObject<Connector>(
+                JsonMappingData.connector(tariffIds = "null"),
+            ),
+        ).isEqualTo(MappingData.connector.copy(tariffIds = null))
+    }
 }
