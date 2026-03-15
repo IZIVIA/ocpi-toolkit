@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.samples.common
 import com.izivia.ocpi.toolkit.common.*
 import com.izivia.ocpi.toolkit.common.validation.toReadableString
 import com.izivia.ocpi.toolkit.transport.TransportServer
+import com.izivia.ocpi.toolkit.transport.context.HttpStatusOverride
 import com.izivia.ocpi.toolkit.transport.context.ResponseMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.transport.domain.*
 import kotlinx.coroutines.runBlocking
@@ -79,7 +80,7 @@ class Http4kTransportServer(
                             val responseMessageRoutingHeaders = ResponseMessageRoutingHeaders
                                 .invertFromRequest(requestMessageRoutingHeaders)
 
-                            httpRequest to runBlocking(requestMessageRoutingHeaders + responseMessageRoutingHeaders) {
+                            httpRequest to runBlocking(requestMessageRoutingHeaders + responseMessageRoutingHeaders + HttpStatusOverride()) {
                                 callback(httpRequest)
                             }
                         }
