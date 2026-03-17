@@ -80,7 +80,9 @@ class Http4kTransportServer(
                             val responseMessageRoutingHeaders = ResponseMessageRoutingHeaders
                                 .invertFromRequest(requestMessageRoutingHeaders)
 
-                            httpRequest to runBlocking(requestMessageRoutingHeaders + responseMessageRoutingHeaders + HttpStatusOverride()) {
+                            val coroutineContext =
+                                requestMessageRoutingHeaders + responseMessageRoutingHeaders + HttpStatusOverride()
+                            httpRequest to runBlocking(coroutineContext) {
                                 callback(httpRequest)
                             }
                         }
