@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.common
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeOcpiResponse
 import com.izivia.ocpi.toolkit.serialization.serializeOcpiResponseList
+import com.izivia.ocpi.toolkit.transport.context.currentHttpStatusOverrideOrNull
 import com.izivia.ocpi.toolkit.transport.context.currentResponseMessageRoutingHeadersOrNull
 import com.izivia.ocpi.toolkit.transport.domain.HttpException
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
@@ -69,12 +70,10 @@ suspend inline fun <reified T> HttpRequest.respondNullableList(
 ) =
     defaultHeadersOrErrorHandling(now) {
         val result = fn()
+        val httpStatus = currentHttpStatusOverrideOrNull() ?: HttpStatus.OK
 
-        // TODO we are supposed to respond with a 201 CREATED if this is a newly added object
-        //      https://github.com/ocpi/ocpi/blob/v2.2.1-d2/status_codes.asciidoc
-        //      https://github.com/IZIVIA/ocpi-toolkit/issues/65
         HttpResponse(
-            status = HttpStatus.OK,
+            status = httpStatus,
             body = mapper.serializeOcpiResponseList<T>(
                 OcpiResponseBody(
                     data = result,
@@ -92,12 +91,10 @@ suspend inline fun <reified T> HttpRequest.respondNullableObject(
 ) =
     defaultHeadersOrErrorHandling(now) {
         val result = fn()
+        val httpStatus = currentHttpStatusOverrideOrNull() ?: HttpStatus.OK
 
-        // TODO we are supposed to respond with a 201 CREATED if this is a newly added object
-        //      https://github.com/ocpi/ocpi/blob/v2.2.1-d2/status_codes.asciidoc
-        //      https://github.com/IZIVIA/ocpi-toolkit/issues/65
         HttpResponse(
-            status = HttpStatus.OK,
+            status = httpStatus,
             body = mapper.serializeOcpiResponse<T>(
                 OcpiResponseBody(
                     data = result,
