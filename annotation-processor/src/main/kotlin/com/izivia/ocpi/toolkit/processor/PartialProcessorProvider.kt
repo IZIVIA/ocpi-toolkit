@@ -4,5 +4,5 @@ import com.google.devtools.ksp.processing.*
 
 class PartialProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor =
-        PartialProcessor(environment.codeGenerator, environment.logger)
+        PartialProcessor(environment.codeGenerator, environment.logger, environment.options)
 }
