@@ -22,7 +22,6 @@ fun <T> validate(fn: ValidationContext.() -> T) = with(ValidationContext()) {
 
     if (violations.isNotEmpty()) {
         // while parameter validation errors are added to the context
-        // TODO unclear why we use different approach for partials and params
         throw OcpiClientInvalidParametersException(violations.toReadableString())
     }
 }

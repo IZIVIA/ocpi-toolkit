@@ -22,6 +22,7 @@ object Versions {
     // Used only for tests
     const val logback = "1.5.6"
     const val junit = "5.13.4"
+    const val junitPlatformLauncher = "1.13.4"
     const val http4k = "5.47.0.0" // version 6 requires java 21+
     const val strikt = "0.35.1"
     const val mockk = "1.14.5"

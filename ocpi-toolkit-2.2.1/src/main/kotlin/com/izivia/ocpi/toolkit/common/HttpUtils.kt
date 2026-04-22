@@ -11,7 +11,11 @@ import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit.transport.context.RequestMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.transport.context.ResponseMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.transport.decodeBase64
-import com.izivia.ocpi.toolkit.transport.domain.*
+import com.izivia.ocpi.toolkit.transport.domain.HttpException
+import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
+import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
+import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 
 object Header {
     const val AUTHORIZATION = "Authorization"
