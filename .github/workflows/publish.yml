@@ -3,7 +3,8 @@ name: OCPI Publish
 on:
     push:
         tags:
-            - "R-*"
+            - "R-*-ocpi221"
+            - "R-*-ocpi211"
 
 permissions:
     contents: write
@@ -30,21 +31,66 @@ jobs:
                 with:
                     cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
-            -   name: Publish OCPI toolkit
+            -   name: Publish OCPI 2.2.1 module pack
+                if: ${{ endsWith(github.ref_name, '-ocpi221') }}
                 env:
                     VERSION: ${{ github.ref }}
                     SONATYPE_USERNAME: ${{ secrets.DELIVERY_SONATYPE_USERNAME }}
                     SONATYPE_PASSWORD: ${{ secrets.DELIVERY_SONATYPE_PASSWORD }}
                     GPG_PRIVATE_KEY: ${{ secrets.DELIVERY_GPG_SECRET_KEY }}
                     GPG_PASSPHRASE: ${{ secrets.DELIVERY_GPG_KEY_PASSPHRASE }}
-                run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
+                run: >-
+                    ./gradlew
+                    :transport:publishToSonatype
+                    :annotation-processor:publishToSonatype
+                    :ocpi-toolkit-2.2.1:publishToSonatype
+                    :integrations:ocpi-toolkit-2.2.1-jackson:publishToSonatype
+                    :integrations:ocpi-toolkit-2.2.1-kotlinx-serialization:publishToSonatype
+                    closeAndReleaseSonatypeStagingRepository
 
-            -   name: Create a GH release
+            -   name: Publish OCPI 2.1.1 module pack
+                if: ${{ endsWith(github.ref_name, '-ocpi211') }}
                 env:
+                    VERSION: ${{ github.ref }}
+                    SONATYPE_USERNAME: ${{ secrets.DELIVERY_SONATYPE_USERNAME }}
+                    SONATYPE_PASSWORD: ${{ secrets.DELIVERY_SONATYPE_PASSWORD }}
+                    GPG_PRIVATE_KEY: ${{ secrets.DELIVERY_GPG_SECRET_KEY }}
+                    GPG_PASSPHRASE: ${{ secrets.DELIVERY_GPG_KEY_PASSPHRASE }}
+                run: >-
+                    ./gradlew
+                    :transport:publishToSonatype
+                    :annotation-processor:publishToSonatype
+                    :ocpi-toolkit-2.1.1:publishToSonatype
+                    :integrations:ocpi-toolkit-2.1.1-jackson:publishToSonatype
+                    :integrations:ocpi-toolkit-2.1.1-kotlinx-serialization:publishToSonatype
+                    closeAndReleaseSonatypeStagingRepository
+
+            -   name: Create a GH release (2.2.1)
+                if: ${{ endsWith(github.ref_name, '-ocpi221') }}
+                env:
+                    GIT_TAG: ${{ github.ref }}
                     VERSION: ${{ github.ref_name }}
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 run: |-
-                    gh release create ${{ github.ref }} \
+                    gh release create "$GIT_TAG" \
                         --generate-notes \
                         --title "Version ${VERSION#R-}" \
-                        ocpi-toolkit-2.2.1/build/libs/*.jar
+                        transport/build/libs/*.jar \
+                        ocpi-toolkit-2.2.1/build/libs/*.jar \
+                        integrations/ocpi-toolkit-2.2.1-jackson/build/libs/*.jar \
+                        integrations/ocpi-toolkit-2.2.1-kotlinx-serialization/build/libs/*.jar
+
+            -   name: Create a GH release (2.1.1)
+                if: ${{ endsWith(github.ref_name, '-ocpi211') }}
+                env:
+                    GIT_TAG: ${{ github.ref }}
+                    VERSION: ${{ github.ref_name }}
+                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: |-
+                    gh release create "$GIT_TAG" \
+                        --generate-notes \
+                        --title "Version ${VERSION#R-}" \
+                        transport/build/libs/*.jar \
+                        ocpi-toolkit-2.1.1/build/libs/*.jar \
+                        integrations/ocpi-toolkit-2.1.1-jackson/build/libs/*.jar \
+                        integrations/ocpi-toolkit-2.1.1-kotlinx-serialization/build/libs/*.jar

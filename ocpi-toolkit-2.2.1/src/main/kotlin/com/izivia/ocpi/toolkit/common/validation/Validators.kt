@@ -6,7 +6,7 @@ import com.izivia.ocpi.toolkit.modules.types.PricePartial
 import org.valiktor.*
 import org.valiktor.functions.isGreaterThanOrEqualTo
 import java.math.BigDecimal
-import java.net.URL
+import java.net.URI
 import java.time.Instant
 import java.util.*
 
@@ -20,6 +20,7 @@ class PrintableAsciiConstraint : Constraint
 class PrintableUtf8Constraint : Constraint
 data class MaxLengthContraint(val length: Int) : Constraint
 data class IsAfterContraint(val property: String, val instant: Instant) : Constraint
+data class SameStringValueConstraint(val reference: String) : Constraint
 class CountryCodeConstraint : Constraint
 class CurrencyCodeConstraint : Constraint
 class UrlConstraint : Constraint
@@ -32,7 +33,6 @@ class EvseIdConstraint : Constraint
 class NoHtmlConstraint : Constraint
 class RegularHoursSetWhenNotTwentyFourSevenConstraint : Constraint
 class RegularHoursSetAtTheSameTimeAsTwentyFourSevenConstraint : Constraint
-data class SameStringValueConstraint(val reference: String) : Constraint
 
 fun String.isPrintableAscii(): Boolean = matches("[\\x20-\\x7E]*".toRegex())
 fun String.isNonPrintableUtf8(): Boolean = matches(".*[\\x00-\\x1F\\x7F\\x80-\\x9F]+.*".toRegex()) // C0, DEL, C1
@@ -93,7 +93,7 @@ fun <E> Validator<E>.Property<String?>.isCurrencyCode(caseSensitive: Boolean) =
 fun <E> Validator<E>.Property<String?>.isUrl() =
     this.validate(UrlConstraint()) {
         it == null || try {
-            URL(it).toURI().let { true }
+            URI(it).toURL().let { true }
         } catch (e: Exception) {
             false
         }
@@ -109,7 +109,7 @@ fun String?.validateUrl() =
 
 private fun isUrl(url: String): Boolean {
     return url.length <= 255 && try {
-        URL(url).toURI().let { true }
+        URI(url).toURL().let { true }
     } catch (e: Exception) {
         false
     }
@@ -177,14 +177,14 @@ fun <E> Validator<E>.Property<String?>.isDate() =
  * - Country Code: two character country code according to ISO-3166-1 (Alpha-2-Code). Country Code SHALL represent the
  * country where the EVSE is installed.
  * - Spot Operator ID: three alphanumeric characters, defined and listed by eMI3 group, referring to the EVSE operator
- * - ID Type: one character “E” indicating that this ID represents an “EVSE”
+ * - ID Type: one character "E" indicating that this ID represents an "EVSE"
  * - Power Outlet ID: between 1 and 31 sequence of alphanumeric characters or separators, including additional optional
  * separators start with alphanumeric character, internal number allowing the EVSE Operator to identify one specific
  * EVSE
  * - S: optional separator
  *
- * An example for, a valid EVSE ID is “FR*A23*E45B*78C” with “FR” indicating France, “A23” representing a particular
- * EVSE Operator, “E” indicating that it is of type “EVSE” and “45B*78C” representing the power outlet ID, that is to
+ * An example for, a valid EVSE ID is "FR*A23*E45B*78C" with "FR" indicating France, "A23" representing a particular
+ * EVSE Operator, "E" indicating that it is of type "EVSE" and "45B*78C" representing the power outlet ID, that is to
  * say one of its EVSEs.NOTE: In contrast to the eMA ID, no check digit is specified for the EVSE ID in this document.
  * Alpha characters SHALL be interpreted case insensitively.
  */

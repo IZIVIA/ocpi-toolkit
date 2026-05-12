@@ -34,7 +34,7 @@ dependencies {
     testRuntimeOnly(project(":integrations:ocpi-toolkit-2.2.1-jackson"))
     testRuntimeOnly(project(":integrations:ocpi-toolkit-2.2.1-kotlinx-serialization"))
     testRuntimeOnly("ch.qos.logback:logback-classic:${Versions.logback}")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:${Versions.junitPlatformLauncher}")
 }
 
 tasks.test {

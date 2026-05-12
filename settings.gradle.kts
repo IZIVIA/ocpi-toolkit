@@ -12,4 +12,7 @@ include(
     "ocpi-toolkit-2.2.1",
     "integrations:ocpi-toolkit-2.2.1-jackson",
     "integrations:ocpi-toolkit-2.2.1-kotlinx-serialization",
+    "ocpi-toolkit-2.1.1",
+    "integrations:ocpi-toolkit-2.1.1-jackson",
+    "integrations:ocpi-toolkit-2.1.1-kotlinx-serialization",
 )

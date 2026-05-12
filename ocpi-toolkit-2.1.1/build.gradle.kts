@@ -1,0 +1,73 @@
+plugins {
+    id("java-library")
+    id("com.google.devtools.ksp")
+    `public-lib`
+}
+
+dependencies {
+    internal(project(":annotation-processor"))
+    ksp(project(":annotation-processor"))
+    api(project(":transport"))
+
+    api("org.apache.logging.log4j:log4j-api:${Versions.log4j}")
+    api("org.apache.logging.log4j:log4j-core:${Versions.log4j}")
+
+    implementation("org.valiktor:valiktor-core:${Versions.valiktor}")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
+
+    testImplementation(http4k("core"))
+    testImplementation(http4k("api-openapi"))
+    testImplementation(http4k("client-okhttp"))
+    testImplementation(http4k("server-netty"))
+
+    testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junit}")
+    testImplementation("io.strikt:strikt-core:${Versions.strikt}")
+    testImplementation("io.github.deblockt:json-diff:${Versions.jsonDiff}")
+    testImplementation("io.mockk:mockk:${Versions.mockk}")
+    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}")
+
+    testRuntimeOnly(project(":integrations:ocpi-toolkit-2.1.1-jackson"))
+    testRuntimeOnly(project(":integrations:ocpi-toolkit-2.1.1-kotlinx-serialization"))
+    testRuntimeOnly("ch.qos.logback:logback-classic:${Versions.logback}")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:${Versions.junitPlatformLauncher}")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
+
+kotlin {
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin")
+    }
+}
+
+ksp {
+    arg("ocpiCommonPackage", "com.izivia.ocpi.toolkit211.common")
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        named<MavenPublication>("maven") {
+            artifactId = "ocpi-2-1-1"
+            groupId = "com.izivia"
+
+            from(components["java"])
+
+            pom {
+                name.set("OCPI 2.1.1")
+                artifactId = "ocpi-2-1-1"
+                description.set("This module implements the v2.1.1 of the OCPI spec")
+            }
+        }
+    }
+}

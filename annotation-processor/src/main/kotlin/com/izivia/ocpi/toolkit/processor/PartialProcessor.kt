@@ -15,7 +15,11 @@ import com.squareup.kotlinpoet.ksp.writeTo
 class PartialProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger,
+    private val options: Map<String, String> = emptyMap(),
 ) : SymbolProcessor {
+
+    private val commonPackage: String
+        get() = options["ocpiCommonPackage"] ?: "com.izivia.ocpi.toolkit.common"
 
     private val toPartialMethodName = "toPartial"
     private val toDomainMethodName = "toOcpiDomain"
@@ -67,7 +71,7 @@ class PartialProcessor(
             classDeclaration to FileSpec
                 .builder(packageName, partialClassName)
                 .generateComments()
-                .addImport("com.izivia.ocpi.toolkit.common", "OcpiClientInvalidParametersException")
+                .addImport(commonPackage, "OcpiClientInvalidParametersException")
                 .addType(partialClassType)
                 .addFunction(partialBuilderFun)
                 .addFunction(partialListBuilderFun)
@@ -122,7 +126,7 @@ class PartialProcessor(
             .classBuilder(partialClassName)
             .addModifiers(KModifier.DATA)
             .addSuperinterface(
-                ClassName("com.izivia.ocpi.toolkit.common", "Partial")
+                ClassName(commonPackage, "Partial")
                     .parameterizedBy(ClassName(packageName, className)),
             )
             .addKdoc(
@@ -198,7 +202,7 @@ class PartialProcessor(
                             paramName,
                             paramName,
                             toDomainMethodName,
-                            ClassName("com.izivia.ocpi.toolkit.common", "OcpiClientInvalidParametersException"),
+                            ClassName(commonPackage, "OcpiClientInvalidParametersException"),
                             exceptionMessage,
                         )
                     } else {
@@ -206,7 +210,7 @@ class PartialProcessor(
                             "  %L = %L\n    ?: throw %T(%S)",
                             paramName,
                             paramName,
-                            ClassName("com.izivia.ocpi.toolkit.common", "OcpiClientInvalidParametersException"),
+                            ClassName(commonPackage, "OcpiClientInvalidParametersException"),
                             exceptionMessage,
                         )
                     }
