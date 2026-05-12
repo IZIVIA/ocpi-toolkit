@@ -18,7 +18,7 @@ plugins {
 
 val versionNumber = System.getenv("VERSION")
     ?.substringAfter("R-")
-    ?.replace(Regex("-ocpi\\d+$"), "")
+    ?.replace(Regex("-(ocpi\\d+|transport)$"), "")
     ?: "0.0.15"
 
 println("building current version: $versionNumber")
