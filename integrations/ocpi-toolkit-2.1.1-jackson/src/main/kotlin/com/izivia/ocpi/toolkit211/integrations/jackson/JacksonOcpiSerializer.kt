@@ -40,7 +40,6 @@ class JacksonOcpiSerializer : OcpiSerializer() {
                 .addDeserializer(Instant::class.java, OcpiInstantDeserializer()),
         )
         .addMixIn(Capability::class.java, CapacityMixin::class.java)
-        .addMixIn(ConnectorType::class.java, ConnectorTypeMixin::class.java)
         .addMixIn(Facility::class.java, FacilityMixin::class.java)
         .addMixIn(ImageCategory::class.java, ImageCategoryMixin::class.java)
         .addMixIn(ParkingRestriction::class.java, ParkingRestrictionMixin::class.java)

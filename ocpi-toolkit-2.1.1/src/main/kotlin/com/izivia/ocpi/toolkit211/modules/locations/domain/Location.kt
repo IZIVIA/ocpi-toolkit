@@ -33,6 +33,7 @@ import java.time.Instant
 @Partial
 data class Location(
     val id: CiString,
+    val type: LocationType,
     val name: String? = null,
     val address: String,
     val city: String,

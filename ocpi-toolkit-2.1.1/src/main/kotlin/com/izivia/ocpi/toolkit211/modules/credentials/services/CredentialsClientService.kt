@@ -3,7 +3,9 @@ package com.izivia.ocpi.toolkit211.modules.credentials.services
 import com.izivia.ocpi.toolkit211.common.*
 import com.izivia.ocpi.toolkit211.modules.credentials.CredentialsClient
 import com.izivia.ocpi.toolkit211.modules.credentials.domain.Credentials
-import com.izivia.ocpi.toolkit211.modules.credentials.repositories.CredentialsRoleRepository
+import com.izivia.ocpi.toolkit211.modules.credentials.domain.CredentialsDetails
+import com.izivia.ocpi.toolkit211.modules.credentials.domain.toDetails
+import com.izivia.ocpi.toolkit211.modules.credentials.repositories.CredentialsDetailsRepository
 import com.izivia.ocpi.toolkit211.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit211.modules.versions.VersionDetailsClient
 import com.izivia.ocpi.toolkit211.modules.versions.VersionsClient
@@ -16,7 +18,7 @@ open class CredentialsClientService(
     private val clientVersionsEndpointUrl: String,
     private val clientPartnerRepository: PartnerRepository,
     private val clientVersionsRepository: VersionsRepository,
-    private val clientCredentialsRoleRepository: CredentialsRoleRepository,
+    private val clientCredentialsDetailsRepository: CredentialsDetailsRepository,
     private val partnerId: String,
     private val transportClientBuilder: TransportClientBuilder,
     private val requiredEndpoints: List<ModuleID>?,
@@ -26,6 +28,7 @@ open class CredentialsClientService(
         ?.let { clientToken ->
             buildCredentialClient()
                 .get(token = clientToken)
+                .validate()
         }
         ?: throw OcpiClientGenericException(
             "Could not find CREDENTIALS_TOKEN_C associated with partner $partnerId",
@@ -48,17 +51,13 @@ open class CredentialsClientService(
 
         val credentials = buildCredentialClient(allowTokenA = true).post(
             token = credentialsTokenA,
-            credentials = Credentials(
-                token = serverToken,
-                url = clientVersionsEndpointUrl,
-                roles = clientCredentialsRoleRepository.getCredentialsRoles(partnerId),
-            ),
+            credentials = buildCredentials(serverToken),
             debugHeaders = emptyMap(),
-        )
+        ).validate()
 
-        clientPartnerRepository.saveCredentialsRoles(
+        clientPartnerRepository.saveCredentialsDetails(
             partnerId = partnerId,
-            credentialsRoles = credentials.roles,
+            credentialsDetails = credentials.toDetails(),
         )
 
         clientPartnerRepository.saveCredentialsClientToken(
@@ -87,17 +86,13 @@ open class CredentialsClientService(
 
         val credentials = buildCredentialClient().put(
             token = credentialsClientToken,
-            credentials = Credentials(
-                token = credentialsServerToken,
-                url = clientVersionsEndpointUrl,
-                roles = clientCredentialsRoleRepository.getCredentialsRoles(partnerId),
-            ),
+            credentials = buildCredentials(credentialsServerToken),
             debugHeaders = emptyMap(),
-        )
+        ).validate()
 
-        clientPartnerRepository.saveCredentialsRoles(
+        clientPartnerRepository.saveCredentialsDetails(
             partnerId = partnerId,
-            credentialsRoles = credentials.roles,
+            credentialsDetails = credentials.toDetails(),
         )
 
         clientPartnerRepository.saveCredentialsClientToken(
@@ -161,6 +156,17 @@ open class CredentialsClientService(
         .getEndpoints(partnerId = partnerId)
         .takeIf { it.isNotEmpty() }
         ?: findLatestMutualVersionAndSaveInformation()
+
+    private suspend fun buildCredentials(token: String): Credentials {
+        val details: CredentialsDetails = clientCredentialsDetailsRepository.getCredentialsDetails(partnerId)
+        return Credentials(
+            token = token,
+            url = clientVersionsEndpointUrl,
+            businessDetails = details.businessDetails,
+            partyId = details.partyId,
+            countryCode = details.countryCode,
+        )
+    }
 
     private suspend fun buildCredentialClient(allowTokenA: Boolean = false): CredentialsClient = CredentialsClient(
         transportClient = transportClientBuilder

@@ -12,9 +12,8 @@ import java.time.Instant
  * @property standard The standard of the installed connector.
  * @property format The format (socket/cable) of the installed connector.
  * @property powerType
- * @property maxVoltage Maximum voltage of the connector, in volt V.
- * @property maxAmperage Maximum amperage of the connector, in ampere A.
- * @property maxElectricPower Maximum electric power that can be delivered by this connector, in Watts (W).
+ * @property voltage Voltage of the connector, in volt V.
+ * @property amperage Maximum amperage of the connector, in ampere A.
  * @property tariffId (max-length=36) Optional identifier of the current charging tariff structure.
  * @property termsAndConditions URL to the operator's terms and conditions.
  * @property lastUpdated Timestamp when this Connector was last updated (or created).
@@ -25,9 +24,8 @@ data class Connector(
     val standard: ConnectorType,
     val format: ConnectorFormat,
     val powerType: PowerType,
-    val maxVoltage: Int,
-    val maxAmperage: Int,
-    val maxElectricPower: Int? = null,
+    val voltage: Int,
+    val amperage: Int,
     val tariffId: CiString? = null,
     val termsAndConditions: String? = null,
     val lastUpdated: Instant,

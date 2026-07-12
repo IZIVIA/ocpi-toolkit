@@ -4,5 +4,6 @@ enum class CommandResponseType {
     NOT_SUPPORTED,
     REJECTED,
     ACCEPTED,
+    TIMEOUT,
     UNKNOWN_SESSION,
 }

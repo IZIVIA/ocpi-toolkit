@@ -8,5 +8,4 @@ enum class ModuleID {
     sessions,
     tariffs,
     tokens,
-    versions,
 }

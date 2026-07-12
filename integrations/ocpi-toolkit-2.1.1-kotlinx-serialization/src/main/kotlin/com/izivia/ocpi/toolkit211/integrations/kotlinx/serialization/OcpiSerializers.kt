@@ -3,7 +3,6 @@ package com.izivia.ocpi.toolkit211.integrations.kotlinx.serialization
 import com.izivia.ocpi.toolkit211.integrations.kotlinx.serialization.serializers.*
 import com.izivia.ocpi.toolkit211.modules.cdr.domain.*
 import com.izivia.ocpi.toolkit211.modules.commands.domain.*
-import com.izivia.ocpi.toolkit211.modules.credentials.domain.CredentialRole
 import com.izivia.ocpi.toolkit211.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit211.modules.locations.domain.*
 import com.izivia.ocpi.toolkit211.modules.sessions.domain.Session
@@ -12,8 +11,6 @@ import com.izivia.ocpi.toolkit211.modules.tariff.domain.*
 import com.izivia.ocpi.toolkit211.modules.tokens.domain.*
 import com.izivia.ocpi.toolkit211.modules.types.DisplayText
 import com.izivia.ocpi.toolkit211.modules.types.DisplayTextPartial
-import com.izivia.ocpi.toolkit211.modules.types.Price
-import com.izivia.ocpi.toolkit211.modules.types.PricePartial
 import com.izivia.ocpi.toolkit211.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit211.modules.versions.domain.Version
 import com.izivia.ocpi.toolkit211.modules.versions.domain.VersionDetails
@@ -41,7 +38,6 @@ import java.time.Instant
 
         // Credentials
         Credentials::class,
-        CredentialRole::class,
 
         // Sessions
         Session::class,
@@ -103,8 +99,6 @@ import java.time.Instant
         // Types
         DisplayText::class,
         DisplayTextPartial::class,
-        Price::class,
-        PricePartial::class,
     ],
     customClassSerializers = [
         // Built-in types
@@ -113,7 +107,6 @@ import java.time.Instant
 
         // Enums
         CustomClassSerializer(targetClass = Capability::class, serializer = CapabilitySerializer::class),
-        CustomClassSerializer(targetClass = ConnectorType::class, serializer = ConnectorTypeSerializer::class),
         CustomClassSerializer(targetClass = Facility::class, serializer = FacilitySerializer::class),
         CustomClassSerializer(targetClass = ImageCategory::class, serializer = ImageCategorySerializer::class),
         CustomClassSerializer(

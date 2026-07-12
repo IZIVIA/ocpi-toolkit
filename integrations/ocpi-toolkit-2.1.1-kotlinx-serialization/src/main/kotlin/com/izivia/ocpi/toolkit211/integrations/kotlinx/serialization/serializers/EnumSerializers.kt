@@ -1,7 +1,6 @@
 package com.izivia.ocpi.toolkit211.integrations.kotlinx.serialization.serializers
 
 import com.izivia.ocpi.toolkit211.modules.locations.domain.Capability
-import com.izivia.ocpi.toolkit211.modules.locations.domain.ConnectorType
 import com.izivia.ocpi.toolkit211.modules.locations.domain.Facility
 import com.izivia.ocpi.toolkit211.modules.locations.domain.ImageCategory
 import com.izivia.ocpi.toolkit211.modules.locations.domain.ParkingRestriction
@@ -33,7 +32,6 @@ inline fun <reified T> createEnumSerializerWithOther(): KSerializer<T> where T :
 }
 
 object CapabilitySerializer : KSerializer<Capability> by createEnumSerializerWithOther()
-object ConnectorTypeSerializer : KSerializer<ConnectorType> by createEnumSerializerWithOther()
 object FacilitySerializer : KSerializer<Facility> by createEnumSerializerWithOther()
 object ImageCategorySerializer : KSerializer<ImageCategory> by createEnumSerializerWithOther()
 object ParkingRestrictionSerializer : KSerializer<ParkingRestriction> by createEnumSerializerWithOther()

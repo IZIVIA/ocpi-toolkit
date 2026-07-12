@@ -12,8 +12,10 @@ import com.izivia.ocpi.toolkit211.modules.cdr.domain.CdrDimension
 import com.izivia.ocpi.toolkit211.modules.cdr.domain.CdrDimensionType
 import com.izivia.ocpi.toolkit211.modules.cdr.domain.ChargingPeriod
 import com.izivia.ocpi.toolkit211.modules.isJsonEqualTo
+import com.izivia.ocpi.toolkit211.modules.locations.domain.GeoLocation
+import com.izivia.ocpi.toolkit211.modules.locations.domain.Location
+import com.izivia.ocpi.toolkit211.modules.locations.domain.LocationType
 import com.izivia.ocpi.toolkit211.modules.toSearchResult
-import com.izivia.ocpi.toolkit211.modules.types.Price
 import com.izivia.ocpi.toolkit211.serialization.OcpiSerializer
 import com.izivia.ocpi.toolkit211.serialization.mapper
 import io.mockk.coEvery
@@ -37,12 +39,19 @@ class CdrsCpoHttpGetCdrsTest : TestWithSerializerProviders {
                     Cdr(
                         id = "CDR0001",
                         startDateTime = Instant.parse("2015-06-29T21:39:09Z"),
-                        endDateTime = Instant.parse("2015-06-29T23:50:16Z"),
+                        stopDateTime = Instant.parse("2015-06-29T23:50:16Z"),
                         authId = "FA54320",
                         authMethod = AuthMethod.AUTH_REQUEST,
-                        locationId = "LOC1",
-                        evseId = "BE*BEC*E041503001",
-                        connectorId = "1",
+                        location = Location(
+                            id = "LOC1",
+                            type = LocationType.ON_STREET,
+                            address = "F.Rooseveltlaan 3A",
+                            city = "Gent",
+                            postalCode = "9000",
+                            country = "BEL",
+                            coordinates = GeoLocation("51.047599", "3.729944"),
+                            lastUpdated = Instant.parse("2015-06-29T22:01:13Z"),
+                        ),
                         currency = "EUR",
                         tariffs = null,
                         chargingPeriods = listOf(
@@ -56,7 +65,7 @@ class CdrsCpoHttpGetCdrsTest : TestWithSerializerProviders {
                                 ),
                             ),
                         ),
-                        totalCost = Price(BigDecimal("4.00")),
+                        totalCost = BigDecimal("4.00"),
                         totalEnergy = BigDecimal("41.00"),
                         totalTime = BigDecimal("0.973"),
                         lastUpdated = Instant.parse("2015-06-29T22:01:13Z"),
@@ -81,12 +90,19 @@ class CdrsCpoHttpGetCdrsTest : TestWithSerializerProviders {
     {
       "id": "CDR0001",
       "start_date_time": "2015-06-29T21:39:09Z",
-      "end_date_time": "2015-06-29T23:50:16Z",
+      "stop_date_time": "2015-06-29T23:50:16Z",
       "auth_id": "FA54320",
       "auth_method": "AUTH_REQUEST",
-      "location_id": "LOC1",
-      "evse_id": "BE*BEC*E041503001",
-      "connector_id": "1",
+      "location": {
+        "id": "LOC1",
+        "type": "ON_STREET",
+        "address": "F.Rooseveltlaan 3A",
+        "city": "Gent",
+        "postal_code": "9000",
+        "country": "BEL",
+        "coordinates": {"latitude": "51.047599", "longitude": "3.729944"},
+        "last_updated": "2015-06-29T22:01:13Z"
+      },
       "currency": "EUR",
       "charging_periods": [
         {
@@ -99,7 +115,7 @@ class CdrsCpoHttpGetCdrsTest : TestWithSerializerProviders {
           ]
         }
       ],
-      "total_cost": {"excl_vat": 4.00},
+      "total_cost": 4.00,
       "total_energy": 41.00,
       "total_time": 0.973,
       "last_updated": "2015-06-29T22:01:13Z"

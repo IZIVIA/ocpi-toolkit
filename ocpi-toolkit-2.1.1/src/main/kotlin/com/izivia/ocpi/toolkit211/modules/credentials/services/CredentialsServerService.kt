@@ -5,7 +5,9 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit211.common.*
 import com.izivia.ocpi.toolkit211.modules.credentials.CredentialsInterface
 import com.izivia.ocpi.toolkit211.modules.credentials.domain.Credentials
-import com.izivia.ocpi.toolkit211.modules.credentials.repositories.CredentialsRoleRepository
+import com.izivia.ocpi.toolkit211.modules.credentials.domain.CredentialsDetails
+import com.izivia.ocpi.toolkit211.modules.credentials.domain.toDetails
+import com.izivia.ocpi.toolkit211.modules.credentials.repositories.CredentialsDetailsRepository
 import com.izivia.ocpi.toolkit211.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit211.modules.versions.domain.ModuleID
 import com.izivia.ocpi.toolkit211.modules.versions.domain.Version
@@ -14,7 +16,7 @@ import com.izivia.ocpi.toolkit211.modules.versions.domain.VersionNumber
 
 open class CredentialsServerService(
     private val partnerRepository: PartnerRepository,
-    private val credentialsRoleRepository: CredentialsRoleRepository,
+    private val credentialsDetailsRepository: CredentialsDetailsRepository,
     private val transportClientBuilder: TransportClientBuilder,
     private val serverVersionsUrlProvider: suspend () -> String,
     private val requiredEndpoints: List<ModuleID>?,
@@ -38,15 +40,16 @@ open class CredentialsServerService(
         credentials: Credentials,
         debugHeaders: Map<String, String>,
     ): Credentials {
+        credentials.validate()
         val partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
             ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)
             ?: throw OcpiClientInvalidParametersException(
                 "Invalid token ($token) - should be either a TokenA or a ServerToken",
             )
 
-        partnerRepository.saveCredentialsRoles(
+        partnerRepository.saveCredentialsDetails(
             partnerId = partnerId,
-            credentialsRoles = credentials.roles,
+            credentialsDetails = credentials.toDetails(),
         )
 
         partnerRepository.saveCredentialsClientToken(
@@ -76,12 +79,13 @@ open class CredentialsServerService(
         credentials: Credentials,
         debugHeaders: Map<String, String>,
     ): Credentials {
+        credentials.validate()
         val partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
             ?: throw OcpiClientMethodNotAllowedException()
 
-        partnerRepository.saveCredentialsRoles(
+        partnerRepository.saveCredentialsDetails(
             partnerId = partnerId,
-            credentialsRoles = credentials.roles,
+            credentialsDetails = credentials.toDetails(),
         )
 
         partnerRepository.saveCredentialsClientToken(
@@ -164,9 +168,14 @@ open class CredentialsServerService(
         partnerRepository.saveEndpoints(partnerId = partnerId, endpoints = versionDetail.endpoints)
     }
 
-    private suspend fun getCredentials(serverToken: String, partnerId: String): Credentials = Credentials(
-        token = serverToken,
-        url = serverVersionsUrlProvider(),
-        roles = credentialsRoleRepository.getCredentialsRoles(partnerId),
-    )
+    private suspend fun getCredentials(serverToken: String, partnerId: String): Credentials {
+        val details: CredentialsDetails = credentialsDetailsRepository.getCredentialsDetails(partnerId)
+        return Credentials(
+            token = serverToken,
+            url = serverVersionsUrlProvider(),
+            businessDetails = details.businessDetails,
+            partyId = details.partyId,
+            countryCode = details.countryCode,
+        )
+    }
 }

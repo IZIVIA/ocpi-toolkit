@@ -1,6 +1,6 @@
 package com.izivia.ocpi.toolkit211.modules.credentials.repositories
 
-import com.izivia.ocpi.toolkit211.modules.credentials.domain.CredentialRole
+import com.izivia.ocpi.toolkit211.modules.credentials.domain.CredentialsDetails
 import com.izivia.ocpi.toolkit211.modules.versions.domain.Endpoint
 import com.izivia.ocpi.toolkit211.modules.versions.domain.Version
 
@@ -125,13 +125,13 @@ interface PartnerRepository {
     suspend fun savePartnerUrlForTokenA(tokenA: String, partnerUrl: String): String?
 
     /**
-     * Used to save credentials roles given by a partner during registration.
+     * Used to save credentials details given by a partner during registration or update.
      *
      * @param partnerId, identifies uniquely the partner
-     * @param credentialsRoles
-     * @return the updated credentials roles
+     * @param credentialsDetails the partner's credentials details
+     * @return the updated credentials details
      */
-    suspend fun saveCredentialsRoles(partnerId: String, credentialsRoles: List<CredentialRole>): List<CredentialRole>
+    suspend fun saveCredentialsDetails(partnerId: String, credentialsDetails: CredentialsDetails): CredentialsDetails
 
     /**
      * Used to save available version for a given partner identified by an id value.
