@@ -195,15 +195,6 @@ fun <E> Validator<E>.Property<BigDecimal?>.isBigDecimalPositive() = this.isGreat
 
 fun <E> Validator<E>.Property<Int?>.isIntPositive() = this.isGreaterThanOrEqualTo(0)
 
-fun com.izivia.ocpi.toolkit211.modules.types.PricePartial.validate(
-    allowNegative: Boolean = false,
-): com.izivia.ocpi.toolkit211.modules.types.PricePartial = validate(this) {
-    if (!allowNegative) {
-        validate(com.izivia.ocpi.toolkit211.modules.types.PricePartial::exclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
-        validate(com.izivia.ocpi.toolkit211.modules.types.PricePartial::inclVat).isGreaterThanOrEqualTo(BigDecimal.ZERO)
-    }
-}
-
 fun com.izivia.ocpi.toolkit211.modules.types.DisplayTextPartial.validate():
     com.izivia.ocpi.toolkit211.modules.types.DisplayTextPartial = validate(this) {
     validate(com.izivia.ocpi.toolkit211.modules.types.DisplayTextPartial::language).isLanguage()

@@ -7,11 +7,6 @@ enum class CapacityMixin {
     OTHER,
 }
 
-enum class ConnectorTypeMixin {
-    @JsonEnumDefaultValue
-    OTHER,
-}
-
 enum class FacilityMixin {
     @JsonEnumDefaultValue
     OTHER,

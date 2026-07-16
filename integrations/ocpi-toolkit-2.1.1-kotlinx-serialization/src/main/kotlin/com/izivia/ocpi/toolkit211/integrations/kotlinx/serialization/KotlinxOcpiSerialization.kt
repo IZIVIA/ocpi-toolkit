@@ -45,7 +45,6 @@ class KotlinxOcpiSerialization : OcpiSerializer() {
 
             // Enums
             contextual(Capability::class, CapabilitySerializer)
-            contextual(ConnectorType::class, ConnectorTypeSerializer)
             contextual(Facility::class, FacilitySerializer)
             contextual(ImageCategory::class, ImageCategorySerializer)
             contextual(ParkingRestriction::class, ParkingRestrictionSerializer)
@@ -108,7 +107,6 @@ class KotlinxOcpiSerialization : OcpiSerializer() {
         // kotlinx.serialization.internal.EnumSerializer<T>. We instead want our custom
         // serializer if we have one
         Capability::class.java -> CapabilitySerializer
-        ConnectorType::class.java -> ConnectorTypeSerializer
         Facility::class.java -> FacilitySerializer
         ImageCategory::class.java -> ImageCategorySerializer
         ParkingRestriction::class.java -> ParkingRestrictionSerializer

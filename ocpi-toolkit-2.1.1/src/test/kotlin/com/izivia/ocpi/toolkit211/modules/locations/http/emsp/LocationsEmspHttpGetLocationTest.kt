@@ -40,6 +40,7 @@ class LocationsEmspHttpGetLocationTest : TestWithSerializerProviders {
             } coAnswers {
                 Location(
                     id = "LOC1",
+                    type = LocationType.ON_STREET,
                     name = "Gent Zuid",
                     address = "F.Rooseveltlaan 3A",
                     city = "Gent",
@@ -58,8 +59,8 @@ class LocationsEmspHttpGetLocationTest : TestWithSerializerProviders {
                                     standard = ConnectorType.IEC_62196_T2,
                                     format = ConnectorFormat.CABLE,
                                     powerType = PowerType.AC_3_PHASE,
-                                    maxVoltage = 220,
-                                    maxAmperage = 16,
+                                    voltage = 220,
+                                    amperage = 16,
                                     tariffId = "11",
                                     lastUpdated = Instant.parse("2015-03-16T10:10:02Z"),
                                 ),
@@ -94,6 +95,7 @@ class LocationsEmspHttpGetLocationTest : TestWithSerializerProviders {
                 {
                   "data": {
                     "id": "LOC1",
+                    "type": "ON_STREET",
                     "name": "Gent Zuid",
                     "address": "F.Rooseveltlaan 3A",
                     "city": "Gent",
@@ -115,8 +117,8 @@ class LocationsEmspHttpGetLocationTest : TestWithSerializerProviders {
                             "standard": "IEC_62196_T2",
                             "format": "CABLE",
                             "power_type": "AC_3_PHASE",
-                            "max_voltage": 220,
-                            "max_amperage": 16,
+                            "voltage": 220,
+                            "amperage": 16,
                             "tariff_id": "11",
                             "last_updated": "2015-03-16T10:10:02Z"
                           }

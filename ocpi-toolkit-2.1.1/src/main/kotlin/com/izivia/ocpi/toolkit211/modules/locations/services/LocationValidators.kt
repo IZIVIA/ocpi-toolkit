@@ -147,10 +147,8 @@ fun EvsePartial.validate(): EvsePartial = validate(this) {
 
 fun ConnectorPartial.validate(): ConnectorPartial = validate(this) {
     validate(ConnectorPartial::id).isPrintableAscii().hasMaxLengthOf(36)
-    validate(ConnectorPartial::standard).isNotEqualTo(ConnectorType.OTHER)
-    validate(ConnectorPartial::maxVoltage).isGreaterThanOrEqualTo(0)
-    validate(ConnectorPartial::maxAmperage).isGreaterThanOrEqualTo(0)
-    validate(ConnectorPartial::maxElectricPower).isGreaterThanOrEqualTo(0)
+    validate(ConnectorPartial::voltage).isGreaterThanOrEqualTo(0)
+    validate(ConnectorPartial::amperage).isGreaterThanOrEqualTo(0)
     validate(ConnectorPartial::tariffId).isPrintableAscii().hasMaxLengthOf(36)
     validate(ConnectorPartial::termsAndConditions).isUrl()
 }

@@ -13,4 +13,5 @@ import com.izivia.ocpi.toolkit211.common.CiString
 data class LocationReferences(
     val locationId: CiString,
     val evseUids: List<CiString>? = null,
+    val connectorIds: List<CiString>? = null,
 )

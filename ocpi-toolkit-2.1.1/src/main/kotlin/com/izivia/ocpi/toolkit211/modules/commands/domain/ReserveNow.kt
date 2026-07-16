@@ -7,7 +7,7 @@ import java.time.Instant
 data class ReserveNow(
     val token: Token,
     val expiryDate: Instant,
-    val reservationId: CiString,
+    val reservationId: Int,
     val locationId: CiString,
     val evseUid: CiString?,
 )

@@ -81,7 +81,7 @@ suspend fun PartnerRepository.checkToken(
      * So, we allow token A only if we are in this case.
      */
 
-    val allowTokenA = httpRequest.path.contains(ModuleID.versions.name) ||
+    val allowTokenA = httpRequest.path.contains("versions") ||
         httpRequest.path.contains("/{versionNumber}") ||
         httpRequest.path.contains(ModuleID.credentials.name)
 

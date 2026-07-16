@@ -37,6 +37,7 @@ class LocationsCpoHttpGetLocationsTest : TestWithSerializerProviders {
                 listOf(
                     Location(
                         id = "3e7b39c2-10d0-4138-a8b3-8509a25f9920",
+                        type = LocationType.PARKING_LOT,
                         name = "ihomer",
                         address = "Tamboerijn 7",
                         city = "Etten-Leur",
@@ -54,8 +55,8 @@ class LocationsCpoHttpGetLocationsTest : TestWithSerializerProviders {
                                         standard = ConnectorType.IEC_62196_T2,
                                         format = ConnectorFormat.SOCKET,
                                         powerType = PowerType.AC_3_PHASE,
-                                        maxVoltage = 220,
-                                        maxAmperage = 16,
+                                        voltage = 220,
+                                        amperage = 16,
                                         lastUpdated = Instant.parse("2019-07-01T12:12:11Z"),
                                     ),
                                 ),
@@ -85,6 +86,7 @@ class LocationsCpoHttpGetLocationsTest : TestWithSerializerProviders {
   "data": [
     {
       "id": "3e7b39c2-10d0-4138-a8b3-8509a25f9920",
+      "type": "PARKING_LOT",
       "name": "ihomer",
       "address": "Tamboerijn 7",
       "city": "Etten-Leur",
@@ -105,8 +107,8 @@ class LocationsCpoHttpGetLocationsTest : TestWithSerializerProviders {
               "standard": "IEC_62196_T2",
               "format": "SOCKET",
               "power_type": "AC_3_PHASE",
-              "max_voltage": 220,
-              "max_amperage": 16,
+              "voltage": 220,
+              "amperage": 16,
               "last_updated": "2019-07-01T12:12:11Z"
             }
           ],

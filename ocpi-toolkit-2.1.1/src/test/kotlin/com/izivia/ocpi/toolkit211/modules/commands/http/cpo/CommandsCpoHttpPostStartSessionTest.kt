@@ -37,8 +37,6 @@ class CommandsCpoHttpPostStartSessionTest : TestWithSerializerProviders {
             coEvery { postStartSession(any(), capture(slots.startSession)) } coAnswers {
                 CommandResponse(
                     result = CommandResponseType.ACCEPTED,
-                    timeout = 30,
-                    message = null,
                 )
             }
         }.buildServer()
@@ -77,7 +75,6 @@ class CommandsCpoHttpPostStartSessionTest : TestWithSerializerProviders {
         val commandResponse = ocpiResponse.data!!
         expectThat(commandResponse) {
             get { result }.isEqualTo(CommandResponseType.ACCEPTED)
-            get { timeout }.isEqualTo(30)
         }
     }
 }

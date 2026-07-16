@@ -29,7 +29,6 @@ private fun TariffElementPartial.validate() = validate(this) {
 private fun PriceComponentPartial.validate() = validate(this) {
     // type: nothing to validate
     validate(PriceComponentPartial::price).isBigDecimalPositive()
-    validate(PriceComponentPartial::vat).isBigDecimalPositive()
     validate(PriceComponentPartial::stepSize).isIntPositive()
 }
 

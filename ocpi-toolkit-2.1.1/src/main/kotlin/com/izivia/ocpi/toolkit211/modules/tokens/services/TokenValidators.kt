@@ -23,13 +23,13 @@ fun TokenPartial.validate(): TokenPartial = validate(this) {
 }
 
 fun LocationReferencesPartial.validate(): LocationReferencesPartial = validate(this) {
-    validate(LocationReferencesPartial::locationId).isPrintableAscii().hasMaxLengthOf(36)
+    validate(LocationReferencesPartial::locationId).isPrintableAscii().hasMaxLengthOf(39)
     evseUids?.forEach { evseUid ->
-        if (evseUid.length > 36) {
+        if (evseUid.length > 39) {
             constraintViolations.add(
                 DefaultConstraintViolation(
                     property = "evseUids",
-                    constraint = MaxLengthContraint(36),
+                    constraint = MaxLengthContraint(39),
                 ),
             )
         }
@@ -37,6 +37,24 @@ fun LocationReferencesPartial.validate(): LocationReferencesPartial = validate(t
             constraintViolations.add(
                 DefaultConstraintViolation(
                     property = "evseUids",
+                    constraint = PrintableAsciiConstraint(),
+                ),
+            )
+        }
+    }
+    connectorIds?.forEach { connectorId ->
+        if (connectorId.length > 36) {
+            constraintViolations.add(
+                DefaultConstraintViolation(
+                    property = "connectorIds",
+                    constraint = MaxLengthContraint(36),
+                ),
+            )
+        }
+        if (!connectorId.isPrintableAscii()) {
+            constraintViolations.add(
+                DefaultConstraintViolation(
+                    property = "connectorIds",
                     constraint = PrintableAsciiConstraint(),
                 ),
             )

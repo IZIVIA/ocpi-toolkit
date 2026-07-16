@@ -64,7 +64,7 @@ class CommandEmspClient(
     suspend fun postReserveNow(
         token: Token,
         expiryDate: Instant,
-        reservationId: CiString,
+        reservationId: Int,
         locationId: CiString,
         evseUid: CiString?,
     ): CommandResponse = with(buildTransport()) {

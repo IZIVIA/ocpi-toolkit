@@ -2,8 +2,8 @@ package com.izivia.ocpi.toolkit211.modules.cdr.domain
 
 import com.izivia.ocpi.toolkit.annotations.Partial
 import com.izivia.ocpi.toolkit211.common.CiString
+import com.izivia.ocpi.toolkit211.modules.locations.domain.Location
 import com.izivia.ocpi.toolkit211.modules.tariff.domain.Tariff
-import com.izivia.ocpi.toolkit211.modules.types.Price
 import java.math.BigDecimal
 import java.time.Instant
 
@@ -11,17 +11,15 @@ import java.time.Instant
 data class Cdr(
     val id: CiString,
     val startDateTime: Instant,
-    val endDateTime: Instant,
+    val stopDateTime: Instant,
     val authId: CiString,
     val authMethod: AuthMethod,
-    val locationId: CiString,
-    val evseId: CiString,
-    val connectorId: CiString,
+    val location: Location,
     val meterId: String? = null,
     val currency: String,
     val tariffs: List<Tariff>?,
     val chargingPeriods: List<ChargingPeriod>,
-    val totalCost: Price,
+    val totalCost: BigDecimal,
     val totalEnergy: BigDecimal,
     val totalTime: BigDecimal,
     val totalParkingTime: BigDecimal? = null,
