@@ -43,7 +43,6 @@ jobs:
                 run: >-
                     ./gradlew
                     :transport:publishToSonatype
-                    :annotation-processor:publishToSonatype
                     closeAndReleaseSonatypeStagingRepository
 
             -   name: Publish OCPI 2.2.1 module pack
