@@ -36,7 +36,7 @@ suspend inline fun <reified T> HttpRequest.respondSearchResult(
     }
 
 fun paginationHeaders(result: SearchResult<*>, request: HttpRequest): Map<String, String> {
-    val nextPageOffset = (result.offset + result.limit).takeIf { it <= result.totalCount }
+    val nextPageOffset = (result.offset + result.limit).takeIf { it < result.totalCount }
 
     val queries = request
         .queryParams
