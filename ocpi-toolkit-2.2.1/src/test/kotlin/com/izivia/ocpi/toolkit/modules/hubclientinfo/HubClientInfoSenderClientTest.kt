@@ -29,7 +29,11 @@ import java.time.Instant
 
 class HubClientInfoSenderClientTest : TestWithSerializerProviders {
     private val clientInfo = ClientInfo(
-        "FR", "ABC", Role.EMSP, ConnectionStatus.CONNECTED, Instant.parse("2026-01-01T00:00:00Z"),
+        "FR",
+        "ABC",
+        Role.EMSP,
+        ConnectionStatus.CONNECTED,
+        Instant.parse("2026-01-01T00:00:00Z"),
     )
 
     @ParameterizedTest
