@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.ValueSource
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNull
-
 import java.net.URI
 import java.net.URLDecoder
 import java.time.Instant
@@ -98,7 +97,8 @@ class PaginationHeadersTest {
         )
 
         expectThat(headers[Header.LINK]).isEqualTo(
-            "<https://example.com/2.2.1/tokens?filter=a%26b%3Dc%20%23d%20%25e%20%C3%A9%20%2A~:@/?&limit=1&offset=1>; rel=\"next\"",
+            "<https://example.com/2.2.1/tokens?filter=a%26b%3Dc%20%23d%20%25e%20%C3%A9%20%2A~:@/?" +
+                "&limit=1&offset=1>; rel=\"next\"",
         )
     }
 
