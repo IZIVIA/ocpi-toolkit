@@ -51,6 +51,6 @@ class HubClientInfoSenderClient(
                     body = mapper.serializeObject(clientInfo),
                 ),
             )
-                .parseResultOrNull<Any>()
+                .parseResultOrNull<String>()
         }
 }
