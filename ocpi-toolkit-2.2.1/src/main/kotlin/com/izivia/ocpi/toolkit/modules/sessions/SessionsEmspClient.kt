@@ -74,7 +74,7 @@ class SessionsEmspClient(
             send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/$sessionId/charging_preferences",
+                    path = pathOf(sessionId, "charging_preferences"),
                     body = mapper.serializeObject(chargingPreferences),
                 ),
             )
