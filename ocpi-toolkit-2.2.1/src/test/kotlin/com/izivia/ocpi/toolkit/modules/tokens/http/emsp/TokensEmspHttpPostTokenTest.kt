@@ -19,8 +19,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import strikt.api.expectThat
+import strikt.assertions.contains
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
+import strikt.assertions.isNull
 import java.time.Instant
 
 class TokensEmspHttpPostTokenTest : TestWithSerializerProviders {
@@ -200,6 +202,49 @@ class TokensEmspHttpPostTokenTest : TestWithSerializerProviders {
                 }
                 """.trimIndent(),
             )
+        }
+    }
+
+    /**
+     * OCPI 2.2.1, mod_tokens, LocationReferences: `evse_uids` has the cardinality `*`, a CPO may omit it.
+     */
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should post token with a location reference without evse_uids`(serializer: OcpiSerializer) {
+        mapper = serializer
+        val locationReferences = slot<LocationReferences>()
+        val srv = mockk<TokensEmspRepository> {
+            coEvery { postToken(any(), any(), capture(locationReferences)) } coAnswers {
+                AuthorizationInfo(
+                    allowed = AllowedType.ALLOWED,
+                    token = Token(
+                        countryCode = "DE",
+                        partyId = "TNM",
+                        uid = "012345678",
+                        type = TokenType.RFID,
+                        contractId = "DE8ACC12E46L89",
+                        issuer = "TheNewMotion",
+                        valid = true,
+                        whitelist = WhitelistType.ALLOWED,
+                        lastUpdated = Instant.parse("2018-12-10T17:25:10Z"),
+                    ),
+                )
+            }
+        }.buildServer()
+
+        // when
+        val resp: HttpResponse = srv.send(
+            buildHttpRequest(HttpMethod.POST, "/tokens/012345678/authorize?type=RFID", """{"location_id":"LOC1"}"""),
+        )
+
+        // then
+        expectThat(resp) {
+            get { status }.isEqualTo(HttpStatus.OK)
+            get { body }.isNotNull().contains("\"status_code\":1000")
+        }
+        expectThat(locationReferences.captured) {
+            get { locationId }.isEqualTo("LOC1")
+            get { evseUids }.isNull()
         }
     }
 }
