@@ -66,6 +66,8 @@ interface TokensEmspInterface {
      *
      * When the token is known by the Sender, the response SHALL contain a AuthorizationInfo object.
      * If the token is not known, the response SHALL contain the status code: 2004: Unknown Token, and no data field.
+     * To do so, throw [com.izivia.ocpi.toolkit.common.OcpiClientUnknownTokenException]: [TokensEmspServer] answers it
+     * with HTTP 404 and 2004, whatever HTTP status the exception carries.
      *
      * @param tokenUid Token.uid of the Token for which authorization is requested. max-length = 36.
      * @param type Token.type of the Token for which this authorization is. Default if omitted: RFID

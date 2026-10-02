@@ -13,6 +13,7 @@ import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
+import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import com.izivia.ocpi.toolkit.transport.domain.VariablePathSegment
 import java.time.Instant
 
@@ -57,13 +58,24 @@ class TokensEmspServer(
             queryParams = listOf("type"),
         ) { req ->
             req.respondObject(timeProvider.now()) {
-                service.postToken(
-                    tokenUid = req.pathParam("tokenUid"),
-                    type = req.optionalQueryParamAs("type", TokenType::valueOf) ?: TokenType.RFID,
-                    locationReferences = req.body
-                        ?.takeIf { it.isNotBlank() } // During Test if client sent body = null, this reiceve body=""
-                        ?.let { mapper.deserializeObject<LocationReferences>(it) },
-                )
+                try {
+                    service.postToken(
+                        tokenUid = req.pathParam("tokenUid"),
+                        type = req.optionalQueryParamAs("type", TokenType::valueOf) ?: TokenType.RFID,
+                        locationReferences = req.body
+                            ?.takeIf { it.isNotBlank() } // During Test if client sent body = null, this reiceve body=""
+                            ?.let { mapper.deserializeObject<LocationReferences>(it) },
+                    )
+                } catch (e: OcpiClientUnknownTokenException) {
+                    // OCPI 2.2.1 (mod_tokens, real-time authorization): "When the eMSP does not know the Token, the
+                    // eMSP SHALL respond with an HTTP status code: 404 (Not Found)". The exception defaults to 400
+                    // because the credentials module also uses it for an unknown authorization token.
+                    throw OcpiClientUnknownTokenException(
+                        message = e.message ?: "Unknown token",
+                        httpStatus = HttpStatus.NOT_FOUND,
+                        ocpiStatus = e.ocpiStatus,
+                    )
+                }
             }
         }
     }
