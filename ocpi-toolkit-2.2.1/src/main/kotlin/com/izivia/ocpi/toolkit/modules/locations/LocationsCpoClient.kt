@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit.common.parseOptionalResult
 import com.izivia.ocpi.toolkit.common.parseResultOrNull
+import com.izivia.ocpi.toolkit.common.pathOf
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -38,7 +39,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$countryCode/$partyId/$locationId",
+                path = pathOf(countryCode, partyId, locationId),
             ),
         )
             .parseOptionalResult()
@@ -53,7 +54,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$countryCode/$partyId/$locationId/$evseUid",
+                path = pathOf(countryCode, partyId, locationId, evseUid),
             ),
         )
             .parseOptionalResult()
@@ -69,7 +70,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                path = pathOf(countryCode, partyId, locationId, evseUid, connectorId),
             ),
         )
             .parseOptionalResult()
@@ -84,7 +85,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
-                path = "/$countryCode/$partyId/$locationId",
+                path = pathOf(countryCode, partyId, locationId),
                 body = mapper.serializeObject(location),
             ),
         )
@@ -101,7 +102,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
-                path = "/$countryCode/$partyId/$locationId/$evseUid",
+                path = pathOf(countryCode, partyId, locationId, evseUid),
                 body = mapper.serializeObject(evse),
             ),
         )
@@ -119,7 +120,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
-                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                path = pathOf(countryCode, partyId, locationId, evseUid, connectorId),
                 body = mapper.serializeObject(connector),
             ),
         )
@@ -135,7 +136,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/$countryCode/$partyId/$locationId",
+                path = pathOf(countryCode, partyId, locationId),
                 body = mapper.serializeObject(location),
             ),
         )
@@ -152,7 +153,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/$countryCode/$partyId/$locationId/$evseUid",
+                path = pathOf(countryCode, partyId, locationId, evseUid),
                 body = mapper.serializeObject(evse),
             ),
         )
@@ -170,7 +171,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                path = pathOf(countryCode, partyId, locationId, evseUid, connectorId),
                 body = mapper.serializeObject(connector),
             ),
         )

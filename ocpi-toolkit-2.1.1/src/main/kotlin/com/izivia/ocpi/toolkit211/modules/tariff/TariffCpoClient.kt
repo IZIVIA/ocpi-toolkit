@@ -6,6 +6,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit211.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit211.common.parseOptionalResult
 import com.izivia.ocpi.toolkit211.common.parseResultOrNull
+import com.izivia.ocpi.toolkit211.common.pathOf
 import com.izivia.ocpi.toolkit211.modules.tariff.domain.Tariff
 import com.izivia.ocpi.toolkit211.modules.tariff.domain.TariffPartial
 import com.izivia.ocpi.toolkit211.modules.versions.domain.ModuleID
@@ -31,7 +32,7 @@ class TariffCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$countryCode/$partyId/$tariffId",
+                path = pathOf(countryCode, partyId, tariffId),
             ),
         ).parseOptionalResult()
     }
@@ -45,7 +46,7 @@ class TariffCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
-                path = "/$countryCode/$partyId/$tariffId",
+                path = pathOf(countryCode, partyId, tariffId),
                 body = mapper.serializeObject(tariff),
             ),
         ).parseResultOrNull() ?: TariffPartial()
@@ -59,7 +60,7 @@ class TariffCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.DELETE,
-                path = "/$countryCode/$partyId/$tariffId",
+                path = pathOf(countryCode, partyId, tariffId),
             ),
         ).parseResultOrNull<Any>()
     }

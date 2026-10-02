@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit.common.parseOptionalResult
 import com.izivia.ocpi.toolkit.common.parseResultOrNull
+import com.izivia.ocpi.toolkit.common.pathOf
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
 import com.izivia.ocpi.toolkit.modules.sessions.domain.SessionPartial
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
@@ -39,7 +40,7 @@ class SessionsCpoClient(
             send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/$countryCode/$partyId/$sessionId",
+                    path = pathOf(countryCode, partyId, sessionId),
                 ),
             )
                 .parseOptionalResult()
@@ -55,7 +56,7 @@ class SessionsCpoClient(
             send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/$countryCode/$partyId/$sessionId",
+                    path = pathOf(countryCode, partyId, sessionId),
                     body = mapper.serializeObject(session),
                 ),
             )
@@ -72,7 +73,7 @@ class SessionsCpoClient(
             send(
                 HttpRequest(
                     method = HttpMethod.PATCH,
-                    path = "/$countryCode/$partyId/$sessionId",
+                    path = pathOf(countryCode, partyId, sessionId),
                     body = mapper.serializeObject(session),
                 ),
             )

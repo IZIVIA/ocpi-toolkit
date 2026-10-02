@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.chargingProfiles
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit.common.parseResultOrNull
+import com.izivia.ocpi.toolkit.common.pathOf
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfile
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfileResult
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileResult
@@ -87,7 +88,7 @@ class ChargingProfilesCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
-                path = "/$sessionId",
+                path = pathOf(sessionId),
                 body = mapper.serializeObject(activeChargingProfile),
             ),
         )
