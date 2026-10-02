@@ -33,7 +33,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$countryCode/$partyId/$locationId",
+                path = pathOf(countryCode, partyId, locationId),
             ),
         ).parseOptionalResult()
     }
@@ -47,7 +47,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$countryCode/$partyId/$locationId/$evseUid",
+                path = pathOf(countryCode, partyId, locationId, evseUid),
             ),
         ).parseOptionalResult()
     }
@@ -62,7 +62,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                path = pathOf(countryCode, partyId, locationId, evseUid, connectorId),
             ),
         ).parseOptionalResult()
     }
@@ -76,7 +76,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
-                path = "/$countryCode/$partyId/$locationId",
+                path = pathOf(countryCode, partyId, locationId),
                 body = mapper.serializeObject(location),
             ),
         ).parseResultOrNull() ?: LocationPartial()
@@ -92,7 +92,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
-                path = "/$countryCode/$partyId/$locationId/$evseUid",
+                path = pathOf(countryCode, partyId, locationId, evseUid),
                 body = mapper.serializeObject(evse),
             ),
         ).parseResultOrNull() ?: EvsePartial()
@@ -109,7 +109,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
-                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                path = pathOf(countryCode, partyId, locationId, evseUid, connectorId),
                 body = mapper.serializeObject(connector),
             ),
         ).parseResultOrNull() ?: ConnectorPartial()
@@ -124,7 +124,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/$countryCode/$partyId/$locationId",
+                path = pathOf(countryCode, partyId, locationId),
                 body = mapper.serializeObject(location),
             ),
         ).parseResultOrNull()
@@ -140,7 +140,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/$countryCode/$partyId/$locationId/$evseUid",
+                path = pathOf(countryCode, partyId, locationId, evseUid),
                 body = mapper.serializeObject(evse),
             ),
         ).parseResultOrNull()
@@ -157,7 +157,7 @@ class LocationsCpoClient(
         send(
             HttpRequest(
                 method = HttpMethod.PATCH,
-                path = "/$countryCode/$partyId/$locationId/$evseUid/$connectorId",
+                path = pathOf(countryCode, partyId, locationId, evseUid, connectorId),
                 body = mapper.serializeObject(connector),
             ),
         ).parseResultOrNull()
