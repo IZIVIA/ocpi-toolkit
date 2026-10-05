@@ -4,7 +4,7 @@ import com.izivia.ocpi.toolkit.transport.TransportClient
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit211.common.parseResult
-import com.izivia.ocpi.toolkit211.common.parseResultOrNull
+import com.izivia.ocpi.toolkit211.common.parseResultIgnoringData
 import com.izivia.ocpi.toolkit211.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit211.serialization.mapper
 import com.izivia.ocpi.toolkit211.serialization.serializeObject
@@ -52,6 +52,6 @@ class CredentialsClient(
     override suspend fun delete(token: String) {
         transportClient
             .send(HttpRequest(method = HttpMethod.DELETE))
-            .parseResultOrNull<String>()
+            .parseResultIgnoringData()
     }
 }

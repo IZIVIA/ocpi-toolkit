@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.tariff
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit.common.parseOptionalResult
+import com.izivia.ocpi.toolkit.common.parseResultIgnoringData
 import com.izivia.ocpi.toolkit.common.parseResultOrNull
 import com.izivia.ocpi.toolkit.common.pathOf
 import com.izivia.ocpi.toolkit.modules.tariff.domain.Tariff
@@ -68,6 +69,6 @@ class TariffCpoClient(
                 path = pathOf(countryCode, partyId, tariffId),
             ),
         )
-            .parseResultOrNull<Any>()
+            .parseResultIgnoringData()
     }
 }

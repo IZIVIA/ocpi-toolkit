@@ -2,7 +2,7 @@ package com.izivia.ocpi.toolkit.modules.chargingProfiles
 
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.TransportClientBuilder
-import com.izivia.ocpi.toolkit.common.parseResultOrNull
+import com.izivia.ocpi.toolkit.common.parseResultIgnoringData
 import com.izivia.ocpi.toolkit.common.pathOf
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfile
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ActiveChargingProfileResult
@@ -18,6 +18,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 
 /**
  * Send calls to the SCSP
+ * Acknowledgement data is ignored; nullable return types are retained for compatibility.
  *
  * @property transportClientBuilder used to build transport client
  * @property partnerId used to know which partner to communicate with
@@ -42,7 +43,7 @@ class ChargingProfilesCpoClient(
     suspend fun postCallbackActiveChargingProfile(
         responseUrl: String,
         result: ActiveChargingProfileResult,
-    ) = with(buildCallbackTransport()) {
+    ): String? = with(buildCallbackTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.POST,
@@ -50,13 +51,14 @@ class ChargingProfilesCpoClient(
                 body = mapper.serializeObject(result),
             ),
         )
-            .parseResultOrNull<String>()
+            .parseResultIgnoringData()
+        null
     }
 
     suspend fun postCallbackChargingProfile(
         responseUrl: String,
         result: ChargingProfileResult,
-    ) = with(buildCallbackTransport()) {
+    ): String? = with(buildCallbackTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.POST,
@@ -64,13 +66,14 @@ class ChargingProfilesCpoClient(
                 body = mapper.serializeObject(result),
             ),
         )
-            .parseResultOrNull<String>()
+            .parseResultIgnoringData()
+        null
     }
 
     suspend fun postCallbackClearProfile(
         responseUrl: String,
         result: ClearProfileResult,
-    ) = with(buildCallbackTransport()) {
+    ): String? = with(buildCallbackTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.POST,
@@ -78,13 +81,14 @@ class ChargingProfilesCpoClient(
                 body = mapper.serializeObject(result),
             ),
         )
-            .parseResultOrNull<String>()
+            .parseResultIgnoringData()
+        null
     }
 
     suspend fun putActiveChargingProfile(
         sessionId: CiString,
         activeChargingProfile: ActiveChargingProfile,
-    ) = with(buildTransport()) {
+    ): String? = with(buildTransport()) {
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
@@ -92,6 +96,7 @@ class ChargingProfilesCpoClient(
                 body = mapper.serializeObject(activeChargingProfile),
             ),
         )
-            .parseResultOrNull<String>()
+            .parseResultIgnoringData()
+        null
     }
 }

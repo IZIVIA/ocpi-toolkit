@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.common
 
+import com.izivia.ocpi.toolkit.serialization.deserializeObject
 import com.izivia.ocpi.toolkit.serialization.deserializeOcpiResponse
 import com.izivia.ocpi.toolkit.serialization.deserializeOcpiResponseList
 import com.izivia.ocpi.toolkit.serialization.mapper
@@ -82,6 +83,17 @@ inline fun <reified T> HttpResponse.parseResultOrNull(): T? =
     parseOcpiResponseBodyAndHandleErrors { mapper.deserializeOcpiResponse<T>(it) }
 
 /**
+ * Handle HTTP and OCPI errors without deserializing unused response data.
+ * The OCPI envelope, including its timestamp, must still be valid.
+ */
+fun HttpResponse.parseResultIgnoringData() {
+    parseOcpiResponseBodyAndHandleErrors<Unit> { body ->
+        val response = mapper.deserializeObject<OcpiResponseStatus>(body)
+        OcpiResponseBody(null, response.statusCode, response.statusMessage, response.timestamp)
+    }
+}
+
+/**
  * Parse body of a request that might contain data, like PUT/PATCH calls.
  * Any error information contained in HTTP request or OcpiResponseBody gets converted into Exceptions.
  */
@@ -91,7 +103,7 @@ inline fun <reified T> HttpResponse.parseOcpiResponseBodyAndHandleErrors(
     if (!status.success()) {
         // We know there was an error, so an exception must be thrown, we will try to throw an OcpiException if the
         // error is formatted as an OCPI error
-        runCatching { deserializeFn(body) }
+        runCatching { mapper.deserializeObject<OcpiResponseStatus>(body) }
             .getOrElse {
                 // If deserialization fails, it means that the response is probably not an OCPI error (if it is, it is
                 // incorrectly formatted, so we read it as a regular HttpException)
@@ -104,6 +116,11 @@ inline fun <reified T> HttpResponse.parseOcpiResponseBodyAndHandleErrors(
     // exception if it is not the case
     return runCatching { deserializeFn(body) }
         .getOrElse { e ->
+            // Error data is unspecified by OCPI and need not match the expected success type.
+            runCatching { mapper.deserializeObject<OcpiResponseStatus>(body) }
+                .getOrNull()
+                ?.takeIf { !it.statusCode.toOcpiStatus().isSuccess() }
+                ?.throwOcpiException(status)
             throw OcpiToolkitResponseParsingException("Response cannot be parsed: $body", e)
         }
         .also { parsedOcpiResponse ->
@@ -117,6 +134,15 @@ inline fun <reified T> HttpResponse.parseOcpiResponseBodyAndHandleErrors(
 }
 
 inline fun <reified T> OcpiResponseBody<T>.throwOcpiException(httpStatus: HttpStatus) {
+    throw OcpiException(
+        httpStatus = httpStatus,
+        ocpiStatus = statusCode.toOcpiStatus(),
+        ocpiStatusCode = statusCode,
+        message = statusMessage.orEmpty(),
+    )
+}
+
+fun OcpiResponseStatus.throwOcpiException(httpStatus: HttpStatus): Nothing {
     throw OcpiException(
         httpStatus = httpStatus,
         ocpiStatus = statusCode.toOcpiStatus(),

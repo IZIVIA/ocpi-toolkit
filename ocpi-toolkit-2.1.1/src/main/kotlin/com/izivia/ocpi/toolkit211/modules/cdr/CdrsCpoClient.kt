@@ -41,7 +41,7 @@ class CdrsCpoClient(
                     body = mapper.serializeObject(cdr),
                 ),
             )
-                .also { it.parseResultOrNull<URL?>() }
+                .also { it.parseResultIgnoringData() }
                 .getHeader(Header.LOCATION)
         }
 }
