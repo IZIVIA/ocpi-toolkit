@@ -1,4 +1,4 @@
-package com.izivia.ocpi.toolkit.common
+package com.izivia.ocpi.toolkit211.common
 
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
@@ -23,7 +23,7 @@ class PaginationHeadersTest {
         )
 
         expectThat(headers[Header.LINK])
-            .isEqualTo("<https://example.com/2.2.1/tokens?limit=1&offset=1>; rel=\"next\"")
+            .isEqualTo("<https://example.com/2.1.1/tokens?limit=1&offset=1>; rel=\"next\"")
     }
 
     @Test
@@ -72,7 +72,7 @@ class PaginationHeadersTest {
         )
 
         expectThat(headers[Header.LINK]).isEqualTo(
-            "<https://example.com/2.2.1/tokens?limit=2&date_from=2026-01-01T00:00:00Z" +
+            "<https://example.com/2.1.1/tokens?limit=2&date_from=2026-01-01T00:00:00Z" +
                 "&date_to=2026-02-01T00:00:00Z&offset=4>; rel=\"next\"",
         )
     }
@@ -85,7 +85,7 @@ class PaginationHeadersTest {
         )
 
         expectThat(headers[Header.LINK]).isEqualTo(
-            "<https://example.com/2.2.1/tokens?date_from=2026-01-01T02:00:00%2B02:00&limit=2&offset=2>; rel=\"next\"",
+            "<https://example.com/2.1.1/tokens?date_from=2026-01-01T02:00:00%2B02:00&limit=2&offset=2>; rel=\"next\"",
         )
     }
 
@@ -97,7 +97,7 @@ class PaginationHeadersTest {
         )
 
         expectThat(headers[Header.LINK]).isEqualTo(
-            "<https://example.com/2.2.1/tokens?filter=a%26b%3Dc%20%23d%20%25e%20%C3%A9%20%2A~:@/?" +
+            "<https://example.com/2.1.1/tokens?filter=a%26b%3Dc%20%23d%20%25e%20%C3%A9%20%2A~:@/?" +
                 "&limit=1&offset=1>; rel=\"next\"",
         )
     }
@@ -119,7 +119,7 @@ class PaginationHeadersTest {
     @Test
     fun `an unencoded plus in the next link reproduces OCPI error 2001`() {
         val nextRequest = requestFromLink(
-            "<https://example.com/2.2.1/tokens?date_from=2026-01-01T02:00:00+02:00&offset=2>; rel=\"next\"",
+            "<https://example.com/2.1.1/tokens?date_from=2026-01-01T02:00:00+02:00&offset=2>; rel=\"next\"",
         )
 
         expectThat(nextRequest.queryParams["date_from"]).isEqualTo("2026-01-01T02:00:00 02:00")
@@ -149,7 +149,7 @@ class PaginationHeadersTest {
 
     private fun request(queryParams: Map<String, String?>) = HttpRequest(
         method = HttpMethod.GET,
-        path = "/2.2.1/tokens",
+        path = "/2.1.1/tokens",
         baseUrl = "https://example.com",
         queryParams = queryParams,
     )

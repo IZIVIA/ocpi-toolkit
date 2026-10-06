@@ -8,6 +8,7 @@ import com.izivia.ocpi.toolkit211.serialization.mapper
 import com.izivia.ocpi.toolkit211.serialization.serializeOcpiResponse
 import com.izivia.ocpi.toolkit211.serialization.serializeOcpiResponseList
 import org.apache.logging.log4j.LogManager
+import java.net.URLEncoder
 import java.time.Instant
 
 private val logger = LogManager.getLogger(HttpRequest::class.java)
@@ -34,13 +35,13 @@ suspend inline fun <reified T> HttpRequest.respondSearchResult(
     }
 
 fun paginationHeaders(result: SearchResult<*>, request: HttpRequest): Map<String, String> {
-    val nextPageOffset = (result.offset + result.limit).takeIf { it <= result.totalCount }
+    val nextPageOffset = (result.offset + result.limit).takeIf { it < result.totalCount }
 
     val queries = request
         .queryParams
         .filter { it.key != "offset" && it.value != null }
         .plus("offset" to (result.limit + result.offset))
-        .map { "${it.key}=${it.value}" }
+        .map { "${encodeQueryComponent(it.key)}=${encodeQueryComponent(it.value.toString())}" }
         .joinToString("&", "?")
 
     return listOfNotNull(
@@ -49,6 +50,19 @@ fun paginationHeaders(result: SearchResult<*>, request: HttpRequest): Map<String
         Header.X_LIMIT to result.limit.toString(),
     ).toMap()
 }
+
+/** Encodes decoded query parameters while keeping RFC 3986 query characters and dates readable. */
+private fun encodeQueryComponent(value: String): String =
+    URLEncoder.encode(value, Charsets.UTF_8.name())
+        // URLEncoder uses form encoding: convert spaces and asterisks to percent encoding.
+        .replace("+", "%20")
+        .replace("*", "%2A")
+        // These characters are safe in a query parameter and can remain readable.
+        .replace("%7E", "~")
+        .replace("%3A", ":")
+        .replace("%40", "@")
+        .replace("%2F", "/")
+        .replace("%3F", "?")
 
 suspend inline fun <reified T> HttpRequest.respondList(now: Instant, crossinline fn: suspend () -> List<T>?) =
     respondNullableList(now) { fn() ?: throw OcpiObjectNotFoundException() }
