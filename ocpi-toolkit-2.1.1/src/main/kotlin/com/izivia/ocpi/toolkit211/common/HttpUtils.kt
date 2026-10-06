@@ -8,6 +8,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import com.izivia.ocpi.toolkit211.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit211.modules.versions.domain.ModuleID
+import java.net.URLEncoder
 
 object Header {
     const val AUTHORIZATION = "Authorization"
@@ -105,3 +106,16 @@ suspend fun PartnerRepository.checkToken(
         throw HttpException(HttpStatus.UNAUTHORIZED, "Invalid server token (token A allowed: $allowTokenA)")
     }
 }
+
+/**
+ * Encodes this OCPI identifier as one URL path segment (RFC 3986). An identifier is printable ASCII and may
+ * hold a space, a slash or a percent sign: put raw in a request path, it would break the request or reach
+ * another path. Clients encode every variable segment they put in a path.
+ */
+fun String.encodePathSegment(): String = URLEncoder.encode(this, Charsets.UTF_8).replace("+", "%20")
+
+/**
+ * A request path made of [segments], each encoded with [encodePathSegment]:
+ * `pathOf(countryCode, partyId, tokenUid)` gives `/FR/LAB/04%20AB`.
+ */
+fun pathOf(vararg segments: String): String = segments.joinToString("/", prefix = "/") { it.encodePathSegment() }

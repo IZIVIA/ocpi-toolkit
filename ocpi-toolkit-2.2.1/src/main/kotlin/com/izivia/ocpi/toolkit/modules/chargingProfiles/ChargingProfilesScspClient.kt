@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit.common.URL
 import com.izivia.ocpi.toolkit.common.parseResult
+import com.izivia.ocpi.toolkit.common.pathOf
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfile
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.ChargingProfileResponse
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.SetChargingProfile
@@ -36,7 +37,7 @@ class ChargingProfilesScspClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$sessionId",
+                path = pathOf(sessionId),
                 queryParams = mapOf(
                     "duration" to duration.toString(),
                     "response_url" to "$callbackBaseUrl/" +
@@ -55,7 +56,7 @@ class ChargingProfilesScspClient(
         send(
             HttpRequest(
                 method = HttpMethod.PUT,
-                path = "/$sessionId",
+                path = pathOf(sessionId),
                 body = mapper.serializeObject(
                     SetChargingProfile(
                         chargingProfile = chargingProfile,
@@ -75,7 +76,7 @@ class ChargingProfilesScspClient(
         send(
             HttpRequest(
                 method = HttpMethod.DELETE,
-                path = "/$sessionId",
+                path = pathOf(sessionId),
                 queryParams = mapOf(
                     "response_url" to "$callbackBaseUrl/" +
                         "${ChargingProfilesScspServer.CLEAR_PROFILE_CALLBACK_URL}/$requestId",

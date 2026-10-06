@@ -68,7 +68,7 @@ class LocationsEmspClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$locationId",
+                path = pathOf(locationId),
             ),
         )
             .parseOptionalResult()
@@ -79,7 +79,7 @@ class LocationsEmspClient(
             send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/$locationId/$evseUid",
+                    path = pathOf(locationId, evseUid),
                 ),
             )
                 .parseOptionalResult()
@@ -93,7 +93,7 @@ class LocationsEmspClient(
         send(
             HttpRequest(
                 method = HttpMethod.GET,
-                path = "/$locationId/$evseUid/$connectorId",
+                path = pathOf(locationId, evseUid, connectorId),
             ),
         )
             .parseOptionalResult()

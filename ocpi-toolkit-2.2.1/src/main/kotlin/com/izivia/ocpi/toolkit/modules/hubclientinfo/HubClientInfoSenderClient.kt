@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.hubclientinfo
 import com.izivia.ocpi.toolkit.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit.common.parseOptionalResult
 import com.izivia.ocpi.toolkit.common.parseResultOrNull
+import com.izivia.ocpi.toolkit.common.pathOf
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ClientInfo
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -32,7 +33,7 @@ class HubClientInfoSenderClient(
             send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/$countryCode/$partyId",
+                    path = pathOf(countryCode, partyId),
                 ),
             )
                 .parseOptionalResult()
@@ -47,7 +48,7 @@ class HubClientInfoSenderClient(
             send(
                 HttpRequest(
                     method = HttpMethod.PUT,
-                    path = "/$countryCode/$partyId",
+                    path = pathOf(countryCode, partyId),
                     body = mapper.serializeObject(clientInfo),
                 ),
             )
