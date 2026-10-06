@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.modules.tokens.http.emsp
 
+import com.izivia.ocpi.toolkit.common.OcpiClientUnknownTokenException
 import com.izivia.ocpi.toolkit.common.TestWithSerializerProviders
 import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.isJsonEqualTo
@@ -196,6 +197,38 @@ class TokensEmspHttpPostTokenTest : TestWithSerializerProviders {
                     },
                     "status_code": 1000,
                     "status_message": "Success",
+                    "timestamp": "2015-06-30T21:59:59Z"
+                }
+                """.trimIndent(),
+            )
+        }
+    }
+
+    /**
+     * OCPI 2.2.1, mod_tokens, real-time authorization: "When the eMSP does not know the Token, the eMSP
+     * SHALL respond with an HTTP status code: 404 (Not Found)", with the OCPI status 2004 and no data.
+     */
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `should answer 404 and 2004 when the token is unknown`(serializer: OcpiSerializer) {
+        mapper = serializer
+        val srv = mockk<TokensEmspRepository> {
+            coEvery { postToken(any(), any(), any()) } throws OcpiClientUnknownTokenException()
+        }.buildServer()
+
+        // when
+        val resp: HttpResponse = srv.send(
+            buildHttpRequest(HttpMethod.POST, "/tokens/012345678/authorize?type=RFID"),
+        )
+
+        // then
+        expectThat(resp) {
+            get { status }.isEqualTo(HttpStatus.NOT_FOUND)
+            get { body }.isNotNull().isJsonEqualTo(
+                """
+                {
+                    "status_code": 2004,
+                    "status_message": "Unknown token",
                     "timestamp": "2015-06-30T21:59:59Z"
                 }
                 """.trimIndent(),
