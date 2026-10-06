@@ -2,7 +2,7 @@ package com.izivia.ocpi.toolkit.modules.hubclientinfo
 
 import com.izivia.ocpi.toolkit.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit.common.parseOptionalResult
-import com.izivia.ocpi.toolkit.common.parseResultOrNull
+import com.izivia.ocpi.toolkit.common.parseResultIgnoringData
 import com.izivia.ocpi.toolkit.common.pathOf
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ClientInfo
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
@@ -52,6 +52,6 @@ class HubClientInfoSenderClient(
                     body = mapper.serializeObject(clientInfo),
                 ),
             )
-                .parseResultOrNull<String>()
+                .parseResultIgnoringData()
         }
 }

@@ -1,7 +1,7 @@
 package com.izivia.ocpi.toolkit.modules.credentials
 
 import com.izivia.ocpi.toolkit.common.parseResult
-import com.izivia.ocpi.toolkit.common.parseResultOrNull
+import com.izivia.ocpi.toolkit.common.parseResultIgnoringData
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.serialization.mapper
 import com.izivia.ocpi.toolkit.serialization.serializeObject
@@ -57,6 +57,6 @@ class CredentialsClient(
             .send(
                 HttpRequest(method = HttpMethod.DELETE),
             )
-            .parseResultOrNull<String>()
+            .parseResultIgnoringData()
     }
 }

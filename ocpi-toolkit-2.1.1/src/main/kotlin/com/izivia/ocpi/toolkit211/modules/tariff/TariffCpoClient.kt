@@ -5,6 +5,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit211.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit211.common.parseOptionalResult
+import com.izivia.ocpi.toolkit211.common.parseResultIgnoringData
 import com.izivia.ocpi.toolkit211.common.parseResultOrNull
 import com.izivia.ocpi.toolkit211.common.pathOf
 import com.izivia.ocpi.toolkit211.modules.tariff.domain.Tariff
@@ -62,6 +63,6 @@ class TariffCpoClient(
                 method = HttpMethod.DELETE,
                 path = pathOf(countryCode, partyId, tariffId),
             ),
-        ).parseResultOrNull<Any>()
+        ).parseResultIgnoringData()
     }
 }

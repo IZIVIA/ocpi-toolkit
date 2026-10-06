@@ -1,5 +1,6 @@
 package com.izivia.ocpi.toolkit.integrations.kotlinx.serialization
 
+import com.izivia.ocpi.toolkit.common.OcpiResponseStatus
 import com.izivia.ocpi.toolkit.integrations.kotlinx.serialization.serializers.*
 import com.izivia.ocpi.toolkit.modules.cdr.domain.*
 import com.izivia.ocpi.toolkit.modules.chargingProfiles.domain.*
@@ -30,6 +31,7 @@ import java.time.Instant
 
 @GenerateSerializers(
     classes = [
+        OcpiResponseStatus::class,
         // CDR
         Cdr::class,
         CdrPartial::class,

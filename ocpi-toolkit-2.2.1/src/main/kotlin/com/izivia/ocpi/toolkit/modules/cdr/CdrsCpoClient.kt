@@ -47,7 +47,7 @@ class CdrsCpoClient(
             )
                 .also {
                     // this will check response for errors and throw exceptions where applicable
-                    it.parseResultOrNull<URL?>()
+                    it.parseResultIgnoringData()
                 }
                 // https://github.com/ocpi/ocpi/blob/v2.2.1-d2/mod_cdrs.asciidoc#response-headers
                 .getHeader(Header.LOCATION)
