@@ -144,11 +144,13 @@ open class CredentialsServerService(
             .runCatching {
                 // we can not use VersionsClient::getVersions() without some refactoring
                 // regular clients require an established connect and make too many assumptions around headers
-                send(
-                    HttpRequest(method = HttpMethod.GET)
-                        // we need to forward the correlation id (while request id will get overwritten)
-                        .withHeadersMixin(debugHeaders),
-                )
+                withoutMessageRoutingHeaders {
+                    send(
+                        HttpRequest(method = HttpMethod.GET)
+                            // we need to forward the correlation id (while request id will get overwritten)
+                            .withHeadersMixin(debugHeaders),
+                    )
+                }
                     .parseResultList<Version>()
             }
             .onFailure {
@@ -167,11 +169,13 @@ open class CredentialsServerService(
         val versionDetail = transportClientBuilder
             .build(matchingVersion.url, credentials.token)
             .runCatching {
-                send(
-                    HttpRequest(method = HttpMethod.GET)
-                        // we need to forward the correlation id (while request id will get overwritten)
-                        .withHeadersMixin(debugHeaders),
-                )
+                withoutMessageRoutingHeaders {
+                    send(
+                        HttpRequest(method = HttpMethod.GET)
+                            // we need to forward the correlation id (while request id will get overwritten)
+                            .withHeadersMixin(debugHeaders),
+                    )
+                }
                     .parseResult<VersionDetails>()
             }
             .onFailure {

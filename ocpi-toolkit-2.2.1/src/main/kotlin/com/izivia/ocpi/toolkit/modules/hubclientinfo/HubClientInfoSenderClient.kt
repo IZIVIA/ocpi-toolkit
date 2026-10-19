@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit.common.parseOptionalResult
 import com.izivia.ocpi.toolkit.common.parseResultIgnoringData
 import com.izivia.ocpi.toolkit.common.pathOf
+import com.izivia.ocpi.toolkit.common.withoutMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ClientInfo
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -30,12 +31,14 @@ class HubClientInfoSenderClient(
         partyId: String,
     ): ClientInfo? =
         with(buildTransport()) {
-            send(
-                HttpRequest(
-                    method = HttpMethod.GET,
-                    path = pathOf(countryCode, partyId),
-                ),
-            )
+            withoutMessageRoutingHeaders {
+                send(
+                    HttpRequest(
+                        method = HttpMethod.GET,
+                        path = pathOf(countryCode, partyId),
+                    ),
+                )
+            }
                 .parseOptionalResult()
         }
 
@@ -45,13 +48,15 @@ class HubClientInfoSenderClient(
         clientInfo: ClientInfo,
     ): Unit =
         with(buildTransport()) {
-            send(
-                HttpRequest(
-                    method = HttpMethod.PUT,
-                    path = pathOf(countryCode, partyId),
-                    body = mapper.serializeObject(clientInfo),
-                ),
-            )
+            withoutMessageRoutingHeaders {
+                send(
+                    HttpRequest(
+                        method = HttpMethod.PUT,
+                        path = pathOf(countryCode, partyId),
+                        body = mapper.serializeObject(clientInfo),
+                    ),
+                )
+            }
                 .parseResultIgnoringData()
         }
 }

@@ -5,6 +5,7 @@ import com.izivia.ocpi.toolkit.common.TimeProvider
 import com.izivia.ocpi.toolkit.common.pathParam
 import com.izivia.ocpi.toolkit.common.respondList
 import com.izivia.ocpi.toolkit.common.respondObject
+import com.izivia.ocpi.toolkit.common.withoutMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
 import com.izivia.ocpi.toolkit.transport.TransportServer
 import com.izivia.ocpi.toolkit.transport.domain.FixedPathSegment
@@ -22,8 +23,10 @@ class VersionsServer(
             method = HttpMethod.GET,
             path = listOf(FixedPathSegment(service.versionsBasePath)),
         ) { req ->
-            req.respondList(timeProvider.now()) {
-                service.getVersions()
+            withoutMessageRoutingHeaders {
+                req.respondList(timeProvider.now()) {
+                    service.getVersions()
+                }
             }
         }
 
@@ -34,10 +37,12 @@ class VersionsServer(
                 VariablePathSegment("versionNumber"),
             ),
         ) { req ->
-            req.respondObject(timeProvider.now()) {
-                service.getVersionDetails(
-                    versionNumber = req.pathParam("versionNumber"),
-                )
+            withoutMessageRoutingHeaders {
+                req.respondObject(timeProvider.now()) {
+                    service.getVersionDetails(
+                        versionNumber = req.pathParam("versionNumber"),
+                    )
+                }
             }
         }
     }
