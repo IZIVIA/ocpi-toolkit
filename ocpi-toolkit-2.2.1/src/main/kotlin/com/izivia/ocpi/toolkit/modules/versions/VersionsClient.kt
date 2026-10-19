@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.versions
 import com.izivia.ocpi.toolkit.common.OcpiToolkitUnknownEndpointException
 import com.izivia.ocpi.toolkit.common.TransportClientBuilder
 import com.izivia.ocpi.toolkit.common.parseResultList
+import com.izivia.ocpi.toolkit.common.withoutMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
 import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
@@ -31,9 +32,11 @@ class VersionsClient(
                     allowTokenA = true,
                 ),
         ) {
-            send(
-                HttpRequest(method = HttpMethod.GET),
-            )
+            withoutMessageRoutingHeaders {
+                send(
+                    HttpRequest(method = HttpMethod.GET),
+                )
+            }
                 .parseResultList<Version>()
         }
 }

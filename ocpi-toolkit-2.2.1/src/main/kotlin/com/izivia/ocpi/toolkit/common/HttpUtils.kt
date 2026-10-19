@@ -16,6 +16,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
+import kotlinx.coroutines.withContext
 import java.net.URLEncoder
 
 object Header {
@@ -56,6 +57,16 @@ fun HttpRequest.messageRoutingHeaders(): RequestMessageRoutingHeaders =
         fromPartyId = headers.getByNormalizedKey(OCPI_FROM_PARTY_ID),
         fromCountryCode = headers.getByNormalizedKey(OCPI_FROM_COUNTRY_CODE),
     )
+
+/**
+ * Runs [block] without the [RequestMessageRoutingHeaders] of the current coroutine context, so that the requests it
+ * sends do not carry any `OCPI-from-*` / `OCPI-to-*` header.
+ *
+ * From OCPI 2.2.1 doc: "The requests/responses to/from Configuration Modules: Credentials, Versions and Hub Client
+ * Info are not to be routed [...]. Thus routing headers SHALL NOT be used with these modules."
+ */
+suspend fun <T> withoutMessageRoutingHeaders(block: suspend () -> T): T =
+    withContext(RequestMessageRoutingHeaders()) { block() }
 
 fun ResponseMessageRoutingHeaders.httpHeaders(): Map<String, String> =
     mapOf(
