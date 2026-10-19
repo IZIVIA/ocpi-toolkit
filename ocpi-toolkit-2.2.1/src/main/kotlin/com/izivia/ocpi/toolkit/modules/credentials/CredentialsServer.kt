@@ -32,10 +32,12 @@ class CredentialsServer(
             method = HttpMethod.GET,
             path = basePathSegments,
         ) { req ->
-            req.respondObject(timeProvider.now()) {
-                service.get(
-                    token = req.parseAuthorizationHeader(),
-                )
+            withoutMessageRoutingHeaders {
+                req.respondObject(timeProvider.now()) {
+                    service.get(
+                        token = req.parseAuthorizationHeader(),
+                    )
+                }
             }
         }
 
@@ -43,12 +45,14 @@ class CredentialsServer(
             method = HttpMethod.POST,
             path = basePathSegments,
         ) { req ->
-            req.respondObject(timeProvider.now()) {
-                service.post(
-                    token = req.parseAuthorizationHeader(),
-                    credentials = mapper.deserializeObject<Credentials>(req.body!!),
-                    debugHeaders = req.getDebugHeaders(),
-                )
+            withoutMessageRoutingHeaders {
+                req.respondObject(timeProvider.now()) {
+                    service.post(
+                        token = req.parseAuthorizationHeader(),
+                        credentials = mapper.deserializeObject<Credentials>(req.body!!),
+                        debugHeaders = req.getDebugHeaders(),
+                    )
+                }
             }
         }
 
@@ -56,12 +60,14 @@ class CredentialsServer(
             method = HttpMethod.PUT,
             path = basePathSegments,
         ) { req ->
-            req.respondObject(timeProvider.now()) {
-                service.put(
-                    token = req.parseAuthorizationHeader(),
-                    credentials = mapper.deserializeObject<Credentials>(req.body!!),
-                    debugHeaders = req.getDebugHeaders(),
-                )
+            withoutMessageRoutingHeaders {
+                req.respondObject(timeProvider.now()) {
+                    service.put(
+                        token = req.parseAuthorizationHeader(),
+                        credentials = mapper.deserializeObject<Credentials>(req.body!!),
+                        debugHeaders = req.getDebugHeaders(),
+                    )
+                }
             }
         }
 
@@ -69,10 +75,12 @@ class CredentialsServer(
             method = HttpMethod.DELETE,
             path = basePathSegments,
         ) { req ->
-            req.respondNothing(timeProvider.now()) {
-                service.delete(
-                    token = req.parseAuthorizationHeader(),
-                )
+            withoutMessageRoutingHeaders {
+                req.respondNothing(timeProvider.now()) {
+                    service.delete(
+                        token = req.parseAuthorizationHeader(),
+                    )
+                }
             }
         }
     }

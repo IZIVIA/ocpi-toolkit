@@ -1,20 +1,32 @@
 package com.izivia.ocpi.toolkit.modules.credentials
 
+import com.izivia.ocpi.toolkit.common.TestTransportClient
 import com.izivia.ocpi.toolkit.common.TestWithSerializerProviders
 import com.izivia.ocpi.toolkit.common.TransportClientBuilder
+import com.izivia.ocpi.toolkit.modules.buildHttpRequest
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Credentials
 import com.izivia.ocpi.toolkit.modules.credentials.domain.Role
 import com.izivia.ocpi.toolkit.modules.credentials.repositories.PartnerRepository
 import com.izivia.ocpi.toolkit.modules.credentials.services.CredentialsServerService
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.HubClientInfoReceiverClient
+import com.izivia.ocpi.toolkit.modules.hubclientinfo.HubClientInfoReceiverInterface
+import com.izivia.ocpi.toolkit.modules.hubclientinfo.HubClientInfoReceiverServer
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.HubClientInfoSenderClient
+import com.izivia.ocpi.toolkit.modules.hubclientinfo.HubClientInfoSenderInterface
+import com.izivia.ocpi.toolkit.modules.hubclientinfo.HubClientInfoSenderServer
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ClientInfo
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ConnectionStatus
+import com.izivia.ocpi.toolkit.modules.toSearchResult
 import com.izivia.ocpi.toolkit.modules.versions.VersionDetailsClient
 import com.izivia.ocpi.toolkit.modules.versions.VersionsClient
+import com.izivia.ocpi.toolkit.modules.versions.VersionsServer
 import com.izivia.ocpi.toolkit.modules.versions.domain.Version
+import com.izivia.ocpi.toolkit.modules.versions.domain.VersionDetails
+import com.izivia.ocpi.toolkit.modules.versions.services.VersionsService
+import com.izivia.ocpi.toolkit.samples.common.Http4kTransportServer
 import com.izivia.ocpi.toolkit.serialization.OcpiSerializer
 import com.izivia.ocpi.toolkit.serialization.mapper
+import com.izivia.ocpi.toolkit.serialization.serializeObject
 import com.izivia.ocpi.toolkit.transport.AbstractTransportClient
 import com.izivia.ocpi.toolkit.transport.context.RequestMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.transport.domain.HttpHeaders
@@ -23,6 +35,7 @@ import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.params.ParameterizedTest
@@ -31,6 +44,7 @@ import strikt.api.expectThat
 import strikt.assertions.all
 import strikt.assertions.doesNotContainKeys
 import strikt.assertions.hasSize
+import strikt.assertions.isEqualTo
 import strikt.assertions.isNotEmpty
 import java.time.Instant
 
@@ -139,6 +153,57 @@ class ConfigurationModulesRoutingHeadersTest : TestWithSerializerProviders {
         }
 
         expectThat(transport.requests).isNotEmpty().all { get { headers }.doesNotContainKeys(*routingHeaderNames) }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAvailableOcpiSerializers")
+    fun `configuration module servers do not answer with routing headers`(serializer: OcpiSerializer) {
+        mapper = serializer
+        val credentials = Credentials(token = "token", url = "http://receiver/versions", roles = emptyList())
+        val clientInfo = ClientInfo("FR", "ABC", Role.EMSP, ConnectionStatus.CONNECTED, Instant.EPOCH)
+        val credentialsService = mockk<CredentialsServerService>()
+        coEvery { credentialsService.get(any()) } returns credentials
+        coEvery { credentialsService.post(any(), any(), any()) } returns credentials
+        coEvery { credentialsService.put(any(), any(), any()) } returns credentials
+        coEvery { credentialsService.delete(any()) } returns Unit
+        val versionsService = mockk<VersionsService> {
+            every { versionsBasePath } returns "/versions"
+            every { versionDetailsBasePath } returns "/versions"
+            coEvery { getVersions() } returns listOf(Version("2.2.1", "http://receiver/versions/2.2.1"))
+            coEvery { getVersionDetails(any()) } returns VersionDetails("2.2.1", emptyList())
+        }
+        val hubClientInfoReceiverService = mockk<HubClientInfoReceiverInterface>()
+        coEvery { hubClientInfoReceiverService.get(any(), any()) } returns clientInfo
+        coEvery { hubClientInfoReceiverService.put(any(), any(), any()) } returns Unit
+        val hubClientInfoSenderService = mockk<HubClientInfoSenderInterface> {
+            coEvery { getAll(any(), any(), any(), any()) } returns listOf(clientInfo).toSearchResult()
+        }
+        val transportServer = Http4kTransportServer("http://localhost:1234", 1234)
+        runBlocking {
+            CredentialsServer(credentialsService).registerOn(transportServer)
+            VersionsServer(versionsService).registerOn(transportServer)
+            HubClientInfoReceiverServer(hubClientInfoReceiverService).registerOn(transportServer)
+            HubClientInfoSenderServer(hubClientInfoSenderService).registerOn(transportServer)
+        }
+        val client = TestTransportClient(transportServer.initRouterAndBuildClient())
+        val credentialsBody = mapper.serializeObject(credentials)
+
+        val responses = listOf(
+            buildHttpRequest(HttpMethod.GET, "/2.2.1/credentials"),
+            buildHttpRequest(HttpMethod.POST, "/2.2.1/credentials", credentialsBody),
+            buildHttpRequest(HttpMethod.PUT, "/2.2.1/credentials", credentialsBody),
+            buildHttpRequest(HttpMethod.DELETE, "/2.2.1/credentials"),
+            buildHttpRequest(HttpMethod.GET, "/versions"),
+            buildHttpRequest(HttpMethod.GET, "/versions/2.2.1"),
+            buildHttpRequest(HttpMethod.GET, "/2.2.1/hubclientinfo/FR/ABC"),
+            buildHttpRequest(HttpMethod.PUT, "/2.2.1/hubclientinfo/FR/ABC", mapper.serializeObject(clientInfo)),
+            buildHttpRequest(HttpMethod.GET, "/2.2.1/hubclientinfo"),
+        ).map { request -> client.send(request.withHeadersMixin(routingHeaders.toHttpHeaders())) }
+
+        expectThat(responses).all {
+            get { status }.isEqualTo(HttpStatus.OK)
+            get { headers }.doesNotContainKeys(*routingHeaderNames)
+        }
     }
 
     /**

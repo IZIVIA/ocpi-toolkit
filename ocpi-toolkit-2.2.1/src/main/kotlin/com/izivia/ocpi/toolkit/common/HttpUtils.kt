@@ -59,14 +59,15 @@ fun HttpRequest.messageRoutingHeaders(): RequestMessageRoutingHeaders =
     )
 
 /**
- * Runs [block] without the [RequestMessageRoutingHeaders] of the current coroutine context, so that the requests it
- * sends do not carry any `OCPI-from-*` / `OCPI-to-*` header.
+ * Runs [block] without the [RequestMessageRoutingHeaders] and [ResponseMessageRoutingHeaders] of the current coroutine
+ * context, so that neither the requests it sends nor the response it builds carry any `OCPI-from-*` / `OCPI-to-*`
+ * header.
  *
  * From OCPI 2.2.1 doc: "The requests/responses to/from Configuration Modules: Credentials, Versions and Hub Client
  * Info are not to be routed [...]. Thus routing headers SHALL NOT be used with these modules."
  */
 suspend fun <T> withoutMessageRoutingHeaders(block: suspend () -> T): T =
-    withContext(RequestMessageRoutingHeaders()) { block() }
+    withContext(RequestMessageRoutingHeaders() + ResponseMessageRoutingHeaders()) { block() }
 
 fun ResponseMessageRoutingHeaders.httpHeaders(): Map<String, String> =
     mapOf(

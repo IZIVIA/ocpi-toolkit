@@ -4,6 +4,7 @@ import com.izivia.ocpi.toolkit.common.OcpiSelfRegisteringModuleServer
 import com.izivia.ocpi.toolkit.common.TimeProvider
 import com.izivia.ocpi.toolkit.common.respondNothing
 import com.izivia.ocpi.toolkit.common.respondObject
+import com.izivia.ocpi.toolkit.common.withoutMessageRoutingHeaders
 import com.izivia.ocpi.toolkit.modules.hubclientinfo.domain.ClientInfo
 import com.izivia.ocpi.toolkit.modules.versions.domain.InterfaceRole
 import com.izivia.ocpi.toolkit.modules.versions.domain.ModuleID
@@ -37,11 +38,13 @@ class HubClientInfoReceiverServer(
                 VariablePathSegment("party_id"),
             ),
         ) { req ->
-            req.respondObject(timeProvider.now()) {
-                service.get(
-                    countryCode = req.pathParams["country_code"]!!,
-                    partyId = req.pathParams["party_id"]!!,
-                )
+            withoutMessageRoutingHeaders {
+                req.respondObject(timeProvider.now()) {
+                    service.get(
+                        countryCode = req.pathParams["country_code"]!!,
+                        partyId = req.pathParams["party_id"]!!,
+                    )
+                }
             }
         }
 
@@ -52,12 +55,14 @@ class HubClientInfoReceiverServer(
                 VariablePathSegment("party_id"),
             ),
         ) { req ->
-            req.respondNothing(timeProvider.now()) {
-                service.put(
-                    countryCode = req.pathParams["country_code"]!!,
-                    partyId = req.pathParams["party_id"]!!,
-                    clientInfo = mapper.deserializeObject<ClientInfo>(req.body!!),
-                )
+            withoutMessageRoutingHeaders {
+                req.respondNothing(timeProvider.now()) {
+                    service.put(
+                        countryCode = req.pathParams["country_code"]!!,
+                        partyId = req.pathParams["party_id"]!!,
+                        clientInfo = mapper.deserializeObject<ClientInfo>(req.body!!),
+                    )
+                }
             }
         }
     }
