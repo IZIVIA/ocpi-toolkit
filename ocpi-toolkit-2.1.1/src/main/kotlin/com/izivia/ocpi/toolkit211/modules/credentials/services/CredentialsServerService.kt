@@ -30,7 +30,7 @@ open class CredentialsServerService(
             partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
                 ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)
                 ?: throw OcpiClientInvalidParametersException(
-                    "Invalid token ($token) - should be either a TokenA or a ServerToken",
+                    "Invalid token - should be either a TokenA or a ServerToken",
                 ),
         )
     }
@@ -44,7 +44,7 @@ open class CredentialsServerService(
         val partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
             ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)
             ?: throw OcpiClientInvalidParametersException(
-                "Invalid token ($token) - should be either a TokenA or a ServerToken",
+                "Invalid token - should be either a TokenA or a ServerToken",
             )
 
         partnerRepository.saveCredentialsDetails(

@@ -27,7 +27,7 @@ open class CredentialsServerService(
             partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
                 ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)
                 ?: throw OcpiClientInvalidParametersException(
-                    "Invalid token ($token) - should be either a TokenA or a ServerToken",
+                    "Invalid token - should be either a TokenA or a ServerToken",
                 ),
         )
     }
@@ -44,7 +44,7 @@ open class CredentialsServerService(
             // If we could not find a partner with this serverToken, then, it means that it's probably a tokenA
             ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)
             ?: throw OcpiClientInvalidParametersException(
-                "Invalid token ($token) - should be either a TokenA or a ServerToken",
+                "Invalid token - should be either a TokenA or a ServerToken",
             )
 
         // Save credentials roles of partner
