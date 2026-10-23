@@ -31,7 +31,6 @@ class CdrsCpoClient(
             send(
                 HttpRequest(
                     method = HttpMethod.GET,
-                    path = "/",
                 ),
             )
                 .parseOptionalResult()
