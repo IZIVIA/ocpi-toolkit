@@ -6,6 +6,7 @@ import org.valiktor.ConstraintViolationException
 import org.valiktor.DefaultConstraintViolation
 import org.valiktor.constraints.Greater
 import org.valiktor.constraints.Less
+import org.valiktor.constraints.NotNull
 import java.time.Instant
 
 data class ValidationContext(
@@ -77,6 +78,18 @@ fun ValidationContext.validateSame(property: String, value: String, reference: S
                 property = property,
                 value = value,
                 constraint = SameStringValueConstraint(reference),
+            ),
+        )
+    }
+}
+
+fun ValidationContext.validateNotNull(property: String, value: Any?) {
+    if (value == null) {
+        violations.add(
+            DefaultConstraintViolation(
+                property = property,
+                value = null,
+                constraint = NotNull,
             ),
         )
     }
