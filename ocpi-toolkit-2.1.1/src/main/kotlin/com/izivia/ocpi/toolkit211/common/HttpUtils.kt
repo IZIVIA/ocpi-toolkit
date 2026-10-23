@@ -2,7 +2,6 @@ package com.izivia.ocpi.toolkit211.common
 
 import com.izivia.ocpi.toolkit.transport.decodeBase64
 import com.izivia.ocpi.toolkit.transport.domain.HttpException
-import com.izivia.ocpi.toolkit.transport.domain.HttpMethod
 import com.izivia.ocpi.toolkit.transport.domain.HttpRequest
 import com.izivia.ocpi.toolkit.transport.domain.HttpResponse
 import com.izivia.ocpi.toolkit.transport.domain.HttpStatus
@@ -88,19 +87,6 @@ suspend fun PartnerRepository.checkToken(
 
     val validToken = (allowTokenA && isCredentialsTokenAValid(token)) ||
         isCredentialsServerTokenValid(token)
-
-    // 7. Credentials module
-    // 7.2.3. PUT Method
-    // This method MUST return a HTTP status code 405: method not allowed if the client has not been registered yet
-    // 7.2.4. DELETE Method
-    // This method MUST return a HTTP starting code 405: method not allowed if the client has not been registered before.
-    if (!validToken && httpRequest.path.contains(ModuleID.credentials.name) && httpRequest.method in listOf(
-            HttpMethod.PUT,
-            HttpMethod.DELETE,
-        )
-    ) {
-        throw HttpException(HttpStatus.METHOD_NOT_ALLOWED, "Method not allowed")
-    }
 
     if (!validToken) {
         throw HttpException(HttpStatus.UNAUTHORIZED, "Invalid server token (token A allowed: $allowTokenA)")
