@@ -41,6 +41,13 @@ open class CredentialsServerService(
         // It can happen when a partner unregister, then registers with its clientToken (which is the serverToken
         // for us)
         val partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
+            ?.also { partnerId ->
+                // An unregistered partner has its client token invalidated. If it is still there, the partner is
+                // still registered, so it must use PUT to update its credentials.
+                if (partnerRepository.getCredentialsClientToken(partnerId) != null) {
+                    throw OcpiClientMethodNotAllowedException("Client already registered, use PUT instead")
+                }
+            }
             // If we could not find a partner with this serverToken, then, it means that it's probably a tokenA
             ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)
             ?: throw OcpiClientInvalidParametersException(
