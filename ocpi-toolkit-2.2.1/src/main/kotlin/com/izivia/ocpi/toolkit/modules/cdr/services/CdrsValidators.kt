@@ -5,6 +5,7 @@ import com.izivia.ocpi.toolkit.modules.cdr.domain.*
 import com.izivia.ocpi.toolkit.modules.locations.services.validate
 import com.izivia.ocpi.toolkit.modules.tariff.services.validate
 import org.valiktor.functions.isGreaterThanOrEqualTo
+import org.valiktor.functions.isNotNull
 import org.valiktor.validate
 import java.math.BigDecimal
 
@@ -12,7 +13,8 @@ fun CdrPartial.validate(): CdrPartial =
     validate(this) {
         validate(CdrPartial::countryCode).isCountryCode(caseSensitive = false, alpha2 = true)
         validate(CdrPartial::partyId).isPrintableAscii().hasMaxLengthOf(3)
-        validate(CdrPartial::id).isPrintableAscii().hasMaxLengthOf(39)
+        // id: CiString(39) for credit CDRs, non-credit CDRs SHALL only have a max length of 36
+        validate(CdrPartial::id).isPrintableAscii().hasMaxLengthOf(if (credit == true) 39 else 36)
         // startDateTime nothing to validate
         // endDateTime nothing to validate
         validate(CdrPartial::sessionId).isPrintableAscii().hasMaxLengthOf(36)
@@ -38,6 +40,9 @@ fun CdrPartial.validate(): CdrPartial =
         validate(CdrPartial::invoiceReferenceId).isPrintableAscii().hasMaxLengthOf(39)
         // credit: nothing to validate
         validate(CdrPartial::creditReferenceId).isPrintableAscii().hasMaxLengthOf(39)
+        if (credit == true) {
+            validate(CdrPartial::creditReferenceId).isNotNull()
+        }
         // homeChargingCompensation: nothing to validate
         // lastUpdated: nothing to validate
     }
