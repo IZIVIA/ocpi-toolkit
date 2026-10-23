@@ -683,4 +683,55 @@ class LocationsEmspServiceTest {
             }
         }
     }
+
+    @Test
+    fun patchLocationWithoutLastUpdatedTest() {
+        val service = LocationsEmspValidator(LocationsEmspService(locationsEmspRepository(emptyList())))
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking {
+                service.patchLocation(
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    locationId = str36chars,
+                    location = validLocation.toPartial().copy(lastUpdated = null),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun patchEvseWithoutLastUpdatedTest() {
+        val service = LocationsEmspValidator(LocationsEmspService(locationsEmspRepository(emptyList())))
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking {
+                service.patchEvse(
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    locationId = str36chars,
+                    evseUid = str36chars,
+                    evse = validEvse.toPartial().copy(lastUpdated = null),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun patchConnectorWithoutLastUpdatedTest() {
+        val service = LocationsEmspValidator(LocationsEmspService(locationsEmspRepository(emptyList())))
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking {
+                service.patchConnector(
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    locationId = str36chars,
+                    evseUid = str36chars,
+                    connectorId = str36chars,
+                    connector = validConnector.toPartial().copy(lastUpdated = null),
+                )
+            }
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.sessions.services
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateLength
+import com.izivia.ocpi.toolkit.common.validation.validateNotNull
 import com.izivia.ocpi.toolkit.common.validation.validateSame
 import com.izivia.ocpi.toolkit.modules.sessions.SessionsEmspInterface
 import com.izivia.ocpi.toolkit.modules.sessions.domain.Session
@@ -55,6 +56,7 @@ open class SessionsEmspValidator(
     ): SessionPartial? {
         validate {
             session.validate()
+            validateNotNull("lastUpdated", session.lastUpdated)
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("sessionId", sessionId, 36)
