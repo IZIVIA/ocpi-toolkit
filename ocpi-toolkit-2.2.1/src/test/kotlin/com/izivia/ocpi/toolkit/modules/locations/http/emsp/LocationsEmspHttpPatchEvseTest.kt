@@ -91,7 +91,7 @@ class LocationsEmspHttpPatchEvseTest : TestWithSerializerProviders {
             directions = null,
             parkingRestrictions = null,
             images = null,
-            lastUpdated = null,
+            lastUpdated = Instant.parse("2015-06-29T20:39:09Z"),
         )
         val resp: HttpResponse = srv.send(
             buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1/3256", mapper.serializeObject(evse)),
