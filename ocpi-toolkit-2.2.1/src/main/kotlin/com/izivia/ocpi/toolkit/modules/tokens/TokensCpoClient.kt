@@ -74,7 +74,7 @@ class TokensCpoClient(
                     method = HttpMethod.POST,
                     path = pathOf(tokenUid, "authorize"),
                     queryParams = listOfNotNull(type?.let { "type" to type.toString() }).toMap(),
-                    body = locationReferences.run(mapper::serializeObject),
+                    body = locationReferences?.let { mapper.serializeObject(it) },
                 ),
             ).parseResult()
         }
