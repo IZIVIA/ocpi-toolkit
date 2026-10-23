@@ -94,15 +94,14 @@ fun Map<String, String>.getByNormalizedKey(key: String): String? =
 /**
  * Parses authorization header from the HttpRequest
  *
- * @throws OcpiClientNotEnoughInformationException if the token is missing
- * @throws HttpException if the authorization header is missing
+ * @throws HttpException (401) if the authorization header is missing, not prefixed by `Token ` or not Base64-encoded
  */
 fun HttpRequest.parseAuthorizationHeader() = getHeader(Header.AUTHORIZATION)
     ?.let {
         if (it.startsWith("Token ")) {
             it
         } else {
-            throw OcpiClientInvalidParametersException("Unkown token format: $it")
+            throw HttpException(HttpStatus.UNAUTHORIZED, "${Header.AUTHORIZATION} header has an unknown format")
         }
     }
     ?.removePrefix("Token ")
@@ -110,7 +109,7 @@ fun HttpRequest.parseAuthorizationHeader() = getHeader(Header.AUTHORIZATION)
         try {
             it.decodeBase64()
         } catch (_: Exception) {
-            throw HttpException(HttpStatus.BAD_REQUEST, "${Header.AUTHORIZATION} token cannot be decoded")
+            throw HttpException(HttpStatus.UNAUTHORIZED, "${Header.AUTHORIZATION} token cannot be decoded")
         }
     }
     ?: throw HttpException(HttpStatus.UNAUTHORIZED, "${Header.AUTHORIZATION} header missing")
