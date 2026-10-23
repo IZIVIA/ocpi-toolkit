@@ -70,7 +70,7 @@ class LocationsEmspHttpPatchConnectorTest : TestWithSerializerProviders {
             tariffIds = null,
             maxElectricPower = null,
             termsAndConditions = null,
-            lastUpdated = null,
+            lastUpdated = Instant.parse("2015-06-29T20:39:09Z"),
         )
         val resp: HttpResponse = srv.send(
             buildHttpRequest(HttpMethod.PATCH, "/locations/BE/BEC/LOC1/3256/1", mapper.serializeObject(connector)),
