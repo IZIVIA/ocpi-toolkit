@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.tokens.services
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateLength
+import com.izivia.ocpi.toolkit.common.validation.validateNotNull
 import com.izivia.ocpi.toolkit.common.validation.validateSame
 import com.izivia.ocpi.toolkit.modules.tokens.TokensCpoInterface
 import com.izivia.ocpi.toolkit.modules.tokens.domain.Token
@@ -59,6 +60,7 @@ open class TokensCpoValidator(
     ): TokenPartial? {
         validate {
             token.validate()
+            validateNotNull("lastUpdated", token.lastUpdated)
             validateLength("countryCode", countryCode, 2)
             validateLength("partyId", partyId, 3)
             validateLength("tokenUid", tokenUid, 36)
