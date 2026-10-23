@@ -145,7 +145,7 @@ fun StatusSchedulePartial.validate(): StatusSchedulePartial = validate(this) {
 }
 
 fun EvsePartial.validate(): EvsePartial = validate(this) {
-    validate(EvsePartial::uid).isPrintableAscii().hasMaxLengthOf(39)
+    validate(EvsePartial::uid).isPrintableAscii().hasMaxLengthOf(36)
     validate(EvsePartial::evseId).isEvseId()
     // status: nothing to validate
     statusSchedule?.forEach { it.validate() }
