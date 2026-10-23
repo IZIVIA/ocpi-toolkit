@@ -133,7 +133,10 @@ suspend fun HttpRequest.defaultHeadersOrErrorHandling(
         logger.warn("could not handle request", e)
         e.toHttpResponse(now)
     } catch (e: HttpException) {
-        HttpResponse(status = e.status)
+        HttpResponse(
+            status = e.status,
+            headers = if (e.status == HttpStatus.UNAUTHORIZED) mapOf("WWW-Authenticate" to "Token") else emptyMap(),
+        )
     } catch (e: Exception) {
         // at this point, we should only encounter well-defined OcpiExceptions, or unhandled server errors
         // all other issues, like auth and json deserialization should have happened before
