@@ -26,7 +26,7 @@ object Versions {
     const val http4k = "5.47.0.0" // version 6 requires java 21+
     const val strikt = "0.35.1"
     const val mockk = "1.14.5"
-    const val testcontainers = "1.21.3"
+    const val testcontainers = "1.21.4"
     const val kmongo = "5.5.1"
     const val jsonDiff = "1.1.0"
 }
