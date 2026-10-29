@@ -85,8 +85,7 @@ open class CredentialsServerService(
         debugHeaders: Map<String, String>,
     ): Credentials {
         val partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
-            // This line should not be reached when using the HttpUtils.kt PartnerRepository.checkToken
-            // implementation of the toolkit, but is included for custom implementations.
+            // Reached by a client that authenticates with its CREDENTIALS_TOKEN_A: it is not registered yet.
             ?: throw OcpiClientMethodNotAllowedException()
 
         // Save credentials roles of partner
@@ -129,8 +128,7 @@ open class CredentialsServerService(
                 // to the system.
                 partnerRepository.invalidateCredentialsClientToken(partnerId = partnerId)
             }
-            // This line should not be reached when using the HttpUtils.kt PartnerRepository.checkToken
-            // implementation of the toolkit, but is included for custom implementations.
+            // Reached by a client that authenticates with its CREDENTIALS_TOKEN_A: it is not registered yet.
             ?: throw OcpiClientMethodNotAllowedException()
     }
 
