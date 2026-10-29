@@ -42,6 +42,13 @@ open class CredentialsServerService(
     ): Credentials {
         credentials.validate()
         val partnerId = partnerRepository.getPartnerIdByCredentialsServerToken(token)
+            ?.also { partnerId ->
+                // An unregistered partner has its client token invalidated. If it is still there, the partner is
+                // still registered, so it must use PUT to update its credentials.
+                if (partnerRepository.getCredentialsClientToken(partnerId) != null) {
+                    throw OcpiClientMethodNotAllowedException("Client already registered, use PUT instead")
+                }
+            }
             ?: partnerRepository.getPartnerIdByCredentialsTokenA(credentialsTokenA = token)
             ?: throw OcpiClientInvalidParametersException(
                 "Invalid token - should be either a TokenA or a ServerToken",
