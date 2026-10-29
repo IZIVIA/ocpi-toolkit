@@ -199,4 +199,21 @@ class TokensCpoServiceTest {
             }
         }
     }
+
+    @Test
+    fun patchTokenWithoutLastUpdatedTest() {
+        val service = TokensCpoValidator(TokensCpoService(tokensCpoRepositoryTest(validTokenFullRfid)))
+
+        expectThrows<OcpiClientInvalidParametersException> {
+            runBlocking {
+                service.patchToken(
+                    countryCode = str2chars,
+                    partyId = str3chars,
+                    tokenUid = str36chars,
+                    type = TokenType.RFID,
+                    token = validTokenFullRfid.toPartial().copy(lastUpdated = null),
+                )
+            }
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.izivia.ocpi.toolkit.modules.locations.services
 import com.izivia.ocpi.toolkit.common.CiString
 import com.izivia.ocpi.toolkit.common.validation.validate
 import com.izivia.ocpi.toolkit.common.validation.validateLength
+import com.izivia.ocpi.toolkit.common.validation.validateNotNull
 import com.izivia.ocpi.toolkit.common.validation.validateSame
 import com.izivia.ocpi.toolkit.modules.locations.LocationsEmspInterface
 import com.izivia.ocpi.toolkit.modules.locations.domain.*
@@ -164,6 +165,7 @@ open class LocationsEmspValidator(
             validateLength("partyId", partyId, 3)
             validateLength("locationId", locationId, 36)
             location.validate()
+            validateNotNull("lastUpdated", location.lastUpdated)
         }
 
         return service
@@ -189,6 +191,7 @@ open class LocationsEmspValidator(
             validateLength("locationId", locationId, 36)
             validateLength("evseUid", evseUid, 36)
             evse.validate()
+            validateNotNull("lastUpdated", evse.lastUpdated)
         }
 
         return service
@@ -217,6 +220,7 @@ open class LocationsEmspValidator(
             validateLength("evseUid", evseUid, 36)
             validateLength("connectorId", connectorId, 36)
             connector.validate()
+            validateNotNull("lastUpdated", connector.lastUpdated)
         }
 
         return service
